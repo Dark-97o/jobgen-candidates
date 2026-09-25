@@ -28,3 +28,7 @@
 - Timestamp: `2026-09-25T12:10:44+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] style(jobs): calibrate dark hero image overlay opacity for job cards
+- Timestamp: `2026-09-25T12:35:28+05:30`
+- Status: Completed & Verified
+
