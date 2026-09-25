@@ -80,3 +80,7 @@
 - Timestamp: `2026-09-25T19:18:35+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] feat(interview): add audio recording timer and waveform preview
+- Timestamp: `2026-09-25T19:50:12+05:30`
+- Status: Completed & Verified
+
