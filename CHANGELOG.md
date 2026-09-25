@@ -40,3 +40,7 @@
 - Timestamp: `2026-09-25T14:15:10+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] perf(jobs): optimize job list virtual scroll performance
+- Timestamp: `2026-09-25T14:48:32+05:30`
+- Status: Completed & Verified
+
