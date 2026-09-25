@@ -20,3 +20,7 @@
 - Timestamp: `2026-09-25T11:15:33+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] feat(jobs): implement multi-select location filter dropdown
+- Timestamp: `2026-09-25T11:42:19+05:30`
+- Status: Completed & Verified
+
