@@ -96,3 +96,7 @@
 - Timestamp: `2026-09-25T21:20:30+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] feat(events): implement calendar export (.ics) for registered sessions
+- Timestamp: `2026-09-25T21:45:50+05:30`
+- Status: Completed & Verified
+
