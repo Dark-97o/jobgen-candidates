@@ -72,3 +72,7 @@
 - Timestamp: `2026-09-25T18:10:20+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] refactor(coverletter): extract export options into action bar component
+- Timestamp: `2026-09-25T18:45:00+05:30`
+- Status: Completed & Verified
+
