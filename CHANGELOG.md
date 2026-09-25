@@ -56,3 +56,7 @@
 - Timestamp: `2026-09-25T16:05:14+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] fix(resume): prevent NaN score display during initial file parsing
+- Timestamp: `2026-09-25T16:32:55+05:30`
+- Status: Completed & Verified
+
