@@ -36,3 +36,7 @@
 - Timestamp: `2026-09-25T13:02:50+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] fix(jobs): ensure drawer backdrop prevents background scroll propagation
+- Timestamp: `2026-09-25T14:15:10+05:30`
+- Status: Completed & Verified
+
