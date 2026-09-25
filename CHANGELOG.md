@@ -88,3 +88,7 @@
 - Timestamp: `2026-09-25T20:22:45+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] fix(interview): reset recording timer on question switch
+- Timestamp: `2026-09-25T20:55:18+05:30`
+- Status: Completed & Verified
+
