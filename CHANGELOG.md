@@ -32,3 +32,7 @@
 - Timestamp: `2026-09-25T12:35:28+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] refactor(jobs): normalize company logo aspect ratios and fallback badges
+- Timestamp: `2026-09-25T13:02:50+05:30`
+- Status: Completed & Verified
+
