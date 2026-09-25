@@ -24,3 +24,7 @@
 - Timestamp: `2026-09-25T11:42:19+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] feat(jobs): add salary range slider with currency formatting
+- Timestamp: `2026-09-25T12:10:44+05:30`
+- Status: Completed & Verified
+
