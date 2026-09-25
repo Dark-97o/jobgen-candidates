@@ -64,3 +64,7 @@
 - Timestamp: `2026-09-25T17:04:18+05:30`
 - Status: Completed & Verified
 
+## [2026-09-25] feat(coverletter): implement tone selector with Casual, Formal, and Bold pills
+- Timestamp: `2026-09-25T17:35:42+05:30`
+- Status: Completed & Verified
+
