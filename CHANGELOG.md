@@ -144,3 +144,7 @@
 - Timestamp: `2026-09-26T13:20:45+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] fix(careerplan): correct milestone completion percentage rounding
+- Timestamp: `2026-09-26T14:10:05+05:30`
+- Status: Completed & Verified
+
