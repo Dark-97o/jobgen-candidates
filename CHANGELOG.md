@@ -156,3 +156,7 @@
 - Timestamp: `2026-09-26T15:04:40+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] perf(header): throttle particle canvas resize listener on window resize
+- Timestamp: `2026-09-26T15:30:15+05:30`
+- Status: Completed & Verified
+
