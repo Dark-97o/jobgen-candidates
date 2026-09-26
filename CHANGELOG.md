@@ -216,3 +216,7 @@
 - Timestamp: `2026-09-26T21:50:45+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] fix(ats): reset file input ref on modal close to allow re-upload
+- Timestamp: `2026-09-26T22:15:10+05:30`
+- Status: Completed & Verified
+
