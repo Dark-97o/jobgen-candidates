@@ -160,3 +160,7 @@
 - Timestamp: `2026-09-26T15:30:15+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] feat(header): add Refer & Earn pill button with emerald gradient
+- Timestamp: `2026-09-26T15:58:50+05:30`
+- Status: Completed & Verified
+
