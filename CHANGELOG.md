@@ -224,3 +224,7 @@
 - Timestamp: `2026-09-26T22:38:35+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] docs(changelog): document candidate dashboard feature milestones
+- Timestamp: `2026-09-26T22:56:00+05:30`
+- Status: Completed & Verified
+
