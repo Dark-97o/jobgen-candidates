@@ -172,3 +172,7 @@
 - Timestamp: `2026-09-26T16:52:10+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] style(sidebar): add collapsible pill action buttons for Academy and Extension
+- Timestamp: `2026-09-26T17:20:00+05:30`
+- Status: Completed & Verified
+
