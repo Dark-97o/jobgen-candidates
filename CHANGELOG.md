@@ -212,3 +212,7 @@
 - Timestamp: `2026-09-26T21:25:20+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] style(ats): add subtle glass refraction to scanner modal container
+- Timestamp: `2026-09-26T21:50:45+05:30`
+- Status: Completed & Verified
+
