@@ -164,3 +164,7 @@
 - Timestamp: `2026-09-26T15:58:50+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] style(header): polish free tier pill badge with subtle border glow
+- Timestamp: `2026-09-26T16:25:35+05:30`
+- Status: Completed & Verified
+
