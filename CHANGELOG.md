@@ -128,3 +128,7 @@
 - Timestamp: `2026-09-26T11:32:10+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] fix(copilot): auto-scroll chat thread to bottom on incoming stream token
+- Timestamp: `2026-09-26T11:58:34+05:30`
+- Status: Completed & Verified
+
