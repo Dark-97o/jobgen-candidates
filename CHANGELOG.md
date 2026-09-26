@@ -196,3 +196,7 @@
 - Timestamp: `2026-09-26T19:38:00+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] refactor(overview): isolate metric cards data mapping
+- Timestamp: `2026-09-26T20:05:40+05:30`
+- Status: Completed & Verified
+
