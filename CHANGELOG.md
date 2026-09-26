@@ -204,3 +204,7 @@
 - Timestamp: `2026-09-26T20:32:15+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] feat(ats): implement drag-and-drop resume upload zone
+- Timestamp: `2026-09-26T20:58:50+05:30`
+- Status: Completed & Verified
+
