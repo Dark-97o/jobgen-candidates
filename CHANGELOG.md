@@ -148,3 +148,7 @@
 - Timestamp: `2026-09-26T14:10:05+05:30`
 - Status: Completed & Verified
 
+## [2026-09-26] feat(header): add canvas smoke particle animation on top right bar
+- Timestamp: `2026-09-26T14:38:20+05:30`
+- Status: Completed & Verified
+
