@@ -1991,6 +1991,36 @@ export default function OverviewView({ onNavigate }) {
               e.currentTarget.style.transform = 'translateY(0px) scale(1)';
             }}
           >
+            {/* Background Tall Building Image with slight fade from top */}
+            <img
+              src="/clock-building.jpg"
+              alt="Tall Building"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                objectPosition: 'center 35%',
+                zIndex: 0,
+                opacity: 0.72,
+                maskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.45) 22%, rgba(0, 0, 0, 0.88) 55%, rgba(0, 0, 0, 1) 100%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.45) 22%, rgba(0, 0, 0, 0.88) 55%, rgba(0, 0, 0, 1) 100%)',
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Subtle contrast gradient to maintain maximum readability for the time text */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(to bottom, rgba(9, 12, 21, 0.5) 0%, rgba(9, 12, 21, 0.15) 45%, rgba(9, 12, 21, 0.65) 100%)',
+                zIndex: 0,
+                pointerEvents: 'none',
+              }}
+            />
+
             {/* Concentric Right-Side Half Circle Strokes: 1 thick stroke followed by 1 slightly thinner stroke */}
             <svg
               viewBox="0 0 200 200"
