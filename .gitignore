@@ -26,3 +26,9 @@ dist-ssr
 # Agent & Scratch
 .gemini
 scratch/
+
+# Vercel & Environment
+.vercel
+.env
+.env.local
+.env.*.local
