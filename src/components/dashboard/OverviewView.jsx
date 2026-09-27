@@ -1991,31 +1991,36 @@ export default function OverviewView({ onNavigate }) {
               e.currentTarget.style.transform = 'translateY(0px) scale(1)';
             }}
           >
-            {/* Background Tall Building Image with slight fade from top */}
+            {/* Background Tall Building Image (Isolated building with transparent background, faded from top) */}
             <img
-              src="/clock-building.jpg"
+              src="/clock-building.png"
               alt="Tall Building"
               style={{
                 position: 'absolute',
                 inset: 0,
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
-                objectPosition: 'center 35%',
+                objectFit: 'contain',
+                objectPosition: 'center 75%',
+                transform: 'scale(1.22)',
                 zIndex: 0,
-                opacity: 0.72,
-                maskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.45) 22%, rgba(0, 0, 0, 0.88) 55%, rgba(0, 0, 0, 1) 100%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.18) 0%, rgba(0, 0, 0, 0.45) 22%, rgba(0, 0, 0, 0.88) 55%, rgba(0, 0, 0, 1) 100%)',
+                opacity: 0.85,
+                maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 16%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 1) 85%)',
+                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 16%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 1) 85%)',
                 pointerEvents: 'none',
               }}
             />
 
-            {/* Subtle contrast gradient to maintain maximum readability for the time text */}
+            {/* Subtle atmospheric blue glow beneath the building */}
             <div
               style={{
                 position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(to bottom, rgba(9, 12, 21, 0.5) 0%, rgba(9, 12, 21, 0.15) 45%, rgba(9, 12, 21, 0.65) 100%)',
+                left: '20%',
+                right: '20%',
+                bottom: '5%',
+                height: '40%',
+                background: 'radial-gradient(ellipse at 50% 100%, rgba(56, 189, 248, 0.22) 0%, transparent 75%)',
+                filter: 'blur(16px)',
                 zIndex: 0,
                 pointerEvents: 'none',
               }}
