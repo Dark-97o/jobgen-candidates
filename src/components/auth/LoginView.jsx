@@ -324,8 +324,8 @@ export default function LoginView({ onLogin }) {
             }}
           >
             <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto', pointerEvents: 'auto' }}>
-              {/* Correct Company Logo & Name: JobGen.AI */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
+              {/* Correct Company Logo & Name: JobGen.AI (Right Aligned) */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-end', gap: '10px', marginBottom: '18px' }}>
                 <div 
                   style={{
                     width: '34px',
@@ -361,7 +361,7 @@ export default function LoginView({ onLogin }) {
                 </span>
               </div>
 
-              {/* Heading */}
+              {/* Heading (Right Aligned) */}
               <h1 
                 style={{ 
                   fontSize: '22px', 
@@ -369,7 +369,8 @@ export default function LoginView({ onLogin }) {
                   color: '#090C15', 
                   letterSpacing: '-0.025em',
                   lineHeight: 1.25,
-                  marginBottom: '5px'
+                  marginBottom: '5px',
+                  textAlign: 'right'
                 }}
               >
                 Candidate Sign In
@@ -379,7 +380,8 @@ export default function LoginView({ onLogin }) {
                   fontSize: '12.5px', 
                   color: '#64748B', 
                   lineHeight: 1.45, 
-                  marginBottom: '16px' 
+                  marginBottom: '16px',
+                  textAlign: 'right'
                 }}
               >
                 Sign in with your Candidate credentials to access your autonomous pipeline.
