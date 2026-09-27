@@ -12,10 +12,29 @@ import CareerEventsView from './components/dashboard/CareerEventsView';
 import EmmaCopilotView from './components/dashboard/EmmaCopilotView';
 import AtsScanModal from './components/dashboard/AtsScanModal';
 import Footer from './components/dashboard/Footer';
+import LoginView from './components/auth/LoginView';
 
 export default function App() {
+  const [isAuthenticated, setIsAuthenticated] = useState(() => {
+    return sessionStorage.getItem('jobgen_candidate_auth') === 'true';
+  });
   const [currentTab, setCurrentTab] = useState('overview');
   const [atsModalOpen, setAtsModalOpen] = useState(false);
+
+  const handleLoginSuccess = () => {
+    sessionStorage.setItem('jobgen_candidate_auth', 'true');
+    setIsAuthenticated(true);
+  };
+
+  const handleLogout = () => {
+    sessionStorage.removeItem('jobgen_candidate_auth');
+    setIsAuthenticated(false);
+  };
+
+  // 1. Initial State: Website starts with Login first on a white background
+  if (!isAuthenticated) {
+    return <LoginView onLogin={handleLoginSuccess} />;
+  }
 
   return (
     <div style={{ minHeight: '100vh', backgroundColor: '#F8FAFC' }}>
@@ -81,6 +100,7 @@ export default function App() {
             currentTab={currentTab}
             onOpenAtsScan={() => setAtsModalOpen(true)}
             onQuickAction={() => setCurrentTab('jobs')}
+            onLogout={handleLogout}
           />
 
           {/* Dynamic Content Surface */}

@@ -226,7 +226,7 @@ function HeaderRightSmokeAnimation() {
   );
 }
 
-export default function TopHeader({ currentTab }) {
+export default function TopHeader({ currentTab, onLogout }) {
   // Profile & Settings state shifted to top bar
   const [candidateName, setCandidateName] = useState('Subhranil Baul');
   const [candidateRole, setCandidateRole] = useState('Lead Product Architect');
@@ -616,7 +616,11 @@ export default function TopHeader({ currentTab }) {
               <button
                 onClick={() => {
                   setProfileMenuOpen(false);
-                  alert('Logged out of JobGen.AI');
+                  if (onLogout) {
+                    onLogout();
+                  } else {
+                    alert('Logged out of JobGen.AI');
+                  }
                 }}
                 style={{
                   display: 'flex',
