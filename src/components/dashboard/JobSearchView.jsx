@@ -1566,7 +1566,9 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
           ========================================================================= */}
       <div 
         style={{ 
-          background: 'rgba(255, 255, 255, 0.85)', 
+          position: 'relative',
+          overflow: 'hidden',
+          background: 'rgba(255, 255, 255, 0.88)', 
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
           padding: '16px 22px', 
@@ -1581,8 +1583,107 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
           boxSizing: 'border-box',
         }}
       >
+        <style>{`
+          @keyframes filterBgAuraPulse {
+            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.65; }
+            50% { transform: scale(1.15) translate(-15px, 8px); opacity: 0.95; }
+          }
+          @keyframes filterBgAuraBlue {
+            0%, 100% { transform: scale(1) translate(0, 0); opacity: 0.55; }
+            50% { transform: scale(1.12) translate(18px, -10px); opacity: 0.85; }
+          }
+          @keyframes filterGlassSweep {
+            0% { transform: translateX(-160%) skewX(-20deg); opacity: 0; }
+            12% { opacity: 0.45; }
+            35% { opacity: 0.45; }
+            45% { transform: translateX(260%) skewX(-20deg); opacity: 0; }
+            100% { transform: translateX(260%) skewX(-20deg); opacity: 0; }
+          }
+          @keyframes badgeShimmer {
+            0% { transform: translateX(-100%); }
+            50%, 100% { transform: translateX(200%); }
+          }
+          @keyframes liveDotPulse {
+            0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px rgba(16, 185, 129, 0.7); }
+            50% { transform: scale(1.25); opacity: 0.75; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
+          }
+          @keyframes countNumberPop {
+            0% { transform: scale(0.9); opacity: 0.5; }
+            100% { transform: scale(1); opacity: 1; }
+          }
+        `}</style>
+
+        {/* ================= LIGHTWEIGHT BACKGROUND ANIMATION LAYER ================= */}
+        <div 
+          style={{ 
+            position: 'absolute', 
+            inset: 0, 
+            pointerEvents: 'none', 
+            zIndex: 0, 
+            overflow: 'hidden', 
+            borderRadius: '20px' 
+          }}
+        >
+          {/* 1. Subtle Technical Micro-Dot Grid */}
+          <div 
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: 'radial-gradient(circle, rgba(37, 99, 235, 0.06) 1px, transparent 1px)',
+              backgroundSize: '18px 18px',
+              opacity: 0.6,
+            }}
+          />
+
+          {/* 2. Top-Right Corner Ambient Aurora Orb (Directly behind the Matching Roles section) */}
+          <div 
+            style={{
+              position: 'absolute',
+              top: '-40px',
+              right: '-30px',
+              width: '320px',
+              height: '180px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(16, 185, 129, 0.12) 0%, rgba(6, 182, 212, 0.08) 40%, rgba(37, 99, 235, 0.04) 70%, transparent 100%)',
+              filter: 'blur(30px)',
+              animation: 'filterBgAuraPulse 9s ease-in-out infinite alternate',
+              willChange: 'transform, opacity',
+            }}
+          />
+
+          {/* 3. Left Side Ambient Blue Aura Orb (Behind search input & location button) */}
+          <div 
+            style={{
+              position: 'absolute',
+              bottom: '-30px',
+              left: '-20px',
+              width: '360px',
+              height: '180px',
+              borderRadius: '50%',
+              background: 'radial-gradient(circle, rgba(37, 99, 235, 0.08) 0%, rgba(99, 102, 241, 0.05) 50%, transparent 75%)',
+              filter: 'blur(32px)',
+              animation: 'filterBgAuraBlue 12s ease-in-out infinite alternate',
+              willChange: 'transform, opacity',
+            }}
+          />
+
+          {/* 4. Elegant Glass Shimmer Sweep */}
+          <div 
+            style={{
+              position: 'absolute',
+              top: 0,
+              bottom: 0,
+              left: 0,
+              width: '180px',
+              background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.65) 50%, transparent 100%)',
+              animation: 'filterGlassSweep 11s ease-in-out infinite',
+              willChange: 'transform',
+            }}
+          />
+        </div>
+
         {/* Row 1: Search Bar (Job Title) & Location Button with Icon */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap', position: 'relative', zIndex: 1 }}>
           
           {/* 1. Job Title Search Input */}
           <div style={{ flex: '1 1 380px', maxWidth: '520px', position: 'relative' }}>
@@ -1676,17 +1777,32 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
 
           {/* Quick Active Opportunity Count badge with Casual Animation */}
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#64748B' }}>
-            <style>{`
-              @keyframes liveDotPulse {
-                0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px rgba(16, 185, 129, 0.7); }
-                50% { transform: scale(1.25); opacity: 0.75; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
-              }
-              @keyframes countNumberPop {
-                0% { transform: scale(0.9); opacity: 0.5; }
-                100% { transform: scale(1); opacity: 1; }
-              }
-            `}</style>
-            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+            <span 
+              style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '7px',
+                padding: '5px 12px',
+                borderRadius: '999px',
+                background: 'linear-gradient(135deg, rgba(248, 250, 252, 0.9) 0%, rgba(236, 253, 245, 0.75) 100%)',
+                border: '1px solid rgba(226, 232, 240, 0.95)',
+                boxShadow: '0 2px 8px rgba(16, 185, 129, 0.07), inset 0 1px 1px rgba(255, 255, 255, 0.9)',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)',
+                position: 'relative',
+                overflow: 'hidden',
+              }}
+            >
+              {/* Subtle animated shimmer beam across the badge */}
+              <span
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'linear-gradient(90deg, transparent 0%, rgba(16, 185, 129, 0.12) 50%, transparent 100%)',
+                  animation: 'badgeShimmer 3.5s ease-in-out infinite',
+                  pointerEvents: 'none',
+                }}
+              />
               <span 
                 style={{ 
                   display: 'inline-block', 
@@ -1695,10 +1811,15 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
                   borderRadius: '50%', 
                   backgroundColor: '#10B981', 
                   animation: 'liveDotPulse 2.2s infinite ease-in-out',
-                  flexShrink: 0
+                  boxShadow: '0 0 8px rgba(16, 185, 129, 0.8)',
+                  flexShrink: 0,
+                  position: 'relative',
+                  zIndex: 1,
                 }} 
               />
-              Showing <strong key={filteredJobs.length} style={{ color: '#090C15', display: 'inline-block', animation: 'countNumberPop 0.25s cubic-bezier(0.16, 1, 0.3, 1)' }}>{filteredJobs.length}</strong> matching roles
+              <span style={{ position: 'relative', zIndex: 1 }}>
+                Showing <strong key={filteredJobs.length} style={{ color: '#090C15', display: 'inline-block', animation: 'countNumberPop 0.25s cubic-bezier(0.16, 1, 0.3, 1)' }}>{filteredJobs.length}</strong> matching roles
+              </span>
             </span>
             {(selectedLocation !== 'All' || datePostedFilter !== 'All' || workTypeFilter !== 'All' || careerLevelFilter !== 'All' || minSalary > 60000 || jobTitleSearch) && (
               <button
@@ -1732,7 +1853,9 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             gap: '16px', 
             flexWrap: 'wrap',
             paddingTop: '12px',
-            borderTop: '1px solid rgba(226, 232, 240, 0.8)'
+            borderTop: '1px solid rgba(226, 232, 240, 0.8)',
+            position: 'relative',
+            zIndex: 1,
           }}
         >
           {/* Filter 1: Date Posted */}
