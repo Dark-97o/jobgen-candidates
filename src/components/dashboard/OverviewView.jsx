@@ -1224,34 +1224,20 @@ export default function OverviewView({ onNavigate }) {
             }}
           />
 
-          {/* Header: 'Calendar' + 2-Week Range + Week Indicator */}
+          {/* Header: 'Calendar' (Bigger) + Week Indicator (Range Pill Removed) */}
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 2 }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               <span
                 style={{
-                  fontSize: 'clamp(13px, 1.25vw, 20px)',
+                  fontSize: 'clamp(20px, 1.9vw, 28px)',
                   fontWeight: 800,
                   color: '#FFFFFF',
                   letterSpacing: '-0.015em',
                   fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)',
+                  textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)',
                 }}
               >
                 Calendar
-              </span>
-              <span
-                style={{
-                  fontSize: 'clamp(9px, 0.85vw, 12px)',
-                  fontWeight: 700,
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(2, 132, 199, 0.85)',
-                  border: '1px solid rgba(56, 189, 248, 0.4)',
-                  padding: '2px 8px',
-                  borderRadius: '999px',
-                  boxShadow: '0 2px 8px rgba(2, 132, 199, 0.35)',
-                }}
-              >
-                {calendarWeeks.rangeText}
               </span>
             </div>
             <span
@@ -1308,11 +1294,11 @@ export default function OverviewView({ onNavigate }) {
                         justifyContent: 'center',
                         padding: 'clamp(3px, 0.42vw, 6px) clamp(2px, 0.35vw, 5px)',
                         borderRadius: '9px',
-                        backgroundColor: isSelected ? '#FFFFFF' : 'rgba(15, 23, 42, 0.55)',
+                        backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.14)' : 'rgba(15, 23, 42, 0.55)',
                         backdropFilter: 'blur(10px)',
                         WebkitBackdropFilter: 'blur(10px)',
-                        border: isSelected ? '2px solid #0284C7' : '1px solid rgba(255, 255, 255, 0.22)',
-                        boxShadow: isSelected ? '0 6px 14px rgba(0, 0, 0, 0.35), 0 0 10px rgba(2, 132, 199, 0.5)' : '0 2px 4px rgba(0, 0, 0, 0.2)',
+                        border: isSelected ? '2px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.18)',
+                        boxShadow: isSelected ? '0 0 12px rgba(255, 255, 255, 0.5), inset 0 0 6px rgba(255, 255, 255, 0.18)' : '0 2px 4px rgba(0, 0, 0, 0.2)',
                         cursor: 'pointer',
                         transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
                         userSelect: 'none',
@@ -1328,9 +1314,10 @@ export default function OverviewView({ onNavigate }) {
                         style={{
                           fontSize: 'clamp(8.5px, 0.75vw, 11px)',
                           fontWeight: 700,
-                          color: isSelected ? '#475569' : '#94A3B8',
+                          color: isSelected ? '#FFFFFF' : '#94A3B8',
                           lineHeight: 1,
                           fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+                          textShadow: isSelected ? '0 1px 3px rgba(0, 0, 0, 0.6)' : 'none',
                         }}
                       >
                         {item.initial}
@@ -1339,11 +1326,11 @@ export default function OverviewView({ onNavigate }) {
                         style={{
                           fontSize: 'clamp(11px, 1.1vw, 16px)',
                           fontWeight: 800,
-                          color: isSelected ? '#090C15' : '#FFFFFF',
+                          color: '#FFFFFF',
                           lineHeight: 1,
                           marginTop: '2px',
                           fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                          textShadow: isSelected ? 'none' : '0 2px 4px rgba(0, 0, 0, 0.7)',
+                          textShadow: '0 2px 4px rgba(0, 0, 0, 0.7)',
                         }}
                       >
                         {item.dateNum}
@@ -1353,9 +1340,9 @@ export default function OverviewView({ onNavigate }) {
                           width: '3.5px',
                           height: '3.5px',
                           borderRadius: '50%',
-                          backgroundColor: item.hasDot ? (isSelected ? '#0284C7' : '#38BDF8') : 'transparent',
+                          backgroundColor: item.hasDot ? (isSelected ? '#FFFFFF' : '#38BDF8') : 'transparent',
                           marginTop: '2px',
-                          boxShadow: item.hasDot ? '0 0 5px rgba(56, 189, 248, 0.8)' : 'none',
+                          boxShadow: item.hasDot ? (isSelected ? '0 0 5px #FFFFFF' : '0 0 5px rgba(56, 189, 248, 0.8)') : 'none',
                         }}
                       />
                     </div>
@@ -1392,11 +1379,11 @@ export default function OverviewView({ onNavigate }) {
                         justifyContent: 'center',
                         padding: 'clamp(3px, 0.42vw, 6px) clamp(2px, 0.35vw, 5px)',
                         borderRadius: '9px',
-                        backgroundColor: isSelected ? '#FFFFFF' : 'rgba(15, 23, 42, 0.55)',
+                        backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.14)' : 'rgba(15, 23, 42, 0.55)',
                         backdropFilter: 'blur(10px)',
                         WebkitBackdropFilter: 'blur(10px)',
-                        border: isSelected ? '2px solid #0284C7' : '1px solid rgba(255, 255, 255, 0.22)',
-                        boxShadow: isSelected ? '0 6px 14px rgba(0, 0, 0, 0.35), 0 0 10px rgba(2, 132, 199, 0.5)' : '0 2px 4px rgba(0, 0, 0, 0.2)',
+                        border: isSelected ? '2px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.18)',
+                        boxShadow: isSelected ? '0 0 12px rgba(255, 255, 255, 0.5), inset 0 0 6px rgba(255, 255, 255, 0.18)' : '0 2px 4px rgba(0, 0, 0, 0.2)',
                         cursor: 'pointer',
                         transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
                         userSelect: 'none',
@@ -1412,9 +1399,10 @@ export default function OverviewView({ onNavigate }) {
                         style={{
                           fontSize: 'clamp(8.5px, 0.75vw, 11px)',
                           fontWeight: 700,
-                          color: isSelected ? '#475569' : '#94A3B8',
+                          color: isSelected ? '#FFFFFF' : '#94A3B8',
                           lineHeight: 1,
                           fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+                          textShadow: isSelected ? '0 1px 3px rgba(0, 0, 0, 0.6)' : 'none',
                         }}
                       >
                         {item.initial}
@@ -1423,11 +1411,11 @@ export default function OverviewView({ onNavigate }) {
                         style={{
                           fontSize: 'clamp(11px, 1.1vw, 16px)',
                           fontWeight: 800,
-                          color: isSelected ? '#090C15' : '#FFFFFF',
+                          color: '#FFFFFF',
                           lineHeight: 1,
                           marginTop: '2px',
                           fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                          textShadow: isSelected ? 'none' : '0 2px 4px rgba(0, 0, 0, 0.7)',
+                          textShadow: '0 2px 4px rgba(0, 0, 0, 0.7)',
                         }}
                       >
                         {item.dateNum}
@@ -1437,9 +1425,9 @@ export default function OverviewView({ onNavigate }) {
                           width: '3.5px',
                           height: '3.5px',
                           borderRadius: '50%',
-                          backgroundColor: item.hasDot ? (isSelected ? '#0284C7' : '#38BDF8') : 'transparent',
+                          backgroundColor: item.hasDot ? (isSelected ? '#FFFFFF' : '#38BDF8') : 'transparent',
                           marginTop: '2px',
-                          boxShadow: item.hasDot ? '0 0 5px rgba(56, 189, 248, 0.8)' : 'none',
+                          boxShadow: item.hasDot ? (isSelected ? '0 0 5px #FFFFFF' : '0 0 5px rgba(56, 189, 248, 0.8)') : 'none',
                         }}
                       />
                     </div>
@@ -1719,7 +1707,7 @@ export default function OverviewView({ onNavigate }) {
             <div style={{ position: 'relative', zIndex: 2 }}>
               {/* Headline & Add Button - Shifted towards the right */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '10px' }}>
-                <h4 style={{ fontSize: 'clamp(15px, 1.4vw, 22px)', fontWeight: 800, color: '#FFFFFF', margin: 0, fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
+                <h4 style={{ fontSize: 'clamp(20px, 1.9vw, 28px)', fontWeight: 800, color: '#FFFFFF', margin: 0, fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif', letterSpacing: '-0.015em', textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)' }}>
                   Task
                 </h4>
 
@@ -1860,7 +1848,7 @@ export default function OverviewView({ onNavigate }) {
             <div style={{ position: 'relative', zIndex: 2 }}>
               {/* Headline & Add Button - Shifted towards the right */}
               <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '10px' }}>
-                <h4 style={{ fontSize: 'clamp(15px, 1.4vw, 22px)', fontWeight: 800, color: '#FFFFFF', margin: 0, fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif' }}>
+                <h4 style={{ fontSize: 'clamp(20px, 1.9vw, 28px)', fontWeight: 800, color: '#FFFFFF', margin: 0, fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif', letterSpacing: '-0.015em', textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)' }}>
                   Contact
                 </h4>
                 <button
