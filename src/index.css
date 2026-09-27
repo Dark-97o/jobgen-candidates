@@ -51,6 +51,7 @@
 }
 
 html, body {
+  scroll-behavior: smooth;
   height: 100%;
   font-family: var(--font-body);
   background-color: var(--canvas-bg);
@@ -421,7 +422,8 @@ html, body {
    ========================================================================== */
 .frictionless-scroll {
   scroll-behavior: smooth !important;
-  overscroll-behavior-y: contain;
+  overscroll-behavior: auto !important;
+  overscroll-behavior-y: auto !important;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: thin;
   scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
@@ -451,7 +453,8 @@ html, body {
    ========================================================================== */
 .hide-scrollbar {
   scroll-behavior: smooth !important;
-  overscroll-behavior-y: contain;
+  overscroll-behavior: auto !important;
+  overscroll-behavior-y: auto !important;
   -webkit-overflow-scrolling: touch;
   scrollbar-width: none !important;
   -ms-overflow-style: none !important;

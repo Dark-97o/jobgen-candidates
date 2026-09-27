@@ -2073,6 +2073,14 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
         {/* Left Column: Job Cards List with Smooth Frictionless Scrolling (Enlarged Column) */}
         <div 
           className="frictionless-scroll"
+          onWheel={(e) => {
+            const el = e.currentTarget;
+            const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 1;
+            const isAtTop = el.scrollTop <= 0;
+            if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
+              window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
+            }
+          }}
           style={{ 
             display: 'flex', 
             flexDirection: 'column', 
@@ -2080,7 +2088,7 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             maxHeight: 'calc(100vh - 160px)', 
             overflowY: 'auto', 
             scrollBehavior: 'smooth',
-            overscrollBehavior: 'contain',
+            overscrollBehavior: 'auto',
             paddingTop: '8px',
             paddingBottom: '20px',
             paddingLeft: '4px',
@@ -2345,9 +2353,17 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
           )}
         </div>
 
-        {/* Right Column: Deep Job Inspection & 1-Click Action Terminal (Scrollbar Hidden with Smooth Frictionless Scrolling) */}
+        {/* Right Column: Deep Job Inspection & 1-Click Action Terminal (Scrollbar Hidden with Seamless Scroll Chaining) */}
         <div 
           className="hide-scrollbar"
+          onWheel={(e) => {
+            const el = e.currentTarget;
+            const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 1;
+            const isAtTop = el.scrollTop <= 0;
+            if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
+              window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
+            }
+          }}
           style={{ 
             background: 'rgba(255, 255, 255, 0.92)', 
             backdropFilter: 'blur(20px)',
@@ -2361,7 +2377,7 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             maxHeight: 'calc(100vh - 160px)',
             overflowY: 'auto',
             scrollBehavior: 'smooth',
-            overscrollBehavior: 'contain',
+            overscrollBehavior: 'auto',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
           }}
