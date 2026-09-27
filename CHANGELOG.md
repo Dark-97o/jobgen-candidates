@@ -336,3 +336,7 @@
 - Timestamp: `2026-09-27T14:34:20+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] style(auth): right-align company logo and candidate sign in heading
+- Timestamp: `2026-09-27T14:37:10+05:30`
+- Status: Completed & Verified
+
