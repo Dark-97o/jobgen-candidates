@@ -1674,9 +1674,32 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             <ChevronDown size={15} color={selectedLocation !== 'All' ? '#2563EB' : '#64748B'} />
           </button>
 
-          {/* Quick Active Opportunity Count badge */}
+          {/* Quick Active Opportunity Count badge with Casual Animation */}
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#64748B' }}>
-            <span>Showing <strong style={{ color: '#090C15' }}>{filteredJobs.length}</strong> matching roles</span>
+            <style>{`
+              @keyframes liveDotPulse {
+                0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px rgba(16, 185, 129, 0.7); }
+                50% { transform: scale(1.25); opacity: 0.75; box-shadow: 0 0 12px rgba(16, 185, 129, 0.9); }
+              }
+              @keyframes countNumberPop {
+                0% { transform: scale(0.9); opacity: 0.5; }
+                100% { transform: scale(1); opacity: 1; }
+              }
+            `}</style>
+            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+              <span 
+                style={{ 
+                  display: 'inline-block', 
+                  width: '6.5px', 
+                  height: '6.5px', 
+                  borderRadius: '50%', 
+                  backgroundColor: '#10B981', 
+                  animation: 'liveDotPulse 2.2s infinite ease-in-out',
+                  flexShrink: 0
+                }} 
+              />
+              Showing <strong key={filteredJobs.length} style={{ color: '#090C15', display: 'inline-block', animation: 'countNumberPop 0.25s cubic-bezier(0.16, 1, 0.3, 1)' }}>{filteredJobs.length}</strong> matching roles
+            </span>
             {(selectedLocation !== 'All' || datePostedFilter !== 'All' || workTypeFilter !== 'All' || careerLevelFilter !== 'All' || minSalary > 60000 || jobTitleSearch) && (
               <button
                 onClick={handleResetFilters}

@@ -2100,7 +2100,7 @@ export default function OverviewView({ onNavigate }) {
                 </span>
               </span>
 
-              {/* Alternating Stroke Text HYDRATING / GRINDING Alternating Every 1s */}
+              {/* Alternating Text HYDRATING / GRINDING with Lightweight Casual Animation */}
               <div
                 style={{
                   position: 'relative',
@@ -2110,8 +2110,28 @@ export default function OverviewView({ onNavigate }) {
                   marginTop: '1px',
                   width: '100%',
                   height: 'clamp(24px, 2.8vw, 42px)',
+                  overflow: 'hidden',
                 }}
               >
+                <style>{`
+                  @keyframes casualWordFlip {
+                    0% {
+                      opacity: 0;
+                      transform: translateY(8px) scale(0.96);
+                      filter: blur(2px);
+                    }
+                    60% {
+                      opacity: 0.9;
+                      transform: translateY(-1px) scale(1.01);
+                      filter: blur(0px);
+                    }
+                    100% {
+                      opacity: 1;
+                      transform: translateY(0) scale(1);
+                      filter: blur(0px);
+                    }
+                  }
+                `}</style>
                 <span
                   key={liveTime.getSeconds() % 2 === 0 ? 'HYDRATING' : 'GRINDING'}
                   style={{
@@ -2128,6 +2148,8 @@ export default function OverviewView({ onNavigate }) {
                     zIndex: 1,
                     whiteSpace: 'nowrap',
                     textShadow: '0 2px 12px rgba(0, 0, 0, 0.75), 0 0 20px rgba(56, 189, 248, 0.35)',
+                    display: 'inline-block',
+                    animation: 'casualWordFlip 0.38s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
                 >
                   {liveTime.getSeconds() % 2 === 0 ? 'HYDRATING' : 'GRINDING'}
