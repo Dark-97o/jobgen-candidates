@@ -2095,13 +2095,18 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
         
         {/* Left Column: Job Cards List with Smooth Frictionless Scrolling (Enlarged Column) */}
         <div 
+          data-lenis-prevent="true"
           className="frictionless-scroll"
           onWheel={(e) => {
             const el = e.currentTarget;
-            const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 1;
+            const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 2;
             const isAtTop = el.scrollTop <= 0;
             if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
-              window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
+              if (window.lenis) {
+                window.lenis.scrollTo(window.scrollY + e.deltaY * 1.4, { duration: 0.6 });
+              } else {
+                window.scrollBy({ top: e.deltaY, left: 0, behavior: 'smooth' });
+              }
             }
           }}
           style={{ 
@@ -2378,15 +2383,8 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
 
         {/* Right Column: Deep Job Inspection & 1-Click Action Terminal (Scrollbar Hidden with Seamless Scroll Chaining) */}
         <div 
+          data-lenis-prevent="true"
           className="hide-scrollbar"
-          onWheel={(e) => {
-            const el = e.currentTarget;
-            const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 1;
-            const isAtTop = el.scrollTop <= 0;
-            if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
-              window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
-            }
-          }}
           style={{ 
             background: 'rgba(255, 255, 255, 0.92)', 
             backdropFilter: 'blur(20px)',
@@ -2403,6 +2401,18 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             overscrollBehavior: 'auto',
             scrollbarWidth: 'none',
             msOverflowStyle: 'none',
+          }}
+          onWheel={(e) => {
+            const el = e.currentTarget;
+            const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 2;
+            const isAtTop = el.scrollTop <= 0;
+            if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
+              if (window.lenis) {
+                window.lenis.scrollTo(window.scrollY + e.deltaY * 1.4, { duration: 0.6 });
+              } else {
+                window.scrollBy({ top: e.deltaY, left: 0, behavior: 'smooth' });
+              }
+            }
           }}
         >
           {/* Header with Actual Company Logo */}

@@ -1,4 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import Lenis from 'lenis';
+import 'lenis/dist/lenis.css';
 import Sidebar from './components/dashboard/Sidebar';
 import TopHeader from './components/dashboard/TopHeader';
 import OverviewView from './components/dashboard/OverviewView';
@@ -20,6 +22,59 @@ export default function App() {
   });
   const [currentTab, setCurrentTab] = useState('overview');
   const [atsModalOpen, setAtsModalOpen] = useState(false);
+
+  // Initialize Frictionless Physics-Based Smooth Scrolling (Lenis)
+  useEffect(() => {
+    const lenis = new Lenis({
+      autoRaf: true,
+      duration: 1.25,
+      easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+      orientation: 'vertical',
+      gestureOrientation: 'vertical',
+      smoothWheel: true,
+      wheelMultiplier: 1.0,
+      touchMultiplier: 1.6,
+      infinite: false,
+      allowNestedScroll: true,
+      prevent: (node) => {
+        if (!node || !(node instanceof HTMLElement)) return false;
+        if (node.hasAttribute?.('data-lenis-prevent')) return true;
+        let curr = node;
+        while (curr && curr !== document.body && curr !== document.documentElement) {
+          if (curr.hasAttribute?.('data-lenis-prevent')) return true;
+          try {
+            const style = window.getComputedStyle(curr);
+            if (
+              (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
+              curr.scrollHeight > curr.clientHeight
+            ) {
+              return true;
+            }
+          } catch {
+            // ignore
+          }
+          curr = curr.parentElement;
+        }
+        return false;
+      },
+    });
+
+    window.lenis = lenis;
+
+    return () => {
+      lenis.destroy();
+      delete window.lenis;
+    };
+  }, []);
+
+  // When changing tabs, smoothly reposition to top
+  useEffect(() => {
+    if (window.lenis) {
+      window.lenis.scrollTo(0, { immediate: true });
+    } else {
+      window.scrollTo(0, 0);
+    }
+  }, [currentTab]);
 
   const handleLoginSuccess = () => {
     sessionStorage.setItem('jobgen_candidate_auth', 'true');
