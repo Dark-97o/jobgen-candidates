@@ -17,70 +17,119 @@ import {
 } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
-// 9 Required Locations with dedicated real photography & bold white text
+// 16 Global Innovation Hub Locations with dedicated photography & country flags
 const LOCATION_CARDS = [
   {
     id: 'sydney',
     name: 'Sydney',
     country: 'Australia',
+    flag: '🇦🇺',
     image: 'https://images.unsplash.com/photo-1506973035872-a4ec16b8e8d9?auto=format&fit=crop&w=600&q=80',
-    tag: 'Tech & Fintech Hub'
   },
   {
     id: 'melbourne',
     name: 'Melbourne',
     country: 'Australia',
+    flag: '🇦🇺',
     image: 'https://images.unsplash.com/photo-1514395462725-fb4566210144?auto=format&fit=crop&w=600&q=80',
-    tag: 'Design & Culture'
   },
   {
     id: 'san-francisco',
     name: 'San Francisco',
     country: 'United States',
+    flag: '🇺🇸',
     image: 'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?auto=format&fit=crop&w=600&q=80',
-    tag: 'Silicon Valley'
   },
   {
     id: 'canberra',
     name: 'Canberra',
     country: 'Australia',
+    flag: '🇦🇺',
     image: 'https://images.unsplash.com/photo-1596701062351-8c2c14d1fdd0?auto=format&fit=crop&w=600&q=80',
-    tag: 'GovTech & Defense'
   },
   {
     id: 'new-delhi',
     name: 'New Delhi',
     country: 'India',
+    flag: '🇮🇳',
     image: 'https://images.unsplash.com/photo-1587474260584-136574528ed5?auto=format&fit=crop&w=600&q=80',
-    tag: 'Enterprise & Startups'
   },
   {
     id: 'bangalore',
     name: 'Bangalore',
     country: 'India',
+    flag: '🇮🇳',
     image: 'https://images.unsplash.com/photo-1596176530529-78163a4f7af2?auto=format&fit=crop&w=600&q=80',
-    tag: 'Silicon Plateau'
   },
   {
     id: 'jaipur',
     name: 'Jaipur',
     country: 'India',
+    flag: '🇮🇳',
     image: 'https://images.unsplash.com/photo-1599661046289-e31897846e41?auto=format&fit=crop&w=600&q=80',
-    tag: 'Growing Tech Hub'
   },
   {
     id: 'california',
     name: 'California',
     country: 'United States',
+    flag: '🇺🇸',
     image: 'https://images.unsplash.com/photo-1449034446853-66c86144b0ad?auto=format&fit=crop&w=600&q=80',
-    tag: 'Innovation Coast'
   },
   {
     id: 'new-york',
     name: 'New York',
     country: 'United States',
+    flag: '🇺🇸',
     image: 'https://images.unsplash.com/photo-1496442226666-8d4d0e62e6e9?auto=format&fit=crop&w=600&q=80',
-    tag: 'Silicon Alley & FinTech'
+  },
+  {
+    id: 'london',
+    name: 'London',
+    country: 'United Kingdom',
+    flag: '🇬🇧',
+    image: 'https://images.unsplash.com/photo-1513635269975-59663e0ac1ad?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'singapore',
+    name: 'Singapore',
+    country: 'Singapore',
+    flag: '🇸🇬',
+    image: 'https://images.unsplash.com/photo-1525625293386-3f8f99389edd?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'tokyo',
+    name: 'Tokyo',
+    country: 'Japan',
+    flag: '🇯🇵',
+    image: 'https://images.unsplash.com/photo-1503899036084-c55cdd92da26?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'berlin',
+    name: 'Berlin',
+    country: 'Germany',
+    flag: '🇩🇪',
+    image: 'https://images.unsplash.com/photo-1560969184-10fe8719e047?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'toronto',
+    name: 'Toronto',
+    country: 'Canada',
+    flag: '🇨🇦',
+    image: 'https://images.unsplash.com/photo-1507992781348-310259076fe0?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'seattle',
+    name: 'Seattle',
+    country: 'United States',
+    flag: '🇺🇸',
+    image: 'https://images.unsplash.com/photo-1502175353174-a7a70e73b362?auto=format&fit=crop&w=600&q=80',
+  },
+  {
+    id: 'austin',
+    name: 'Austin',
+    country: 'United States',
+    flag: '🇺🇸',
+    image: 'https://images.unsplash.com/photo-1531218150217-54595bc2b934?auto=format&fit=crop&w=600&q=80',
   }
 ];
 
@@ -757,12 +806,449 @@ const ALL_JOBS = [
       'Walk through a complex interaction model you distilled into an intuitive, invisible design experience.',
       'How do you bridge the gap between design tokens and production code in engineering systems?'
     ]
+  },
+  {
+    id: 'revolut-mobile',
+    company: 'Revolut',
+    initial: 'R',
+    title: 'Lead Mobile Platform Architect',
+    location: 'London',
+    locationFull: 'London, United Kingdom',
+    workType: 'Hybrid',
+    careerLevel: 'Lead / Executive',
+    salaryNum: 175000,
+    salary: '£135k - £160k GBP',
+    equity: '£45k - £60k Equity Pool',
+    department: 'Core Banking & Global Payments Engine',
+    platform: 'LinkedIn',
+    datePosted: 'Past 24 Hours',
+    postedTime: '1h ago',
+    score: 95,
+    jobDarkImage: 'https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&w=600&q=80',
+    description: 'Spearhead global mobile architecture for 40M+ retail and institutional banking customers across 38 countries. Lead cross-platform native runtime performance and offline-first transactional ledgers.',
+    teamMission: 'Build the worlds premier frictionless financial super-app operating with microsecond response times and bank-grade security protocols.',
+    responsibilities: [
+      'Architect resilient mobile frameworks for iOS and Android high-frequency financial trading and multi-currency exchange.',
+      'Establish strict native runtime benchmarks, eliminating latency bottlenecks and frame drops.',
+      'Collaborate with cryptography and regulatory compliance teams to deploy biometric authentication hardware hooks.'
+    ],
+    requirements: [
+      '9+ years building large-scale, high-concurrency native mobile applications in Swift, Kotlin, or Rust.',
+      'Deep architectural mastery of reactive design patterns, offline database sync, and distributed state machines.',
+      'Demonstrated experience shipping fintech, banking, or crypto infrastructure at multi-million scale.'
+    ],
+    preferred: [
+      'Prior experience scaling European banking licence systems or international payment schemes.',
+      'Contributions to open-source performance profiling or mobile compiler toolchains.'
+    ],
+    perks: [
+      { label: 'Base Compensation', value: '£135k - £160k GBP' },
+      { label: 'Revolut Stock Options', value: '£50k Annual Grant' },
+      { label: 'Relocation & Visa', value: 'Comprehensive UK Relocation' },
+      { label: 'Health & Wellness', value: 'Premium Private Medical' }
+    ],
+    hiringStages: [
+      { step: '1', title: 'Recruiter Video Screening', time: '30 min' },
+      { step: '2', title: 'System Architecture Deep Dive', time: '60 min' },
+      { step: '3', title: 'Live Coding & Performance Challenge', time: '60 min' },
+      { step: '4', title: 'VP Engineering & Executive Alignment', time: '45 min' }
+    ],
+    matchedSkills: ['Mobile Architecture', 'Swift', 'Kotlin', 'Distributed Systems', 'Security'],
+    missingSkills: ['Rust Embedded NDK'],
+    starQuestions: [
+      'Describe how you designed an offline-first transactional pipeline that reconciled concurrent multi-device state changes.',
+      'How do you enforce deterministic performance budgets across multi-hundred person mobile engineering organizations?'
+    ]
+  },
+  {
+    id: 'grab-ml',
+    company: 'Grab',
+    initial: 'G',
+    title: 'Principal Machine Learning Engineer (Dispatch & Dynamic Pricing)',
+    location: 'Singapore',
+    locationFull: 'Singapore, Singapore',
+    workType: 'On-site',
+    careerLevel: 'Lead / Executive',
+    salaryNum: 165000,
+    salary: '$180k - $215k SGD',
+    equity: '$50k USD Grab RSUs',
+    department: 'AI Marketplace Optimization & Telematics',
+    platform: 'LinkedIn',
+    datePosted: 'Past Week',
+    postedTime: '3d ago',
+    score: 93,
+    jobDarkImage: 'https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&w=600&q=80',
+    description: 'Direct deep reinforcement learning algorithms that balance supply and demand across Southeast Asias largest on-demand mobility and deliveries marketplace. Process billions of geospatial pings daily.',
+    teamMission: 'Drive economic empowerment across Southeast Asia through cutting-edge predictive geospatial AI and hyper-optimized dispatch logistics.',
+    responsibilities: [
+      'Formulate real-time multi-agent reinforcement learning models for automated fleet balancing and surging.',
+      'Lead large-scale streaming feature pipelines on Apache Flink, Ray, and Triton Inference Server.',
+      'Collaborate with regional city operations teams to calibrate local regulatory constraints and traffic dynamics.'
+    ],
+    requirements: [
+      '8+ years in production machine learning systems with deep expertise in RL, graph networks, or geospatial modeling.',
+      'Proficiency in Python, C++, PyTorch, and distributed training across GPU clusters.',
+      'Strong track record in double-blind A/B testing and statistical causal inference.'
+    ],
+    preferred: [
+      'PhD or MS in Computer Science, Operations Research, or Applied Mathematics.',
+      'Experience in ride-hailing, micromobility, or high-throughput logistics platforms.'
+    ],
+    perks: [
+      { label: 'Base Salary', value: '$180k - $215k SGD' },
+      { label: 'Grab RSUs', value: '$50k USD / Year' },
+      { label: 'Transport Credit', value: 'Unlimited Grab rides & food' },
+      { label: 'Insurance', value: 'Full Comprehensive Global Coverage' }
+    ],
+    hiringStages: [
+      { step: '1', title: 'ML Foundations Review', time: '45 min' },
+      { step: '2', title: 'Real-time System Design Session', time: '60 min' },
+      { step: '3', title: 'Algorithm & Causal Inference Panel', time: '60 min' },
+      { step: '4', title: 'Head of Marketplace Offer Discussion', time: '30 min' }
+    ],
+    matchedSkills: ['Reinforcement Learning', 'PyTorch', 'Distributed Systems', 'Apache Flink', 'C++'],
+    missingSkills: ['Triton TensorRT Optimization'],
+    starQuestions: [
+      'How do you prevent negative feedback loops in automated dynamic pricing algorithms under sudden external shock events?',
+      'Explain your approach to sub-10ms model inference for millions of concurrent geospatial matchmaking queries.'
+    ]
+  },
+  {
+    id: 'sony-robotics',
+    company: 'Sony AI',
+    initial: 'S',
+    title: 'Senior Computer Vision & Sensory Systems Researcher',
+    location: 'Tokyo',
+    locationFull: 'Tokyo, Japan',
+    workType: 'Hybrid',
+    careerLevel: 'Mid / Senior',
+    salaryNum: 160000,
+    salary: '¥18M - ¥24M JPY',
+    equity: '¥4M Performance Bonus',
+    department: 'Embodied AI & Next-Gen Autonomous Robotics',
+    platform: 'Indeed',
+    datePosted: 'Past Month',
+    postedTime: '2w ago',
+    score: 91,
+    jobDarkImage: 'https://images.unsplash.com/photo-1485827404703-89b55fcc595e?auto=format&fit=crop&w=600&q=80',
+    description: 'Pioneer advanced multimodal spatial awareness, neural radiance fields (NeRFs), and tactile sensor fusion for next-generation domestic and industrial robotic systems.',
+    teamMission: 'Unleash human imagination and creativity with the power of artificial intelligence merged with worlds best imaging sensors.',
+    responsibilities: [
+      'Develop real-time 3D perception algorithms fusing event-based vision sensors, LiDAR, and IMUs.',
+      'Train foundation vision-language-action (VLA) models for dexterous robotic manipulation.',
+      'Publish cutting-edge breakthroughs in premier conferences including CVPR, ICCV, and CoRL.'
+    ],
+    requirements: [
+      'PhD or equivalent research experience in Computer Vision, Robotics, or Deep Learning.',
+      'Extensive publication record in top-tier computer vision or robotics venues.',
+      'Strong coding mastery in PyTorch, CUDA, and ROS 2.'
+    ],
+    preferred: [
+      'Bilingual proficiency in Japanese and English is a plus, but English-only is welcome.',
+      'Hands-on experience with hardware-in-the-loop robotic arms and mobile manipulators.'
+    ],
+    perks: [
+      { label: 'Annual Compensation', value: '¥18M - ¥24M JPY' },
+      { label: 'Research Budget', value: 'Unlimited Computing & Conference Grants' },
+      { label: 'Relocation Assistance', value: 'Tokyo Expat Housing Allowance' },
+      { label: 'Flexible Work', value: 'Hybrid Tokyo Shinagawa Campus' }
+    ],
+    hiringStages: [
+      { step: '1', title: 'Research Colloquium Presentation', time: '60 min' },
+      { step: '2', title: 'Technical Deep-Dive with Principal Scientists', time: '60 min' },
+      { step: '3', title: 'Hands-on Coding & CUDA Exercise', time: '60 min' },
+      { step: '4', title: 'Managing Director Vision Alignment', time: '45 min' }
+    ],
+    matchedSkills: ['Computer Vision', 'PyTorch', 'CUDA', '3D Perception', 'Robotics'],
+    missingSkills: ['ROS 2 Real-Time Microcontrollers'],
+    starQuestions: [
+      'How have you addressed sensor occlusion and extreme lighting conditions in dynamic real-world environments?',
+      'Discuss how you balance compute latency vs model parameter capacity for embedded robotic inference.'
+    ]
+  },
+  {
+    id: 'deliveryhero-infra',
+    company: 'Delivery Hero',
+    initial: 'D',
+    title: 'Senior Infrastructure Platform Lead (Kubernetes Mesh)',
+    location: 'Berlin',
+    locationFull: 'Berlin, Germany',
+    workType: 'Hybrid',
+    careerLevel: 'Senior / Staff',
+    salaryNum: 155000,
+    salary: '€140k - €165k EUR',
+    equity: '€30k Annual Equity RSUs',
+    department: 'Global Cloud Platform & Developer Productivity',
+    platform: 'LinkedIn',
+    datePosted: 'Past 24 Hours',
+    postedTime: '5h ago',
+    score: 94,
+    jobDarkImage: 'https://images.unsplash.com/photo-1558494949-ef010cbdcc31?auto=format&fit=crop&w=600&q=80',
+    description: 'Scale multi-region Kubernetes clusters supporting 70+ countries and hundreds of millions of on-demand quick-commerce transactions per second. Drive zero-trust service meshes and automated chaos testing.',
+    teamMission: 'Deliver anything, anywhere, anytime with uninterrupted resilience and millisecond global response times.',
+    responsibilities: [
+      'Manage multi-cloud infrastructure footprints across AWS, GCP, and bare-metal edge nodes.',
+      'Build internal developer platforms with Backstage, ArgoCD, and automated GitOps canary rollouts.',
+      'Champion site reliability engineering (SRE) practices, reducing mean-time-to-recovery (MTTR) across 300+ squads.'
+    ],
+    requirements: [
+      '7+ years experience designing, managing, and hardening enterprise Kubernetes production clusters.',
+      'Proficiency in Go, Terraform, eBPF, Cilium, and Prometheus/Thanos observability stacks.',
+      'Demonstrated expertise in high-concurrency outage mitigation and post-mortem facilitation.'
+    ],
+    preferred: [
+      'Certified Kubernetes Administrator (CKA) or HashiCorp Certified Terraform Associate.',
+      'Experience in global e-commerce, food delivery, or hyper-scale travel platforms.'
+    ],
+    perks: [
+      { label: 'Base Salary', value: '€140k - €165k EUR' },
+      { label: 'Equity Grant', value: '€30k RSUs per year' },
+      { label: 'Berlin Relocation', value: 'Full visa, flights, and 2 months furnished flat' },
+      { label: 'Learning Budget', value: '€2,500 Annual Conference Grant' }
+    ],
+    hiringStages: [
+      { step: '1', title: 'Talent Acquisition Chat', time: '30 min' },
+      { step: '2', title: 'Platform & SRE Architecture Interview', time: '60 min' },
+      { step: '3', title: 'Hands-on Debugging in Live Cluster', time: '60 min' },
+      { step: '4', title: 'VP Platform Engineering Offer Sync', time: '45 min' }
+    ],
+    matchedSkills: ['Kubernetes', 'Go', 'Terraform', 'GitOps', 'Site Reliability Engineering'],
+    missingSkills: ['eBPF Kernel Tracing'],
+    starQuestions: [
+      'Walk us through an incident where a production service mesh failed under peak holiday order load and how you recovered it.',
+      'How do you build internal developer platforms that engineering squads adopt voluntarily?'
+    ]
+  },
+  {
+    id: 'shopify-merchant',
+    company: 'Shopify',
+    initial: 'S',
+    title: 'Staff Merchant Experience Engineer (High-Scale Checkout)',
+    location: 'Toronto',
+    locationFull: 'Toronto, Canada',
+    workType: 'Remote',
+    careerLevel: 'Senior / Staff',
+    salaryNum: 165000,
+    salary: '$185k - $215k CAD',
+    equity: '$70k USD Shopify RSUs',
+    department: 'Checkout Core & Flash-Sale Resilience',
+    platform: 'LinkedIn',
+    datePosted: 'Past Week',
+    postedTime: '4d ago',
+    score: 97,
+    jobDarkImage: 'https://images.unsplash.com/photo-1556742049-0a67c5574f73?auto=format&fit=crop&w=600&q=80',
+    description: 'Architect Shopifys ultra-high-throughput Checkout system, powering Black Friday Cyber Monday peak events processing over $10 Billion in gross merchandise volume with zero downtime.',
+    teamMission: 'Make commerce better for everyone by building the most performant, customizable, and resilient checkout engine on earth.',
+    responsibilities: [
+      'Design modular WebAssembly (WASM) and React checkout extensions enabling global enterprise customization.',
+      'Optimize database sharding and caching tiers to process over 100,000 checkout completions per minute.',
+      'Mentor senior engineers across distributed global teams in digital-by-default remote culture.'
+    ],
+    requirements: [
+      '8+ years in high-concurrency web architecture using Ruby, Go, Rust, or modern TypeScript.',
+      'Deep expertise in distributed data stores (MySQL, Vitess, Redis) and transactional ACID guarantees.',
+      'Obsessive passion for front-end rendering performance, critical path optimization, and accessibility.'
+    ],
+    preferred: [
+      'Experience building e-commerce payment gateways or high-concurrency ticketing systems.',
+      'Active contributor to open-source web standards or developer tooling.'
+    ],
+    perks: [
+      { label: 'Base Salary', value: '$185k - $215k CAD' },
+      { label: 'Shopify RSUs', value: '$70k USD Annual Equity' },
+      { label: 'Home Office Fund', value: '$5,000 Setup Budget' },
+      { label: 'Wellness Stipend', value: '$1,500 Annual Healthy Lifestyle Grant' }
+    ],
+    hiringStages: [
+      { step: '1', title: 'Shopify Life Story Interview', time: '45 min' },
+      { step: '2', title: 'System Architecture & Data Modeling', time: '60 min' },
+      { step: '3', title: 'Pair Programming & Code Refactoring', time: '60 min' },
+      { step: '4', title: 'Executive Engineering Leader Chat', time: '45 min' }
+    ],
+    matchedSkills: ['Distributed Systems', 'TypeScript', 'React', 'Ruby / Go', 'High-Concurrency'],
+    missingSkills: ['Vitess Sharded MySQL'],
+    starQuestions: [
+      'How do you design a checkout system that prevents inventory overselling during million-user flash drops?',
+      'What trade-offs do you make between server-side execution and client-side WebAssembly computation?'
+    ]
+  },
+  {
+    id: 'aws-s3',
+    company: 'Amazon Web Services',
+    initial: 'A',
+    title: 'Senior Distributed Systems Engineer (S3 Core Storage Engine)',
+    location: 'Seattle',
+    locationFull: 'Seattle, United States',
+    workType: 'Hybrid',
+    careerLevel: 'Senior / Staff',
+    salaryNum: 240000,
+    salary: '$220k - $265k USD',
+    equity: '$120k Amazon RSUs',
+    department: 'AWS Foundation Storage & Durability Engineering',
+    platform: 'Indeed',
+    datePosted: 'Past Month',
+    postedTime: '3w ago',
+    score: 96,
+    jobDarkImage: 'https://images.unsplash.com/photo-1544197150-b99a580bb7a8?auto=format&fit=crop&w=600&q=80',
+    description: 'Work on Amazon Simple Storage Service (S3), the largest distributed object storage system in human history holding trillions of objects and peak exabyte-per-second transfers.',
+    teamMission: 'Provide mathematically proven 99.999999999% (11 9s) of durability and indefinite scale for the worlds data.',
+    responsibilities: [
+      'Design next-generation erasure coding and consensus algorithms in C++ and Rust.',
+      'Analyze petabyte-scale drive telemetry to forecast hardware failure modes before data corruption occurs.',
+      'Deploy mission-critical firmware and kernel modules to custom AWS storage hardware racks.'
+    ],
+    requirements: [
+      '7+ years writing systems software in C++, Rust, or Go with rigorous focus on memory safety and concurrency.',
+      'Mastery of distributed consensus (Paxos, Raft), disk I/O schedulers, and zero-copy networking.',
+      'Strong foundations in formal methods (TLA+) or automated protocol verification.'
+    ],
+    preferred: [
+      'Contributions to Linux kernel storage subsystems, Ceph, or NVMe-oF drivers.',
+      'Experience operating multi-datacenter distributed infrastructure at massive scale.'
+    ],
+    perks: [
+      { label: 'Base Salary', value: '$220k - $265k USD' },
+      { label: 'Amazon RSUs', value: '$120k Annual Stock Grant' },
+      { label: 'Comprehensive Benefits', value: 'Premier 401(k) Match & Healthcare' },
+      { label: 'Seattle Campus', value: 'Dog-friendly HQ with transit pass' }
+    ],
+    hiringStages: [
+      { step: '1', title: 'Technical Phone Screen', time: '60 min' },
+      { step: '2', title: 'Distributed Storage Architecture', time: '60 min' },
+      { step: '3', title: 'Systems Programming & Concurrency Coding', time: '60 min' },
+      { step: '4', title: 'Amazon Leadership Principles & Bar Raiser', time: '60 min' }
+    ],
+    matchedSkills: ['Distributed Systems', 'C++', 'Rust', 'Consensus Algorithms', 'Storage Systems'],
+    missingSkills: ['TLA+ Formal Verification'],
+    starQuestions: [
+      'How do you design a consensus algorithm that guarantees zero data loss across concurrent rack power outages?',
+      'Describe a time you solved an elusive kernel-level race condition under heavy asynchronous I/O.'
+    ]
+  },
+  {
+    id: 'tesla-autopilot',
+    company: 'Tesla',
+    initial: 'T',
+    title: 'Autonomous Fleet & Autopilot Software Lead',
+    location: 'Austin',
+    locationFull: 'Austin, United States',
+    workType: 'On-site',
+    careerLevel: 'Lead / Executive',
+    salaryNum: 230000,
+    salary: '$200k - $245k USD',
+    equity: '$110k Tesla Stock Options',
+    department: 'Full Self-Driving (FSD) Core & Supercomputer Cluster',
+    platform: 'LinkedIn',
+    datePosted: 'Past 24 Hours',
+    postedTime: '4h ago',
+    score: 98,
+    jobDarkImage: 'https://images.unsplash.com/photo-1563986768609-322da13575f3?auto=format&fit=crop&w=600&q=80',
+    description: 'Lead engineering pods building neural network inference pipelines for millions of Full Self-Driving vehicles. Optimize Dojo supercomputer data ingestion and real-world trajectory planning.',
+    teamMission: 'Accelerate the advent of sustainable energy and autonomous transportation through artificial general intelligence applied to physical systems.',
+    responsibilities: [
+      'Direct end-to-end vision-to-actuation neural planner networks deployed on custom Tesla FSD silicon chips.',
+      'Scale automated auto-labeling pipelines processing billions of real-world video clips from the global fleet.',
+      'Lead cross-disciplinary simulations to validate vehicle behavior across rare edge case interventions.'
+    ],
+    requirements: [
+      '8+ years leading software teams in autonomy, robotics, or high-performance GPU programming.',
+      'Deep mastery of modern C++, PyTorch, CUDA, and real-time deterministic embedded OS.',
+      'Proven ability to execute in rapid-iteration, high-intensity product environments.'
+    ],
+    preferred: [
+      'Experience in autonomous vehicle systems, aerospace flight control, or competitive robotics.',
+      'Demonstrated expertise in hardware-accelerated transformer quantization (INT8/FP8).'
+    ],
+    perks: [
+      { label: 'Base Salary', value: '$200k - $245k USD' },
+      { label: 'Tesla Stock', value: '$110k Annual Options Grant' },
+      { label: 'Vehicle Program', value: 'Full Self-Driving Model S/X Included' },
+      { label: 'Austin Giga Campus', value: 'Cutting-edge onsite labs & gym' }
+    ],
+    hiringStages: [
+      { step: '1', title: 'VP Autopilot Screening', time: '45 min' },
+      { step: '2', title: 'Real-time Autonomy System Architecture', time: '60 min' },
+      { step: '3', title: 'High-Performance CUDA & C++ Deep Dive', time: '60 min' },
+      { step: '4', title: 'Executive Hardware & Neural Net Review', time: '45 min' }
+    ],
+    matchedSkills: ['Autonomous Systems', 'CUDA', 'C++', 'Computer Vision', 'Deep Learning'],
+    missingSkills: ['Custom ASIC Quantization'],
+    starQuestions: [
+      'How do you bridge the sim-to-real gap when training autonomous vehicle motion planners?',
+      'Describe how you optimize deep neural networks to run at 60 FPS within a strict 35W automotive silicon power envelope.'
+    ]
   }
 ];
 
 // Official Company Logos rendered as crisp authentic vector SVGs
 function CompanyLogo({ company, size = 28, style = {} }) {
   const normalized = (company || '').toLowerCase();
+
+  if (normalized.includes('revolut')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '7px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="7" fill="#000000" />
+        <path d="M11 8h6.5c3.2 0 5.2 1.8 5.2 4.4 0 2-1.3 3.6-3.4 4.1l4 7.5h-3.8l-3.5-6.8h-2.2v6.8H11V8zm2.8 6.5h3.4c1.5 0 2.5-.8 2.5-2.1s-1-2.1-2.5-2.1h-3.4v4.2z" fill="#FFFFFF" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('grab')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '7px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="7" fill="#00B14F" />
+        <path d="M16 8c-4.4 0-8 3.6-8 8s3.6 8 8 8c2.4 0 4.6-1.1 6.1-2.8l-2.3-2.1c-1 1.2-2.3 1.9-3.8 1.9-2.8 0-5-2.2-5-5s2.2-5 5-5c2 0 3.7 1.2 4.5 2.9h-4.5v3h7.8c.1-.6.2-1.2.2-1.9 0-4.4-3.6-8-8-8z" fill="#FFFFFF" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('sony')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '7px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="7" fill="#000000" />
+        <text x="16" y="20" fill="#FFFFFF" fontSize="9" fontWeight="900" textAnchor="middle" fontFamily="sans-serif" letterSpacing="1">SONY</text>
+      </svg>
+    );
+  }
+
+  if (normalized.includes('delivery hero')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '7px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="7" fill="#D61C4E" />
+        <path d="M10 8h5.5c4 0 6.5 2.8 6.5 8s-2.5 8-6.5 8H10V8zm3 13h2.3c2.4 0 3.8-1.8 3.8-5s-1.4-5-3.8-5H13v10z" fill="#FFFFFF" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('shopify')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '7px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="7" fill="#95BF47" />
+        <path d="M22.5 9.5l-2.1-.6s-1.3-1.3-1.8-1.5c-.5-.2-1.5-.1-1.5-.1s-.6-.6-1-.8c-.7-.3-1.8-.3-2.3 0-.5.4-.8 1.1-.9 1.7L9.5 9.5c-.3.1-.5.4-.4.7l2.5 13.6c.1.4.4.7.8.7h8.2c.4 0 .7-.3.8-.7l2.5-13.6c.1-.3-.1-.6-.4-.7z" fill="#5E8E3E" />
+        <path d="M18.6 13.8c-.2-.1-.5-.2-.9-.2-.7 0-1.1.4-1.1.8 0 .8 1.8 1 1.8 2.2 0 1.1-.9 1.8-2 1.8-.8 0-1.4-.3-1.7-.6l.3-.9c.3.3.8.5 1.4.5.6 0 .9-.3.9-.7 0-.8-1.8-1-1.8-2.2 0-1.1.8-1.7 1.9-1.7.6 0 1.1.2 1.4.4l-.2.9z" fill="#FFFFFF" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('amazon') || normalized.includes('aws')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '7px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="7" fill="#232F3E" />
+        <text x="16" y="16" fill="#FFFFFF" fontSize="8" fontWeight="900" textAnchor="middle" fontFamily="sans-serif">AWS</text>
+        <path d="M10 21c3.5 2 8.5 2 12 0" stroke="#FF9900" strokeWidth="1.8" strokeLinecap="round" />
+        <path d="M22 21l-1.5-.5" stroke="#FF9900" strokeWidth="1.8" strokeLinecap="round" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('tesla')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '7px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="7" fill="#E82127" />
+        <path d="M16 9.5c2.4 0 5 .5 7 1.6l-.8 2c-1.8-.9-4-1.3-6.2-1.3s-4.4.4-6.2 1.3l-.8-2c2-1.1 4.6-1.6 7-1.6zm-1.2 4.5h2.4v10.5h-2.4V14z" fill="#FFFFFF" />
+      </svg>
+    );
+  }
 
   if (normalized.includes('canva')) {
     return (
@@ -1331,8 +1817,7 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
 
       {/* =========================================================================
           LOCATION MODAL POPUP:
-          9 Distinct City Cards with High-Res Images & Bold White Text Over Images
-          (Sydney, Melbourne, San Francisco, Canberra, New Delhi, Bangalore, Jaipur, California, New York)
+          16 Distinct City Cards with Dedicated Photography, Centered Place Names & Country Flags
           ========================================================================= */}
       {showLocationModal && (
         <div 
@@ -1352,11 +1837,12 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
           onClick={() => setShowLocationModal(false)}
         >
           <div 
+            className="frictionless-scroll"
             style={{
               position: 'relative',
               width: '100%',
-              maxWidth: '820px',
-              maxHeight: '90vh',
+              maxWidth: '960px',
+              maxHeight: '85vh',
               overflowY: 'auto',
               backgroundColor: '#FFFFFF',
               borderRadius: '24px',
@@ -1366,18 +1852,13 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             }}
             onClick={(e) => e.stopPropagation()}
           >
-            {/* Modal Header */}
+            {/* Modal Header without subtitle */}
             <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px' }}>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <MapPin size={22} color="#2563EB" />
-                  <h3 style={{ margin: 0, fontSize: '22px', fontWeight: 800, color: '#090C15', fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-                    Select Target Location
-                  </h3>
-                </div>
-                <p style={{ margin: '4px 0 0 0', fontSize: '13px', color: '#64748B' }}>
-                  Filter curated opportunities across prime global innovation hubs
-                </p>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <MapPin size={22} color="#2563EB" />
+                <h3 style={{ margin: 0, fontSize: '22px', fontWeight: 800, color: '#090C15', fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
+                  Select Target Location
+                </h3>
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
@@ -1419,11 +1900,11 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
               </div>
             </div>
 
-            {/* 3x3 Grid of Location Cards with Photography & Bold White Text */}
+            {/* 16 Location Cards Grid */}
             <div 
               style={{ 
                 display: 'grid', 
-                gridTemplateColumns: 'repeat(auto-fill, minmax(230px, 1fr))', 
+                gridTemplateColumns: 'repeat(auto-fill, minmax(210px, 1fr))', 
                 gap: '14px' 
               }}
             >
@@ -1438,7 +1919,7 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
                     }}
                     style={{
                       position: 'relative',
-                      height: '145px',
+                      height: '140px',
                       borderRadius: '16px',
                       overflow: 'hidden',
                       cursor: 'pointer',
@@ -1478,7 +1959,7 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
                       style={{
                         position: 'absolute',
                         inset: 0,
-                        background: 'linear-gradient(180deg, rgba(9, 12, 21, 0.15) 0%, rgba(9, 12, 21, 0.45) 45%, rgba(9, 12, 21, 0.85) 100%)',
+                        background: 'linear-gradient(180deg, rgba(9, 12, 21, 0.2) 0%, rgba(9, 12, 21, 0.45) 50%, rgba(9, 12, 21, 0.8) 100%)',
                       }}
                     />
 
@@ -1488,7 +1969,7 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
                         style={{
                           position: 'absolute',
                           top: '10px',
-                          right: '10px',
+                          left: '10px',
                           backgroundColor: '#2563EB',
                           color: '#FFFFFF',
                           borderRadius: '999px',
@@ -1499,52 +1980,68 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
                           alignItems: 'center',
                           gap: '4px',
                           boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)',
+                          zIndex: 3,
                         }}
                       >
                         ✓ Selected
                       </div>
                     )}
 
-                    {/* White Text Over Image */}
+                    {/* Place Name in the Middle of the Card */}
                     <div 
                       style={{
                         position: 'absolute',
-                        bottom: '12px',
-                        left: '14px',
-                        right: '14px',
+                        inset: 0,
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
                         zIndex: 2,
+                        padding: '0 16px',
+                        textAlign: 'center',
+                        pointerEvents: 'none',
                         userSelect: 'none',
                       }}
                     >
                       <h4 
                         style={{
                           margin: 0,
-                          fontSize: '19px',
-                          fontWeight: 900,
+                          fontSize: '21px',
+                          fontWeight: 800,
                           color: '#FFFFFF',
                           fontFamily: '"Plus Jakarta Sans", sans-serif',
                           letterSpacing: '-0.02em',
-                          textShadow: '0 2px 10px rgba(0, 0, 0, 0.95), 0 0 16px rgba(0, 0, 0, 0.7)',
-                          lineHeight: 1.1,
+                          textShadow: '0 2px 12px rgba(0, 0, 0, 0.95), 0 0 16px rgba(0, 0, 0, 0.8)',
+                          lineHeight: 1.15,
                         }}
                       >
                         {loc.name}
                       </h4>
-                      <p 
-                        style={{
-                          margin: '3px 0 0 0',
-                          fontSize: '11.5px',
-                          fontWeight: 650,
-                          color: 'rgba(255, 255, 255, 0.9)',
-                          textShadow: '0 1px 6px rgba(0, 0, 0, 0.8)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'space-between',
-                        }}
-                      >
-                        <span>{loc.country}</span>
-                        <span style={{ fontSize: '10.5px', color: '#60A5FA', fontWeight: 700 }}>{loc.tag}</span>
-                      </p>
+                    </div>
+
+                    {/* Country Flag at the Bottom Corner */}
+                    <div 
+                      style={{
+                        position: 'absolute',
+                        bottom: '10px',
+                        right: '12px',
+                        zIndex: 2,
+                        display: 'flex',
+                        alignItems: 'center',
+                        gap: '5px',
+                        backgroundColor: 'rgba(9, 12, 21, 0.65)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        padding: '3px 8px',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.35)',
+                        userSelect: 'none',
+                      }}
+                    >
+                      <span style={{ fontSize: '15px', lineHeight: 1 }}>{loc.flag}</span>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#FFFFFF', textShadow: '0 1px 3px rgba(0, 0, 0, 0.8)' }}>
+                        {loc.country}
+                      </span>
                     </div>
                   </div>
                 );
