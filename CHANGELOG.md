@@ -272,3 +272,7 @@
 - Timestamp: `2026-09-27T11:45:20+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] fix(header): resolve title background image clipping on wide viewports
+- Timestamp: `2026-09-27T12:02:40+05:30`
+- Status: Completed & Verified
+
