@@ -240,3 +240,7 @@
 - Timestamp: `2026-09-27T09:22:40+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] style(jobs): enlarge job card column width to avoid right screen clipping
+- Timestamp: `2026-09-27T09:40:10+05:30`
+- Status: Completed & Verified
+
