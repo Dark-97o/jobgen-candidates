@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 // Heavy assets to actively download and cache during loading
 const PRELOAD_IMAGES = [
-  '/cityfr.jpg',
+  '/loadingbg.png',
   '/caln.png',
   '/jobgen-logo.png',
   '/back.png',
@@ -25,7 +25,6 @@ const SPLINE_SCENE_URL = 'https://my.spline.design/cutecomputerfollowcursor-kTco
 export default function WaterLoader({ onComplete }) {
   const [displayProgress, setDisplayProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
-  const [currentAssetLabel, setCurrentAssetLabel] = useState('Downloading 3D mascot & assets...');
 
   // Tracking real download progress
   const completedCountRef = useRef(0);
@@ -33,38 +32,31 @@ export default function WaterLoader({ onComplete }) {
   const targetProgressRef = useRef(5);
   const isDoneRef = useRef(false);
   const startTimeRef = useRef(Date.now());
-  const MIN_DISPLAY_TIME = 2000; // Minimum 2s so animation feels smooth even on fast cache
+  const MIN_DISPLAY_TIME = 2200; // Minimum 2.2s so animation feels smooth even on fast cache
 
   // 1. Actively download all assets and Spline things in parallel
   useEffect(() => {
     let active = true;
 
-    const handleOneAssetLoaded = (label) => {
+    const handleOneAssetLoaded = () => {
       if (!active) return;
       completedCountRef.current += 1;
       const count = completedCountRef.current;
       
-      // Calculate real download percentage (up to 95% while loading; hits 100% when everything is done)
       const realRatio = count / totalAssetsCount;
       const computedTarget = Math.min(95, Math.max(targetProgressRef.current, realRatio * 95));
       targetProgressRef.current = computedTarget;
 
-      if (label) {
-        setCurrentAssetLabel(label);
-      }
-
-      // When all assets have completed downloading
       if (count >= totalAssetsCount) {
         targetProgressRef.current = 100;
-        setCurrentAssetLabel('Assets cached • Launching candidate portal');
       }
     };
 
     // A. Preload Images
     PRELOAD_IMAGES.forEach((src) => {
       const img = new Image();
-      img.onload = () => handleOneAssetLoaded(`Cached ${src.replace('/', '')}`);
-      img.onerror = () => handleOneAssetLoaded();
+      img.onload = handleOneAssetLoaded;
+      img.onerror = handleOneAssetLoaded;
       img.src = src;
     });
 
@@ -73,8 +65,8 @@ export default function WaterLoader({ onComplete }) {
       try {
         const video = document.createElement('video');
         video.preload = 'auto';
-        video.onloadeddata = () => handleOneAssetLoaded(`Streamed ${src.replace('/', '')}`);
-        video.onerror = () => handleOneAssetLoaded();
+        video.onloadeddata = handleOneAssetLoaded;
+        video.onerror = handleOneAssetLoaded;
         video.src = src;
         video.load();
 
@@ -87,8 +79,8 @@ export default function WaterLoader({ onComplete }) {
     // C. Preload Spline Scene Binary
     try {
       fetch(SPLINE_SCENE_URL, { mode: 'no-cors', cache: 'force-cache' })
-        .then(() => handleOneAssetLoaded('3D Mascot Scene Code Downloaded'))
-        .catch(() => handleOneAssetLoaded());
+        .then(handleOneAssetLoaded)
+        .catch(handleOneAssetLoaded);
     } catch {
       handleOneAssetLoaded();
     }
@@ -106,7 +98,7 @@ export default function WaterLoader({ onComplete }) {
     };
   }, [totalAssetsCount]);
 
-  // 2. Monotonic Forward-Only RAF Loop (Guarantees no reverse animation or jumping)
+  // 2. Monotonic Forward-Only RAF Loop
   useEffect(() => {
     let animId;
     let currentVal = 0;
@@ -115,17 +107,14 @@ export default function WaterLoader({ onComplete }) {
       const target = targetProgressRef.current;
       const elapsed = Date.now() - startTimeRef.current;
 
-      // Smooth forward lerp towards target
       if (currentVal < target) {
         const diff = target - currentVal;
-        // Natural fluid acceleration: faster if far behind, gentle as it approaches
-        const step = Math.max(0.2, diff * 0.07);
+        const step = Math.max(0.25, diff * 0.075);
         currentVal = Math.min(target, currentVal + step);
       }
 
       setDisplayProgress(currentVal);
 
-      // Check if all downloads finished AND minimum graceful time elapsed AND progress is 100%
       if (
         completedCountRef.current >= totalAssetsCount &&
         elapsed >= MIN_DISPLAY_TIME &&
@@ -148,18 +137,23 @@ export default function WaterLoader({ onComplete }) {
     return () => cancelAnimationFrame(animId);
   }, [totalAssetsCount, onComplete]);
 
+  // Contextual loading messages for candidate workflow
+  const getLoadingMessage = (pct) => {
+    if (pct < 20) return 'Connecting with Emma Copilot...';
+    if (pct < 40) return 'Finding matching autonomous jobs & roles...';
+    if (pct < 60) return 'Distributing salary benchmarks & equity tiers...';
+    if (pct < 80) return 'Optimizing candidate credentials & ATS ranking...';
+    if (pct < 98) return 'Downloading interactive 3D mascot & workspace...';
+    return 'Candidate workspace ready • Launching portal';
+  };
+
   return (
     <div
       style={{
         position: 'fixed',
         inset: 0,
         zIndex: 999999,
-        backgroundColor: '#FFFFFF',
-        backgroundImage: `
-          radial-gradient(at 50% 35%, rgba(224, 242, 254, 0.6) 0px, transparent 65%),
-          radial-gradient(at 10% 90%, rgba(240, 249, 255, 0.5) 0px, transparent 50%),
-          radial-gradient(at 90% 10%, rgba(238, 242, 255, 0.5) 0px, transparent 50%)
-        `,
+        backgroundColor: '#090C15',
         display: 'flex',
         flexDirection: 'column',
         alignItems: 'center',
@@ -167,8 +161,9 @@ export default function WaterLoader({ onComplete }) {
         pointerEvents: isExiting ? 'none' : 'auto',
         opacity: isExiting ? 0 : 1,
         transform: isExiting ? 'scale(1.02)' : 'scale(1)',
-        transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
         userSelect: 'none',
+        overflow: 'hidden',
       }}
     >
       <style>{`
@@ -176,12 +171,6 @@ export default function WaterLoader({ onComplete }) {
         @keyframes waterShimmerForward {
           0% { transform: translateX(-100%); }
           100% { transform: translateX(200%); }
-        }
-
-        /* Forward-only micro-ripples */
-        @keyframes waterFlowForward {
-          0% { background-position: 0% 50%; }
-          100% { background-position: -200% 50%; }
         }
 
         @keyframes waveOscillate {
@@ -196,6 +185,34 @@ export default function WaterLoader({ onComplete }) {
           100% { transform: translate(6px, -18px) scale(1.15); opacity: 0; }
         }
       `}</style>
+
+      {/* 1. Background Image (loadingbg.png) */}
+      <img
+        src="/loadingbg.png"
+        alt="Loading Background"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          width: '100%',
+          height: '100%',
+          objectFit: 'cover',
+          zIndex: 0,
+          pointerEvents: 'none',
+        }}
+      />
+
+      {/* 2. Black Overlay over the background image */}
+      <div
+        style={{
+          position: 'absolute',
+          inset: 0,
+          background: 'linear-gradient(180deg, rgba(9, 12, 21, 0.72) 0%, rgba(9, 12, 21, 0.6) 50%, rgba(9, 12, 21, 0.85) 100%)',
+          backdropFilter: 'blur(2px)',
+          WebkitBackdropFilter: 'blur(2px)',
+          zIndex: 1,
+          pointerEvents: 'none',
+        }}
+      />
 
       {/* Hidden Spline Preload iframe: fully downloads and caches WebGL shaders and WASM */}
       <iframe
@@ -215,85 +232,73 @@ export default function WaterLoader({ onComplete }) {
           const count = completedCountRef.current;
           const realRatio = count / totalAssetsCount;
           targetProgressRef.current = Math.min(95, Math.max(targetProgressRef.current, realRatio * 95));
-          setCurrentAssetLabel('3D Mascot & Spline Runtime Cached');
         }}
       />
 
-      {/* Ambient Atmospheric Refraction Glow */}
+      {/* Atmospheric Radial Refraction Flare */}
       <div
         style={{
           position: 'absolute',
-          width: '400px',
-          height: '400px',
+          width: '460px',
+          height: '460px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, rgba(14, 165, 233, 0.06) 50%, transparent 70%)',
-          filter: 'blur(50px)',
+          background: 'radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(14, 165, 233, 0.05) 50%, transparent 70%)',
+          filter: 'blur(60px)',
           pointerEvents: 'none',
-          zIndex: 0,
+          zIndex: 2,
         }}
       />
 
       <div
         style={{
           position: 'relative',
-          zIndex: 2,
+          zIndex: 3,
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
           textAlign: 'center',
         }}
       >
-        {/* 1. Logo & JobGen.AI Brand Header */}
+        {/* 1. Header: Just the pure logo (no cards or background) + JOBGEN.AI in ALL CAPS */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '12px',
+            gap: '14px',
             marginBottom: '16px',
             animation: 'waveOscillate 3s ease-in-out infinite',
           }}
         >
-          <div
+          {/* Pure Logo Image (No cards, borders, or backgrounds around it) */}
+          <img
+            src="/jobgen-logo.png"
+            alt="JOBGEN.AI"
             style={{
               width: '44px',
               height: '44px',
-              borderRadius: '12px',
-              backgroundColor: '#FFFFFF',
-              boxShadow: '0 8px 24px rgba(14, 165, 233, 0.18), 0 2px 6px rgba(0, 0, 0, 0.05)',
-              border: '1.5px solid rgba(224, 242, 254, 0.9)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              padding: '5px',
-              boxSizing: 'border-box',
+              objectFit: 'contain',
+              display: 'block',
+              filter: 'drop-shadow(0 4px 16px rgba(56, 189, 248, 0.45))',
             }}
-          >
-            <img
-              src="/jobgen-logo.png"
-              alt="JobGen.AI"
-              style={{
-                width: '32px',
-                height: '32px',
-                objectFit: 'contain',
-              }}
-            />
-          </div>
+          />
 
+          {/* Company Name in ALL CAPS */}
           <span
             style={{
-              fontSize: 'clamp(26px, 2.6vw, 34px)',
-              fontWeight: 800,
+              fontSize: 'clamp(26px, 2.6vw, 36px)',
+              fontWeight: 900,
               fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-              color: '#090C15',
-              letterSpacing: '-0.03em',
+              color: '#FFFFFF',
+              letterSpacing: '-0.02em',
               lineHeight: 1,
+              textShadow: '0 2px 16px rgba(0, 0, 0, 0.8), 0 0 30px rgba(56, 189, 248, 0.35)',
             }}
           >
-            JobGen.AI
+            JOBGEN.AI
           </span>
         </div>
 
-        {/* 2. Loading Text + Counter Above Bar */}
+        {/* 2. Loading Indicator & Counter Above Bar */}
         <div
           style={{
             display: 'flex',
@@ -305,11 +310,12 @@ export default function WaterLoader({ onComplete }) {
           <span
             style={{
               fontSize: '13px',
-              fontWeight: 700,
-              letterSpacing: '0.14em',
+              fontWeight: 800,
+              letterSpacing: '0.18em',
               textTransform: 'uppercase',
-              color: '#0284C7',
+              color: '#38BDF8',
               fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+              textShadow: '0 0 12px rgba(56, 189, 248, 0.65)',
             }}
           >
             Loading
@@ -320,8 +326,8 @@ export default function WaterLoader({ onComplete }) {
               width: '4px',
               height: '4px',
               borderRadius: '50%',
-              backgroundColor: '#0284C7',
-              opacity: 0.6,
+              backgroundColor: '#38BDF8',
+              boxShadow: '0 0 6px rgba(56, 189, 248, 0.8)',
             }}
           />
           <span
@@ -329,7 +335,7 @@ export default function WaterLoader({ onComplete }) {
               fontSize: '13px',
               fontWeight: 700,
               fontFamily: 'monospace, monospace',
-              color: '#64748B',
+              color: '#E2E8F0',
               letterSpacing: '0.04em',
               minWidth: '40px',
               textAlign: 'left',
@@ -345,16 +351,18 @@ export default function WaterLoader({ onComplete }) {
             width: 'clamp(280px, 42vw, 420px)',
             height: '32px',
             borderRadius: '999px',
-            backgroundColor: 'rgba(241, 245, 249, 0.95)',
-            border: '2px solid rgba(203, 213, 225, 0.85)',
-            boxShadow: 'inset 0 3px 8px rgba(15, 23, 42, 0.08), 0 10px 28px rgba(14, 165, 233, 0.12)',
+            backgroundColor: 'rgba(15, 23, 42, 0.75)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            border: '1.5px solid rgba(255, 255, 255, 0.22)',
+            boxShadow: 'inset 0 3px 8px rgba(0, 0, 0, 0.7), 0 10px 32px rgba(0, 0, 0, 0.6), 0 0 20px rgba(56, 189, 248, 0.15)',
             position: 'relative',
             padding: '3px',
             boxSizing: 'border-box',
             overflow: 'hidden',
           }}
         >
-          {/* Water Liquid Body - Strictly Forward-Moving Direct Width (No conflicting CSS transitions) */}
+          {/* Water Liquid Body - Strictly Forward-Moving Direct Width */}
           <div
             style={{
               height: '100%',
@@ -363,8 +371,8 @@ export default function WaterLoader({ onComplete }) {
               position: 'relative',
               overflow: 'hidden',
               background: 'linear-gradient(90deg, #38BDF8 0%, #0284C7 60%, #0369A1 100%)',
-              boxShadow: '0 2px 14px rgba(2, 132, 199, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.55)',
-              transition: 'none', // Strictly disabled to avoid conflicting with RAF ticks
+              boxShadow: '0 2px 16px rgba(2, 132, 199, 0.7), inset 0 2px 4px rgba(255, 255, 255, 0.65)',
+              transition: 'none',
             }}
           >
             {/* Forward-Flowing Surface Highlight Stream */}
@@ -373,7 +381,7 @@ export default function WaterLoader({ onComplete }) {
                 position: 'absolute',
                 inset: 0,
                 width: '60%',
-                background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%)',
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.5) 50%, transparent 100%)',
                 animation: 'waterShimmerForward 2.2s linear infinite',
                 pointerEvents: 'none',
               }}
@@ -387,7 +395,7 @@ export default function WaterLoader({ onComplete }) {
                 left: 0,
                 right: 0,
                 height: '46%',
-                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.1) 80%, transparent 100%)',
+                background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.75) 0%, rgba(255, 255, 255, 0.15) 80%, transparent 100%)',
                 borderRadius: '999px',
                 pointerEvents: 'none',
               }}
@@ -402,8 +410,8 @@ export default function WaterLoader({ onComplete }) {
                 width: '5px',
                 height: '5px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                boxShadow: '0 0 4px rgba(255, 255, 255, 0.9)',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                boxShadow: '0 0 5px rgba(255, 255, 255, 0.95)',
                 animation: 'bubbleFloatForward 1.3s ease-in infinite',
               }}
             />
@@ -415,8 +423,8 @@ export default function WaterLoader({ onComplete }) {
                 width: '4px',
                 height: '4px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(255, 255, 255, 0.8)',
-                boxShadow: '0 0 4px rgba(255, 255, 255, 0.9)',
+                backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                boxShadow: '0 0 5px rgba(255, 255, 255, 0.95)',
                 animation: 'bubbleFloatForward 1.7s ease-in infinite 0.5s',
               }}
             />
@@ -428,8 +436,8 @@ export default function WaterLoader({ onComplete }) {
                 width: '6px',
                 height: '6px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                boxShadow: '0 0 5px rgba(255, 255, 255, 0.9)',
+                backgroundColor: 'rgba(255, 255, 255, 0.95)',
+                boxShadow: '0 0 6px rgba(255, 255, 255, 0.95)',
                 animation: 'bubbleFloatForward 1.5s ease-in infinite 0.9s',
               }}
             />
@@ -442,7 +450,7 @@ export default function WaterLoader({ onComplete }) {
                 bottom: 0,
                 right: 0,
                 width: '14px',
-                background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85))',
+                background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.9))',
                 borderRadius: '0 999px 999px 0',
                 filter: 'blur(1px)',
               }}
@@ -450,20 +458,21 @@ export default function WaterLoader({ onComplete }) {
           </div>
         </div>
 
-        {/* Live Asset Download Status Subtitle */}
+        {/* Dynamic Candidate Workflow Loading Message */}
         <div
           style={{
-            marginTop: '14px',
-            fontSize: '11px',
+            marginTop: '15px',
+            fontSize: '12px',
             fontWeight: 600,
-            color: '#64748B',
+            color: '#94A3B8',
             letterSpacing: '0.04em',
             fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
             minHeight: '18px',
+            textShadow: '0 1px 6px rgba(0, 0, 0, 0.8)',
             transition: 'color 0.2s ease',
           }}
         >
-          {currentAssetLabel}
+          {getLoadingMessage(displayProgress)}
         </div>
       </div>
     </div>
