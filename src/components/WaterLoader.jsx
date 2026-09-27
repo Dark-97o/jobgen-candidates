@@ -254,16 +254,16 @@ export default function WaterLoader({ onComplete }) {
           textAlign: 'center',
         }}
       >
-        {/* 1. Header: Just the pure logo (no cards or background) + JOBGEN.AI in ALL CAPS (Static, no animation) */}
+        {/* 1. Header: Just the pure white logo + JOBGEN.AI in ALL CAPS (Static, no animation) */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '14px',
-            marginBottom: '16px',
+            marginBottom: '24px',
           }}
         >
-          {/* Pure Logo Image (No cards, borders, or backgrounds around it) */}
+          {/* Pure Logo Image in Crisp White */}
           <img
             src="/jobgen-logo.png"
             alt="JOBGEN.AI"
@@ -272,7 +272,7 @@ export default function WaterLoader({ onComplete }) {
               height: '44px',
               objectFit: 'contain',
               display: 'block',
-              filter: 'drop-shadow(0 4px 16px rgba(56, 189, 248, 0.45))',
+              filter: 'brightness(0) invert(1) drop-shadow(0 2px 14px rgba(255, 255, 255, 0.4))',
             }}
           />
 
@@ -292,31 +292,7 @@ export default function WaterLoader({ onComplete }) {
           </span>
         </div>
 
-        {/* 2. Loading Indicator Above Bar: LOADING ... in JetBrains Mono without percentage */}
-        <div
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            marginBottom: '18px',
-          }}
-        >
-          <span
-            style={{
-              fontSize: '13px',
-              fontWeight: 600,
-              letterSpacing: '0.24em',
-              textTransform: 'uppercase',
-              color: '#38BDF8',
-              fontFamily: '"JetBrains Mono", monospace',
-              textShadow: '0 0 14px rgba(56, 189, 248, 0.65)',
-            }}
-          >
-            LOADING ...
-          </span>
-        </div>
-
-        {/* 3. The Water Tank / Bar (Forward Filling with Liquid Water) */}
+        {/* 2. The Water Tank / Bar (Forward Filling with Liquid Water) */}
         <div
           style={{
             width: 'clamp(280px, 42vw, 420px)',
