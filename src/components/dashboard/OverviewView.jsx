@@ -2119,8 +2119,7 @@ export default function OverviewView({ onNavigate }) {
                     fontSize: 'clamp(20px, 2.5vw, 40px)',
                     fontWeight: 800,
                     fontFamily: '"Teko", "Bebas Neue", sans-serif',
-                    WebkitTextStroke: '2.2px rgba(255, 255, 255, 0.82)',
-                    color: 'transparent',
+                    color: '#FFFFFF', // Solid opaque text fill
                     letterSpacing: '0.04em',
                     textTransform: 'uppercase',
                     lineHeight: 0.9,
@@ -2128,7 +2127,7 @@ export default function OverviewView({ onNavigate }) {
                     pointerEvents: 'none',
                     zIndex: 1,
                     whiteSpace: 'nowrap',
-                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.6)',
+                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.75), 0 0 20px rgba(56, 189, 248, 0.35)',
                   }}
                 >
                   {liveTime.getSeconds() % 2 === 0 ? 'HYDRATING' : 'GRINDING'}
