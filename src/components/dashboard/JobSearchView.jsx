@@ -2426,13 +2426,13 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             </div>
           </div>
 
-          {/* Dark Job-Relevant Image Preview Banner */}
+          {/* Job-Relevant Image Preview Banner (Brightened & High-Clarity) */}
           <div 
             style={{ 
               position: 'relative', 
               borderRadius: '14px', 
               overflow: 'hidden', 
-              height: '72px', 
+              height: '80px', 
               marginTop: '16px',
               border: '1px solid rgba(0, 0, 0, 0.08)',
               boxShadow: '0 4px 16px rgba(0, 0, 0, 0.06)'
@@ -2441,13 +2441,13 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             <img 
               src={selectedJob.jobDarkImage} 
               alt={selectedJob.title} 
-              style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.5) contrast(1.2)' }} 
+              style={{ width: '100%', height: '100%', objectFit: 'cover', filter: 'brightness(0.95) contrast(1.05)' }} 
             />
             <div 
               style={{ 
                 position: 'absolute', 
                 inset: 0, 
-                background: 'linear-gradient(90deg, rgba(9, 12, 21, 0.85) 0%, rgba(9, 12, 21, 0.4) 60%, rgba(9, 12, 21, 0.85) 100%)',
+                background: 'linear-gradient(90deg, rgba(9, 12, 21, 0.45) 0%, rgba(9, 12, 21, 0.12) 50%, rgba(9, 12, 21, 0.4) 100%)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
@@ -2455,15 +2455,37 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
                 color: '#FFFFFF'
               }}
             >
-              <div>
-                <span style={{ fontSize: '11px', fontWeight: 700, color: '#60A5FA', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+              <div 
+                style={{ 
+                  backgroundColor: 'rgba(9, 12, 21, 0.58)', 
+                  backdropFilter: 'blur(8px)', 
+                  WebkitBackdropFilter: 'blur(8px)', 
+                  padding: '5px 12px', 
+                  borderRadius: '9px', 
+                  border: '1px solid rgba(255, 255, 255, 0.18)' 
+                }}
+              >
+                <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#93C5FD', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                   Active Workstation Domain
                 </span>
-                <h5 style={{ margin: '2px 0 0 0', fontSize: '14px', fontWeight: 800, color: '#FFFFFF' }}>
+                <h5 style={{ margin: '2px 0 0 0', fontSize: '13.5px', fontWeight: 800, color: '#FFFFFF', textShadow: '0 1px 3px rgba(0, 0, 0, 0.8)' }}>
                   {selectedJob.department}
                 </h5>
               </div>
-              <span style={{ fontSize: '11px', fontWeight: 700, background: 'rgba(255, 255, 255, 0.15)', backdropFilter: 'blur(8px)', padding: '4px 10px', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.25)' }}>
+              <span 
+                style={{ 
+                  fontSize: '11px', 
+                  fontWeight: 750, 
+                  background: 'rgba(9, 12, 21, 0.6)', 
+                  backdropFilter: 'blur(8px)', 
+                  WebkitBackdropFilter: 'blur(8px)', 
+                  padding: '5px 12px', 
+                  borderRadius: '8px', 
+                  border: '1px solid rgba(255, 255, 255, 0.22)',
+                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.8)' 
+                }}
+              >
                 {selectedJob.workType} · {selectedJob.careerLevel}
               </span>
             </div>
