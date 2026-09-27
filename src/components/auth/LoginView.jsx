@@ -162,7 +162,8 @@ export default function LoginView({ onLogin }) {
         width: '100vw',
         height: '100vh',
         minHeight: '100vh',
-        background: 'linear-gradient(45deg, #1A53CF 0%, #1A53CF 50%, #FFFFFF 50%, #FFFFFF 100%)',
+        background: 'linear-gradient(135deg, #1A53CF 0%, #1A53CF 50%, #FFFFFF 50%, #FFFFFF 100%)',
+        position: 'relative',
         display: 'flex',
         alignItems: 'center',
         justifyContent: 'center',
@@ -174,6 +175,50 @@ export default function LoginView({ onLogin }) {
       }}
       onMouseMove={(e) => forwardPointerToSpline(e.clientX, e.clientY)}
     >
+      {/* 1. Blue Side Top Corner: Vertical Text "Candidates" in Crisp White */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '36px',
+          left: '38px',
+          writingMode: 'vertical-rl',
+          transform: 'rotate(180deg)',
+          fontSize: 'clamp(18px, 1.8vw, 24px)',
+          fontWeight: 800,
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+          color: '#FFFFFF',
+          fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+          opacity: 0.95,
+          pointerEvents: 'none',
+          userSelect: 'none',
+          zIndex: 1,
+        }}
+      >
+        Candidates
+      </div>
+
+      {/* 2. White Side Bottom Corner: Vertical Text "JobGen.AI" in Vibrant Brand Blue */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '36px',
+          right: '38px',
+          writingMode: 'vertical-rl',
+          fontSize: 'clamp(18px, 1.8vw, 24px)',
+          fontWeight: 800,
+          letterSpacing: '0.22em',
+          textTransform: 'uppercase',
+          color: '#1A53CF',
+          fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+          opacity: 0.95,
+          pointerEvents: 'none',
+          userSelect: 'none',
+          zIndex: 1,
+        }}
+      >
+        JobGen.AI
+      </div>
       <style>{`
         #spline-watermark,
         .spline-watermark,
