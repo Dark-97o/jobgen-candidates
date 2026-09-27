@@ -1188,10 +1188,10 @@ export default function OverviewView({ onNavigate }) {
             width: '66.5%',
             height: '46.5%',
             backgroundColor: 'transparent',
-            border: '1.5px solid rgba(255, 255, 255, 0.45)',
+            border: '5px solid #FFFFFF',
             borderRadius: 'clamp(20px, 2.5vw, 36px)',
             padding: 'clamp(12px, 1.6vw, 24px)',
-            boxShadow: '0 24px 60px rgba(0, 0, 0, 0.25), 0 0 32px rgba(255, 255, 255, 0.2), inset 0 1px 2px rgba(255, 255, 255, 0.5)',
+            boxShadow: '0 0 32px rgba(255, 255, 255, 0.45), 0 24px 60px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.5)',
             display: 'flex',
             flexDirection: 'column',
             justifyContent: 'space-between',
@@ -1723,27 +1723,38 @@ export default function OverviewView({ onNavigate }) {
                   onClick={() => setShowAddTaskModal(true)}
                   title="Add new task"
                   style={{
-                    border: '1px solid rgba(255, 255, 255, 0.22)',
-                    background: 'rgba(255, 255, 255, 0.12)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                    borderRadius: '8px',
-                    padding: '2px 8px',
-                    marginRight: '8px',
+                    border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    borderRadius: '10px',
+                    padding: '4px 12px',
+                    marginRight: '18px',
                     color: '#FFFFFF',
-                    fontSize: 'clamp(10px, 0.9vw, 12.5px)',
+                    fontSize: 'clamp(11px, 1.0vw, 13px)',
                     fontWeight: 700,
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '4px',
+                    gap: '5px',
                     flexShrink: 0,
-                    transition: 'all 0.15s ease',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)',
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(59, 130, 246, 0.4)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)'; }}
+                  onMouseEnter={(e) => { 
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #2563EB 0%, #38BDF8 100%)'; 
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.6)';
+                    e.currentTarget.style.transform = 'translateY(-1px) scale(1.02)';
+                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(37, 99, 235, 0.5)';
+                  }}
+                  onMouseLeave={(e) => { 
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)'; 
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                    e.currentTarget.style.transform = 'translateY(0px) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)';
+                  }}
                 >
-                  <Plus size={12} />
+                  <Plus size={14} strokeWidth={2.5} />
                   <span>Add</span>
                 </button>
               </div>
@@ -1863,27 +1874,38 @@ export default function OverviewView({ onNavigate }) {
                   onClick={() => setShowAddContactModal(true)}
                   title="Add new contact"
                   style={{
-                    border: '1px solid rgba(255, 255, 255, 0.22)',
-                    background: 'rgba(255, 255, 255, 0.12)',
-                    backdropFilter: 'blur(8px)',
-                    WebkitBackdropFilter: 'blur(8px)',
-                    borderRadius: '8px',
-                    padding: '2px 8px',
-                    marginRight: '8px',
+                    border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                    backdropFilter: 'blur(10px)',
+                    WebkitBackdropFilter: 'blur(10px)',
+                    borderRadius: '10px',
+                    padding: '4px 12px',
+                    marginRight: '18px',
                     color: '#FFFFFF',
-                    fontSize: 'clamp(10px, 0.9vw, 12.5px)',
+                    fontSize: 'clamp(11px, 1.0vw, 13px)',
                     fontWeight: 700,
                     cursor: 'pointer',
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '4px',
+                    gap: '5px',
                     flexShrink: 0,
-                    transition: 'all 0.15s ease',
+                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)',
+                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
                   }}
-                  onMouseEnter={(e) => { e.currentTarget.style.background = 'rgba(99, 102, 241, 0.4)'; }}
-                  onMouseLeave={(e) => { e.currentTarget.style.background = 'rgba(255, 255, 255, 0.12)'; }}
+                  onMouseEnter={(e) => { 
+                    e.currentTarget.style.background = 'linear-gradient(135deg, #6366F1 0%, #38BDF8 100%)'; 
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.6)';
+                    e.currentTarget.style.transform = 'translateY(-1px) scale(1.02)';
+                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(99, 102, 241, 0.5)';
+                  }}
+                  onMouseLeave={(e) => { 
+                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)'; 
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                    e.currentTarget.style.transform = 'translateY(0px) scale(1)';
+                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)';
+                  }}
                 >
-                  <Plus size={12} />
+                  <Plus size={14} strokeWidth={2.5} />
                   <span>Add</span>
                 </button>
               </div>
@@ -2019,7 +2041,7 @@ export default function OverviewView({ onNavigate }) {
             />
           </svg>
 
-          {/* Inner Content Stack: Time + Subtitle Message - Brought lower by additional 5px */}
+          {/* Inner Content Stack: Time + Subtitle Message - Brought lower by additional 10px */}
           <div 
             style={{ 
               position: 'relative', 
@@ -2030,7 +2052,7 @@ export default function OverviewView({ onNavigate }) {
               justifyContent: 'center', 
               width: '100%', 
               margin: 'auto',
-              paddingTop: '15px',
+              paddingTop: '25px',
             }}
           >
             {/* Long Height Digital Local Time with Min Letter Spacing (-10% smaller) & Blue Minutes (No Glow) */}
