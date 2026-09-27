@@ -369,23 +369,12 @@ export default function LoginView({ onLogin }) {
                   color: '#090C15', 
                   letterSpacing: '-0.025em',
                   lineHeight: 1.25,
-                  marginBottom: '5px',
+                  marginBottom: '18px',
                   textAlign: 'right'
                 }}
               >
                 Candidate Sign In
               </h1>
-              <p 
-                style={{ 
-                  fontSize: '12.5px', 
-                  color: '#64748B', 
-                  lineHeight: 1.45, 
-                  marginBottom: '16px',
-                  textAlign: 'right'
-                }}
-              >
-                Sign in with your Candidate credentials to access your autonomous pipeline.
-              </p>
 
               {/* Demo Credentials Helper Banner */}
               <div 
