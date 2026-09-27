@@ -44,38 +44,10 @@ const checkHasSeenHero = () => {
 
 export default function OverviewView({ onNavigate }) {
   const heroVideoRef = useRef(null);
-  const calendarVideoRef = useRef(null);
   const hasSeen = checkHasSeenHero();
   const [heroPlaying, setHeroPlaying] = useState(!hasSeen);
   const [heroFading, setHeroFading] = useState(false);
   const [cardsVisible, setCardsVisible] = useState(hasSeen);
-
-  // Ensure calendar background video reliably autoplays
-  useEffect(() => {
-    const vid = calendarVideoRef.current;
-    if (vid) {
-      vid.muted = true;
-      vid.defaultMuted = true;
-      vid.playsInline = true;
-      const playPromise = vid.play();
-      if (playPromise !== undefined) {
-        playPromise.catch((err) => {
-          console.warn('Calendar video autoplay restricted; will start on interaction:', err);
-          const resumeOnGesture = () => {
-            if (calendarVideoRef.current) {
-              calendarVideoRef.current.play().catch(() => { });
-            }
-            ['click', 'pointerdown', 'touchstart', 'scroll'].forEach(ev =>
-              window.removeEventListener(ev, resumeOnGesture)
-            );
-          };
-          ['click', 'pointerdown', 'touchstart', 'scroll'].forEach(ev =>
-            window.addEventListener(ev, resumeOnGesture, { once: true, passive: true })
-          );
-        });
-      }
-    }
-  }, []);
 
   // Interactive selected day in calendar widget (0-13 for 2 weeks, defaulting to Wednesday index 2)
   const [selectedCalendarDay, setSelectedCalendarDay] = useState(2);
@@ -1188,10 +1160,10 @@ export default function OverviewView({ onNavigate }) {
               width: '65.8%',
               height: '45.5%',
               backgroundColor: 'transparent',
-              border: '5px solid #FFFFFF',
+              border: 'none',
               borderRadius: 'clamp(20px, 2.5vw, 36px)',
               padding: 'clamp(12px, 1.6vw, 24px)',
-              boxShadow: '0 0 32px rgba(255, 255, 255, 0.45), 0 24px 60px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.5)',
+              boxShadow: '0 20px 48px rgba(0, 0, 0, 0.22)',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
@@ -1200,14 +1172,10 @@ export default function OverviewView({ onNavigate }) {
               overflow: 'hidden',
             }}
           >
-            {/* Calendar Background Video from public/calendar.mp4 */}
-            <video
-              ref={calendarVideoRef}
-              src="/calendar.mp4"
-              autoPlay
-              loop
-              muted
-              playsInline
+            {/* Calendar Background Still Image from public/caln.png */}
+            <img
+              src="/caln.png"
+              alt="Calendar Still Background"
               style={{
                 position: 'absolute',
                 inset: 0,
@@ -1217,11 +1185,9 @@ export default function OverviewView({ onNavigate }) {
                 zIndex: 0,
                 pointerEvents: 'none',
               }}
-            >
-              <source src="/calendar.mp4" type="video/mp4" />
-            </video>
+            />
 
-            {/* Clean Soft Vignette for Crisp Contrast - Video remains completely bright, clear and visible */}
+            {/* Clean Soft Vignette for Crisp Contrast */}
             <div
               style={{
                 position: 'absolute',
