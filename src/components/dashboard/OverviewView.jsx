@@ -1,13 +1,13 @@
 import React, { useState, useRef, useEffect, useMemo } from 'react';
-import { 
-  TrendingUp, 
-  Briefcase, 
-  Calendar, 
-  ArrowRight, 
-  Sparkles, 
-  Zap, 
-  Mic, 
-  ChevronRight, 
+import {
+  TrendingUp,
+  Briefcase,
+  Calendar,
+  ArrowRight,
+  Sparkles,
+  Zap,
+  Mic,
+  ChevronRight,
   ChevronLeft,
   Plus,
   Bot,
@@ -63,7 +63,7 @@ export default function OverviewView({ onNavigate }) {
           console.warn('Calendar video autoplay restricted; will start on interaction:', err);
           const resumeOnGesture = () => {
             if (calendarVideoRef.current) {
-              calendarVideoRef.current.play().catch(() => {});
+              calendarVideoRef.current.play().catch(() => { });
             }
             ['click', 'pointerdown', 'touchstart', 'scroll'].forEach(ev =>
               window.removeEventListener(ev, resumeOnGesture)
@@ -199,10 +199,10 @@ export default function OverviewView({ onNavigate }) {
   const handleCreateContact = (e) => {
     e.preventDefault();
     if (!contactNameInput.trim() || !contactCompanyInput.trim()) return;
-    
+
     const palette = ['#6366F1', '#3B82F6', '#EC4899', '#10B981', '#8B5CF6', '#F59E0B', '#06B6D4'];
     const chosenColor = palette[contacts.length % palette.length];
-    
+
     let statusColor = '#10B981';
     let statusBg = 'rgba(16, 185, 129, 0.16)';
     if (contactStatusInput === 'Interview') {
@@ -270,31 +270,31 @@ export default function OverviewView({ onNavigate }) {
 
   // Recent Tech Job News with dedicated imagery for each news item
   const JOB_NEWS_ITEMS = [
-    { 
-      id: 1, 
-      title: 'Canva & Atlassian open 450+ remote engineering & product roles', 
-      source: 'Sydney Pulse', 
+    {
+      id: 1,
+      title: 'Canva & Atlassian open 450+ remote engineering & product roles',
+      source: 'Sydney Pulse',
       time: '12m ago',
       image: 'https://images.unsplash.com/photo-1497366216548-37526070297c?auto=format&fit=crop&w=600&q=80'
     },
-    { 
-      id: 2, 
-      title: 'Senior Staff & Principal Engineers see 14% compensation rise in APAC', 
-      source: 'Global Comp', 
+    {
+      id: 2,
+      title: 'Senior Staff & Principal Engineers see 14% compensation rise in APAC',
+      source: 'Global Comp',
       time: '42m ago',
       image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80'
     },
-    { 
-      id: 3, 
-      title: 'Stripe expands APAC operations with new Melbourne innovation center', 
-      source: 'Fintech Daily', 
+    {
+      id: 3,
+      title: 'Stripe expands APAC operations with new Melbourne innovation center',
+      source: 'Fintech Daily',
       time: '2h ago',
       image: 'https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=600&q=80'
     },
-    { 
-      id: 4, 
-      title: '82% of top tech firms fast-track candidates with AI-assisted portfolios', 
-      source: 'Talent Trends', 
+    {
+      id: 4,
+      title: '82% of top tech firms fast-track candidates with AI-assisted portfolios',
+      source: 'Talent Trends',
       time: '3h ago',
       image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80'
     },
@@ -443,7 +443,7 @@ export default function OverviewView({ onNavigate }) {
     globalHasSeenHeroVideo = true;
     try {
       sessionStorage.setItem('jobgen_has_seen_hero', 'true');
-    } catch {}
+    } catch { }
     setHeroFading(true);
     setTimeout(() => {
       setHeroPlaying(false);
@@ -454,19 +454,19 @@ export default function OverviewView({ onNavigate }) {
 
   return (
     <div style={{ position: 'relative', overflowX: 'clip', overflowY: 'visible', paddingBottom: '0px', width: '100%', paddingRight: '0' }}>
-      
+
       {/* ATMOSPHERIC GLOW FLARES */}
       <div className="glow-flare-cyan" style={{ top: '-100px', right: '5%', opacity: 0.6 }} />
       <div className="glow-flare-blue" style={{ top: '250px', left: '-100px', opacity: 0.4 }} />
 
       <div style={{ position: 'relative', zIndex: 10, width: '100%' }}>
-        
+
         {/* ==========================================================================
             FIRST SECTION: BLENDED WAVES BACKGROUND (FIXED POSITION, ZERO SHIFT)
             ========================================================================== */}
-        <div 
-          style={{ 
-            position: 'relative', 
+        <div
+          style={{
+            position: 'relative',
             width: '100%',
             maxWidth: 'none',
             margin: '0 0 28px 0',
@@ -475,8 +475,8 @@ export default function OverviewView({ onNavigate }) {
           }}
         >
           {/* Dynamic Greeting & Action Buttons on Left, Progressive Circular Cards on Right */}
-          <div 
-            style={{ 
+          <div
+            style={{
               position: 'absolute',
               top: 'clamp(36px, 3.8vw, 54px)',
               left: '24px',
@@ -492,10 +492,10 @@ export default function OverviewView({ onNavigate }) {
             {/* Left Column: Big Greeting + Animated Name & Two Rounded Rectangle Buttons (Shifted up 15px) */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', paddingTop: '6px', transform: 'translateY(-15px)' }}>
               <div style={{ display: 'flex', alignItems: 'baseline', gap: '14px', lineHeight: 1 }}>
-                <span style={{ 
-                  fontSize: 'clamp(28px, 3.4vw, 48px)', 
-                  fontWeight: 800, 
-                  color: '#090C15', 
+                <span style={{
+                  fontSize: 'clamp(28px, 3.4vw, 48px)',
+                  fontWeight: 800,
+                  color: '#090C15',
                   letterSpacing: '-0.03em',
                   fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
                   textShadow: '0 2px 14px rgba(255, 255, 255, 0.9)',
@@ -503,11 +503,11 @@ export default function OverviewView({ onNavigate }) {
                 }}>
                   Good afternoon,
                 </span>
-                <span 
+                <span
                   className="animated-hero-name"
-                  style={{ 
-                    fontSize: 'clamp(30px, 3.8vw, 54px)', 
-                    fontWeight: 900, 
+                  style={{
+                    fontSize: 'clamp(30px, 3.8vw, 54px)',
+                    fontWeight: 900,
                     letterSpacing: '-0.03em',
                     fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
                     lineHeight: 1
@@ -518,12 +518,12 @@ export default function OverviewView({ onNavigate }) {
               </div>
 
               {/* Motivational Tagline: Tight spacing directly below greeting, enlarged text */}
-              <p 
-                style={{ 
-                  margin: '3px 0 6px 0', 
-                  fontSize: 'clamp(14.5px, 1.35vw, 18px)', 
-                  fontWeight: 650, 
-                  color: '#334155', 
+              <p
+                style={{
+                  margin: '3px 0 6px 0',
+                  fontSize: 'clamp(14.5px, 1.35vw, 18px)',
+                  fontWeight: 650,
+                  color: '#334155',
                   letterSpacing: '-0.015em',
                   display: 'flex',
                   alignItems: 'center',
@@ -610,18 +610,18 @@ export default function OverviewView({ onNavigate }) {
             </div>
 
             {/* Right Column: Progressive Smaller Circular Cards */}
-            <div 
-              style={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                alignItems: 'center', 
-                gap: '8px', 
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                gap: '8px',
                 pointerEvents: 'auto',
                 flexShrink: 0
               }}
             >
               {/* 1. Large: Circular Liquid Glass Date Card */}
-              <div 
+              <div
                 style={{
                   width: 'clamp(74px, 6.6vw, 92px)',
                   height: 'clamp(74px, 6.6vw, 92px)',
@@ -641,7 +641,7 @@ export default function OverviewView({ onNavigate }) {
                 }}
               >
                 {/* Glossy Liquid Sheen Reflection */}
-                <div 
+                <div
                   style={{
                     position: 'absolute',
                     top: '-20%',
@@ -655,7 +655,7 @@ export default function OverviewView({ onNavigate }) {
                 />
 
                 {/* Day */}
-                <span 
+                <span
                   style={{
                     fontSize: 'clamp(8.5px, 0.8vw, 10.5px)',
                     fontWeight: 800,
@@ -672,7 +672,7 @@ export default function OverviewView({ onNavigate }) {
                 </span>
 
                 {/* Date Number */}
-                <span 
+                <span
                   style={{
                     fontSize: 'clamp(20px, 2.1vw, 30px)',
                     fontWeight: 900,
@@ -687,7 +687,7 @@ export default function OverviewView({ onNavigate }) {
                 </span>
 
                 {/* Month */}
-                <span 
+                <span
                   style={{
                     fontSize: 'clamp(8.5px, 0.8vw, 10.5px)',
                     fontWeight: 800,
@@ -741,7 +741,7 @@ export default function OverviewView({ onNavigate }) {
                 }}
               >
                 {/* Specular sheen */}
-                <div 
+                <div
                   style={{
                     position: 'absolute',
                     top: '-20%',
@@ -754,7 +754,7 @@ export default function OverviewView({ onNavigate }) {
                   }}
                 />
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="#FFFFFF">
-                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z"/>
+                  <path fillRule="evenodd" clipRule="evenodd" d="M12 2C6.477 2 2 6.484 2 12.017c0 4.425 2.865 8.18 6.839 9.504.5.092.682-.217.682-.483 0-.237-.008-.868-.013-1.703-2.782.605-3.369-1.343-3.369-1.343-.454-1.158-1.11-1.466-1.11-1.466-.908-.62.069-.608.069-.608 1.003.07 1.53 1.032 1.53 1.032.892 1.53 2.341 1.088 2.91.832.092-.647.35-1.088.636-1.338-2.22-.253-4.555-1.113-4.555-4.951 0-1.093.39-1.988 1.029-2.688-.103-.253-.446-1.272.098-2.65 0 0 .84-.27 2.75 1.026A9.564 9.564 0 0112 6.844c.85.004 1.705.115 2.504.337 1.909-1.296 2.747-1.027 2.747-1.027.546 1.379.202 2.398.1 2.651.64.7 1.028 1.595 1.028 2.688 0 3.848-2.339 4.695-4.566 4.943.359.309.678.92.678 1.855 0 1.338-.012 2.419-.012 2.747 0 .268.18.58.688.482A10.019 10.019 0 0022 12.017C22 6.484 17.522 2 12 2z" />
                 </svg>
               </a>
 
@@ -793,7 +793,7 @@ export default function OverviewView({ onNavigate }) {
                 }}
               >
                 {/* Specular sheen */}
-                <div 
+                <div
                   style={{
                     position: 'absolute',
                     top: '-20%',
@@ -806,13 +806,13 @@ export default function OverviewView({ onNavigate }) {
                   }}
                 />
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="#FFFFFF">
-                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28Z"/>
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28Z" />
                 </svg>
               </a>
             </div>
           </div>
           {/* Scaled Scene Wrapper: Scales the waves bg video, monitor screen, herow.mp4, and cards together in 1:1 lockstep */}
-          <div 
+          <div
             style={{
               position: 'absolute',
               inset: 0,
@@ -821,224 +821,224 @@ export default function OverviewView({ onNavigate }) {
               pointerEvents: 'auto',
             }}
           >
-          {/* Waves Video: Fully Blended with Background, Attached with Zero Right Gap */}
-          <div 
-            style={{
-              position: 'absolute',
-              inset: 0,
-              overflow: 'hidden',
-              pointerEvents: 'none',
-              zIndex: 0,
-              maskImage: 'radial-gradient(ellipse 78% 70% at 50% 50%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.85) 72%, rgba(0,0,0,0) 98%)',
-              WebkitMaskImage: 'radial-gradient(ellipse 78% 70% at 50% 50%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.85) 72%, rgba(0,0,0,0) 98%)',
-            }}
-          >
-            <video 
-              src="/waves.mp4" 
-              autoPlay 
-              loop 
-              muted 
-              playsInline 
-              style={{ 
-                width: '100%', 
-                height: '100%', 
-                objectFit: 'cover', 
-                opacity: 0.98,
-                display: 'block',
-              }} 
-            />
-          </div>
+            {/* Waves Video: Fully Blended with Background, Attached with Zero Right Gap */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                overflow: 'hidden',
+                pointerEvents: 'none',
+                zIndex: 0,
+                maskImage: 'radial-gradient(ellipse 78% 70% at 50% 50%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.85) 72%, rgba(0,0,0,0) 98%)',
+                WebkitMaskImage: 'radial-gradient(ellipse 78% 70% at 50% 50%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.85) 72%, rgba(0,0,0,0) 98%)',
+              }}
+            >
+              <video
+                src="/waves.mp4"
+                autoPlay
+                loop
+                muted
+                playsInline
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  opacity: 0.98,
+                  display: 'block',
+                }}
+              />
+            </div>
 
-          {/* The White Space: Precisely Locked to the 16:9 White Monitor Screen inside waves.mp4 */}
-          <div 
-            style={{
-              position: 'absolute',
-              left: '31.2%',
-              top: '28.2%',
-              width: '45.6%',
-              height: '41.6%',
-              zIndex: 10,
-              borderRadius: '16px',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column',
-              boxSizing: 'border-box',
-            }}
-          >
-            {/* When Hero Video is Playing - Unmuted by default, buttons removed */}
-            {heroPlaying ? (
-              <div 
-                style={{ 
-                  position: 'relative',
-                  width: '100%',
-                  height: '100%',
-                  backgroundColor: '#000000',
-                  opacity: heroFading ? 0 : 1,
-                  transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
-                }}
-              >
-                <video 
-                  ref={heroVideoRef}
-                  src="/herow.mp4" 
-                  playsInline 
-                  autoPlay 
-                  onEnded={handleHeroEnd}
-                  style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
-                />
-              </div>
-            ) : (
-              /* When Hero Video finishes: 4 Cards inside this white space only */
-              <div 
-                style={{ 
-                  position: 'relative',
-                  width: '100%',
-                  height: '100%',
-                  padding: 'clamp(6px, 1.1vw, 12px) clamp(8px, 1.4vw, 16px)',
-                  boxSizing: 'border-box',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  opacity: cardsVisible ? 1 : 0,
-                  transform: cardsVisible ? 'scale(1)' : 'scale(0.97)',
-                  transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
-                }}
-              >
-                {/* 4 Cards Grid - Sits 100% Inside the White Monitor Screen */}
-                <div 
-                  style={{ 
-                    flex: 1, 
-                    display: 'grid', 
-                    gridTemplateColumns: 'repeat(4, minmax(0, 1fr))', 
-                    gap: 'clamp(5px, 0.8vw, 10px)',
-                    alignItems: 'stretch'
+            {/* The White Space: Precisely Locked to the 16:9 White Monitor Screen inside waves.mp4 */}
+            <div
+              style={{
+                position: 'absolute',
+                left: '31.2%',
+                top: '28.2%',
+                width: '45.6%',
+                height: '41.6%',
+                zIndex: 10,
+                borderRadius: '16px',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
+                boxSizing: 'border-box',
+              }}
+            >
+              {/* When Hero Video is Playing - Unmuted by default, buttons removed */}
+              {heroPlaying ? (
+                <div
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    backgroundColor: '#000000',
+                    opacity: heroFading ? 0 : 1,
+                    transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)'
                   }}
                 >
-                  {PIPELINE_CARDS.map((card, idx) => (
-                    <div 
-                      key={idx}
-                      onClick={() => onNavigate(card.route)}
-                      style={{
-                        position: 'relative',
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                        cursor: 'pointer',
-                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
-                        transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
-                        minWidth: 0,
-                        backgroundColor: '#0F172A',
-                        border: '1px solid rgba(255, 255, 255, 0.16)',
-                        display: 'flex',
-                      }}
-                      onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.35)';
-                        const img = e.currentTarget.querySelector('.card-bg-img');
-                        if (img) img.style.transform = 'scale(1.08)';
-                      }}
-                      onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 0, 0, 0.2)';
-                        const img = e.currentTarget.querySelector('.card-bg-img');
-                        if (img) img.style.transform = 'scale(1)';
-                      }}
-                    >
-                      {/* Background Image with Zoom Transition */}
-                      <div 
-                        className="card-bg-img"
-                        style={{
-                          position: 'absolute',
-                          inset: 0,
-                          backgroundImage: `url(${card.image})`,
-                          backgroundSize: 'cover',
-                          backgroundPosition: 'center',
-                          transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
-                        }}
-                      />
-
-                      {/* Dark Contrast Gradient Overlay */}
-                      <div 
-                        style={{
-                          position: 'absolute',
-                          inset: 0,
-                          background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, rgba(15, 23, 42, 0.78) 100%)',
-                        }}
-                      />
-
-                      {/* White Favicon Placed Directly Over the Image */}
-                      <div 
-                        style={{
-                          position: 'absolute',
-                          top: 'clamp(12px, 1.3vw, 18px)',
-                          left: 'clamp(12px, 1.3vw, 18px)',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          zIndex: 6,
-                          filter: 'drop-shadow(0 2px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(0, 0, 0, 0.8))',
-                        }}
-                      >
-                        <card.icon 
-                          style={{
-                            width: 'clamp(22px, 2.3vw, 30px)',
-                            height: 'clamp(22px, 2.3vw, 30px)',
-                          }}
-                          color="#FFFFFF" 
-                          fill="#FFFFFF" 
-                          strokeWidth={2.4} 
-                        />
-                      </div>
-
-                      {/* Horizontal Number at Bottom Left: Even Bigger size */}
-                      <div 
-                        style={{
-                          position: 'absolute',
-                          bottom: 'clamp(10px, 1.2vw, 15px)',
-                          left: 'clamp(10px, 1.2vw, 15px)',
-                          fontSize: 'clamp(32px, 3.8vw, 50px)',
-                          fontWeight: 900,
-                          color: '#FFFFFF',
-                          lineHeight: 1,
-                          letterSpacing: '-0.03em',
-                          textShadow: '0 2px 18px rgba(0, 0, 0, 0.98)',
-                          fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                          zIndex: 5,
-                        }}
-                      >
-                        {card.value}
-                      </div>
-
-                      {/* Vertical Text Label: Even Bigger typography for maximum readability */}
-                      <div 
-                        style={{
-                          position: 'absolute',
-                          bottom: 'clamp(10px, 1.2vw, 15px)',
-                          right: 'clamp(10px, 1.2vw, 15px)',
-                          writingMode: 'vertical-rl',
-                          transform: 'rotate(180deg)',
-                          fontSize: 'clamp(17px, 1.9vw, 25px)',
-                          fontWeight: 900,
-                          color: '#FFFFFF',
-                          letterSpacing: '0.10em',
-                          textTransform: 'uppercase',
-                          textShadow: '0 2px 16px rgba(0, 0, 0, 0.98), 0 0 24px rgba(0, 0, 0, 0.85)',
-                          fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                          lineHeight: 1,
-                          zIndex: 5,
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {card.label}
-                      </div>
-                    </div>
-                  ))}
+                  <video
+                    ref={heroVideoRef}
+                    src="/herow.mp4"
+                    playsInline
+                    autoPlay
+                    onEnded={handleHeroEnd}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                  />
                 </div>
-              </div>
-            )}
+              ) : (
+                /* When Hero Video finishes: 4 Cards inside this white space only */
+                <div
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: '100%',
+                    padding: 'clamp(6px, 1.1vw, 12px) clamp(8px, 1.4vw, 16px)',
+                    boxSizing: 'border-box',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    justifyContent: 'space-between',
+                    opacity: cardsVisible ? 1 : 0,
+                    transform: cardsVisible ? 'scale(1)' : 'scale(0.97)',
+                    transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
+                  }}
+                >
+                  {/* 4 Cards Grid - Sits 100% Inside the White Monitor Screen */}
+                  <div
+                    style={{
+                      flex: 1,
+                      display: 'grid',
+                      gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
+                      gap: 'clamp(5px, 0.8vw, 10px)',
+                      alignItems: 'stretch'
+                    }}
+                  >
+                    {PIPELINE_CARDS.map((card, idx) => (
+                      <div
+                        key={idx}
+                        onClick={() => onNavigate(card.route)}
+                        style={{
+                          position: 'relative',
+                          borderRadius: '12px',
+                          overflow: 'hidden',
+                          cursor: 'pointer',
+                          boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
+                          transition: 'all 0.25s cubic-bezier(0.16, 1, 0.3, 1)',
+                          minWidth: 0,
+                          backgroundColor: '#0F172A',
+                          border: '1px solid rgba(255, 255, 255, 0.16)',
+                          display: 'flex',
+                        }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.transform = 'translateY(-2px)';
+                          e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 0, 0, 0.35)';
+                          const img = e.currentTarget.querySelector('.card-bg-img');
+                          if (img) img.style.transform = 'scale(1.08)';
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.transform = 'translateY(0)';
+                          e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 0, 0, 0.2)';
+                          const img = e.currentTarget.querySelector('.card-bg-img');
+                          if (img) img.style.transform = 'scale(1)';
+                        }}
+                      >
+                        {/* Background Image with Zoom Transition */}
+                        <div
+                          className="card-bg-img"
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            backgroundImage: `url(${card.image})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            transition: 'transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
+                          }}
+                        />
+
+                        {/* Dark Contrast Gradient Overlay */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            inset: 0,
+                            background: 'linear-gradient(135deg, rgba(15, 23, 42, 0.3) 0%, rgba(15, 23, 42, 0.78) 100%)',
+                          }}
+                        />
+
+                        {/* White Favicon Placed Directly Over the Image */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 'clamp(12px, 1.3vw, 18px)',
+                            left: 'clamp(12px, 1.3vw, 18px)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            zIndex: 6,
+                            filter: 'drop-shadow(0 2px 10px rgba(0, 0, 0, 0.95)) drop-shadow(0 0 6px rgba(0, 0, 0, 0.8))',
+                          }}
+                        >
+                          <card.icon
+                            style={{
+                              width: 'clamp(22px, 2.3vw, 30px)',
+                              height: 'clamp(22px, 2.3vw, 30px)',
+                            }}
+                            color="#FFFFFF"
+                            fill="#FFFFFF"
+                            strokeWidth={2.4}
+                          />
+                        </div>
+
+                        {/* Horizontal Number at Bottom Left: Even Bigger size */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 'clamp(10px, 1.2vw, 15px)',
+                            left: 'clamp(10px, 1.2vw, 15px)',
+                            fontSize: 'clamp(32px, 3.8vw, 50px)',
+                            fontWeight: 900,
+                            color: '#FFFFFF',
+                            lineHeight: 1,
+                            letterSpacing: '-0.03em',
+                            textShadow: '0 2px 18px rgba(0, 0, 0, 0.98)',
+                            fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+                            zIndex: 5,
+                          }}
+                        >
+                          {card.value}
+                        </div>
+
+                        {/* Vertical Text Label: Even Bigger typography for maximum readability */}
+                        <div
+                          style={{
+                            position: 'absolute',
+                            bottom: 'clamp(10px, 1.2vw, 15px)',
+                            right: 'clamp(10px, 1.2vw, 15px)',
+                            writingMode: 'vertical-rl',
+                            transform: 'rotate(180deg)',
+                            fontSize: 'clamp(17px, 1.9vw, 25px)',
+                            fontWeight: 900,
+                            color: '#FFFFFF',
+                            letterSpacing: '0.10em',
+                            textTransform: 'uppercase',
+                            textShadow: '0 2px 16px rgba(0, 0, 0, 0.98), 0 0 24px rgba(0, 0, 0, 0.85)',
+                            fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+                            lineHeight: 1,
+                            zIndex: 5,
+                            whiteSpace: 'nowrap',
+                          }}
+                        >
+                          {card.label}
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
-      </div>
 
-      {/* ==========================================================================
+        {/* ==========================================================================
           WORKSPACE HUB: Strictly Matching Reference Image (media_1790430342092.png)
           - Top-Left: CALENDAR (Wide horizontal rounded card, white transparent glass)
           - Bottom-Left: NEWS (Rounded card, white transparent glass)
@@ -1047,1468 +1047,1468 @@ export default function OverviewView({ onNavigate }) {
             - Bottom-Middle card: "Take notes" & sprint documentation
           - Bottom-Right: TIME (Perfect CIRCLE card, white transparent glass)
           ========================================================================== */}
-      <div 
-        style={{ 
-          width: '96%',
-          maxWidth: '1584px',
-          margin: '-115px auto 65px auto',
-          position: 'relative',
-          zIndex: 25,
-          aspectRatio: '675 / 362',
-          boxSizing: 'border-box',
-        }}
-      >
-        {/* ==========================================================================
+        <div
+          style={{
+            width: '96%',
+            maxWidth: '1584px',
+            margin: '-115px auto 65px auto',
+            position: 'relative',
+            zIndex: 25,
+            aspectRatio: '675 / 362',
+            boxSizing: 'border-box',
+          }}
+        >
+          {/* ==========================================================================
             BACKGROUND BEHIND CARDS:
             1. THIN VERTICAL LINES ON RIGHT SIDE
             2. MOVING BLUE MIST ANIMATION
             ========================================================================== */}
-        {/* 1. Thin Vertical Lines on Right Side behind Cards (Smoothly Faded on All Edges with Extended Gradient) */}
-        <div 
-          style={{
-            position: 'absolute',
-            right: '-2%',
-            top: '-6%',
-            width: '46%',
-            height: '118%',
-            pointerEvents: 'none',
-            zIndex: 0,
-            maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.95) 8%, rgba(0, 0, 0, 0.9) 60%, rgba(0, 0, 0, 0.4) 78%, rgba(0, 0, 0, 0.1) 90%, transparent 98%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.95) 8%, rgba(0, 0, 0, 0.9) 60%, rgba(0, 0, 0, 0.4) 78%, rgba(0, 0, 0, 0.1) 90%, transparent 98%)',
-          }}
-        >
-          <div 
-            style={{
-              position: 'absolute',
-              inset: 0,
-              maskImage: 'linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%)',
-              WebkitMaskImage: 'linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%)',
-            }}
-          >
-            {/* Dense thin vertical tech lines */}
-            <div 
-              style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: 'repeating-linear-gradient(90deg, rgba(56, 189, 248, 0.28) 0px, rgba(56, 189, 248, 0.28) 1px, transparent 1px, transparent 18px)',
-              }}
-            />
-            {/* Subtle accent vertical lines with slightly higher contrast */}
-            <div 
-              style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: 'repeating-linear-gradient(90deg, rgba(37, 99, 235, 0.42) 0px, rgba(37, 99, 235, 0.42) 1.5px, transparent 1.5px, transparent 90px)',
-                opacity: 0.85,
-              }}
-            />
-          </div>
-        </div>
-
-        {/* 2. Blue Mist Animation Moving Around (Smooth Drifting Atmospheric Clouds with Bottom Fade) */}
-        <div 
-          style={{
-            position: 'absolute',
-            inset: '-12% -10% -12% -10%',
-            pointerEvents: 'none',
-            zIndex: 0,
-            overflow: 'visible',
-            maskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 1) 12%, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0.35) 82%, transparent 95%)',
-            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 1) 12%, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0.35) 82%, transparent 95%)',
-          }}
-        >
-          {/* Blue Mist Cloud 1 - Drifting Cyan / Sky Blue */}
-          <div 
-            style={{
-              position: 'absolute',
-              left: '12%',
-              top: '8%',
-              width: '54%',
-              height: '68%',
-              background: 'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(56, 189, 248, 0.45) 0%, rgba(14, 165, 233, 0.22) 50%, transparent 72%)',
-              filter: 'blur(58px)',
-              animation: 'blueMistDrift1 15s ease-in-out infinite',
-              willChange: 'transform, opacity',
-            }}
-          />
-
-          {/* Blue Mist Cloud 2 - Deep Electric Sapphire / Royal Azure Swirling */}
-          <div 
-            style={{
-              position: 'absolute',
-              right: '6%',
-              top: '20%',
-              width: '52%',
-              height: '72%',
-              background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(37, 99, 235, 0.38) 0%, rgba(59, 130, 246, 0.2) 48%, transparent 75%)',
-              filter: 'blur(65px)',
-              animation: 'blueMistDrift2 19s ease-in-out infinite',
-              willChange: 'transform, opacity',
-            }}
-          />
-
-          {/* Blue Mist Cloud 3 - Vibrant Turquoise / Aqua Floating Pool */}
-          <div 
-            style={{
-              position: 'absolute',
-              left: '38%',
-              bottom: '2%',
-              width: '46%',
-              height: '60%',
-              background: 'radial-gradient(circle, rgba(6, 182, 212, 0.36) 0%, rgba(30, 58, 138, 0.18) 46%, transparent 72%)',
-              filter: 'blur(52px)',
-              animation: 'blueMistDrift3 13s ease-in-out infinite',
-              willChange: 'transform, opacity',
-            }}
-          />
-        </div>
-
-        {/* Ambient Radiant Glow Flare Across Center S-Curve Neck */}
-        <div 
-          style={{
-            position: 'absolute',
-            left: '60%',
-            top: '48%',
-            transform: 'translate(-50%, -50%)',
-            width: '46%',
-            height: '46%',
-            background: 'radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, rgba(37, 99, 235, 0.18) 50%, transparent 75%)',
-            filter: 'blur(36px)',
-            pointerEvents: 'none',
-            zIndex: 0,
-          }}
-        />
-
-        {/* ================= 1. CALENDAR (TOP-LEFT): Glass Card with Visible Calendar Video Background ================= */}
-        <div
-          style={{
-            position: 'absolute',
-            left: '0%',
-            top: '0%',
-            width: '62%',
-            height: '46.5%',
-            backgroundColor: 'transparent',
-            border: '5px solid #FFFFFF',
-            borderRadius: 'clamp(20px, 2.5vw, 36px)',
-            padding: 'clamp(12px, 1.6vw, 24px)',
-            boxShadow: '0 0 32px rgba(255, 255, 255, 0.45), 0 24px 60px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.5)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            boxSizing: 'border-box',
-            zIndex: 2,
-            overflow: 'hidden',
-          }}
-        >
-          {/* Calendar Background Video from public/calendar.mp4 */}
-          <video
-            ref={calendarVideoRef}
-            src="/calendar.mp4"
-            autoPlay
-            loop
-            muted
-            playsInline
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              zIndex: 0,
-              pointerEvents: 'none',
-            }}
-          >
-            <source src="/calendar.mp4" type="video/mp4" />
-          </video>
-
-          {/* Clean Soft Vignette for Crisp Contrast - Video remains completely bright, clear and visible */}
+          {/* 1. Thin Vertical Lines on Right Side behind Cards (Smoothly Faded on All Edges with Extended Gradient) */}
           <div
             style={{
               position: 'absolute',
-              inset: 0,
-              background: 'linear-gradient(180deg, rgba(9, 12, 21, 0.45) 0%, rgba(9, 12, 21, 0.08) 35%, rgba(9, 12, 21, 0.08) 65%, rgba(9, 12, 21, 0.5) 100%)',
+              right: '-2%',
+              top: '-6%',
+              width: '46%',
+              height: '118%',
+              pointerEvents: 'none',
+              zIndex: 0,
+              maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.95) 8%, rgba(0, 0, 0, 0.9) 60%, rgba(0, 0, 0, 0.4) 78%, rgba(0, 0, 0, 0.1) 90%, transparent 98%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.95) 8%, rgba(0, 0, 0, 0.9) 60%, rgba(0, 0, 0, 0.4) 78%, rgba(0, 0, 0, 0.1) 90%, transparent 98%)',
+            }}
+          >
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                maskImage: 'linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%)',
+                WebkitMaskImage: 'linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%)',
+              }}
+            >
+              {/* Dense thin vertical tech lines */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: 'repeating-linear-gradient(90deg, rgba(56, 189, 248, 0.28) 0px, rgba(56, 189, 248, 0.28) 1px, transparent 1px, transparent 18px)',
+                }}
+              />
+              {/* Subtle accent vertical lines with slightly higher contrast */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  backgroundImage: 'repeating-linear-gradient(90deg, rgba(37, 99, 235, 0.42) 0px, rgba(37, 99, 235, 0.42) 1.5px, transparent 1.5px, transparent 90px)',
+                  opacity: 0.85,
+                }}
+              />
+            </div>
+          </div>
+
+          {/* 2. Blue Mist Animation Moving Around (Smooth Drifting Atmospheric Clouds with Bottom Fade) */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: '-12% -10% -12% -10%',
+              pointerEvents: 'none',
+              zIndex: 0,
+              overflow: 'visible',
+              maskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 1) 12%, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0.35) 82%, transparent 95%)',
+              WebkitMaskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 1) 12%, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0.35) 82%, transparent 95%)',
+            }}
+          >
+            {/* Blue Mist Cloud 1 - Drifting Cyan / Sky Blue */}
+            <div
+              style={{
+                position: 'absolute',
+                left: '12%',
+                top: '8%',
+                width: '54%',
+                height: '68%',
+                background: 'radial-gradient(ellipse 65% 55% at 50% 50%, rgba(56, 189, 248, 0.45) 0%, rgba(14, 165, 233, 0.22) 50%, transparent 72%)',
+                filter: 'blur(58px)',
+                animation: 'blueMistDrift1 15s ease-in-out infinite',
+                willChange: 'transform, opacity',
+              }}
+            />
+
+            {/* Blue Mist Cloud 2 - Deep Electric Sapphire / Royal Azure Swirling */}
+            <div
+              style={{
+                position: 'absolute',
+                right: '6%',
+                top: '20%',
+                width: '52%',
+                height: '72%',
+                background: 'radial-gradient(ellipse 70% 60% at 50% 50%, rgba(37, 99, 235, 0.38) 0%, rgba(59, 130, 246, 0.2) 48%, transparent 75%)',
+                filter: 'blur(65px)',
+                animation: 'blueMistDrift2 19s ease-in-out infinite',
+                willChange: 'transform, opacity',
+              }}
+            />
+
+            {/* Blue Mist Cloud 3 - Vibrant Turquoise / Aqua Floating Pool */}
+            <div
+              style={{
+                position: 'absolute',
+                left: '38%',
+                bottom: '2%',
+                width: '46%',
+                height: '60%',
+                background: 'radial-gradient(circle, rgba(6, 182, 212, 0.36) 0%, rgba(30, 58, 138, 0.18) 46%, transparent 72%)',
+                filter: 'blur(52px)',
+                animation: 'blueMistDrift3 13s ease-in-out infinite',
+                willChange: 'transform, opacity',
+              }}
+            />
+          </div>
+
+          {/* Ambient Radiant Glow Flare Across Center S-Curve Neck */}
+          <div
+            style={{
+              position: 'absolute',
+              left: '60%',
+              top: '48%',
+              transform: 'translate(-50%, -50%)',
+              width: '46%',
+              height: '46%',
+              background: 'radial-gradient(circle, rgba(56, 189, 248, 0.45) 0%, rgba(37, 99, 235, 0.18) 50%, transparent 75%)',
+              filter: 'blur(36px)',
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          />
+
+          {/* ================= 1. CALENDAR (TOP-LEFT): Glass Card with Visible Calendar Video Background ================= */}
+          <div
+            style={{
+              position: 'absolute',
+              left: '0%',
+              top: '0%',
+              width: '65.8%',
+              height: '45.5%',
+              backgroundColor: 'transparent',
+              border: '5px solid #FFFFFF',
+              borderRadius: 'clamp(20px, 2.5vw, 36px)',
+              padding: 'clamp(12px, 1.6vw, 24px)',
+              boxShadow: '0 0 32px rgba(255, 255, 255, 0.45), 0 24px 60px rgba(0, 0, 0, 0.3), inset 0 1px 2px rgba(255, 255, 255, 0.5)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxSizing: 'border-box',
+              zIndex: 2,
+              overflow: 'hidden',
+            }}
+          >
+            {/* Calendar Background Video from public/calendar.mp4 */}
+            <video
+              ref={calendarVideoRef}
+              src="/calendar.mp4"
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                zIndex: 0,
+                pointerEvents: 'none',
+              }}
+            >
+              <source src="/calendar.mp4" type="video/mp4" />
+            </video>
+
+            {/* Clean Soft Vignette for Crisp Contrast - Video remains completely bright, clear and visible */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg, rgba(9, 12, 21, 0.45) 0%, rgba(9, 12, 21, 0.08) 35%, rgba(9, 12, 21, 0.08) 65%, rgba(9, 12, 21, 0.5) 100%)',
+                zIndex: 1,
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Header: 'Calendar' (Bigger) + Week Indicator (Range Pill Removed) */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 2 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span
+                  style={{
+                    fontSize: 'clamp(20px, 1.9vw, 28px)',
+                    fontWeight: 800,
+                    color: '#FFFFFF',
+                    letterSpacing: '-0.015em',
+                    fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)',
+                  }}
+                >
+                  Calendar
+                </span>
+              </div>
+              <span
+                style={{
+                  fontSize: 'clamp(9px, 0.8vw, 11.5px)',
+                  fontWeight: 700,
+                  color: '#E2E8F0',
+                  backgroundColor: 'rgba(15, 23, 42, 0.65)',
+                  border: '1px solid rgba(255, 255, 255, 0.15)',
+                  padding: '2px 8px',
+                  borderRadius: '6px',
+                }}
+              >
+                {selectedCalendarDay < 7 ? 'Viewing This Week' : 'Viewing Next Week'}
+              </span>
+            </div>
+
+            {/* 2 Rows of Date Columns: Row 1 This Week, Row 2 Next Week */}
+            <div
+              style={{
+                display: 'flex',
+                flexDirection: 'column',
+                gap: 'clamp(3px, 0.45vw, 7px)',
+                margin: '1px 0',
+                position: 'relative',
+                zIndex: 2,
+              }}
+            >
+              {/* Row 1: This Week */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 2px' }}>
+                  <span style={{ fontSize: 'clamp(8.5px, 0.7vw, 10.5px)', fontWeight: 700, color: 'rgba(255, 255, 255, 0.75)', textTransform: 'uppercase', letterSpacing: '0.04em', textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
+                    This Week
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(7, 1fr)',
+                    gap: 'clamp(3px, 0.55vw, 8px)',
+                    alignItems: 'center',
+                  }}
+                >
+                  {calendarWeeks.currentWeek.map((item) => {
+                    const isSelected = selectedCalendarDay === item.index;
+                    return (
+                      <div
+                        key={item.index}
+                        onClick={() => setSelectedCalendarDay(item.index)}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: 'clamp(3px, 0.42vw, 6px) clamp(2px, 0.35vw, 5px)',
+                          borderRadius: '9px',
+                          backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.14)' : 'rgba(15, 23, 42, 0.55)',
+                          backdropFilter: 'blur(10px)',
+                          WebkitBackdropFilter: 'blur(10px)',
+                          border: isSelected ? '2px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.18)',
+                          boxShadow: isSelected ? '0 0 12px rgba(255, 255, 255, 0.5), inset 0 0 6px rgba(255, 255, 255, 0.18)' : '0 2px 4px rgba(0, 0, 0, 0.2)',
+                          cursor: 'pointer',
+                          transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                          userSelect: 'none',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.55)';
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: 'clamp(8.5px, 0.75vw, 11px)',
+                            fontWeight: 700,
+                            color: isSelected ? '#FFFFFF' : '#94A3B8',
+                            lineHeight: 1,
+                            fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+                            textShadow: isSelected ? '0 1px 3px rgba(0, 0, 0, 0.6)' : 'none',
+                          }}
+                        >
+                          {item.initial}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: 'clamp(11px, 1.1vw, 16px)',
+                            fontWeight: 800,
+                            color: '#FFFFFF',
+                            lineHeight: 1,
+                            marginTop: '2px',
+                            fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+                            textShadow: '0 2px 4px rgba(0, 0, 0, 0.7)',
+                          }}
+                        >
+                          {item.dateNum}
+                        </span>
+                        <div
+                          style={{
+                            width: '3.5px',
+                            height: '3.5px',
+                            borderRadius: '50%',
+                            backgroundColor: item.hasDot ? (isSelected ? '#FFFFFF' : '#38BDF8') : 'transparent',
+                            marginTop: '2px',
+                            boxShadow: item.hasDot ? (isSelected ? '0 0 5px #FFFFFF' : '0 0 5px rgba(56, 189, 248, 0.8)') : 'none',
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Row 2: Next Week */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 2px' }}>
+                  <span style={{ fontSize: 'clamp(8.5px, 0.7vw, 10.5px)', fontWeight: 700, color: 'rgba(255, 255, 255, 0.75)', textTransform: 'uppercase', letterSpacing: '0.04em', textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
+                    Next Week
+                  </span>
+                </div>
+                <div
+                  style={{
+                    display: 'grid',
+                    gridTemplateColumns: 'repeat(7, 1fr)',
+                    gap: 'clamp(3px, 0.55vw, 8px)',
+                    alignItems: 'center',
+                  }}
+                >
+                  {calendarWeeks.nextWeek.map((item) => {
+                    const isSelected = selectedCalendarDay === item.index;
+                    return (
+                      <div
+                        key={item.index}
+                        onClick={() => setSelectedCalendarDay(item.index)}
+                        style={{
+                          display: 'flex',
+                          flexDirection: 'column',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          padding: 'clamp(3px, 0.42vw, 6px) clamp(2px, 0.35vw, 5px)',
+                          borderRadius: '9px',
+                          backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.14)' : 'rgba(15, 23, 42, 0.55)',
+                          backdropFilter: 'blur(10px)',
+                          WebkitBackdropFilter: 'blur(10px)',
+                          border: isSelected ? '2px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.18)',
+                          boxShadow: isSelected ? '0 0 12px rgba(255, 255, 255, 0.5), inset 0 0 6px rgba(255, 255, 255, 0.18)' : '0 2px 4px rgba(0, 0, 0, 0.2)',
+                          cursor: 'pointer',
+                          transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
+                          userSelect: 'none',
+                        }}
+                        onMouseEnter={(e) => {
+                          if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
+                        }}
+                        onMouseLeave={(e) => {
+                          if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.55)';
+                        }}
+                      >
+                        <span
+                          style={{
+                            fontSize: 'clamp(8.5px, 0.75vw, 11px)',
+                            fontWeight: 700,
+                            color: isSelected ? '#FFFFFF' : '#94A3B8',
+                            lineHeight: 1,
+                            fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+                            textShadow: isSelected ? '0 1px 3px rgba(0, 0, 0, 0.6)' : 'none',
+                          }}
+                        >
+                          {item.initial}
+                        </span>
+                        <span
+                          style={{
+                            fontSize: 'clamp(11px, 1.1vw, 16px)',
+                            fontWeight: 800,
+                            color: '#FFFFFF',
+                            lineHeight: 1,
+                            marginTop: '2px',
+                            fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+                            textShadow: '0 2px 4px rgba(0, 0, 0, 0.7)',
+                          }}
+                        >
+                          {item.dateNum}
+                        </span>
+                        <div
+                          style={{
+                            width: '3.5px',
+                            height: '3.5px',
+                            borderRadius: '50%',
+                            backgroundColor: item.hasDot ? (isSelected ? '#FFFFFF' : '#38BDF8') : 'transparent',
+                            marginTop: '2px',
+                            boxShadow: item.hasDot ? (isSelected ? '0 0 5px #FFFFFF' : '0 0 5px rgba(56, 189, 248, 0.8)') : 'none',
+                          }}
+                        />
+                      </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </div>
+
+            {/* Selected Day Status Tag (No Seasons Mentioned, Clean Brand Indicator) */}
+            <div
+              style={{
+                backgroundColor: 'rgba(15, 23, 42, 0.68)',
+                borderRadius: '10px',
+                padding: '5px 12px',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.35)',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                position: 'relative',
+                zIndex: 2,
+                backdropFilter: 'blur(10px)',
+                WebkitBackdropFilter: 'blur(10px)',
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#38BDF8', boxShadow: '0 0 8px #38BDF8' }} />
+                <span style={{ fontSize: 'clamp(11px, 0.95vw, 14px)', fontWeight: 800, color: '#FFFFFF' }}>
+                  {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][selectedCalendarDay % 7]} {calendarWeeks.allDays[selectedCalendarDay]?.dateNum} ({selectedCalendarDay < 7 ? 'This Week' : 'Next Week'})
+                </span>
+              </div>
+              <span style={{ fontSize: 'clamp(9.5px, 0.85vw, 12.5px)', color: '#CBD5E1', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
+                <span style={{ color: '#94A3B8' }}>Scheduled</span>
+                <span>•</span>
+                <span style={{ color: '#38BDF8', fontWeight: 700 }}>{(dayEvents[selectedCalendarDay] || []).length} events</span>
+              </span>
+            </div>
+          </div>
+
+          {/* ================= 2. NEWS (BOTTOM-LEFT): White Transparent Glass Card ================= */}
+          <div
+            style={{
+              position: 'absolute',
+              left: '0%',
+              top: '51.5%',
+              width: '38.5%',
+              height: '48.5%',
+              backgroundColor: 'rgba(255, 255, 255, 0.76)',
+              backdropFilter: 'blur(28px) saturate(190%)',
+              WebkitBackdropFilter: 'blur(28px) saturate(190%)',
+              border: '1.5px solid rgba(255, 255, 255, 0.55)',
+              borderRadius: 'clamp(20px, 2.5vw, 36px)',
+              padding: 'clamp(12px, 1.4vw, 22px)',
+              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.16), 0 0 32px rgba(255, 255, 255, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.8)',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              boxSizing: 'border-box',
+              zIndex: 2,
+              overflow: 'hidden',
+            }}
+          >
+            {/* Top Row: News image + Content + Shuffle Controls */}
+            <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+              <div>
+                {/* Image banner with controls overlaid */}
+                <div
+                  style={{
+                    position: 'relative',
+                    width: '100%',
+                    height: 'clamp(120px, 13vw, 175px)',
+                    borderRadius: '16px',
+                    overflow: 'hidden',
+                    marginBottom: '10px',
+                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.08)',
+                  }}
+                >
+                  <img
+                    key={JOB_NEWS_ITEMS[currentNewsIdx].id}
+                    src={JOB_NEWS_ITEMS[currentNewsIdx].image}
+                    alt={JOB_NEWS_ITEMS[currentNewsIdx].title}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                      transition: 'transform 0.4s ease',
+                    }}
+                  />
+                  <div
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.35) 100%)',
+                      pointerEvents: 'none',
+                    }}
+                  />
+
+                  {/* Shuffle Controls on Top-Right of Image */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      top: '8px',
+                      right: '8px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '4px',
+                      zIndex: 3,
+                    }}
+                  >
+                    <button
+                      onClick={handlePrevNews}
+                      title="Previous news"
+                      style={{
+                        border: 'none',
+                        background: 'rgba(255, 255, 255, 0.88)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        borderRadius: '8px',
+                        width: '24px',
+                        height: '24px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        color: '#090C15',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      <ChevronLeft size={13} />
+                    </button>
+                    <button
+                      onClick={handleNextNews}
+                      title="Next news"
+                      style={{
+                        border: 'none',
+                        background: 'rgba(255, 255, 255, 0.88)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        borderRadius: '8px',
+                        width: '24px',
+                        height: '24px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        cursor: 'pointer',
+                        color: '#090C15',
+                        boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
+                        transition: 'all 0.15s ease',
+                      }}
+                    >
+                      <ChevronRight size={13} />
+                    </button>
+                  </div>
+                </div>
+
+                {/* Just the news headline */}
+                <p
+                  key={currentNewsIdx}
+                  style={{
+                    margin: 0,
+                    fontSize: 'clamp(13px, 1.25vw, 18.5px)',
+                    fontWeight: 800,
+                    color: '#090C15',
+                    lineHeight: 1.35,
+                    letterSpacing: '-0.015em',
+                    fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+                  }}
+                >
+                  {JOB_NEWS_ITEMS[currentNewsIdx].title}
+                </p>
+              </div>
+
+              {/* Bottom: Just the source and time posted + dots */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0, 0, 0, 0.06)', paddingTop: '8px', marginTop: '6px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                  <span style={{ fontSize: 'clamp(11px, 1.05vw, 14.5px)', color: '#0F172A', fontWeight: 700 }}>
+                    {JOB_NEWS_ITEMS[currentNewsIdx].source}
+                  </span>
+                  <span style={{ color: '#94A3B8' }}>•</span>
+                  <span style={{ fontSize: 'clamp(10.5px, 1vw, 14px)', color: '#64748B', fontWeight: 500 }}>
+                    {JOB_NEWS_ITEMS[currentNewsIdx].time}
+                  </span>
+                </div>
+                <div style={{ display: 'flex', gap: '4px' }}>
+                  {JOB_NEWS_ITEMS.map((_, i) => (
+                    <span
+                      key={i}
+                      style={{
+                        width: i === currentNewsIdx ? '14px' : '5px',
+                        height: '5px',
+                        borderRadius: '999px',
+                        backgroundColor: i === currentNewsIdx ? '#0284C7' : 'rgba(0, 0, 0, 0.18)',
+                        transition: 'all 0.25s ease'
+                      }}
+                    />
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* ================= 3. ENLARGED FREE.PNG BACKBONE & JOINED CARDS ================= */}
+          <div
+            style={{
+              position: 'absolute',
+              left: '37.0%',
+              top: '-5.0%',
+              width: '63.5%',
+              height: '110.0%',
               zIndex: 1,
               pointerEvents: 'none',
             }}
-          />
-
-          {/* Header: 'Calendar' (Bigger) + Week Indicator (Range Pill Removed) */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', position: 'relative', zIndex: 2 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span
-                style={{
-                  fontSize: 'clamp(20px, 1.9vw, 28px)',
-                  fontWeight: 800,
-                  color: '#FFFFFF',
-                  letterSpacing: '-0.015em',
-                  fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                  textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)',
-                }}
-              >
-                Calendar
-              </span>
-            </div>
-            <span
+          >
+            {/* Flowing Joined Shape Backbone Image */}
+            <img
+              src={freeCardsImg}
+              alt="Flowing Joined Shape"
               style={{
-                fontSize: 'clamp(9px, 0.8vw, 11.5px)',
-                fontWeight: 700,
-                color: '#E2E8F0',
-                backgroundColor: 'rgba(15, 23, 42, 0.65)',
-                border: '1px solid rgba(255, 255, 255, 0.15)',
-                padding: '2px 8px',
-                borderRadius: '6px',
+                width: '100%',
+                height: '100%',
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 22px 46px rgba(0, 0, 0, 0.6))',
+              }}
+            />
+
+            {/* ================= 4. TASK (TOP-RIGHT CARD OF FREE.PNG) ================= */}
+            <div
+              style={{
+                position: 'absolute',
+                left: '49.0%',
+                top: '4.5%',
+                width: '47.5%',
+                height: '43.5%',
+                padding: 'clamp(12px, 1.6vw, 26px)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxSizing: 'border-box',
+                zIndex: 2,
+                pointerEvents: 'auto',
+                borderRadius: 'clamp(24px, 2.8vw, 36px)',
+                overflow: 'hidden',
               }}
             >
-              {selectedCalendarDay < 7 ? 'Viewing This Week' : 'Viewing Next Week'}
-            </span>
-          </div>
-
-          {/* 2 Rows of Date Columns: Row 1 This Week, Row 2 Next Week */}
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              gap: 'clamp(3px, 0.45vw, 7px)',
-              margin: '1px 0',
-              position: 'relative',
-              zIndex: 2,
-            }}
-          >
-            {/* Row 1: This Week */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 2px' }}>
-                <span style={{ fontSize: 'clamp(8.5px, 0.7vw, 10.5px)', fontWeight: 700, color: 'rgba(255, 255, 255, 0.75)', textTransform: 'uppercase', letterSpacing: '0.04em', textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
-                  This Week
-                </span>
-              </div>
+              {/* Smoky Blue Mist Background Effect - Strictly clipped inside rounded card */}
               <div
                 style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(7, 1fr)',
-                  gap: 'clamp(3px, 0.55vw, 8px)',
-                  alignItems: 'center',
+                  position: 'absolute',
+                  inset: 0,
+                  borderRadius: 'clamp(24px, 2.8vw, 36px)',
+                  overflow: 'hidden',
+                  pointerEvents: 'none',
+                  zIndex: 0,
                 }}
               >
-                {calendarWeeks.currentWeek.map((item) => {
-                  const isSelected = selectedCalendarDay === item.index;
-                  return (
-                    <div
-                      key={item.index}
-                      onClick={() => setSelectedCalendarDay(item.index)}
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: 'clamp(3px, 0.42vw, 6px) clamp(2px, 0.35vw, 5px)',
-                        borderRadius: '9px',
-                        backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.14)' : 'rgba(15, 23, 42, 0.55)',
-                        backdropFilter: 'blur(10px)',
-                        WebkitBackdropFilter: 'blur(10px)',
-                        border: isSelected ? '2px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.18)',
-                        boxShadow: isSelected ? '0 0 12px rgba(255, 255, 255, 0.5), inset 0 0 6px rgba(255, 255, 255, 0.18)' : '0 2px 4px rgba(0, 0, 0, 0.2)',
-                        cursor: 'pointer',
-                        transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
-                        userSelect: 'none',
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.55)';
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: 'clamp(8.5px, 0.75vw, 11px)',
-                          fontWeight: 700,
-                          color: isSelected ? '#FFFFFF' : '#94A3B8',
-                          lineHeight: 1,
-                          fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                          textShadow: isSelected ? '0 1px 3px rgba(0, 0, 0, 0.6)' : 'none',
-                        }}
-                      >
-                        {item.initial}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: 'clamp(11px, 1.1vw, 16px)',
-                          fontWeight: 800,
-                          color: '#FFFFFF',
-                          lineHeight: 1,
-                          marginTop: '2px',
-                          fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                          textShadow: '0 2px 4px rgba(0, 0, 0, 0.7)',
-                        }}
-                      >
-                        {item.dateNum}
-                      </span>
-                      <div
-                        style={{
-                          width: '3.5px',
-                          height: '3.5px',
-                          borderRadius: '50%',
-                          backgroundColor: item.hasDot ? (isSelected ? '#FFFFFF' : '#38BDF8') : 'transparent',
-                          marginTop: '2px',
-                          boxShadow: item.hasDot ? (isSelected ? '0 0 5px #FFFFFF' : '0 0 5px rgba(56, 189, 248, 0.8)') : 'none',
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-
-            {/* Row 2: Next Week */}
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '2px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', padding: '0 2px' }}>
-                <span style={{ fontSize: 'clamp(8.5px, 0.7vw, 10.5px)', fontWeight: 700, color: 'rgba(255, 255, 255, 0.75)', textTransform: 'uppercase', letterSpacing: '0.04em', textShadow: '0 1px 4px rgba(0,0,0,0.6)' }}>
-                  Next Week
-                </span>
-              </div>
-              <div
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(7, 1fr)',
-                  gap: 'clamp(3px, 0.55vw, 8px)',
-                  alignItems: 'center',
-                }}
-              >
-                {calendarWeeks.nextWeek.map((item) => {
-                  const isSelected = selectedCalendarDay === item.index;
-                  return (
-                    <div
-                      key={item.index}
-                      onClick={() => setSelectedCalendarDay(item.index)}
-                      style={{
-                        display: 'flex',
-                        flexDirection: 'column',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        padding: 'clamp(3px, 0.42vw, 6px) clamp(2px, 0.35vw, 5px)',
-                        borderRadius: '9px',
-                        backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.14)' : 'rgba(15, 23, 42, 0.55)',
-                        backdropFilter: 'blur(10px)',
-                        WebkitBackdropFilter: 'blur(10px)',
-                        border: isSelected ? '2px solid #FFFFFF' : '1px solid rgba(255, 255, 255, 0.18)',
-                        boxShadow: isSelected ? '0 0 12px rgba(255, 255, 255, 0.5), inset 0 0 6px rgba(255, 255, 255, 0.18)' : '0 2px 4px rgba(0, 0, 0, 0.2)',
-                        cursor: 'pointer',
-                        transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)',
-                        userSelect: 'none',
-                      }}
-                      onMouseEnter={(e) => {
-                        if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.25)';
-                      }}
-                      onMouseLeave={(e) => {
-                        if (!isSelected) e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.55)';
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: 'clamp(8.5px, 0.75vw, 11px)',
-                          fontWeight: 700,
-                          color: isSelected ? '#FFFFFF' : '#94A3B8',
-                          lineHeight: 1,
-                          fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                          textShadow: isSelected ? '0 1px 3px rgba(0, 0, 0, 0.6)' : 'none',
-                        }}
-                      >
-                        {item.initial}
-                      </span>
-                      <span
-                        style={{
-                          fontSize: 'clamp(11px, 1.1vw, 16px)',
-                          fontWeight: 800,
-                          color: '#FFFFFF',
-                          lineHeight: 1,
-                          marginTop: '2px',
-                          fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                          textShadow: '0 2px 4px rgba(0, 0, 0, 0.7)',
-                        }}
-                      >
-                        {item.dateNum}
-                      </span>
-                      <div
-                        style={{
-                          width: '3.5px',
-                          height: '3.5px',
-                          borderRadius: '50%',
-                          backgroundColor: item.hasDot ? (isSelected ? '#FFFFFF' : '#38BDF8') : 'transparent',
-                          marginTop: '2px',
-                          boxShadow: item.hasDot ? (isSelected ? '0 0 5px #FFFFFF' : '0 0 5px rgba(56, 189, 248, 0.8)') : 'none',
-                        }}
-                      />
-                    </div>
-                  );
-                })}
-              </div>
-            </div>
-          </div>
-
-          {/* Selected Day Status Tag (No Seasons Mentioned, Clean Brand Indicator) */}
-          <div 
-            style={{ 
-              backgroundColor: 'rgba(15, 23, 42, 0.68)', 
-              borderRadius: '10px', 
-              padding: '5px 12px',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              boxShadow: '0 4px 14px rgba(0, 0, 0, 0.35)',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              position: 'relative',
-              zIndex: 2,
-              backdropFilter: 'blur(10px)',
-              WebkitBackdropFilter: 'blur(10px)',
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-              <span style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#38BDF8', boxShadow: '0 0 8px #38BDF8' }} />
-              <span style={{ fontSize: 'clamp(11px, 0.95vw, 14px)', fontWeight: 800, color: '#FFFFFF' }}>
-                {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][selectedCalendarDay % 7]} {calendarWeeks.allDays[selectedCalendarDay]?.dateNum} ({selectedCalendarDay < 7 ? 'This Week' : 'Next Week'})
-              </span>
-            </div>
-            <span style={{ fontSize: 'clamp(9.5px, 0.85vw, 12.5px)', color: '#CBD5E1', fontWeight: 600, display: 'flex', alignItems: 'center', gap: '6px' }}>
-              <span style={{ color: '#94A3B8' }}>Scheduled</span>
-              <span>•</span>
-              <span style={{ color: '#38BDF8', fontWeight: 700 }}>{(dayEvents[selectedCalendarDay] || []).length} events</span>
-            </span>
-          </div>
-        </div>
-
-        {/* ================= 2. NEWS (BOTTOM-LEFT): White Transparent Glass Card ================= */}
-        <div
-          style={{
-            position: 'absolute',
-            left: '0%',
-            top: '51.5%',
-            width: '38.5%',
-            height: '48.5%',
-            backgroundColor: 'rgba(255, 255, 255, 0.76)',
-            backdropFilter: 'blur(28px) saturate(190%)',
-            WebkitBackdropFilter: 'blur(28px) saturate(190%)',
-            border: '1.5px solid rgba(255, 255, 255, 0.55)',
-            borderRadius: 'clamp(20px, 2.5vw, 36px)',
-            padding: 'clamp(12px, 1.4vw, 22px)',
-            boxShadow: '0 24px 60px rgba(0, 0, 0, 0.16), 0 0 32px rgba(255, 255, 255, 0.25), inset 0 1px 2px rgba(255, 255, 255, 0.8)',
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'space-between',
-            boxSizing: 'border-box',
-            zIndex: 2,
-            overflow: 'hidden',
-          }}
-        >
-          {/* Top Row: News image + Content + Shuffle Controls */}
-          <div style={{ position: 'relative', zIndex: 2, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
-            <div>
-              {/* Image banner with controls overlaid */}
-              <div 
-                style={{ 
-                  position: 'relative', 
-                  width: '100%', 
-                  height: 'clamp(120px, 13vw, 175px)', 
-                  borderRadius: '16px', 
-                  overflow: 'hidden', 
-                  marginBottom: '10px',
-                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.08)',
-                }}
-              >
-                <img
-                  key={JOB_NEWS_ITEMS[currentNewsIdx].id}
-                  src={JOB_NEWS_ITEMS[currentNewsIdx].image}
-                  alt={JOB_NEWS_ITEMS[currentNewsIdx].title}
-                  style={{
-                    width: '100%',
-                    height: '100%',
-                    objectFit: 'cover',
-                    display: 'block',
-                    transition: 'transform 0.4s ease',
-                  }}
-                />
-                <div 
+                <div
                   style={{
                     position: 'absolute',
                     inset: 0,
-                    background: 'linear-gradient(180deg, rgba(0,0,0,0.1) 0%, rgba(0,0,0,0.35) 100%)',
-                    pointerEvents: 'none',
+                    background: 'radial-gradient(ellipse at 60% 40%, rgba(56, 189, 248, 0.28) 0%, rgba(37, 99, 235, 0.2) 40%, rgba(15, 23, 42, 0.35) 80%, transparent 100%)',
+                    filter: 'blur(16px)',
                   }}
                 />
-
-                {/* Shuffle Controls on Top-Right of Image */}
-                <div 
-                  style={{ 
-                    position: 'absolute', 
-                    top: '8px', 
-                    right: '8px', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    gap: '4px',
-                    zIndex: 3,
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'radial-gradient(circle at 70% 30%, rgba(14, 165, 233, 0.22) 0%, rgba(99, 102, 241, 0.12) 45%, transparent 70%)',
+                    filter: 'blur(22px)',
                   }}
-                >
+                />
+              </div>
+
+              <div style={{ position: 'relative', zIndex: 2 }}>
+                {/* Headline & Add Button - Shifted towards the right */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '10px' }}>
+                  <h4 style={{ fontSize: 'clamp(20px, 1.9vw, 28px)', fontWeight: 800, color: '#FFFFFF', margin: 0, fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif', letterSpacing: '-0.015em', textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)' }}>
+                    Task
+                  </h4>
+
                   <button
-                    onClick={handlePrevNews}
-                    title="Previous news"
+                    onClick={() => setShowAddTaskModal(true)}
+                    title="Add new task"
                     style={{
-                      border: 'none',
-                      background: 'rgba(255, 255, 255, 0.88)',
-                      backdropFilter: 'blur(8px)',
-                      WebkitBackdropFilter: 'blur(8px)',
-                      borderRadius: '8px',
-                      width: '24px',
-                      height: '24px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
+                      border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                      backdropFilter: 'blur(10px)',
+                      WebkitBackdropFilter: 'blur(10px)',
+                      borderRadius: '10px',
+                      padding: '4px 12px',
+                      marginRight: '18px',
+                      color: '#FFFFFF',
+                      fontSize: 'clamp(11px, 1.0vw, 13px)',
+                      fontWeight: 700,
                       cursor: 'pointer',
-                      color: '#090C15',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-                      transition: 'all 0.15s ease',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      flexShrink: 0,
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)',
+                      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #2563EB 0%, #38BDF8 100%)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.6)';
+                      e.currentTarget.style.transform = 'translateY(-1px) scale(1.02)';
+                      e.currentTarget.style.boxShadow = '0 4px 14px rgba(37, 99, 235, 0.5)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                      e.currentTarget.style.transform = 'translateY(0px) scale(1)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)';
                     }}
                   >
-                    <ChevronLeft size={13} />
-                  </button>
-                  <button
-                    onClick={handleNextNews}
-                    title="Next news"
-                    style={{
-                      border: 'none',
-                      background: 'rgba(255, 255, 255, 0.88)',
-                      backdropFilter: 'blur(8px)',
-                      WebkitBackdropFilter: 'blur(8px)',
-                      borderRadius: '8px',
-                      width: '24px',
-                      height: '24px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      cursor: 'pointer',
-                      color: '#090C15',
-                      boxShadow: '0 2px 6px rgba(0,0,0,0.15)',
-                      transition: 'all 0.15s ease',
-                    }}
-                  >
-                    <ChevronRight size={13} />
+                    <Plus size={14} strokeWidth={2.5} />
+                    <span>Add</span>
                   </button>
                 </div>
-              </div>
 
-              {/* Just the news headline */}
-              <p 
-                key={currentNewsIdx}
-                style={{ 
-                  margin: 0, 
-                  fontSize: 'clamp(13px, 1.25vw, 18.5px)', 
-                  fontWeight: 800, 
-                  color: '#090C15', 
-                  lineHeight: 1.35,
-                  letterSpacing: '-0.015em',
-                  fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-                }}
-              >
-                {JOB_NEWS_ITEMS[currentNewsIdx].title}
-              </p>
-            </div>
-
-            {/* Bottom: Just the source and time posted + dots */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', borderTop: '1px solid rgba(0, 0, 0, 0.06)', paddingTop: '8px', marginTop: '6px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <span style={{ fontSize: 'clamp(11px, 1.05vw, 14.5px)', color: '#0F172A', fontWeight: 700 }}>
-                  {JOB_NEWS_ITEMS[currentNewsIdx].source}
-                </span>
-                <span style={{ color: '#94A3B8' }}>•</span>
-                <span style={{ fontSize: 'clamp(10.5px, 1vw, 14px)', color: '#64748B', fontWeight: 500 }}>
-                  {JOB_NEWS_ITEMS[currentNewsIdx].time}
-                </span>
-              </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                {JOB_NEWS_ITEMS.map((_, i) => (
-                  <span 
-                    key={i} 
-                    style={{ 
-                      width: i === currentNewsIdx ? '14px' : '5px', 
-                      height: '5px', 
-                      borderRadius: '999px', 
-                      backgroundColor: i === currentNewsIdx ? '#0284C7' : 'rgba(0, 0, 0, 0.18)',
-                      transition: 'all 0.25s ease'
-                    }} 
-                  />
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ================= 3. ENLARGED FREE.PNG BACKBONE & JOINED CARDS ================= */}
-        <div
-          style={{
-            position: 'absolute',
-            left: '37.0%',
-            top: '-5.0%',
-            width: '63.5%',
-            height: '110.0%',
-            zIndex: 1,
-            pointerEvents: 'none',
-          }}
-        >
-          {/* Flowing Joined Shape Backbone Image */}
-          <img 
-            src={freeCardsImg} 
-            alt="Flowing Joined Shape" 
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              filter: 'drop-shadow(0 22px 46px rgba(0, 0, 0, 0.6))',
-            }} 
-          />
-
-          {/* ================= 4. TASK (TOP-RIGHT CARD OF FREE.PNG) ================= */}
-          <div
-            style={{
-              position: 'absolute',
-              left: '49.0%',
-              top: '4.5%',
-              width: '47.5%',
-              height: '43.5%',
-              padding: 'clamp(12px, 1.6vw, 26px)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              boxSizing: 'border-box',
-              zIndex: 2,
-              pointerEvents: 'auto',
-              borderRadius: 'clamp(24px, 2.8vw, 36px)',
-              overflow: 'hidden',
-            }}
-          >
-            {/* Smoky Blue Mist Background Effect - Strictly clipped inside rounded card */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                borderRadius: 'clamp(24px, 2.8vw, 36px)',
-                overflow: 'hidden',
-                pointerEvents: 'none',
-                zIndex: 0,
-              }}
-            >
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'radial-gradient(ellipse at 60% 40%, rgba(56, 189, 248, 0.28) 0%, rgba(37, 99, 235, 0.2) 40%, rgba(15, 23, 42, 0.35) 80%, transparent 100%)',
-                  filter: 'blur(16px)',
-                }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'radial-gradient(circle at 70% 30%, rgba(14, 165, 233, 0.22) 0%, rgba(99, 102, 241, 0.12) 45%, transparent 70%)',
-                  filter: 'blur(22px)',
-                }}
-              />
-            </div>
-
-            <div style={{ position: 'relative', zIndex: 2 }}>
-              {/* Headline & Add Button - Shifted towards the right */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '10px' }}>
-                <h4 style={{ fontSize: 'clamp(20px, 1.9vw, 28px)', fontWeight: 800, color: '#FFFFFF', margin: 0, fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif', letterSpacing: '-0.015em', textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)' }}>
-                  Task
-                </h4>
-
-                <button
-                  onClick={() => setShowAddTaskModal(true)}
-                  title="Add new task"
-                  style={{
-                    border: '1.5px solid rgba(255, 255, 255, 0.35)',
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)',
-                    backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
-                    borderRadius: '10px',
-                    padding: '4px 12px',
-                    marginRight: '18px',
-                    color: '#FFFFFF',
-                    fontSize: 'clamp(11px, 1.0vw, 13px)',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                    flexShrink: 0,
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)',
-                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                  }}
-                  onMouseEnter={(e) => { 
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #2563EB 0%, #38BDF8 100%)'; 
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.6)';
-                    e.currentTarget.style.transform = 'translateY(-1px) scale(1.02)';
-                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(37, 99, 235, 0.5)';
-                  }}
-                  onMouseLeave={(e) => { 
-                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)'; 
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
-                    e.currentTarget.style.transform = 'translateY(0px) scale(1)';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)';
-                  }}
-                >
-                  <Plus size={14} strokeWidth={2.5} />
-                  <span>Add</span>
-                </button>
-              </div>
-
-              {/* Checkboxes Matching Reference Image (with 8px right padding) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.5vw, 8px)', paddingRight: '8px', maxHeight: '145px', overflowY: 'auto' }}>
-                {(dayEvents[selectedCalendarDay] || []).slice(0, 4).map((ev) => (
-                  <div
-                    key={ev.id}
-                    onClick={() => toggleEvent(selectedCalendarDay, ev.id)}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '9px',
-                      padding: 'clamp(6px, 0.7vw, 10px) clamp(8px, 0.9vw, 14px)',
-                      borderRadius: '10px',
-                      backgroundColor: 'rgba(15, 23, 42, 0.94)',
-                      backdropFilter: 'blur(10px)',
-                      border: '1px solid rgba(255, 255, 255, 0.14)',
-                      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.08)',
-                      cursor: 'pointer',
-                      transition: 'all 0.18s ease',
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(30, 41, 59, 0.98)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.94)'; }}
-                  >
+                {/* Checkboxes Matching Reference Image (with 8px right padding) */}
+                <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.5vw, 8px)', paddingRight: '8px', maxHeight: '145px', overflowY: 'auto' }}>
+                  {(dayEvents[selectedCalendarDay] || []).slice(0, 4).map((ev) => (
                     <div
+                      key={ev.id}
+                      onClick={() => toggleEvent(selectedCalendarDay, ev.id)}
                       style={{
-                        width: '16px',
-                        height: '16px',
-                        borderRadius: '5px',
-                        backgroundColor: ev.done ? '#3B82F6' : 'rgba(255, 255, 255, 0.08)',
-                        border: ev.done ? '1px solid #60A5FA' : '1px solid rgba(255, 255, 255, 0.25)',
                         display: 'flex',
                         alignItems: 'center',
-                        justifyContent: 'center',
-                        flexShrink: 0,
+                        gap: '9px',
+                        padding: 'clamp(6px, 0.7vw, 10px) clamp(8px, 0.9vw, 14px)',
+                        borderRadius: '10px',
+                        backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                        backdropFilter: 'blur(10px)',
+                        border: '1px solid rgba(255, 255, 255, 0.14)',
+                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.08)',
+                        cursor: 'pointer',
+                        transition: 'all 0.18s ease',
                       }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(30, 41, 59, 0.98)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.94)'; }}
                     >
-                      {ev.done && <Check size={10} color="#FFFFFF" strokeWidth={3.5} />}
+                      <div
+                        style={{
+                          width: '16px',
+                          height: '16px',
+                          borderRadius: '5px',
+                          backgroundColor: ev.done ? '#3B82F6' : 'rgba(255, 255, 255, 0.08)',
+                          border: ev.done ? '1px solid #60A5FA' : '1px solid rgba(255, 255, 255, 0.25)',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          flexShrink: 0,
+                        }}
+                      >
+                        {ev.done && <Check size={10} color="#FFFFFF" strokeWidth={3.5} />}
+                      </div>
+                      <span
+                        style={{
+                          fontSize: 'clamp(12px, 1.1vw, 16px)',
+                          color: ev.done ? '#64748B' : '#E2E8F0',
+                          textDecoration: ev.done ? 'line-through' : 'none',
+                          fontWeight: 500,
+                          lineHeight: 1.25,
+                          whiteSpace: 'nowrap',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                        }}
+                      >
+                        {ev.text}
+                      </span>
                     </div>
-                    <span
-                      style={{
-                        fontSize: 'clamp(12px, 1.1vw, 16px)',
-                        color: ev.done ? '#64748B' : '#E2E8F0',
-                        textDecoration: ev.done ? 'line-through' : 'none',
-                        fontWeight: 500,
-                        lineHeight: 1.25,
-                        whiteSpace: 'nowrap',
-                        overflow: 'hidden',
-                        textOverflow: 'ellipsis',
-                      }}
-                    >
-                      {ev.text}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
 
-          {/* ================= 5. CONTACT (BOTTOM-MIDDLE CARD OF FREE.PNG) ================= */}
-          <div
-            style={{
-              position: 'absolute',
-              left: '5.5%',
-              top: '52.5%',
-              width: '47.5%',
-              height: '43.5%',
-              padding: 'clamp(12px, 1.6vw, 26px)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              boxSizing: 'border-box',
-              zIndex: 2,
-              pointerEvents: 'auto',
-              borderRadius: 'clamp(24px, 2.8vw, 36px)',
-              overflow: 'hidden',
-            }}
-          >
-            {/* Smoky Blue Mist Background Effect - Strictly clipped inside rounded card */}
+            {/* ================= 5. CONTACT (BOTTOM-MIDDLE CARD OF FREE.PNG) ================= */}
             <div
               style={{
                 position: 'absolute',
-                inset: 0,
+                left: '5.5%',
+                top: '52.5%',
+                width: '47.5%',
+                height: '43.5%',
+                padding: 'clamp(12px, 1.6vw, 26px)',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                boxSizing: 'border-box',
+                zIndex: 2,
+                pointerEvents: 'auto',
                 borderRadius: 'clamp(24px, 2.8vw, 36px)',
                 overflow: 'hidden',
-                pointerEvents: 'none',
-                zIndex: 0,
               }}
             >
+              {/* Smoky Blue Mist Background Effect - Strictly clipped inside rounded card */}
               <div
                 style={{
                   position: 'absolute',
                   inset: 0,
-                  background: 'radial-gradient(ellipse at 50% 50%, rgba(56, 189, 248, 0.28) 0%, rgba(37, 99, 235, 0.2) 40%, rgba(15, 23, 42, 0.35) 80%, transparent 100%)',
-                  filter: 'blur(16px)',
+                  borderRadius: 'clamp(24px, 2.8vw, 36px)',
+                  overflow: 'hidden',
+                  pointerEvents: 'none',
+                  zIndex: 0,
                 }}
-              />
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  background: 'radial-gradient(circle at 30% 70%, rgba(14, 165, 233, 0.22) 0%, rgba(99, 102, 241, 0.12) 45%, transparent 70%)',
-                  filter: 'blur(22px)',
-                }}
-              />
-            </div>
-
-            <div style={{ position: 'relative', zIndex: 2 }}>
-              {/* Headline & Add Button - Shifted towards the right */}
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '10px' }}>
-                <h4 style={{ fontSize: 'clamp(20px, 1.9vw, 28px)', fontWeight: 800, color: '#FFFFFF', margin: 0, fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif', letterSpacing: '-0.015em', textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)' }}>
-                  Contact
-                </h4>
-                <button
-                  onClick={() => setShowAddContactModal(true)}
-                  title="Add new contact"
+              >
+                <div
                   style={{
-                    border: '1.5px solid rgba(255, 255, 255, 0.35)',
-                    background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)',
-                    backdropFilter: 'blur(10px)',
-                    WebkitBackdropFilter: 'blur(10px)',
-                    borderRadius: '10px',
-                    padding: '4px 12px',
-                    marginRight: '18px',
-                    color: '#FFFFFF',
-                    fontSize: 'clamp(11px, 1.0vw, 13px)',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '5px',
-                    flexShrink: 0,
-                    boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)',
-                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'radial-gradient(ellipse at 50% 50%, rgba(56, 189, 248, 0.28) 0%, rgba(37, 99, 235, 0.2) 40%, rgba(15, 23, 42, 0.35) 80%, transparent 100%)',
+                    filter: 'blur(16px)',
                   }}
-                  onMouseEnter={(e) => { 
-                    e.currentTarget.style.background = 'linear-gradient(135deg, #6366F1 0%, #38BDF8 100%)'; 
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.6)';
-                    e.currentTarget.style.transform = 'translateY(-1px) scale(1.02)';
-                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(99, 102, 241, 0.5)';
+                />
+                <div
+                  style={{
+                    position: 'absolute',
+                    inset: 0,
+                    background: 'radial-gradient(circle at 30% 70%, rgba(14, 165, 233, 0.22) 0%, rgba(99, 102, 241, 0.12) 45%, transparent 70%)',
+                    filter: 'blur(22px)',
                   }}
-                  onMouseLeave={(e) => { 
-                    e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)'; 
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
-                    e.currentTarget.style.transform = 'translateY(0px) scale(1)';
-                    e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)';
+                />
+              </div>
+
+              <div style={{ position: 'relative', zIndex: 2 }}>
+                {/* Headline & Add Button - Shifted towards the right */}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%', marginBottom: '10px' }}>
+                  <h4 style={{ fontSize: 'clamp(20px, 1.9vw, 28px)', fontWeight: 800, color: '#FFFFFF', margin: 0, fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif', letterSpacing: '-0.015em', textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)' }}>
+                    Contact
+                  </h4>
+                  <button
+                    onClick={() => setShowAddContactModal(true)}
+                    title="Add new contact"
+                    style={{
+                      border: '1.5px solid rgba(255, 255, 255, 0.35)',
+                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                      backdropFilter: 'blur(10px)',
+                      WebkitBackdropFilter: 'blur(10px)',
+                      borderRadius: '10px',
+                      padding: '4px 12px',
+                      marginRight: '18px',
+                      color: '#FFFFFF',
+                      fontSize: 'clamp(11px, 1.0vw, 13px)',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '5px',
+                      flexShrink: 0,
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)',
+                      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, #6366F1 0%, #38BDF8 100%)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.6)';
+                      e.currentTarget.style.transform = 'translateY(-1px) scale(1.02)';
+                      e.currentTarget.style.boxShadow = '0 4px 14px rgba(99, 102, 241, 0.5)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                      e.currentTarget.style.transform = 'translateY(0px) scale(1)';
+                      e.currentTarget.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.25), inset 0 1px 1px rgba(255, 255, 255, 0.35)';
+                    }}
+                  >
+                    <Plus size={14} strokeWidth={2.5} />
+                    <span>Add</span>
+                  </button>
+                </div>
+
+                {/* Recruiter Contact Cards (with 8px padding to the right on both container and cards) */}
+                <div
+                  style={{
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: 'clamp(4px, 0.5vw, 8px)',
+                    paddingRight: '8px',
+                    maxHeight: '145px',
+                    overflowY: 'auto',
                   }}
                 >
-                  <Plus size={14} strokeWidth={2.5} />
-                  <span>Add</span>
-                </button>
-              </div>
-
-              {/* Recruiter Contact Cards (with 8px padding to the right on both container and cards) */}
-              <div 
-                style={{ 
-                  display: 'flex', 
-                  flexDirection: 'column', 
-                  gap: 'clamp(4px, 0.5vw, 8px)', 
-                  paddingRight: '8px',
-                  maxHeight: '145px',
-                  overflowY: 'auto',
-                }}
-              >
-                {contacts.slice(0, 4).map((c) => (
-                  <div 
-                    key={c.id}
-                    style={{ 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'space-between',
-                      padding: 'clamp(6px, 0.75vw, 11px) clamp(8px, 0.95vw, 14px)', 
-                      marginRight: '8px',
-                      borderRadius: '10px', 
-                      backgroundColor: 'rgba(15, 23, 42, 0.94)', 
-                      border: '1px solid rgba(255, 255, 255, 0.12)',
-                      boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.08)',
-                      cursor: 'pointer',
-                      transition: 'background-color 0.15s ease'
-                    }}
-                    onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(30, 41, 59, 0.98)'; }}
-                    onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.94)'; }}
-                  >
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
-                      <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: c.avatarBg || '#6366F1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 800, color: '#FFF', flexShrink: 0 }}>
-                        {c.initial}
+                  {contacts.slice(0, 4).map((c) => (
+                    <div
+                      key={c.id}
+                      style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        padding: 'clamp(6px, 0.75vw, 11px) clamp(8px, 0.95vw, 14px)',
+                        marginRight: '8px',
+                        borderRadius: '10px',
+                        backgroundColor: 'rgba(15, 23, 42, 0.94)',
+                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3), inset 0 1px 1px rgba(255, 255, 255, 0.08)',
+                        cursor: 'pointer',
+                        transition: 'background-color 0.15s ease'
+                      }}
+                      onMouseEnter={(e) => { e.currentTarget.style.backgroundColor = 'rgba(30, 41, 59, 0.98)'; }}
+                      onMouseLeave={(e) => { e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.94)'; }}
+                    >
+                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+                        <div style={{ width: '24px', height: '24px', borderRadius: '50%', backgroundColor: c.avatarBg || '#6366F1', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '11px', fontWeight: 800, color: '#FFF', flexShrink: 0 }}>
+                          {c.initial}
+                        </div>
+                        <div style={{ minWidth: 0 }}>
+                          <div style={{ fontSize: 'clamp(12px, 1.1vw, 16px)', fontWeight: 700, color: '#F8FAFC', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name} • {c.company}</div>
+                          <div style={{ fontSize: 'clamp(9.5px, 0.9vw, 13px)', color: '#94A3B8' }}>{c.role}</div>
+                        </div>
                       </div>
-                      <div style={{ minWidth: 0 }}>
-                        <div style={{ fontSize: 'clamp(12px, 1.1vw, 16px)', fontWeight: 700, color: '#F8FAFC', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>{c.name} • {c.company}</div>
-                        <div style={{ fontSize: 'clamp(9.5px, 0.9vw, 13px)', color: '#94A3B8' }}>{c.role}</div>
-                      </div>
+                      <span style={{ fontSize: 'clamp(9.5px, 0.9vw, 13px)', fontWeight: 700, color: c.statusColor, backgroundColor: c.statusBg, padding: '2px 7px', borderRadius: '5px', flexShrink: 0 }}>
+                        {c.status}
+                      </span>
                     </div>
-                    <span style={{ fontSize: 'clamp(9.5px, 0.9vw, 13px)', fontWeight: 700, color: c.statusColor, backgroundColor: c.statusBg, padding: '2px 7px', borderRadius: '5px', flexShrink: 0 }}>
-                      {c.status}
-                    </span>
-                  </div>
-                ))}
+                  ))}
+                </div>
               </div>
             </div>
           </div>
-        </div>
 
 
-        {/* ================= 6. TIME (BOTTOM-RIGHT CIRCLE): Dark Graphics Circle with Long Font White Local Time & Alternating Stroke Subtitle ================= */}
-        <div
-          style={{
-            position: 'absolute',
-            left: '73.0%',
-            top: '56.0%',
-            width: '23.5%',
-            aspectRatio: '1 / 1',
-            borderRadius: '50%',
-            backgroundColor: '#090C15',
-            border: '5px solid #FFFFFF',
-            boxShadow: '0 0 32px rgba(255, 255, 255, 0.45), 0 24px 48px rgba(0, 0, 0, 0.75)',
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            textAlign: 'center',
-            boxSizing: 'border-box',
-            zIndex: 2,
-            overflow: 'hidden',
-            padding: 'clamp(8px, 1.2vw, 18px)',
-            cursor: 'pointer',
-            transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0px) scale(1)';
-          }}
-        >
-          {/* Concentric Right-Side Half Circle Strokes: 1 thick stroke followed by 1 slightly thinner stroke */}
-          <svg
-            viewBox="0 0 200 200"
-            style={{
-              position: 'absolute',
-              inset: 0,
-              width: '100%',
-              height: '100%',
-              pointerEvents: 'none',
-              zIndex: 1,
-            }}
-          >
-            <defs>
-              <linearGradient id="clockStrokeGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#60A5FA" />
-                <stop offset="50%" stopColor="#38BDF8" />
-                <stop offset="100%" stopColor="#2563EB" />
-              </linearGradient>
-              <linearGradient id="clockStrokeGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
-                <stop offset="0%" stopColor="#93C5FD" stopOpacity="0.9" />
-                <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.75" />
-                <stop offset="100%" stopColor="#1D4ED8" stopOpacity="0.6" />
-              </linearGradient>
-            </defs>
-
-            {/* 1. Half Thick Circle Stroke at the Right Side */}
-            <path
-              d="M 100 18 A 82 82 0 0 1 100 182"
-              fill="none"
-              stroke="url(#clockStrokeGrad1)"
-              strokeWidth="9"
-              strokeLinecap="round"
-              style={{
-                filter: 'drop-shadow(0 0 10px rgba(56, 189, 248, 0.55))',
-              }}
-            />
-
-            {/* 2. Followed by Another Slightly Thinner Half Circle Stroke */}
-            <path
-              d="M 100 34 A 66 66 0 0 1 100 166"
-              fill="none"
-              stroke="url(#clockStrokeGrad2)"
-              strokeWidth="4.5"
-              strokeLinecap="round"
-              style={{
-                filter: 'drop-shadow(0 0 8px rgba(56, 189, 248, 0.4))',
-              }}
-            />
-          </svg>
-
-          {/* Inner Content Stack: Time + Subtitle Message - Brought lower by additional 10px */}
-          <div 
-            style={{ 
-              position: 'relative', 
-              zIndex: 2, 
-              display: 'flex', 
-              flexDirection: 'column', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              width: '100%', 
-              margin: 'auto',
-              paddingTop: '25px',
-            }}
-          >
-            {/* Long Height Digital Local Time with Min Letter Spacing (-10% smaller) & Blue Minutes (No Glow) */}
-            <span 
-              style={{ 
-                fontSize: 'clamp(45px, 5.2vw, 85px)', 
-                fontWeight: 700, 
-                fontFamily: '"Teko", "Bebas Neue", sans-serif',
-                lineHeight: 0.85,
-                letterSpacing: '-0.01em',
-                userSelect: 'none',
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                whiteSpace: 'nowrap',
-              }}
-            >
-              <span style={{ color: '#FFFFFF' }}>
-                {liveTime.getHours().toString().padStart(2, '0')}
-              </span>
-              <span style={{ color: '#38BDF8', margin: '0 1px' }}>:</span>
-              <span style={{ color: '#38BDF8' }}>
-                {liveTime.getMinutes().toString().padStart(2, '0')}
-              </span>
-            </span>
-
-            {/* Alternating Stroke Text HYDRATING / GRINDING Alternating Every 1s */}
-            <div 
-              style={{ 
-                position: 'relative', 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                marginTop: '1px',
-                width: '100%',
-                height: 'clamp(24px, 2.8vw, 42px)',
-              }}
-            >
-              <span 
-                key={liveTime.getSeconds() % 2 === 0 ? 'HYDRATING' : 'GRINDING'}
-                style={{ 
-                  position: 'relative', 
-                  fontSize: 'clamp(20px, 2.5vw, 40px)', 
-                  fontWeight: 800, 
-                  fontFamily: '"Teko", "Bebas Neue", sans-serif',
-                  WebkitTextStroke: '2.2px rgba(255, 255, 255, 0.82)',
-                  color: 'transparent', 
-                  letterSpacing: '0.04em',
-                  textTransform: 'uppercase',
-                  lineHeight: 0.9,
-                  userSelect: 'none',
-                  pointerEvents: 'none',
-                  zIndex: 1,
-                  whiteSpace: 'nowrap',
-                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.6)',
-                }}
-              >
-                {liveTime.getSeconds() % 2 === 0 ? 'HYDRATING' : 'GRINDING'}
-              </span>
-            </div>
-          </div>
-
-          {/* Atmospheric Seamless Blend Bridge between Cards and Footer */}
+          {/* ================= 6. TIME (BOTTOM-RIGHT CIRCLE): Dark Graphics Circle with Long Font White Local Time & Alternating Stroke Subtitle ================= */}
           <div
             style={{
               position: 'absolute',
-              left: '5%',
-              right: '5%',
-              bottom: '-45px',
-              height: '160px',
-              background: 'radial-gradient(ellipse 65% 55% at 50% 10%, rgba(56, 189, 248, 0.08) 0%, rgba(37, 99, 235, 0.03) 50%, transparent 85%)',
-              filter: 'blur(35px)',
-              pointerEvents: 'none',
-              zIndex: 0,
+              left: '73.0%',
+              top: '56.0%',
+              width: '23.5%',
+              aspectRatio: '1 / 1',
+              borderRadius: '50%',
+              backgroundColor: '#090C15',
+              border: '5px solid #FFFFFF',
+              boxShadow: '0 0 32px rgba(255, 255, 255, 0.45), 0 24px 48px rgba(0, 0, 0, 0.75)',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center',
+              justifyContent: 'center',
+              textAlign: 'center',
+              boxSizing: 'border-box',
+              zIndex: 2,
+              overflow: 'hidden',
+              padding: 'clamp(8px, 1.2vw, 18px)',
+              cursor: 'pointer',
+              transition: 'all 0.3s cubic-bezier(0.16, 1, 0.3, 1)',
             }}
-          />
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-3px) scale(1.02)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0px) scale(1)';
+            }}
+          >
+            {/* Concentric Right-Side Half Circle Strokes: 1 thick stroke followed by 1 slightly thinner stroke */}
+            <svg
+              viewBox="0 0 200 200"
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '100%',
+                height: '100%',
+                pointerEvents: 'none',
+                zIndex: 1,
+              }}
+            >
+              <defs>
+                <linearGradient id="clockStrokeGrad1" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#60A5FA" />
+                  <stop offset="50%" stopColor="#38BDF8" />
+                  <stop offset="100%" stopColor="#2563EB" />
+                </linearGradient>
+                <linearGradient id="clockStrokeGrad2" x1="0%" y1="0%" x2="0%" y2="100%">
+                  <stop offset="0%" stopColor="#93C5FD" stopOpacity="0.9" />
+                  <stop offset="50%" stopColor="#38BDF8" stopOpacity="0.75" />
+                  <stop offset="100%" stopColor="#1D4ED8" stopOpacity="0.6" />
+                </linearGradient>
+              </defs>
+
+              {/* 1. Half Thick Circle Stroke at the Right Side */}
+              <path
+                d="M 100 18 A 82 82 0 0 1 100 182"
+                fill="none"
+                stroke="url(#clockStrokeGrad1)"
+                strokeWidth="9"
+                strokeLinecap="round"
+                style={{
+                  filter: 'drop-shadow(0 0 10px rgba(56, 189, 248, 0.55))',
+                }}
+              />
+
+              {/* 2. Followed by Another Slightly Thinner Half Circle Stroke */}
+              <path
+                d="M 100 34 A 66 66 0 0 1 100 166"
+                fill="none"
+                stroke="url(#clockStrokeGrad2)"
+                strokeWidth="4.5"
+                strokeLinecap="round"
+                style={{
+                  filter: 'drop-shadow(0 0 8px rgba(56, 189, 248, 0.4))',
+                }}
+              />
+            </svg>
+
+            {/* Inner Content Stack: Time + Subtitle Message - Brought lower by additional 10px */}
+            <div
+              style={{
+                position: 'relative',
+                zIndex: 2,
+                display: 'flex',
+                flexDirection: 'column',
+                alignItems: 'center',
+                justifyContent: 'center',
+                width: '100%',
+                margin: 'auto',
+                paddingTop: '25px',
+              }}
+            >
+              {/* Long Height Digital Local Time with Min Letter Spacing (-10% smaller) & Blue Minutes (No Glow) */}
+              <span
+                style={{
+                  fontSize: 'clamp(45px, 5.2vw, 85px)',
+                  fontWeight: 700,
+                  fontFamily: '"Teko", "Bebas Neue", sans-serif',
+                  lineHeight: 0.85,
+                  letterSpacing: '-0.01em',
+                  userSelect: 'none',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  whiteSpace: 'nowrap',
+                }}
+              >
+                <span style={{ color: '#FFFFFF' }}>
+                  {liveTime.getHours().toString().padStart(2, '0')}
+                </span>
+                <span style={{ color: '#38BDF8', margin: '0 1px' }}>:</span>
+                <span style={{ color: '#38BDF8' }}>
+                  {liveTime.getMinutes().toString().padStart(2, '0')}
+                </span>
+              </span>
+
+              {/* Alternating Stroke Text HYDRATING / GRINDING Alternating Every 1s */}
+              <div
+                style={{
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  marginTop: '1px',
+                  width: '100%',
+                  height: 'clamp(24px, 2.8vw, 42px)',
+                }}
+              >
+                <span
+                  key={liveTime.getSeconds() % 2 === 0 ? 'HYDRATING' : 'GRINDING'}
+                  style={{
+                    position: 'relative',
+                    fontSize: 'clamp(20px, 2.5vw, 40px)',
+                    fontWeight: 800,
+                    fontFamily: '"Teko", "Bebas Neue", sans-serif',
+                    WebkitTextStroke: '2.2px rgba(255, 255, 255, 0.82)',
+                    color: 'transparent',
+                    letterSpacing: '0.04em',
+                    textTransform: 'uppercase',
+                    lineHeight: 0.9,
+                    userSelect: 'none',
+                    pointerEvents: 'none',
+                    zIndex: 1,
+                    whiteSpace: 'nowrap',
+                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.6)',
+                  }}
+                >
+                  {liveTime.getSeconds() % 2 === 0 ? 'HYDRATING' : 'GRINDING'}
+                </span>
+              </div>
+            </div>
+
+            {/* Atmospheric Seamless Blend Bridge between Cards and Footer */}
+            <div
+              style={{
+                position: 'absolute',
+                left: '5%',
+                right: '5%',
+                bottom: '-45px',
+                height: '160px',
+                background: 'radial-gradient(ellipse 65% 55% at 50% 10%, rgba(56, 189, 248, 0.08) 0%, rgba(37, 99, 235, 0.03) 50%, transparent 85%)',
+                filter: 'blur(35px)',
+                pointerEvents: 'none',
+                zIndex: 0,
+              }}
+            />
+          </div>
+
         </div>
+
+
+
+        {/* ==========================================================================
+          ADD TASK MODAL POPUP
+          ========================================================================== */}
+        {showAddTaskModal && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(9, 12, 21, 0.78)',
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '16px',
+            }}
+            onClick={() => setShowAddTaskModal(false)}
+          >
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                maxWidth: '440px',
+                backgroundColor: '#0F172A',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
+                borderRadius: '20px',
+                padding: '24px',
+                boxShadow: '0 24px 60px rgba(0, 0, 0, 0.8), 0 0 32px rgba(59, 130, 246, 0.25)',
+                color: '#FFFFFF',
+                boxSizing: 'border-box',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: 'rgba(59, 130, 246, 0.2)', border: '1px solid rgba(59, 130, 246, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Check size={18} color="#60A5FA" />
+                  </div>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#FFFFFF', fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
+                      Add New Task
+                    </h3>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#94A3B8' }}>
+                      Track your daily interview and job prep milestones
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowAddTaskModal(false)}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    width: '30px',
+                    height: '30px',
+                    color: '#94A3B8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleCreateTask}>
+                <div style={{ marginBottom: '14px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
+                    Task Description
+                  </label>
+                  <input
+                    type="text"
+                    autoFocus
+                    required
+                    value={taskTitleInput}
+                    onChange={(e) => setTaskTitleInput(e.target.value)}
+                    placeholder="e.g. System Design Prep with Emma AI"
+                    style={{
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '10px',
+                      padding: '10px 14px',
+                      color: '#FFFFFF',
+                      fontSize: '14px',
+                      outline: 'none',
+                    }}
+                  />
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
+                    Assign to Date
+                  </label>
+                  <select
+                    value={taskTargetDay}
+                    onChange={(e) => setTaskTargetDay(Number(e.target.value))}
+                    style={{
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      backgroundColor: '#1E293B',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '10px',
+                      padding: '10px 14px',
+                      color: '#FFFFFF',
+                      fontSize: '13.5px',
+                      outline: 'none',
+                      cursor: 'pointer',
+                    }}
+                  >
+                    {calendarWeeks.allDays.map((d) => (
+                      <option key={d.index} value={d.index}>
+                        {d.weekLabel}: {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][d.index % 7]} (Day {d.dateNum})
+                      </option>
+                    ))}
+                  </select>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddTaskModal(false)}
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      borderRadius: '10px',
+                      padding: '9px 16px',
+                      color: '#E2E8F0',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    style={{
+                      backgroundColor: '#2563EB',
+                      border: 'none',
+                      borderRadius: '10px',
+                      padding: '9px 20px',
+                      color: '#FFFFFF',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 14px rgba(37, 99, 235, 0.5)',
+                    }}
+                  >
+                    Add Task
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
+
+        {/* ==========================================================================
+          ADD CONTACT MODAL POPUP
+          ========================================================================== */}
+        {showAddContactModal && (
+          <div
+            style={{
+              position: 'fixed',
+              inset: 0,
+              zIndex: 9999,
+              backgroundColor: 'rgba(9, 12, 21, 0.78)',
+              backdropFilter: 'blur(14px)',
+              WebkitBackdropFilter: 'blur(14px)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              padding: '16px',
+            }}
+            onClick={() => setShowAddContactModal(false)}
+          >
+            <div
+              style={{
+                position: 'relative',
+                width: '100%',
+                maxWidth: '440px',
+                backgroundColor: '#0F172A',
+                border: '1px solid rgba(255, 255, 255, 0.18)',
+                borderRadius: '20px',
+                padding: '24px',
+                boxShadow: '0 24px 60px rgba(0, 0, 0, 0.8), 0 0 32px rgba(99, 102, 241, 0.25)',
+                color: '#FFFFFF',
+                boxSizing: 'border-box',
+              }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              {/* Header */}
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: 'rgba(99, 102, 241, 0.2)', border: '1px solid rgba(99, 102, 241, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                    <Users size={18} color="#818CF8" />
+                  </div>
+                  <div>
+                    <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#FFFFFF', fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
+                      Add Recruiter Contact
+                    </h3>
+                    <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#94A3B8' }}>
+                      Save hiring manager & talent contacts for fast follow-up
+                    </p>
+                  </div>
+                </div>
+                <button
+                  onClick={() => setShowAddContactModal(false)}
+                  style={{
+                    background: 'rgba(255, 255, 255, 0.08)',
+                    border: 'none',
+                    borderRadius: '8px',
+                    width: '30px',
+                    height: '30px',
+                    color: '#94A3B8',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                  }}
+                >
+                  <X size={16} />
+                </button>
+              </div>
+
+              {/* Form */}
+              <form onSubmit={handleCreateContact}>
+                <div style={{ marginBottom: '12px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
+                    Recruiter / Contact Name
+                  </label>
+                  <input
+                    type="text"
+                    autoFocus
+                    required
+                    value={contactNameInput}
+                    onChange={(e) => setContactNameInput(e.target.value)}
+                    placeholder="e.g. Marcus Vance"
+                    style={{
+                      width: '100%',
+                      boxSizing: 'border-box',
+                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                      border: '1px solid rgba(255, 255, 255, 0.2)',
+                      borderRadius: '10px',
+                      padding: '9px 14px',
+                      color: '#FFFFFF',
+                      fontSize: '13.5px',
+                      outline: 'none',
+                    }}
+                  />
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
+                      Company
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      value={contactCompanyInput}
+                      onChange={(e) => setContactCompanyInput(e.target.value)}
+                      placeholder="e.g. Figma"
+                      style={{
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '10px',
+                        padding: '9px 14px',
+                        color: '#FFFFFF',
+                        fontSize: '13.5px',
+                        outline: 'none',
+                      }}
+                    />
+                  </div>
+                  <div>
+                    <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
+                      Role / Title
+                    </label>
+                    <input
+                      type="text"
+                      value={contactRoleInput}
+                      onChange={(e) => setContactRoleInput(e.target.value)}
+                      placeholder="e.g. Lead Talent"
+                      style={{
+                        width: '100%',
+                        boxSizing: 'border-box',
+                        backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        borderRadius: '10px',
+                        padding: '9px 14px',
+                        color: '#FFFFFF',
+                        fontSize: '13.5px',
+                        outline: 'none',
+                      }}
+                    />
+                  </div>
+                </div>
+
+                <div style={{ marginBottom: '20px' }}>
+                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
+                    Status Stage
+                  </label>
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
+                    {['Active', 'Interview', 'Offer', 'Screening'].map((st) => (
+                      <button
+                        key={st}
+                        type="button"
+                        onClick={() => setContactStatusInput(st)}
+                        style={{
+                          padding: '7px 4px',
+                          borderRadius: '8px',
+                          border: contactStatusInput === st ? '1.5px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.15)',
+                          backgroundColor: contactStatusInput === st ? 'rgba(56, 189, 248, 0.18)' : 'rgba(255, 255, 255, 0.05)',
+                          color: contactStatusInput === st ? '#38BDF8' : '#CBD5E1',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          textAlign: 'center',
+                        }}
+                      >
+                        {st}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
+                  <button
+                    type="button"
+                    onClick={() => setShowAddContactModal(false)}
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                      border: '1px solid rgba(255, 255, 255, 0.15)',
+                      borderRadius: '10px',
+                      padding: '9px 16px',
+                      color: '#E2E8F0',
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      cursor: 'pointer',
+                    }}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    type="submit"
+                    style={{
+                      backgroundColor: '#6366F1',
+                      border: 'none',
+                      borderRadius: '10px',
+                      padding: '9px 20px',
+                      color: '#FFFFFF',
+                      fontSize: '13px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 14px rgba(99, 102, 241, 0.5)',
+                    }}
+                  >
+                    Add Contact
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        )}
 
       </div>
 
-
-
-      {/* ==========================================================================
-          ADD TASK MODAL POPUP
-          ========================================================================== */}
-      {showAddTaskModal && (
-        <div 
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 9999,
-            backgroundColor: 'rgba(9, 12, 21, 0.78)',
-            backdropFilter: 'blur(14px)',
-            WebkitBackdropFilter: 'blur(14px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '16px',
-          }}
-          onClick={() => setShowAddTaskModal(false)}
-        >
-          <div 
-            style={{
-              position: 'relative',
-              width: '100%',
-              maxWidth: '440px',
-              backgroundColor: '#0F172A',
-              border: '1px solid rgba(255, 255, 255, 0.18)',
-              borderRadius: '20px',
-              padding: '24px',
-              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.8), 0 0 32px rgba(59, 130, 246, 0.25)',
-              color: '#FFFFFF',
-              boxSizing: 'border-box',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: 'rgba(59, 130, 246, 0.2)', border: '1px solid rgba(59, 130, 246, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Check size={18} color="#60A5FA" />
-                </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#FFFFFF', fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-                    Add New Task
-                  </h3>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#94A3B8' }}>
-                    Track your daily interview and job prep milestones
-                  </p>
-                </div>
-              </div>
-              <button 
-                onClick={() => setShowAddTaskModal(false)}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  border: 'none',
-                  borderRadius: '8px',
-                  width: '30px',
-                  height: '30px',
-                  color: '#94A3B8',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                }}
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            {/* Form */}
-            <form onSubmit={handleCreateTask}>
-              <div style={{ marginBottom: '14px' }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
-                  Task Description
-                </label>
-                <input 
-                  type="text"
-                  autoFocus
-                  required
-                  value={taskTitleInput}
-                  onChange={(e) => setTaskTitleInput(e.target.value)}
-                  placeholder="e.g. System Design Prep with Emma AI"
-                  style={{
-                    width: '100%',
-                    boxSizing: 'border-box',
-                    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    borderRadius: '10px',
-                    padding: '10px 14px',
-                    color: '#FFFFFF',
-                    fontSize: '14px',
-                    outline: 'none',
-                  }}
-                />
-              </div>
-
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
-                  Assign to Date
-                </label>
-                <select
-                  value={taskTargetDay}
-                  onChange={(e) => setTaskTargetDay(Number(e.target.value))}
-                  style={{
-                    width: '100%',
-                    boxSizing: 'border-box',
-                    backgroundColor: '#1E293B',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    borderRadius: '10px',
-                    padding: '10px 14px',
-                    color: '#FFFFFF',
-                    fontSize: '13.5px',
-                    outline: 'none',
-                    cursor: 'pointer',
-                  }}
-                >
-                  {calendarWeeks.allDays.map((d) => (
-                    <option key={d.index} value={d.index}>
-                      {d.weekLabel}: {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'][d.index % 7]} (Day {d.dateNum})
-                    </option>
-                  ))}
-                </select>
-              </div>
-
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                <button
-                  type="button"
-                  onClick={() => setShowAddTaskModal(false)}
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '10px',
-                    padding: '9px 16px',
-                    color: '#E2E8F0',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  style={{
-                    backgroundColor: '#2563EB',
-                    border: 'none',
-                    borderRadius: '10px',
-                    padding: '9px 20px',
-                    color: '#FFFFFF',
-                    fontSize: '13px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(37, 99, 235, 0.5)',
-                  }}
-                >
-                  Add Task
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* ==========================================================================
-          ADD CONTACT MODAL POPUP
-          ========================================================================== */}
-      {showAddContactModal && (
-        <div 
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 9999,
-            backgroundColor: 'rgba(9, 12, 21, 0.78)',
-            backdropFilter: 'blur(14px)',
-            WebkitBackdropFilter: 'blur(14px)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            padding: '16px',
-          }}
-          onClick={() => setShowAddContactModal(false)}
-        >
-          <div 
-            style={{
-              position: 'relative',
-              width: '100%',
-              maxWidth: '440px',
-              backgroundColor: '#0F172A',
-              border: '1px solid rgba(255, 255, 255, 0.18)',
-              borderRadius: '20px',
-              padding: '24px',
-              boxShadow: '0 24px 60px rgba(0, 0, 0, 0.8), 0 0 32px rgba(99, 102, 241, 0.25)',
-              color: '#FFFFFF',
-              boxSizing: 'border-box',
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Header */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '18px' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: 'rgba(99, 102, 241, 0.2)', border: '1px solid rgba(99, 102, 241, 0.4)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Users size={18} color="#818CF8" />
-                </div>
-                <div>
-                  <h3 style={{ margin: 0, fontSize: '18px', fontWeight: 800, color: '#FFFFFF', fontFamily: '"Plus Jakarta Sans", sans-serif' }}>
-                    Add Recruiter Contact
-                  </h3>
-                  <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#94A3B8' }}>
-                    Save hiring manager & talent contacts for fast follow-up
-                  </p>
-                </div>
-              </div>
-              <button 
-                onClick={() => setShowAddContactModal(false)}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.08)',
-                  border: 'none',
-                  borderRadius: '8px',
-                  width: '30px',
-                  height: '30px',
-                  color: '#94A3B8',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  cursor: 'pointer',
-                }}
-              >
-                <X size={16} />
-              </button>
-            </div>
-
-            {/* Form */}
-            <form onSubmit={handleCreateContact}>
-              <div style={{ marginBottom: '12px' }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
-                  Recruiter / Contact Name
-                </label>
-                <input 
-                  type="text"
-                  autoFocus
-                  required
-                  value={contactNameInput}
-                  onChange={(e) => setContactNameInput(e.target.value)}
-                  placeholder="e.g. Marcus Vance"
-                  style={{
-                    width: '100%',
-                    boxSizing: 'border-box',
-                    backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                    border: '1px solid rgba(255, 255, 255, 0.2)',
-                    borderRadius: '10px',
-                    padding: '9px 14px',
-                    color: '#FFFFFF',
-                    fontSize: '13.5px',
-                    outline: 'none',
-                  }}
-                />
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px', marginBottom: '12px' }}>
-                <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
-                    Company
-                  </label>
-                  <input 
-                    type="text"
-                    required
-                    value={contactCompanyInput}
-                    onChange={(e) => setContactCompanyInput(e.target.value)}
-                    placeholder="e.g. Figma"
-                    style={{
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      borderRadius: '10px',
-                      padding: '9px 14px',
-                      color: '#FFFFFF',
-                      fontSize: '13.5px',
-                      outline: 'none',
-                    }}
-                  />
-                </div>
-                <div>
-                  <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
-                    Role / Title
-                  </label>
-                  <input 
-                    type="text"
-                    value={contactRoleInput}
-                    onChange={(e) => setContactRoleInput(e.target.value)}
-                    placeholder="e.g. Lead Talent"
-                    style={{
-                      width: '100%',
-                      boxSizing: 'border-box',
-                      backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                      border: '1px solid rgba(255, 255, 255, 0.2)',
-                      borderRadius: '10px',
-                      padding: '9px 14px',
-                      color: '#FFFFFF',
-                      fontSize: '13.5px',
-                      outline: 'none',
-                    }}
-                  />
-                </div>
-              </div>
-
-              <div style={{ marginBottom: '20px' }}>
-                <label style={{ display: 'block', fontSize: '12px', fontWeight: 700, color: '#CBD5E1', marginBottom: '6px' }}>
-                  Status Stage
-                </label>
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '6px' }}>
-                  {['Active', 'Interview', 'Offer', 'Screening'].map((st) => (
-                    <button
-                      key={st}
-                      type="button"
-                      onClick={() => setContactStatusInput(st)}
-                      style={{
-                        padding: '7px 4px',
-                        borderRadius: '8px',
-                        border: contactStatusInput === st ? '1.5px solid #38BDF8' : '1px solid rgba(255, 255, 255, 0.15)',
-                        backgroundColor: contactStatusInput === st ? 'rgba(56, 189, 248, 0.18)' : 'rgba(255, 255, 255, 0.05)',
-                        color: contactStatusInput === st ? '#38BDF8' : '#CBD5E1',
-                        fontSize: '12px',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        textAlign: 'center',
-                      }}
-                    >
-                      {st}
-                    </button>
-                  ))}
-                </div>
-              </div>
-
-              <div style={{ display: 'flex', gap: '10px', justifyContent: 'flex-end' }}>
-                <button
-                  type="button"
-                  onClick={() => setShowAddContactModal(false)}
-                  style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                    border: '1px solid rgba(255, 255, 255, 0.15)',
-                    borderRadius: '10px',
-                    padding: '9px 16px',
-                    color: '#E2E8F0',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    cursor: 'pointer',
-                  }}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  style={{
-                    backgroundColor: '#6366F1',
-                    border: 'none',
-                    borderRadius: '10px',
-                    padding: '9px 20px',
-                    color: '#FFFFFF',
-                    fontSize: '13px',
-                    fontWeight: 700,
-                    cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(99, 102, 241, 0.5)',
-                  }}
-                >
-                  Add Contact
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
     </div>
-
-  </div>
-);
+  );
 }
