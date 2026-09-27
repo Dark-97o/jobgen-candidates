@@ -276,3 +276,7 @@
 - Timestamp: `2026-09-27T12:02:40+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] style(home): enlarge GitHub and LinkedIn circular social icons
+- Timestamp: `2026-09-27T12:20:15+05:30`
+- Status: Completed & Verified
+
