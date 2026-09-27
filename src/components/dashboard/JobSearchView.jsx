@@ -2224,37 +2224,6 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
                         {job.company}
                       </span>
                     </div>
-
-                    {/* Right Side: Work Type & Career Level pill with crisp frosted backing */}
-                    <div 
-                      style={{ 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        gap: '6px', 
-                        zIndex: 2,
-                        backgroundColor: 'rgba(9, 12, 21, 0.62)',
-                        backdropFilter: 'blur(8px)',
-                        WebkitBackdropFilter: 'blur(8px)',
-                        padding: '3px 8px',
-                        borderRadius: '7px',
-                        border: '1px solid rgba(255, 255, 255, 0.22)',
-                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
-                      }}
-                    >
-                      <span
-                        style={{
-                          fontSize: '11px',
-                          fontWeight: 750,
-                          color: '#FFFFFF',
-                          fontFamily: '"Plus Jakarta Sans", sans-serif',
-                          letterSpacing: '-0.01em',
-                          textShadow: '0 1px 3px rgba(0, 0, 0, 0.8)',
-                          whiteSpace: 'nowrap',
-                        }}
-                      >
-                        {job.workType} · {job.careerLevel}
-                      </span>
-                    </div>
                   </div>
 
                   {/* Role Title & Top Right Platform Badge */}
@@ -2273,9 +2242,13 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
                       >
                         {job.title}
                       </h4>
-                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#64748B', display: 'flex', alignItems: 'center', gap: '6px' }}>
+                      <p style={{ margin: '4px 0 0 0', fontSize: '12px', color: '#64748B', display: 'flex', alignItems: 'center', gap: '6px', flexWrap: 'wrap' }}>
                         <MapPin size={13} color="#2563EB" />
                         <span>{job.locationFull}</span>
+                        <span style={{ color: '#CBD5E1' }}>•</span>
+                        <span style={{ fontWeight: 650, color: '#334155' }}>{job.workType}</span>
+                        <span style={{ color: '#CBD5E1' }}>•</span>
+                        <span style={{ fontWeight: 600, color: '#64748B' }}>{job.careerLevel}</span>
                       </p>
                     </div>
 
