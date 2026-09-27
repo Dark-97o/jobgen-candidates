@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
+import { Application } from '@splinetool/runtime';
 import { 
   User, 
   Lock, 
@@ -8,8 +9,7 @@ import {
   Sparkles, 
   AlertCircle, 
   CheckCircle2, 
-  ShieldCheck,
-  MousePointerClick
+  ShieldCheck 
 } from 'lucide-react';
 
 export default function LoginView({ onLogin }) {
@@ -20,11 +20,123 @@ export default function LoginView({ onLogin }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [isSuccess, setIsSuccess] = useState(false);
+  
+  const [splineLoaded, setSplineLoaded] = useState(false);
+  const [useIframeFallback, setUseIframeFallback] = useState(false);
+  
+  const canvasRef = useRef(null);
+  const splineAppRef = useRef(null);
+  const cardRef = useRef(null);
+
+  // Initialize native Spline runtime on the canvas
+  useEffect(() => {
+    let isMounted = true;
+    let app = null;
+
+    async function initSpline() {
+      if (!canvasRef.current) return;
+      try {
+        app = new Application(canvasRef.current);
+        splineAppRef.current = app;
+        
+        await app.load('https://my.spline.design/cutecomputerfollowcursor-kTcoNww7cfTrcF5RhfaBxgaq/scene.splinecode');
+        
+        if (isMounted) {
+          setSplineLoaded(true);
+        }
+      } catch (err) {
+        console.warn('Spline runtime failed to initialize, falling back to iframe:', err);
+        if (isMounted) {
+          setUseIframeFallback(true);
+        }
+      }
+    }
+
+    initSpline();
+
+    return () => {
+      isMounted = false;
+      if (splineAppRef.current) {
+        try {
+          if (typeof splineAppRef.current.dispose === 'function') {
+            splineAppRef.current.dispose();
+          }
+        } catch (e) {
+          // ignore cleanup errors
+        }
+        splineAppRef.current = null;
+      }
+    };
+  }, []);
+
+  // Forward pointer / mouse coordinates to Spline canvas so interactivity works across inputs and card
+  const forwardPointerToSpline = (clientX, clientY) => {
+    if (!canvasRef.current) return;
+    const canvas = canvasRef.current;
+    
+    const eventInit = {
+      clientX,
+      clientY,
+      screenX: clientX,
+      screenY: clientY,
+      bubbles: true,
+      cancelable: true,
+      view: window
+    };
+
+    try {
+      canvas.dispatchEvent(new PointerEvent('pointermove', eventInit));
+      canvas.dispatchEvent(new MouseEvent('mousemove', eventInit));
+    } catch (e) {
+      // ignore
+    }
+  };
+
+  // When user hovers over a text field or element
+  const handleFieldHover = (e) => {
+    const rect = e.currentTarget.getBoundingClientRect();
+    forwardPointerToSpline(rect.left + rect.width * 0.25, rect.top + rect.height * 0.5);
+  };
+
+  // When user types in username or password: computer actively reacts to keystrokes!
+  const handleFieldTyping = (e, fieldType) => {
+    const val = e.target.value;
+    if (fieldType === 'user') {
+      setUsername(val);
+    } else {
+      setPassword(val);
+    }
+
+    // Micro-jitter to simulate looking right at the typing cursor in the field
+    const rect = e.target.getBoundingClientRect();
+    const jitterX = (Math.random() - 0.5) * 16;
+    const jitterY = (Math.random() - 0.5) * 10;
+    forwardPointerToSpline(
+      rect.left + Math.min(rect.width * 0.8, 60 + val.length * 7) + jitterX, 
+      rect.top + rect.height * 0.5 + jitterY
+    );
+  };
+
+  // When input is focused, computer swivels towards the field
+  const handleFieldFocus = (e) => {
+    const rect = e.target.getBoundingClientRect();
+    forwardPointerToSpline(rect.left + rect.width * 0.3, rect.top + rect.height * 0.5);
+  };
+
+  // Global mouse move across the card: lets the spline follow smoothly
+  const handleCardMouseMove = (e) => {
+    forwardPointerToSpline(e.clientX, e.clientY);
+  };
 
   const handleQuickFill = () => {
     setUsername('Candidate');
     setPassword('Jobgen');
     setErrorMessage('');
+    // Look at the auto-fill button
+    if (cardRef.current) {
+      const rect = cardRef.current.getBoundingClientRect();
+      forwardPointerToSpline(rect.left + rect.width * 0.75, rect.top + rect.height * 0.35);
+    }
   };
 
   const handleSubmit = (e) => {
@@ -32,7 +144,6 @@ export default function LoginView({ onLogin }) {
     setErrorMessage('');
 
     const trimmedUser = username.trim();
-    // Validate hardcoded credentials: Username: Candidate, Password: Jobgen
     if (trimmedUser.toLowerCase() === 'candidate' && password === 'Jobgen') {
       setIsLoading(true);
       setIsSuccess(true);
@@ -48,16 +159,21 @@ export default function LoginView({ onLogin }) {
 
   return (
     <div 
-      className="login-viewport-root"
       style={{
         width: '100vw',
         height: '100vh',
-        backgroundColor: '#FFFFFF',
+        minHeight: '100vh',
+        backgroundColor: '#FFFFFF', // Empty clean pure white background
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
         fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
         color: '#090C15',
         overflow: 'hidden',
-        position: 'relative'
+        padding: '24px',
+        boxSizing: 'border-box'
       }}
+      onMouseMove={(e) => forwardPointerToSpline(e.clientX, e.clientY)}
     >
       <style>{`
         @keyframes shake {
@@ -65,575 +181,542 @@ export default function LoginView({ onLogin }) {
           20%, 60% { transform: translateX(-6px); }
           40%, 80% { transform: translateX(6px); }
         }
-        @keyframes cardPopIn {
-          from { opacity: 0; transform: translateY(16px) scale(0.98); }
-          to { opacity: 1; transform: translateY(0) scale(1); }
+        @keyframes cardPop {
+          from { opacity: 0; transform: scale(0.97) translateY(12px); }
+          to { opacity: 1; transform: scale(1) translateY(0); }
         }
-        @media (max-width: 860px) {
-          .login-card-container {
-            justify-content: center !important;
-            padding: 20px !important;
+        @media (max-width: 900px) {
+          .unified-login-card {
+            flex-direction: column !important;
+            height: auto !important;
+            max-height: 90vh !important;
+            overflow-y: auto !important;
           }
-          .login-spline-fade {
-            background: linear-gradient(180deg, transparent 0%, rgba(255, 255, 255, 0.6) 40%, rgba(255, 255, 255, 0.95) 80%, #FFFFFF 100%) !important;
+          .spline-left-pane {
+            height: 280px !important;
+            min-height: 280px !important;
+            border-right: none !important;
+            border-bottom: 1px solid #F1F5F9 !important;
+          }
+          .form-right-pane {
+            padding: 24px 20px !important;
           }
         }
       `}</style>
 
-      {/* ================= BACKGROUND: SPLINE 3D MASCOT CANVAS ================= */}
+      {/* ================= ONE UNIFIED FLOATING CARD ================= */}
       <div 
+        ref={cardRef}
+        className="unified-login-card"
+        onMouseMove={handleCardMouseMove}
         style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 1,
+          width: 'min(1020px, 94vw)',
+          height: 'min(580px, 88vh)',
           backgroundColor: '#FFFFFF',
-          overflow: 'hidden'
-        }}
-      >
-        <iframe 
-          src="https://my.spline.design/cutecomputerfollowcursor-kTcoNww7cfTrcF5RhfaBxgaq/" 
-          frameBorder="0" 
-          width="100%" 
-          height="100%" 
-          title="JobGen 3D Interactive Mascot"
-          style={{
-            width: '100%',
-            height: '100%',
-            border: 'none',
-            display: 'block'
-          }}
-        />
-      </div>
-
-      {/* ================= SPLINE FADE OVERLAY TOWARDS INPUT DETAILS ================= */}
-      {/* Soft gradient fade that seamlessly transitions the 3D scene towards the white input card */}
-      <div 
-        className="login-spline-fade"
-        style={{
-          position: 'absolute',
-          inset: 0,
-          width: '100%',
-          height: '100%',
-          zIndex: 2,
-          pointerEvents: 'none',
-          background: 'linear-gradient(90deg, transparent 0%, transparent 35%, rgba(255, 255, 255, 0.3) 50%, rgba(255, 255, 255, 0.75) 68%, rgba(255, 255, 255, 0.95) 85%, #FFFFFF 98%)'
-        }}
-      />
-
-      {/* Floating Top-Left Brand & Interactive Indicator */}
-      <div 
-        style={{
-          position: 'absolute',
-          top: '28px',
-          left: '32px',
-          zIndex: 10,
+          borderRadius: '24px',
+          border: '1px solid #E2E8F0',
+          boxShadow: '0 25px 70px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.7)',
           display: 'flex',
-          alignItems: 'center',
-          gap: '12px',
-          pointerEvents: 'none'
-        }}
-      >
-        <div 
-          style={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: '8px',
-            padding: '6px 14px',
-            borderRadius: '999px',
-            backgroundColor: 'rgba(255, 255, 255, 0.9)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            border: '1px solid rgba(226, 232, 240, 0.9)',
-            boxShadow: '0 2px 10px rgba(0, 0, 0, 0.04)'
-          }}
-        >
-          <div 
-            style={{
-              width: '7px',
-              height: '7px',
-              borderRadius: '50%',
-              backgroundColor: '#10B981',
-              boxShadow: '0 0 8px #10B981'
-            }}
-          />
-          <span style={{ fontSize: '12px', fontWeight: 650, color: '#334155', letterSpacing: '-0.01em' }}>
-            Interactive 3D Workspace
-          </span>
-        </div>
-      </div>
-
-      {/* Floating Bottom Guidance Pill */}
-      <div 
-        style={{
-          position: 'absolute',
-          bottom: '24px',
-          left: '32px',
-          zIndex: 10,
-          pointerEvents: 'none',
-          backgroundColor: 'rgba(255, 255, 255, 0.9)',
-          backdropFilter: 'blur(12px)',
-          WebkitBackdropFilter: 'blur(12px)',
-          padding: '6px 14px',
-          borderRadius: '999px',
-          border: '1px solid rgba(226, 232, 240, 0.85)',
-          boxShadow: '0 2px 10px rgba(0, 0, 0, 0.03)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: '6px'
-        }}
-      >
-        <MousePointerClick size={13} color="#64748B" />
-        <span style={{ fontSize: '11.5px', color: '#64748B', fontWeight: 550 }}>
-          Move your cursor around to interact with the computer
-        </span>
-      </div>
-
-      {/* ================= FLOATING LOGIN CARD CONTAINER ================= */}
-      <div 
-        className="login-card-container"
-        style={{
+          overflow: 'hidden',
           position: 'relative',
-          zIndex: 10,
-          width: '100%',
-          height: '100%',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'flex-end',
-          paddingRight: 'clamp(28px, 6vw, 110px)',
-          paddingLeft: '24px',
-          pointerEvents: 'none', // Allows cursor tracking across all surrounding space directly into Spline
+          animation: 'cardPop 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
           boxSizing: 'border-box'
         }}
       >
-        {/* Compact, Elevated Floating Glass Card */}
+        {/* ================= LEFT SIDE: SPLINE 3D MASCOT ================= */}
         <div 
+          className="spline-left-pane"
           style={{
-            pointerEvents: 'auto', // Card itself captures clicks & typing
-            width: '415px',
-            maxWidth: '100%',
-            backgroundColor: 'rgba(255, 255, 255, 0.92)',
-            backdropFilter: 'blur(24px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            borderRadius: '24px',
-            border: '1px solid rgba(226, 232, 240, 0.9)',
-            boxShadow: '0 25px 60px -12px rgba(15, 23, 42, 0.12), 0 0 0 1px rgba(255, 255, 255, 0.9), 0 8px 24px -4px rgba(15, 23, 42, 0.04)',
-            padding: '28px 30px',
-            animation: 'cardPopIn 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
-            boxSizing: 'border-box'
+            flex: '1.08',
+            minWidth: 0,
+            height: '100%',
+            backgroundColor: '#FFFFFF',
+            position: 'relative',
+            borderRight: '1px solid #F1F5F9',
+            overflow: 'hidden',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
           }}
         >
-          {/* Card Brand Header */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
-            <div 
+          {/* Native Spline WebGL Canvas */}
+          {!useIframeFallback ? (
+            <canvas 
+              ref={canvasRef}
               style={{
-                width: '38px',
-                height: '38px',
-                borderRadius: '11px',
-                background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                boxShadow: '0 4px 14px rgba(26, 83, 207, 0.28)',
-                color: '#FFFFFF'
+                width: '100%',
+                height: '100%',
+                display: 'block',
+                outline: 'none',
+                opacity: splineLoaded ? 1 : 0.8,
+                transition: 'opacity 0.3s ease'
               }}
-            >
-              <Sparkles size={20} />
-            </div>
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                <span 
-                  style={{ 
-                    fontSize: '18px', 
-                    fontWeight: 800, 
-                    color: '#090C15', 
-                    letterSpacing: '-0.03em' 
-                  }}
-                >
-                  JobGen<span style={{ color: '#1A53CF' }}>.ai</span>
-                </span>
-                <span 
-                  style={{
-                    fontSize: '10px',
-                    fontWeight: 750,
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.05em',
-                    backgroundColor: '#EFF6FF',
-                    color: '#1A53CF',
-                    padding: '2px 7px',
-                    borderRadius: '999px',
-                    border: '1px solid rgba(37, 99, 235, 0.2)'
-                  }}
-                >
-                  Candidates
-                </span>
-              </div>
-              <div style={{ fontSize: '11.5px', color: '#64748B', fontWeight: 500, marginTop: '1px' }}>
-                Autonomous Career Agent
-              </div>
-            </div>
-          </div>
+            />
+          ) : (
+            /* Fallback iframe embed if WebGL runtime is not supported */
+            <iframe 
+              src="https://my.spline.design/cutecomputerfollowcursor-kTcoNww7cfTrcF5RhfaBxgaq/" 
+              frameBorder="0" 
+              width="100%" 
+              height="100%" 
+              title="JobGen 3D Interactive Mascot"
+              style={{
+                width: '100%',
+                height: '100%',
+                border: 'none',
+                display: 'block'
+              }}
+            />
+          )}
 
-          {/* Heading */}
-          <h1 
-            style={{ 
-              fontSize: '22px', 
-              fontWeight: 800, 
-              color: '#090C15', 
-              letterSpacing: '-0.025em',
-              lineHeight: 1.25,
-              marginBottom: '6px'
-            }}
-          >
-            Candidate Sign In
-          </h1>
-          <p 
-            style={{ 
-              fontSize: '13px', 
-              color: '#64748B', 
-              lineHeight: 1.45, 
-              marginBottom: '16px' 
-            }}
-          >
-            Access your curated job pipeline, resume studio, and AI copilot.
-          </p>
-
-          {/* Hardcoded Credentials Helper Card */}
+          {/* Soft fade along the divider towards the right side input details */}
           <div 
             style={{
-              backgroundColor: 'rgba(248, 250, 252, 0.85)',
-              border: '1px solid #E2E8F0',
-              borderRadius: '12px',
-              padding: '10px 12px',
-              marginBottom: '18px',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'space-between',
-              gap: '10px'
+              position: 'absolute',
+              top: 0,
+              right: 0,
+              bottom: 0,
+              width: '60px',
+              pointerEvents: 'none',
+              background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8) 70%, #FFFFFF 100%)',
+              zIndex: 2
             }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
+          />
+        </div>
+
+        {/* ================= RIGHT SIDE: LOGIN FORM & INPUT DETAILS ================= */}
+        <div 
+          className="form-right-pane"
+          style={{
+            flex: '0.92',
+            minWidth: 0,
+            height: '100%',
+            backgroundColor: '#FFFFFF',
+            display: 'flex',
+            flexDirection: 'column',
+            justifyContent: 'center',
+            padding: '32px 38px',
+            boxSizing: 'border-box',
+            overflowY: 'auto'
+          }}
+        >
+          <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto' }}>
+            {/* Brand Header */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '9px', marginBottom: '16px' }}>
               <div 
                 style={{
-                  width: '28px',
-                  height: '28px',
-                  borderRadius: '7px',
-                  backgroundColor: '#EFF6FF',
+                  width: '36px',
+                  height: '36px',
+                  borderRadius: '10px',
+                  background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#1A53CF',
-                  flexShrink: 0
+                  boxShadow: '0 4px 14px rgba(26, 83, 207, 0.28)',
+                  color: '#FFFFFF'
                 }}
               >
-                <ShieldCheck size={15} />
+                <Sparkles size={18} />
               </div>
-              <div style={{ minWidth: 0 }}>
-                <div style={{ fontSize: '11px', fontWeight: 700, color: '#0F172A' }}>
-                  Demo Credentials:
-                </div>
-                <div style={{ fontSize: '11px', color: '#64748B', marginTop: '1px', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                  ID: <code style={{ color: '#1A53CF', fontWeight: 700 }}>Candidate</code> &bull; Pass: <code style={{ color: '#1A53CF', fontWeight: 700 }}>Jobgen</code>
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                  <span 
+                    style={{ 
+                      fontSize: '17px', 
+                      fontWeight: 800, 
+                      color: '#090C15', 
+                      letterSpacing: '-0.03em' 
+                    }}
+                  >
+                    JobGen<span style={{ color: '#1A53CF' }}>.ai</span>
+                  </span>
+                  <span 
+                    style={{
+                      fontSize: '9.5px',
+                      fontWeight: 750,
+                      textTransform: 'uppercase',
+                      letterSpacing: '0.05em',
+                      backgroundColor: '#EFF6FF',
+                      color: '#1A53CF',
+                      padding: '2px 7px',
+                      borderRadius: '999px',
+                      border: '1px solid rgba(37, 99, 235, 0.2)'
+                    }}
+                  >
+                    Candidates
+                  </span>
                 </div>
               </div>
             </div>
 
-            <button
-              type="button"
-              onClick={handleQuickFill}
-              style={{
-                backgroundColor: '#FFFFFF',
-                border: '1px solid #CBD5E1',
-                padding: '5px 10px',
-                borderRadius: '7px',
-                fontSize: '11px',
-                fontWeight: 650,
-                color: '#1E293B',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-                whiteSpace: 'nowrap',
-                boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
-                flexShrink: 0
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = '#EFF6FF';
-                e.currentTarget.style.borderColor = '#93C5FD';
-                e.currentTarget.style.color = '#1A53CF';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = '#FFFFFF';
-                e.currentTarget.style.borderColor = '#CBD5E1';
-                e.currentTarget.style.color = '#1E293B';
+            {/* Heading */}
+            <h1 
+              style={{ 
+                fontSize: '22px', 
+                fontWeight: 800, 
+                color: '#090C15', 
+                letterSpacing: '-0.025em',
+                lineHeight: 1.25,
+                marginBottom: '5px'
               }}
             >
-              Auto-fill
-            </button>
-          </div>
+              Candidate Sign In
+            </h1>
+            <p 
+              style={{ 
+                fontSize: '12.5px', 
+                color: '#64748B', 
+                lineHeight: 1.45, 
+                marginBottom: '16px' 
+              }}
+            >
+              Sign in with your Candidate credentials to access your autonomous pipeline.
+            </p>
 
-          {/* Error Message Banner */}
-          {errorMessage && (
+            {/* Demo Credentials Helper Banner */}
             <div 
+              onMouseEnter={handleFieldHover}
               style={{
-                backgroundColor: '#FEF2F2',
-                border: '1px solid #FECACA',
-                borderRadius: '10px',
+                backgroundColor: '#F8FAFC',
+                border: '1px solid #E2E8F0',
+                borderRadius: '11px',
                 padding: '9px 12px',
-                marginBottom: '14px',
+                marginBottom: '16px',
                 display: 'flex',
                 alignItems: 'center',
-                gap: '8px',
-                color: '#DC2626',
-                fontSize: '12px',
-                fontWeight: 600,
-                animation: 'shake 0.3s ease'
+                justifyContent: 'space-between',
+                gap: '8px'
               }}
             >
-              <AlertCircle size={15} color="#DC2626" style={{ flexShrink: 0 }} />
-              <span>{errorMessage}</span>
-            </div>
-          )}
-
-          {/* Form */}
-          <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
-            {/* Username / Candidate ID */}
-            <div>
-              <label 
-                style={{ 
-                  display: 'block', 
-                  fontSize: '12.5px', 
-                  fontWeight: 650, 
-                  color: '#0F172A', 
-                  marginBottom: '5px' 
-                }}
-              >
-                Candidate Username / ID
-              </label>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', minWidth: 0 }}>
                 <div 
-                  style={{ 
-                    position: 'absolute', 
-                    left: '12px', 
-                    color: '#94A3B8', 
-                    pointerEvents: 'none',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}
-                >
-                  <User size={16} />
-                </div>
-                <input 
-                  type="text" 
-                  value={username} 
-                  onChange={(e) => setUsername(e.target.value)} 
-                  placeholder="Enter 'Candidate'"
-                  required
                   style={{
-                    width: '100%',
-                    height: '42px',
-                    padding: '0 12px 0 38px',
-                    borderRadius: '9px',
-                    border: '1.5px solid #E2E8F0',
-                    backgroundColor: '#FFFFFF',
-                    color: '#090C15',
-                    fontSize: '13.5px',
-                    fontWeight: 500,
-                    outline: 'none',
-                    transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
-                    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)',
-                    boxSizing: 'border-box'
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = '#2563EB';
-                    e.target.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.12)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = '#E2E8F0';
-                    e.target.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.02)';
-                  }}
-                />
-              </div>
-            </div>
-
-            {/* Password */}
-            <div>
-              <label 
-                style={{ 
-                  display: 'block', 
-                  fontSize: '12.5px', 
-                  fontWeight: 650, 
-                  color: '#0F172A', 
-                  marginBottom: '5px' 
-                }}
-              >
-                Password
-              </label>
-              <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
-                <div 
-                  style={{ 
-                    position: 'absolute', 
-                    left: '12px', 
-                    color: '#94A3B8', 
-                    pointerEvents: 'none',
-                    display: 'flex',
-                    alignItems: 'center'
-                  }}
-                >
-                  <Lock size={16} />
-                </div>
-                <input 
-                  type={showPassword ? 'text' : 'password'} 
-                  value={password} 
-                  onChange={(e) => setPassword(e.target.value)} 
-                  placeholder="Enter 'Jobgen'"
-                  required
-                  style={{
-                    width: '100%',
-                    height: '42px',
-                    padding: '0 38px 0 38px',
-                    borderRadius: '9px',
-                    border: '1.5px solid #E2E8F0',
-                    backgroundColor: '#FFFFFF',
-                    color: '#090C15',
-                    fontSize: '13.5px',
-                    fontWeight: 500,
-                    outline: 'none',
-                    transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
-                    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)',
-                    boxSizing: 'border-box'
-                  }}
-                  onFocus={(e) => {
-                    e.target.style.borderColor = '#2563EB';
-                    e.target.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.12)';
-                  }}
-                  onBlur={(e) => {
-                    e.target.style.borderColor = '#E2E8F0';
-                    e.target.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.02)';
-                  }}
-                />
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  style={{
-                    position: 'absolute',
-                    right: '10px',
-                    background: 'none',
-                    border: 'none',
-                    color: '#94A3B8',
-                    cursor: 'pointer',
+                    width: '26px',
+                    height: '26px',
+                    borderRadius: '7px',
+                    backgroundColor: '#EFF6FF',
                     display: 'flex',
                     alignItems: 'center',
-                    padding: '4px'
+                    justifyContent: 'center',
+                    color: '#1A53CF',
+                    flexShrink: 0
                   }}
-                  title={showPassword ? "Hide password" : "Show password"}
                 >
-                  {showPassword ? <EyeOff size={16} /> : <Eye size={16} />}
-                </button>
+                  <ShieldCheck size={14} />
+                </div>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: '11px', fontWeight: 700, color: '#0F172A' }}>
+                    Demo Credentials:
+                  </div>
+                  <div style={{ fontSize: '11px', color: '#64748B', marginTop: '1px' }}>
+                    ID: <code style={{ color: '#1A53CF', fontWeight: 700 }}>Candidate</code> &bull; Pass: <code style={{ color: '#1A53CF', fontWeight: 700 }}>Jobgen</code>
+                  </div>
+                </div>
               </div>
-            </div>
 
-            {/* Remember Me & Help */}
-            <div 
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'space-between',
-                fontSize: '12px'
-              }}
-            >
-              <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', userSelect: 'none' }}>
-                <input 
-                  type="checkbox" 
-                  checked={rememberMe} 
-                  onChange={(e) => setRememberMe(e.target.checked)} 
-                  style={{ accentColor: '#1A53CF', width: '14px', height: '14px', cursor: 'pointer' }}
-                />
-                <span style={{ color: '#475569', fontWeight: 500 }}>Remember for 30 days</span>
-              </label>
-
-              <button 
-                type="button" 
+              <button
+                type="button"
                 onClick={handleQuickFill}
-                style={{ 
-                  background: 'none', 
-                  border: 'none', 
-                  color: '#1A53CF', 
-                  fontWeight: 650, 
+                style={{
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #CBD5E1',
+                  padding: '5px 9px',
+                  borderRadius: '7px',
+                  fontSize: '11px',
+                  fontWeight: 650,
+                  color: '#1E293B',
                   cursor: 'pointer',
-                  padding: 0,
-                  fontSize: '12px'
+                  transition: 'all 0.15s ease',
+                  whiteSpace: 'nowrap',
+                  boxShadow: '0 1px 2px rgba(0, 0, 0, 0.03)',
+                  flexShrink: 0
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#EFF6FF';
+                  e.currentTarget.style.borderColor = '#93C5FD';
+                  e.currentTarget.style.color = '#1A53CF';
+                  handleFieldHover(e);
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.borderColor = '#CBD5E1';
+                  e.currentTarget.style.color = '#1E293B';
                 }}
               >
-                Forgot credentials?
+                Auto-fill
               </button>
             </div>
 
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={isLoading || isSuccess}
-              style={{
-                marginTop: '4px',
-                height: '44px',
-                borderRadius: '10px',
-                background: isSuccess 
-                  ? '#10B981' 
-                  : 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
-                color: '#FFFFFF',
-                border: 'none',
-                fontSize: '14px',
-                fontWeight: 700,
-                letterSpacing: '-0.01em',
-                cursor: (isLoading || isSuccess) ? 'default' : 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                gap: '8px',
-                boxShadow: isSuccess 
-                  ? '0 6px 18px rgba(16, 185, 129, 0.4)' 
-                  : '0 6px 18px rgba(37, 99, 235, 0.35)',
-                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                transform: 'translateY(0)'
-              }}
-              onMouseEnter={(e) => {
-                if (!isLoading && !isSuccess) {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 8px 22px rgba(37, 99, 235, 0.45)';
-                }
-              }}
-              onMouseLeave={(e) => {
-                if (!isLoading && !isSuccess) {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 6px 18px rgba(37, 99, 235, 0.35)';
-                }
+            {/* Error Message */}
+            {errorMessage && (
+              <div 
+                style={{
+                  backgroundColor: '#FEF2F2',
+                  border: '1px solid #FECACA',
+                  borderRadius: '9px',
+                  padding: '9px 12px',
+                  marginBottom: '14px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  color: '#DC2626',
+                  fontSize: '11.5px',
+                  fontWeight: 600,
+                  animation: 'shake 0.3s ease'
+                }}
+              >
+                <AlertCircle size={14} color="#DC2626" style={{ flexShrink: 0 }} />
+                <span>{errorMessage}</span>
+              </div>
+            )}
+
+            {/* Form */}
+            <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '13px' }}>
+              {/* Username Input */}
+              <div onMouseEnter={handleFieldHover}>
+                <label 
+                  style={{ 
+                    display: 'block', 
+                    fontSize: '12px', 
+                    fontWeight: 650, 
+                    color: '#0F172A', 
+                    marginBottom: '4px' 
+                  }}
+                >
+                  Candidate Username / ID
+                </label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div 
+                    style={{ 
+                      position: 'absolute', 
+                      left: '11px', 
+                      color: '#94A3B8', 
+                      pointerEvents: 'none',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <User size={15} />
+                  </div>
+                  <input 
+                    type="text" 
+                    value={username} 
+                    onChange={(e) => handleFieldTyping(e, 'user')} 
+                    onFocus={handleFieldFocus}
+                    placeholder="Enter 'Candidate'"
+                    required
+                    style={{
+                      width: '100%',
+                      height: '40px',
+                      padding: '0 12px 0 36px',
+                      borderRadius: '8px',
+                      border: '1.5px solid #E2E8F0',
+                      backgroundColor: '#FFFFFF',
+                      color: '#090C15',
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      outline: 'none',
+                      transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)',
+                      boxSizing: 'border-box'
+                    }}
+                    onFocusCapture={(e) => {
+                      e.target.style.borderColor = '#2563EB';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.12)';
+                      handleFieldFocus(e);
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#E2E8F0';
+                      e.target.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.02)';
+                    }}
+                  />
+                </div>
+              </div>
+
+              {/* Password Input */}
+              <div onMouseEnter={handleFieldHover}>
+                <label 
+                  style={{ 
+                    display: 'block', 
+                    fontSize: '12px', 
+                    fontWeight: 650, 
+                    color: '#0F172A', 
+                    marginBottom: '4px' 
+                  }}
+                >
+                  Password
+                </label>
+                <div style={{ position: 'relative', display: 'flex', alignItems: 'center' }}>
+                  <div 
+                    style={{ 
+                      position: 'absolute', 
+                      left: '11px', 
+                      color: '#94A3B8', 
+                      pointerEvents: 'none',
+                      display: 'flex',
+                      alignItems: 'center'
+                    }}
+                  >
+                    <Lock size={15} />
+                  </div>
+                  <input 
+                    type={showPassword ? 'text' : 'password'} 
+                    value={password} 
+                    onChange={(e) => handleFieldTyping(e, 'pass')} 
+                    onFocus={handleFieldFocus}
+                    placeholder="Enter 'Jobgen'"
+                    required
+                    style={{
+                      width: '100%',
+                      height: '40px',
+                      padding: '0 36px 0 36px',
+                      borderRadius: '8px',
+                      border: '1.5px solid #E2E8F0',
+                      backgroundColor: '#FFFFFF',
+                      color: '#090C15',
+                      fontSize: '13px',
+                      fontWeight: 500,
+                      outline: 'none',
+                      transition: 'border-color 0.15s ease, box-shadow 0.15s ease',
+                      boxShadow: '0 1px 2px rgba(0, 0, 0, 0.02)',
+                      boxSizing: 'border-box'
+                    }}
+                    onFocusCapture={(e) => {
+                      e.target.style.borderColor = '#2563EB';
+                      e.target.style.boxShadow = '0 0 0 3px rgba(37, 99, 235, 0.12)';
+                      handleFieldFocus(e);
+                    }}
+                    onBlur={(e) => {
+                      e.target.style.borderColor = '#E2E8F0';
+                      e.target.style.boxShadow = '0 1px 2px rgba(0, 0, 0, 0.02)';
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    style={{
+                      position: 'absolute',
+                      right: '10px',
+                      background: 'none',
+                      border: 'none',
+                      color: '#94A3B8',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      padding: '4px'
+                    }}
+                    title={showPassword ? "Hide password" : "Show password"}
+                  >
+                    {showPassword ? <EyeOff size={15} /> : <Eye size={15} />}
+                  </button>
+                </div>
+              </div>
+
+              {/* Remember Me & Help */}
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between',
+                  fontSize: '11.5px'
+                }}
+              >
+                <label style={{ display: 'flex', alignItems: 'center', gap: '6px', cursor: 'pointer', userSelect: 'none' }}>
+                  <input 
+                    type="checkbox" 
+                    checked={rememberMe} 
+                    onChange={(e) => setRememberMe(e.target.checked)} 
+                    style={{ accentColor: '#1A53CF', width: '13px', height: '13px', cursor: 'pointer' }}
+                  />
+                  <span style={{ color: '#475569', fontWeight: 500 }}>Remember for 30 days</span>
+                </label>
+
+                <button 
+                  type="button" 
+                  onClick={handleQuickFill}
+                  style={{ 
+                    background: 'none', 
+                    border: 'none', 
+                    color: '#1A53CF', 
+                    fontWeight: 650, 
+                    cursor: 'pointer',
+                    padding: 0,
+                    fontSize: '11.5px'
+                  }}
+                >
+                  Forgot credentials?
+                </button>
+              </div>
+
+              {/* Submit Button */}
+              <button
+                type="submit"
+                disabled={isLoading || isSuccess}
+                onMouseEnter={handleFieldHover}
+                style={{
+                  marginTop: '4px',
+                  height: '42px',
+                  borderRadius: '9px',
+                  background: isSuccess 
+                    ? '#10B981' 
+                    : 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontSize: '13.5px',
+                  fontWeight: 700,
+                  letterSpacing: '-0.01em',
+                  cursor: (isLoading || isSuccess) ? 'default' : 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '7px',
+                  boxShadow: isSuccess 
+                    ? '0 6px 18px rgba(16, 185, 129, 0.4)' 
+                    : '0 6px 18px rgba(37, 99, 235, 0.35)',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  transform: 'translateY(0)'
+                }}
+                onMouseEnterCapture={(e) => {
+                  if (!isLoading && !isSuccess) {
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.boxShadow = '0 8px 22px rgba(37, 99, 235, 0.45)';
+                  }
+                  handleFieldHover(e);
+                }}
+                onMouseLeave={(e) => {
+                  if (!isLoading && !isSuccess) {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 6px 18px rgba(37, 99, 235, 0.35)';
+                  }
+                }}
+              >
+                {isSuccess ? (
+                  <>
+                    <CheckCircle2 size={16} />
+                    <span>Access Granted! Loading...</span>
+                  </>
+                ) : (
+                  <>
+                    <span>Sign In to Candidate Portal</span>
+                    <ArrowRight size={16} />
+                  </>
+                )}
+              </button>
+            </form>
+
+            {/* Footer note */}
+            <div 
+              style={{ 
+                marginTop: '16px', 
+                paddingTop: '12px', 
+                borderTop: '1px solid #F1F5F9',
+                textAlign: 'center',
+                fontSize: '10.5px',
+                color: '#94A3B8'
               }}
             >
-              {isSuccess ? (
-                <>
-                  <CheckCircle2 size={17} />
-                  <span>Access Granted! Loading...</span>
-                </>
-              ) : (
-                <>
-                  <span>Sign In to Candidate Portal</span>
-                  <ArrowRight size={17} />
-                </>
-              )}
-            </button>
-          </form>
-
-          {/* Footer note */}
-          <div 
-            style={{ 
-              marginTop: '20px', 
-              paddingTop: '14px', 
-              borderTop: '1px solid rgba(241, 245, 249, 0.9)',
-              textAlign: 'center',
-              fontSize: '11px',
-              color: '#94A3B8'
-            }}
-          >
-            Secured by JobGen AI Identity &bull; Privacy Protected
+              Secured by JobGen AI Identity &bull; Privacy Protected
+            </div>
           </div>
         </div>
       </div>
