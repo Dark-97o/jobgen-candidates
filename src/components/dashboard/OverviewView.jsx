@@ -1185,7 +1185,7 @@ export default function OverviewView({ onNavigate }) {
             position: 'absolute',
             left: '0%',
             top: '0%',
-            width: '66.5%',
+            width: '62%',
             height: '46.5%',
             backgroundColor: 'transparent',
             border: '5px solid #FFFFFF',
