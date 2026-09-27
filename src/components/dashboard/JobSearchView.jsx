@@ -1067,7 +1067,7 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
   const isApplied = appliedJobs.includes(selectedJob?.id);
 
   return (
-    <div style={{ paddingTop: '20px', paddingBottom: '40px', width: '100%', boxSizing: 'border-box' }}>
+    <div style={{ paddingTop: '16px', paddingBottom: '40px', width: '100%', boxSizing: 'border-box' }}>
       
       {/* =========================================================================
           TOP COMMAND SURFACE:
@@ -1083,23 +1083,23 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
           background: 'rgba(255, 255, 255, 0.85)', 
           backdropFilter: 'blur(20px)',
           WebkitBackdropFilter: 'blur(20px)',
-          padding: '16px 20px', 
+          padding: '16px 22px', 
           borderRadius: '20px', 
           border: '1px solid rgba(226, 232, 240, 0.9)', 
           boxShadow: '0 8px 30px rgba(0, 0, 0, 0.04)',
-          marginBottom: '32px', 
+          marginBottom: '22px', 
           display: 'flex', 
           flexDirection: 'column',
           gap: '14px',
-          maxWidth: '1220px',
-          marginLeft: 0,
+          width: '100%',
+          boxSizing: 'border-box',
         }}
       >
         {/* Row 1: Search Bar (Job Title) & Location Button with Icon */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '14px', flexWrap: 'wrap' }}>
           
           {/* 1. Job Title Search Input */}
-          <div style={{ flex: '0 1 420px', minWidth: '280px', position: 'relative' }}>
+          <div style={{ flex: '1 1 380px', maxWidth: '520px', position: 'relative' }}>
             <Search 
               size={18} 
               color="#64748B" 
@@ -1563,11 +1563,11 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
       <div 
         style={{ 
           display: 'grid', 
-          gridTemplateColumns: '380px minmax(460px, 780px)', 
-          gap: '18px', 
+          gridTemplateColumns: '385px 1fr', 
+          gap: '20px', 
           alignItems: 'start',
-          maxWidth: '1220px',
-          marginLeft: 0,
+          width: '100%',
+          boxSizing: 'border-box',
         }}
       >
         
@@ -1587,7 +1587,7 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             paddingLeft: '4px',
             paddingRight: '6px', 
             width: '100%', 
-            maxWidth: '380px',
+            maxWidth: '385px',
             boxSizing: 'border-box'
           }}
         >

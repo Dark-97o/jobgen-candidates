@@ -84,7 +84,7 @@ export default function App() {
           />
 
           {/* Dynamic Content Surface */}
-          <main style={{ flex: 1, padding: currentTab === 'overview' ? '0 0 4px 28px' : (currentTab === 'jobs' ? '0 20px 24px 12px' : '0 0 24px 28px'), width: '100%', maxWidth: 'none', margin: 0 }}>
+          <main style={{ flex: 1, padding: currentTab === 'overview' ? '0 0 4px 28px' : (currentTab === 'jobs' ? '0 28px 24px 18px' : '0 0 24px 28px'), width: '100%', maxWidth: 'none', margin: 0 }}>
             {currentTab === 'overview' && (
               <OverviewView 
                 onNavigate={setCurrentTab}
