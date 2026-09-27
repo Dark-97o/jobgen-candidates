@@ -232,3 +232,7 @@
 - Timestamp: `2026-09-26T23:12:40+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] feat(jobs): hide native scrollbars in job description drawer for clean view
+- Timestamp: `2026-09-27T09:05:15+05:30`
+- Status: Completed & Verified
+
