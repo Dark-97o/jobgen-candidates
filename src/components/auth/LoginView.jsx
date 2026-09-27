@@ -176,6 +176,16 @@ export default function LoginView({ onLogin }) {
       onMouseMove={(e) => forwardPointerToSpline(e.clientX, e.clientY)}
     >
       <style>{`
+        #spline-watermark,
+        .spline-watermark,
+        a[href*="spline.design"],
+        div[style*="spline.design"],
+        #spline-logo {
+          display: none !important;
+          opacity: 0 !important;
+          visibility: hidden !important;
+          pointer-events: none !important;
+        }
         @keyframes shake {
           0%, 100% { transform: translateX(0); }
           20%, 60% { transform: translateX(-6px); }
@@ -196,7 +206,7 @@ export default function LoginView({ onLogin }) {
             height: 280px !important;
             min-height: 280px !important;
             border-right: none !important;
-            border-bottom: 1px solid #F1F5F9 !important;
+            border-bottom: none !important;
           }
           .form-right-pane {
             padding: 24px 20px !important;
@@ -215,7 +225,7 @@ export default function LoginView({ onLogin }) {
           backgroundColor: '#FFFFFF',
           borderRadius: '24px',
           border: '1px solid #E2E8F0',
-          boxShadow: '0 25px 70px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.7)',
+          boxShadow: '0 20px 60px -15px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(226, 232, 240, 0.7)',
           display: 'flex',
           overflow: 'hidden',
           position: 'relative',
@@ -232,7 +242,7 @@ export default function LoginView({ onLogin }) {
             height: '100%',
             backgroundColor: '#FFFFFF',
             position: 'relative',
-            borderRight: '1px solid #F1F5F9',
+            borderRight: 'none', // No separator line between left and right
             overflow: 'hidden',
             display: 'flex',
             alignItems: 'center',
@@ -269,17 +279,29 @@ export default function LoginView({ onLogin }) {
             />
           )}
 
-          {/* Soft fade along the divider towards the right side input details */}
+          {/* Bottom corner white patches to completely hide any "Built with Spline" watermark */}
           <div 
             style={{
               position: 'absolute',
-              top: 0,
-              right: 0,
               bottom: 0,
-              width: '60px',
-              pointerEvents: 'none',
-              background: 'linear-gradient(to right, transparent, rgba(255, 255, 255, 0.8) 70%, #FFFFFF 100%)',
-              zIndex: 2
+              right: 0,
+              width: '210px',
+              height: '56px',
+              backgroundColor: '#FFFFFF',
+              zIndex: 20,
+              pointerEvents: 'none'
+            }}
+          />
+          <div 
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              width: '210px',
+              height: '56px',
+              backgroundColor: '#FFFFFF',
+              zIndex: 20,
+              pointerEvents: 'none'
             }}
           />
         </div>
@@ -301,52 +323,41 @@ export default function LoginView({ onLogin }) {
           }}
         >
           <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto' }}>
-            {/* Brand Header */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '9px', marginBottom: '16px' }}>
+            {/* Correct Company Logo & Name: JobGen.AI (no candidates pill) */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
               <div 
                 style={{
-                  width: '36px',
-                  height: '36px',
-                  borderRadius: '10px',
-                  background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+                  width: '34px',
+                  height: '34px',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  boxShadow: '0 4px 14px rgba(26, 83, 207, 0.28)',
-                  color: '#FFFFFF'
+                  flexShrink: 0
                 }}
               >
-                <Sparkles size={18} />
+                <img 
+                  src="/jobgen-logo.png" 
+                  alt="JobGen.AI" 
+                  style={{ 
+                    width: '32px', 
+                    height: '32px', 
+                    objectFit: 'contain',
+                    display: 'block'
+                  }} 
+                />
               </div>
-              <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-                  <span 
-                    style={{ 
-                      fontSize: '17px', 
-                      fontWeight: 800, 
-                      color: '#090C15', 
-                      letterSpacing: '-0.03em' 
-                    }}
-                  >
-                    JobGen<span style={{ color: '#1A53CF' }}>.ai</span>
-                  </span>
-                  <span 
-                    style={{
-                      fontSize: '9.5px',
-                      fontWeight: 750,
-                      textTransform: 'uppercase',
-                      letterSpacing: '0.05em',
-                      backgroundColor: '#EFF6FF',
-                      color: '#1A53CF',
-                      padding: '2px 7px',
-                      borderRadius: '999px',
-                      border: '1px solid rgba(37, 99, 235, 0.2)'
-                    }}
-                  >
-                    Candidates
-                  </span>
-                </div>
-              </div>
+              <span 
+                style={{ 
+                  fontFamily: 'var(--font-title, sans-serif)',
+                  fontSize: '20px', 
+                  fontWeight: 800, 
+                  color: '#090C15', 
+                  letterSpacing: '-0.025em',
+                  lineHeight: 1
+                }}
+              >
+                JobGen.AI
+              </span>
             </div>
 
             {/* Heading */}
