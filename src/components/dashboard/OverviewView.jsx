@@ -7,6 +7,7 @@ import {
   Sparkles,
   Zap,
   Mic,
+  MicOff,
   ChevronRight,
   ChevronLeft,
   Plus,
@@ -17,6 +18,9 @@ import {
   Volume2,
   Bookmark,
   Video,
+  VideoOff,
+  Maximize2,
+  Minimize2,
   Trophy,
   FileText,
   Clock,
@@ -422,6 +426,55 @@ export default function OverviewView({ onNavigate }) {
       setHeroFading(false);
       setCardsVisible(true);
     }, 600);
+  };
+
+  // Video Call Meeting Floating Bar States (Screen Share, Mute, End Call, Camera Off, Fullscreen)
+  const [videoMuted, setVideoMuted] = useState(false);
+  const [videoCameraOff, setVideoCameraOff] = useState(false);
+  const [videoFullscreen, setVideoFullscreen] = useState(false);
+  const [videoScreenShared, setVideoScreenShared] = useState(false);
+
+  useEffect(() => {
+    const onFsChange = () => setVideoFullscreen(!!document.fullscreenElement);
+    document.addEventListener('fullscreenchange', onFsChange);
+    return () => document.removeEventListener('fullscreenchange', onFsChange);
+  }, []);
+
+  const handleToggleMute = (e) => {
+    e.stopPropagation();
+    if (heroVideoRef.current) {
+      const nextMuted = !heroVideoRef.current.muted;
+      heroVideoRef.current.muted = nextMuted;
+      setVideoMuted(nextMuted);
+    }
+  };
+
+  const handleToggleCamera = (e) => {
+    e.stopPropagation();
+    setVideoCameraOff(prev => !prev);
+  };
+
+  const handleToggleScreenShare = (e) => {
+    e.stopPropagation();
+    setVideoScreenShared(prev => !prev);
+  };
+
+  const handleToggleFullscreen = (e) => {
+    e.stopPropagation();
+    if (!document.fullscreenElement) {
+      if (heroVideoRef.current?.requestFullscreen) {
+        heroVideoRef.current.requestFullscreen().catch(() => {});
+      }
+    } else {
+      if (document.exitFullscreen) {
+        document.exitFullscreen().catch(() => {});
+      }
+    }
+  };
+
+  const handleEndCall = (e) => {
+    e.stopPropagation();
+    handleHeroEnd();
   };
 
   return (
@@ -857,7 +910,7 @@ export default function OverviewView({ onNavigate }) {
                 boxSizing: 'border-box',
               }}
             >
-              {/* When Hero Video is Playing - Unmuted by default, buttons removed */}
+              {/* When Hero Video is Playing - Video Call Meeting Control Bar */}
               {heroPlaying ? (
                 <div
                   style={{
@@ -875,8 +928,222 @@ export default function OverviewView({ onNavigate }) {
                     playsInline
                     autoPlay
                     onEnded={handleHeroEnd}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                      display: 'block',
+                      filter: videoCameraOff ? 'brightness(0)' : 'none',
+                      transition: 'filter 0.3s ease',
+                    }}
                   />
+
+                  {/* Video Call Action Buttons (Auto-Disappears When Video Ends) */}
+                  <div
+                    style={{
+                      position: 'absolute',
+                      bottom: 'clamp(10px, 1.4vw, 22px)',
+                      left: '50%',
+                      transform: heroFading ? 'translateX(-50%) translateY(12px) scale(0.92)' : 'translateX(-50%) translateY(0) scale(1)',
+                      opacity: heroFading ? 0 : 1,
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: 'clamp(6px, 0.8vw, 12px)',
+                      zIndex: 35,
+                      pointerEvents: heroFading ? 'none' : 'auto',
+                      transition: 'opacity 0.35s ease, transform 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
+                    }}
+                  >
+                    {/* 1. Screen Share Button */}
+                    <button
+                      type="button"
+                      onClick={handleToggleScreenShare}
+                      title={videoScreenShared ? 'Stop Sharing Screen' : 'Share Screen'}
+                      style={{
+                        width: 'clamp(30px, 2.4vw, 42px)',
+                        height: 'clamp(30px, 2.4vw, 42px)',
+                        borderRadius: '50%',
+                        backgroundColor: videoScreenShared ? 'rgba(59, 130, 246, 0.9)' : 'rgba(75, 78, 85, 0.82)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.18)',
+                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#FFFFFF',
+                        cursor: 'pointer',
+                        padding: 0,
+                        transition: 'transform 0.18s ease, background-color 0.2s ease, box-shadow 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                        e.currentTarget.style.backgroundColor = videoScreenShared ? 'rgba(37, 99, 235, 0.95)' : 'rgba(95, 100, 110, 0.95)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.backgroundColor = videoScreenShared ? 'rgba(59, 130, 246, 0.9)' : 'rgba(75, 78, 85, 0.82)';
+                      }}
+                    >
+                      <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.3" strokeLinecap="round" strokeLinejoin="round">
+                        <path d="M4 4h6" />
+                        <path d="M4 4v6" />
+                        <path d="M4 4l7 7" />
+                        <path d="M15 4h5a1 1 0 0 1 1 1v10a1 1 0 0 1-1 1H4a1 1 0 0 1-1-1v-1" />
+                        <path d="M12 16v4" />
+                        <path d="M8 20h8" />
+                      </svg>
+                    </button>
+
+                    {/* 2. Microphone Mute / Unmute Button */}
+                    <button
+                      type="button"
+                      onClick={handleToggleMute}
+                      title={videoMuted ? 'Unmute Microphone' : 'Mute Microphone'}
+                      style={{
+                        width: 'clamp(30px, 2.4vw, 42px)',
+                        height: 'clamp(30px, 2.4vw, 42px)',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(75, 78, 85, 0.82)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.18)',
+                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#FFFFFF',
+                        cursor: 'pointer',
+                        padding: 0,
+                        transition: 'transform 0.18s ease, background-color 0.2s ease, box-shadow 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                        e.currentTarget.style.backgroundColor = 'rgba(95, 100, 110, 0.95)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.backgroundColor = 'rgba(75, 78, 85, 0.82)';
+                      }}
+                    >
+                      {videoMuted ? (
+                        <MicOff size={18} strokeWidth={2.3} />
+                      ) : (
+                        <Mic size={18} strokeWidth={2.3} />
+                      )}
+                    </button>
+
+                    {/* 3. Red End Call 'X' Button (Prominent Center Button) */}
+                    <button
+                      type="button"
+                      onClick={handleEndCall}
+                      title="End Call / Skip Video"
+                      style={{
+                        width: 'clamp(34px, 2.8vw, 48px)',
+                        height: 'clamp(34px, 2.8vw, 48px)',
+                        borderRadius: '50%',
+                        backgroundColor: '#FF4A4A',
+                        backgroundImage: 'linear-gradient(135deg, #FF5C5C 0%, #EA3B3B 100%)',
+                        border: '1px solid rgba(255, 255, 255, 0.28)',
+                        boxShadow: '0 4px 18px rgba(239, 68, 68, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#FFFFFF',
+                        cursor: 'pointer',
+                        padding: 0,
+                        transition: 'transform 0.18s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.2s ease, filter 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.12)';
+                        e.currentTarget.style.filter = 'brightness(1.12)';
+                        e.currentTarget.style.boxShadow = '0 6px 24px rgba(239, 68, 68, 0.7)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.filter = 'none';
+                        e.currentTarget.style.boxShadow = '0 4px 18px rgba(239, 68, 68, 0.5), 0 2px 6px rgba(0, 0, 0, 0.35)';
+                      }}
+                    >
+                      <X size={21} strokeWidth={2.9} color="#FFFFFF" />
+                    </button>
+
+                    {/* 4. Camera Video Off / On Button */}
+                    <button
+                      type="button"
+                      onClick={handleToggleCamera}
+                      title={videoCameraOff ? 'Turn Camera On' : 'Turn Camera Off'}
+                      style={{
+                        width: 'clamp(30px, 2.4vw, 42px)',
+                        height: 'clamp(30px, 2.4vw, 42px)',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(75, 78, 85, 0.82)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.18)',
+                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#FFFFFF',
+                        cursor: 'pointer',
+                        padding: 0,
+                        transition: 'transform 0.18s ease, background-color 0.2s ease, box-shadow 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                        e.currentTarget.style.backgroundColor = 'rgba(95, 100, 110, 0.95)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.backgroundColor = 'rgba(75, 78, 85, 0.82)';
+                      }}
+                    >
+                      {videoCameraOff ? (
+                        <VideoOff size={18} strokeWidth={2.3} />
+                      ) : (
+                        <Video size={18} strokeWidth={2.3} />
+                      )}
+                    </button>
+
+                    {/* 5. Maximize / Fullscreen Button */}
+                    <button
+                      type="button"
+                      onClick={handleToggleFullscreen}
+                      title={videoFullscreen ? 'Exit Fullscreen' : 'Fullscreen'}
+                      style={{
+                        width: 'clamp(30px, 2.4vw, 42px)',
+                        height: 'clamp(30px, 2.4vw, 42px)',
+                        borderRadius: '50%',
+                        backgroundColor: 'rgba(75, 78, 85, 0.82)',
+                        backdropFilter: 'blur(12px)',
+                        WebkitBackdropFilter: 'blur(12px)',
+                        border: '1px solid rgba(255, 255, 255, 0.18)',
+                        boxShadow: '0 4px 14px rgba(0, 0, 0, 0.3)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: '#FFFFFF',
+                        cursor: 'pointer',
+                        padding: 0,
+                        transition: 'transform 0.18s ease, background-color 0.2s ease, box-shadow 0.2s ease',
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'scale(1.1)';
+                        e.currentTarget.style.backgroundColor = 'rgba(95, 100, 110, 0.95)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                        e.currentTarget.style.backgroundColor = 'rgba(75, 78, 85, 0.82)';
+                      }}
+                    >
+                      {videoFullscreen ? (
+                        <Minimize2 size={18} strokeWidth={2.3} />
+                      ) : (
+                        <Maximize2 size={18} strokeWidth={2.3} />
+                      )}
+                    </button>
+                  </div>
                 </div>
               ) : (
                 /* When Hero Video finishes: 4 Cards inside this white space only */
