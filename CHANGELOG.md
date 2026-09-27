@@ -236,3 +236,7 @@
 - Timestamp: `2026-09-27T09:05:15+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] feat(jobs): adjust job card image overlay darkness for improved legibility
+- Timestamp: `2026-09-27T09:22:40+05:30`
+- Status: Completed & Verified
+
