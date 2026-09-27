@@ -308,3 +308,7 @@
 - Timestamp: `2026-09-27T13:58:40+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] fix(auth): hide Spline watermark badges across embedded viewports
+- Timestamp: `2026-09-27T14:06:15+05:30`
+- Status: Completed & Verified
+
