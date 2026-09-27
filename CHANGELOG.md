@@ -296,3 +296,7 @@
 - Timestamp: `2026-09-27T13:22:40+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] feat(auth): add auto-fill credentials shortcut button for demo access
+- Timestamp: `2026-09-27T13:35:10+05:30`
+- Status: Completed & Verified
+
