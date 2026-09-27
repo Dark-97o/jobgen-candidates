@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 
 // Heavy assets to actively download and cache during loading
 const PRELOAD_IMAGES = [
+  '/cityfr.jpg',
   '/caln.png',
   '/jobgen-logo.png',
   '/back.png',
