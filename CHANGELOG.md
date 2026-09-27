@@ -316,3 +316,7 @@
 - Timestamp: `2026-09-27T14:12:30+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] style(auth): replace placeholder logo with official JobGen.AI brand mark
+- Timestamp: `2026-09-27T14:18:50+05:30`
+- Status: Completed & Verified
+
