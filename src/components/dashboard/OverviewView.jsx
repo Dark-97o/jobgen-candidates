@@ -1957,7 +1957,7 @@ export default function OverviewView({ onNavigate }) {
               e.currentTarget.style.transform = 'translateY(0px) scale(1)';
             }}
           >
-            {/* Background Tall Building Image (Isolated building with transparent background, faded from top) */}
+            {/* Background Tall Building Image (Isolated building with transparent background, warm yellow lights, faded from top) */}
             <img
               src="/clock-building.png"
               alt="Tall Building"
@@ -1967,26 +1967,26 @@ export default function OverviewView({ onNavigate }) {
                 width: '100%',
                 height: '100%',
                 objectFit: 'contain',
-                objectPosition: 'center 75%',
-                transform: 'scale(1.22)',
+                objectPosition: 'center 65%',
+                transform: 'scale(1.28)',
                 zIndex: 0,
-                opacity: 0.85,
+                opacity: 0.92,
                 maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 16%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 1) 85%)',
                 WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 16%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 1) 85%)',
                 pointerEvents: 'none',
               }}
             />
 
-            {/* Subtle atmospheric blue glow beneath the building */}
+            {/* Subtle atmospheric warm amber glow beneath the building */}
             <div
               style={{
                 position: 'absolute',
-                left: '20%',
-                right: '20%',
-                bottom: '5%',
-                height: '40%',
-                background: 'radial-gradient(ellipse at 50% 100%, rgba(56, 189, 248, 0.22) 0%, transparent 75%)',
-                filter: 'blur(16px)',
+                left: '15%',
+                right: '15%',
+                bottom: '3%',
+                height: '42%',
+                background: 'radial-gradient(ellipse at 50% 100%, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.12) 48%, transparent 75%)',
+                filter: 'blur(18px)',
                 zIndex: 0,
                 pointerEvents: 'none',
               }}
