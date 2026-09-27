@@ -248,3 +248,7 @@
 - Timestamp: `2026-09-27T09:58:30+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] feat(jobs): implement page-level scroll continuation when drawer ends
+- Timestamp: `2026-09-27T10:16:45+05:30`
+- Status: Completed & Verified
+
