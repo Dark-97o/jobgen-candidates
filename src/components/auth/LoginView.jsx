@@ -244,61 +244,44 @@ export default function LoginView({ onLogin }) {
             top: 0,
             bottom: 0,
             left: 0,
-            width: '74%',
+            width: '72%',
             height: '100%',
             backgroundColor: '#FFFFFF',
             zIndex: 1,
             overflow: 'hidden',
-            // Fade out smoothly towards the right input area so no hard cutoff exists
-            maskImage: 'linear-gradient(to right, black 0%, black 36%, rgba(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 0.2) 70%, transparent 92%)',
-            WebkitMaskImage: 'linear-gradient(to right, black 0%, black 36%, rgba(0, 0, 0, 0.75) 50%, rgba(0, 0, 0, 0.2) 70%, transparent 92%)'
+            pointerEvents: 'auto'
           }}
         >
-          {/* Native Spline WebGL Canvas */}
-          {!useIframeFallback ? (
-            <canvas 
-              ref={canvasRef}
-              style={{
-                width: '100%',
-                height: 'calc(100% + 45px)',
-                marginBottom: '-45px',
-                display: 'block',
-                outline: 'none',
-                opacity: splineLoaded ? 1 : 0.85,
-                transition: 'opacity 0.3s ease'
-              }}
-            />
-          ) : (
-            /* Fallback iframe embed pushed down slightly to clip any bottom watermark */
-            <iframe 
-              src="https://my.spline.design/cutecomputerfollowcursor-kTcoNww7cfTrcF5RhfaBxgaq/" 
-              frameBorder="0" 
-              width="100%" 
-              height="calc(100% + 45px)" 
-              title="JobGen 3D Interactive Mascot"
-              style={{
-                width: '100%',
-                height: 'calc(100% + 45px)',
-                marginBottom: '-45px',
-                border: 'none',
-                display: 'block'
-              }}
-            />
-          )}
+          {/* Interactive Spline 3D Scene */}
+          <iframe 
+            src="https://my.spline.design/cutecomputerfollowcursor-kTcoNww7cfTrcF5RhfaBxgaq/" 
+            frameBorder="0" 
+            width="100%" 
+            height="calc(100% + 42px)" 
+            title="JobGen 3D Interactive Mascot"
+            style={{
+              width: '100%',
+              height: 'calc(100% + 42px)',
+              marginBottom: '-42px',
+              border: 'none',
+              display: 'block',
+              pointerEvents: 'auto'
+            }}
+          />
         </div>
 
         {/* ================= 2. SOFT WHITE OVERLAY ON RIGHT HALF ================= */}
-        {/* Guarantees the input area has crystal-clear contrast and seamless white background */}
+        {/* Softly dissolves the 3D scene from the middle towards the input area with zero pointer interference */}
         <div 
           style={{
             position: 'absolute',
             top: 0,
             bottom: 0,
+            left: '36%',
             right: 0,
-            width: '58%',
             zIndex: 2,
             pointerEvents: 'none',
-            background: 'linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.65) 18%, #FFFFFF 42%, #FFFFFF 100%)'
+            background: 'linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.45) 18%, rgba(255, 255, 255, 0.88) 38%, #FFFFFF 55%, #FFFFFF 100%)'
           }}
         />
 
@@ -311,7 +294,7 @@ export default function LoginView({ onLogin }) {
             width: '100%',
             height: '100%',
             display: 'flex',
-            pointerEvents: 'none' // Allows mouse movements over empty spaces to reach Spline
+            pointerEvents: 'none' // Allows mouse movements over left area and background to reach Spline
           }}
         >
           {/* Left area allows direct cursor interaction with the 3D mascot */}
@@ -320,7 +303,7 @@ export default function LoginView({ onLogin }) {
               flex: '1.05',
               minWidth: 0,
               height: '100%',
-              pointerEvents: 'auto'
+              pointerEvents: 'none' // CRITICAL: must be none so mouse hits Spline directly!
             }}
           />
 
@@ -337,10 +320,10 @@ export default function LoginView({ onLogin }) {
               padding: '36px 42px',
               boxSizing: 'border-box',
               overflowY: 'auto',
-              pointerEvents: 'auto'
+              pointerEvents: 'none' // Only the form itself captures pointer events
             }}
           >
-            <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto' }}>
+            <div style={{ width: '100%', maxWidth: '380px', margin: '0 auto', pointerEvents: 'auto' }}>
               {/* Correct Company Logo & Name: JobGen.AI */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '18px' }}>
                 <div 
