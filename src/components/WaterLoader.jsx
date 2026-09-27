@@ -173,11 +173,6 @@ export default function WaterLoader({ onComplete }) {
           100% { transform: translateX(200%); }
         }
 
-        @keyframes waveOscillate {
-          0%, 100% { transform: translateY(0px); }
-          50% { transform: translateY(-3px); }
-        }
-
         /* Bubbles drift gently upward and forward with the current */
         @keyframes bubbleFloatForward {
           0% { transform: translate(0, 4px) scale(0.6); opacity: 0; }
@@ -259,14 +254,13 @@ export default function WaterLoader({ onComplete }) {
           textAlign: 'center',
         }}
       >
-        {/* 1. Header: Just the pure logo (no cards or background) + JOBGEN.AI in ALL CAPS */}
+        {/* 1. Header: Just the pure logo (no cards or background) + JOBGEN.AI in ALL CAPS (Static, no animation) */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
             gap: '14px',
             marginBottom: '16px',
-            animation: 'waveOscillate 3s ease-in-out infinite',
           }}
         >
           {/* Pure Logo Image (No cards, borders, or backgrounds around it) */}
@@ -298,50 +292,27 @@ export default function WaterLoader({ onComplete }) {
           </span>
         </div>
 
-        {/* 2. Loading Indicator & Counter Above Bar */}
+        {/* 2. Loading Indicator Above Bar: LOADING ... in JetBrains Mono without percentage */}
         <div
           style={{
             display: 'flex',
             alignItems: 'center',
-            gap: '10px',
+            justifyContent: 'center',
             marginBottom: '18px',
           }}
         >
           <span
             style={{
               fontSize: '13px',
-              fontWeight: 800,
-              letterSpacing: '0.18em',
+              fontWeight: 600,
+              letterSpacing: '0.24em',
               textTransform: 'uppercase',
               color: '#38BDF8',
-              fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
-              textShadow: '0 0 12px rgba(56, 189, 248, 0.65)',
+              fontFamily: '"JetBrains Mono", monospace',
+              textShadow: '0 0 14px rgba(56, 189, 248, 0.65)',
             }}
           >
-            Loading
-          </span>
-          <span
-            style={{
-              display: 'inline-block',
-              width: '4px',
-              height: '4px',
-              borderRadius: '50%',
-              backgroundColor: '#38BDF8',
-              boxShadow: '0 0 6px rgba(56, 189, 248, 0.8)',
-            }}
-          />
-          <span
-            style={{
-              fontSize: '13px',
-              fontWeight: 700,
-              fontFamily: 'monospace, monospace',
-              color: '#E2E8F0',
-              letterSpacing: '0.04em',
-              minWidth: '40px',
-              textAlign: 'left',
-            }}
-          >
-            {Math.round(displayProgress)}%
+            LOADING ...
           </span>
         </div>
 
