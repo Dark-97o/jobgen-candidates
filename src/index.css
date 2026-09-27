@@ -415,3 +415,33 @@ html, body {
     opacity: 0.5;
   }
 }
+
+/* ==========================================================================
+   FRICTIONLESS SMOOTH SCROLLING UTILITY
+   ========================================================================== */
+.frictionless-scroll {
+  scroll-behavior: smooth !important;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(148, 163, 184, 0.4) transparent;
+}
+
+.frictionless-scroll::-webkit-scrollbar {
+  display: block !important;
+  width: 5px;
+}
+
+.frictionless-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.frictionless-scroll::-webkit-scrollbar-thumb {
+  background: rgba(148, 163, 184, 0.35);
+  border-radius: 999px;
+  transition: background 0.2s ease;
+}
+
+.frictionless-scroll::-webkit-scrollbar-thumb:hover {
+  background: rgba(37, 99, 235, 0.65);
+}
