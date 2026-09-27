@@ -292,3 +292,7 @@
 - Timestamp: `2026-09-27T13:08:15+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] feat(auth): configure hardcoded Candidate credentials validation
+- Timestamp: `2026-09-27T13:22:40+05:30`
+- Status: Completed & Verified
+
