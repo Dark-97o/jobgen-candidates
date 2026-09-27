@@ -177,18 +177,20 @@ export default function LoginView({ onLogin }) {
     >
       {/* 1. Blue Side Top Corner: Vertical Text "Candidates" in Crisp White */}
       <div
+        className="login-corner-text"
         style={{
           position: 'absolute',
           top: '36px',
           left: '38px',
           writingMode: 'vertical-rl',
           transform: 'rotate(180deg)',
-          fontSize: 'clamp(18px, 1.8vw, 24px)',
-          fontWeight: 800,
-          letterSpacing: '0.22em',
+          fontSize: 'clamp(34px, 4.2vw, 62px)',
+          fontWeight: 900,
+          letterSpacing: '-0.03em',
           textTransform: 'uppercase',
           color: '#FFFFFF',
-          fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+          fontFamily: '"Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif',
+          lineHeight: 1,
           opacity: 0.95,
           pointerEvents: 'none',
           userSelect: 'none',
@@ -200,17 +202,19 @@ export default function LoginView({ onLogin }) {
 
       {/* 2. White Side Bottom Corner: Vertical Text "JobGen.AI" in Vibrant Brand Blue */}
       <div
+        className="login-corner-text"
         style={{
           position: 'absolute',
           bottom: '36px',
           right: '38px',
           writingMode: 'vertical-rl',
-          fontSize: 'clamp(18px, 1.8vw, 24px)',
-          fontWeight: 800,
-          letterSpacing: '0.22em',
+          fontSize: 'clamp(34px, 4.2vw, 62px)',
+          fontWeight: 900,
+          letterSpacing: '-0.03em',
           textTransform: 'uppercase',
           color: '#1A53CF',
-          fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+          fontFamily: '"Plus Jakarta Sans", "Inter", system-ui, -apple-system, sans-serif',
+          lineHeight: 1,
           opacity: 0.95,
           pointerEvents: 'none',
           userSelect: 'none',
@@ -260,6 +264,11 @@ export default function LoginView({ onLogin }) {
             padding: 24px 20px !important;
           }
         }
+        @media (max-width: 820px) {
+          .login-corner-text {
+            display: none !important;
+          }
+        }
       `}</style>
 
       {/* ================= ONE UNIFIED FLOATING CARD ================= */}
@@ -277,6 +286,7 @@ export default function LoginView({ onLogin }) {
           display: 'flex',
           overflow: 'hidden',
           position: 'relative',
+          zIndex: 5,
           animation: 'cardPop 0.35s cubic-bezier(0.16, 1, 0.3, 1)',
           boxSizing: 'border-box'
         }}
