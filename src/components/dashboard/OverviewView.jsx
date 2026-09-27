@@ -453,7 +453,7 @@ export default function OverviewView({ onNavigate }) {
   };
 
   return (
-    <div style={{ position: 'relative', overflow: 'hidden', paddingBottom: '0px', width: '100%', paddingRight: '0' }}>
+    <div style={{ position: 'relative', overflowX: 'clip', overflowY: 'visible', paddingBottom: '0px', width: '100%', paddingRight: '0' }}>
       
       {/* ATMOSPHERIC GLOW FLARES */}
       <div className="glow-flare-cyan" style={{ top: '-100px', right: '5%', opacity: 0.6 }} />
@@ -1063,43 +1063,49 @@ export default function OverviewView({ onNavigate }) {
             1. THIN VERTICAL LINES ON RIGHT SIDE
             2. MOVING BLUE MIST ANIMATION
             ========================================================================== */}
-        {/* 1. Thin Vertical Lines on Right Side behind Cards */}
+        {/* 1. Thin Vertical Lines on Right Side behind Cards (Smoothly Faded on All Edges with Extended Gradient) */}
         <div 
           style={{
             position: 'absolute',
-            right: '-3%',
-            top: '-8%',
+            right: '-2%',
+            top: '-6%',
             width: '46%',
-            height: '116%',
+            height: '118%',
             pointerEvents: 'none',
             zIndex: 0,
-            overflow: 'hidden',
-            maskImage: 'linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 55%, transparent 100%), linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.95) 12%, rgba(0, 0, 0, 0.95) 88%, transparent 100%)',
-            WebkitMaskImage: 'linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.6) 55%, transparent 100%), linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.95) 12%, rgba(0, 0, 0, 0.95) 88%, transparent 100%)',
-            maskComposite: 'intersect',
-            WebkitMaskComposite: 'source-in',
+            maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.95) 8%, rgba(0, 0, 0, 0.9) 60%, rgba(0, 0, 0, 0.4) 78%, rgba(0, 0, 0, 0.1) 90%, transparent 98%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.95) 8%, rgba(0, 0, 0, 0.9) 60%, rgba(0, 0, 0, 0.4) 78%, rgba(0, 0, 0, 0.1) 90%, transparent 98%)',
           }}
         >
-          {/* Dense thin vertical tech lines */}
           <div 
             style={{
               position: 'absolute',
               inset: 0,
-              backgroundImage: 'repeating-linear-gradient(90deg, rgba(56, 189, 248, 0.28) 0px, rgba(56, 189, 248, 0.28) 1px, transparent 1px, transparent 18px)',
+              maskImage: 'linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%)',
+              WebkitMaskImage: 'linear-gradient(to left, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.5) 60%, transparent 100%)',
             }}
-          />
-          {/* Subtle accent vertical lines with slightly higher contrast */}
-          <div 
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage: 'repeating-linear-gradient(90deg, rgba(37, 99, 235, 0.42) 0px, rgba(37, 99, 235, 0.42) 1.5px, transparent 1.5px, transparent 90px)',
-              opacity: 0.85,
-            }}
-          />
+          >
+            {/* Dense thin vertical tech lines */}
+            <div 
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: 'repeating-linear-gradient(90deg, rgba(56, 189, 248, 0.28) 0px, rgba(56, 189, 248, 0.28) 1px, transparent 1px, transparent 18px)',
+              }}
+            />
+            {/* Subtle accent vertical lines with slightly higher contrast */}
+            <div 
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: 'repeating-linear-gradient(90deg, rgba(37, 99, 235, 0.42) 0px, rgba(37, 99, 235, 0.42) 1.5px, transparent 1.5px, transparent 90px)',
+                opacity: 0.85,
+              }}
+            />
+          </div>
         </div>
 
-        {/* 2. Blue Mist Animation Moving Around (Smooth Drifting Atmospheric Clouds) */}
+        {/* 2. Blue Mist Animation Moving Around (Smooth Drifting Atmospheric Clouds with Bottom Fade) */}
         <div 
           style={{
             position: 'absolute',
@@ -1107,6 +1113,8 @@ export default function OverviewView({ onNavigate }) {
             pointerEvents: 'none',
             zIndex: 0,
             overflow: 'visible',
+            maskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 1) 12%, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0.35) 82%, transparent 95%)',
+            WebkitMaskImage: 'linear-gradient(to bottom, rgba(0, 0, 0, 0.2) 0%, rgba(0, 0, 0, 1) 12%, rgba(0, 0, 0, 1) 65%, rgba(0, 0, 0, 0.35) 82%, transparent 95%)',
           }}
         >
           {/* Blue Mist Cloud 1 - Drifting Cyan / Sky Blue */}
@@ -2084,6 +2092,21 @@ export default function OverviewView({ onNavigate }) {
               </span>
             </div>
           </div>
+
+          {/* Atmospheric Seamless Blend Bridge between Cards and Footer */}
+          <div
+            style={{
+              position: 'absolute',
+              left: '5%',
+              right: '5%',
+              bottom: '-45px',
+              height: '160px',
+              background: 'radial-gradient(ellipse 65% 55% at 50% 10%, rgba(56, 189, 248, 0.08) 0%, rgba(37, 99, 235, 0.03) 50%, transparent 85%)',
+              filter: 'blur(35px)',
+              pointerEvents: 'none',
+              zIndex: 0,
+            }}
+          />
         </div>
 
       </div>
