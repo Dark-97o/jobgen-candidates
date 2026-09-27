@@ -317,25 +317,30 @@ export default function TopHeader({ currentTab }) {
             display: 'inline-flex', 
             alignItems: 'center', 
             justifyContent: 'center',
-            padding: '7px 28px 8px 28px', 
+            padding: '8px 46px 9px 46px', 
             minHeight: '44px',
+            minWidth: '180px',
             zIndex: 10, 
-            flexShrink: 0 
+            flexShrink: 0,
+            overflow: 'visible',
           }}
         >
-          {/* Background Image /back.png */}
+          {/* Background Image /back.png with side bleed so feathered bristles never clip */}
           <img 
             src="/back.png" 
             alt="Page Badge" 
             style={{ 
               position: 'absolute', 
-              inset: 0, 
-              width: '100%', 
-              height: '100%', 
+              top: '-3px',
+              bottom: '-3px',
+              left: '-20px',
+              right: '-20px',
+              width: 'calc(100% + 40px)', 
+              height: 'calc(100% + 6px)', 
               objectFit: 'fill', 
               pointerEvents: 'none', 
               zIndex: 0,
-              filter: 'drop-shadow(0 3px 10px rgba(26, 83, 207, 0.35))',
+              filter: 'drop-shadow(0 4px 12px rgba(26, 83, 207, 0.35))',
             }} 
           />
 
@@ -343,7 +348,7 @@ export default function TopHeader({ currentTab }) {
             style={{ 
               position: 'relative',
               zIndex: 1,
-              fontSize: '21px', 
+              fontSize: '20px', 
               fontWeight: 800, 
               letterSpacing: '-0.02em', 
               margin: 0,
@@ -352,7 +357,7 @@ export default function TopHeader({ currentTab }) {
               alignItems: 'center',
               lineHeight: 1,
               fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
-              textShadow: '0 1px 4px rgba(0, 0, 0, 0.4)',
+              textShadow: '0 1px 4px rgba(0, 0, 0, 0.45)',
               whiteSpace: 'nowrap',
             }}
           >
@@ -360,11 +365,11 @@ export default function TopHeader({ currentTab }) {
           </h1>
         </div>
 
-        {/* Smoke Animation: Starts just beside Home and drifts softly across the topbar */}
+        {/* Smoke Animation: Starts softly beside the page title */}
         <div 
           style={{
             position: 'absolute',
-            left: '135px',
+            left: '210px',
             right: 0,
             top: 0,
             bottom: 0,
