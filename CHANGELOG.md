@@ -256,3 +256,7 @@
 - Timestamp: `2026-09-27T10:35:20+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] style(locations): remove descriptive subtitles from location modal cards
+- Timestamp: `2026-09-27T10:52:10+05:30`
+- Status: Completed & Verified
+
