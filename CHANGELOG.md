@@ -320,3 +320,7 @@
 - Timestamp: `2026-09-27T14:18:50+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] style(auth): remove candidates pill from login brand header
+- Timestamp: `2026-09-27T14:23:10+05:30`
+- Status: Completed & Verified
+
