@@ -1,11 +1,77 @@
 import React, { useState, useEffect, useRef } from 'react';
 
+// Heavy assets to actively download and cache during the 5-second loading phase
+const PRELOAD_IMAGES = [
+  '/caln.png',
+  '/jobgen-logo.png',
+  '/back.png',
+  '/free.png',
+  '/clock-building.png',
+  '/cloud1.png',
+  '/cloud2.png',
+  '/city-skyline.jpg',
+  '/clouds.jpg',
+];
+
+const PRELOAD_VIDEOS = [
+  '/herow.mp4',
+  '/waves.mp4',
+];
+
+const SPLINE_IFRAME_URL = 'https://my.spline.design/cutecomputerfollowcursor-kTcoNww7cfTrcF5RhfaBxgaq/';
+const SPLINE_SCENE_URL = 'https://my.spline.design/cutecomputerfollowcursor-kTcoNww7cfTrcF5RhfaBxgaq/scene.splinecode';
+
 export default function WaterLoader({ onComplete }) {
   const [progress, setProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
+  const [loadedCount, setLoadedCount] = useState(0);
   const startTimeRef = useRef(null);
   const DURATION = 5000; // Exactly 5 seconds
 
+  // 1. Active Parallel Asset & Spline Downloader
+  useEffect(() => {
+    let completed = 0;
+    const increment = () => {
+      completed += 1;
+      setLoadedCount(completed);
+    };
+
+    // A. Pre-download images into browser cache
+    PRELOAD_IMAGES.forEach((src) => {
+      const img = new Image();
+      img.onload = increment;
+      img.onerror = increment;
+      img.src = src;
+    });
+
+    // B. Pre-download videos into browser media cache
+    PRELOAD_VIDEOS.forEach((src) => {
+      try {
+        const video = document.createElement('video');
+        video.preload = 'auto';
+        video.onloadeddata = increment;
+        video.onerror = increment;
+        video.src = src;
+        video.load();
+
+        // Also fetch to warm HTTP cache
+        fetch(src, { cache: 'force-cache' }).catch(() => {});
+      } catch {
+        increment();
+      }
+    });
+
+    // C. Pre-download Spline 3D Scene Binary
+    try {
+      fetch(SPLINE_SCENE_URL, { mode: 'no-cors', cache: 'force-cache' })
+        .then(increment)
+        .catch(increment);
+    } catch {
+      increment();
+    }
+  }, []);
+
+  // 2. 5-Second Liquid Progress Timer Loop
   useEffect(() => {
     let animId;
 
@@ -14,14 +80,12 @@ export default function WaterLoader({ onComplete }) {
       const elapsed = timestamp - startTimeRef.current;
       const rawProgress = Math.min(100, (elapsed / DURATION) * 100);
 
-      // Natural fluid easing for realistic filling feel
       setProgress(rawProgress);
 
       if (elapsed < DURATION) {
         animId = requestAnimationFrame(tick);
       } else {
         setProgress(100);
-        // Start smooth exit transition
         setIsExiting(true);
         setTimeout(() => {
           if (onComplete) onComplete();
@@ -32,6 +96,15 @@ export default function WaterLoader({ onComplete }) {
     animId = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(animId);
   }, [onComplete]);
+
+  // Informative micro status tracking what is downloading
+  const getSubStatus = (pct) => {
+    if (pct < 24) return 'Downloading 3D interactive mascot & Spline runtime...';
+    if (pct < 52) return 'Caching cinematic video streams & herow.mp4...';
+    if (pct < 78) return 'Pre-buffering calendar textures & candidate assets...';
+    if (pct < 98) return 'Optimizing neural pipeline & liquid workspace...';
+    return 'Assets cached • Launching candidate portal';
+  };
 
   return (
     <div
@@ -72,6 +145,21 @@ export default function WaterLoader({ onComplete }) {
           100% { transform: translate(-8px, -18px) scale(1.2); opacity: 0; }
         }
       `}</style>
+
+      {/* Hidden Spline Preload iframe: fully loads & caches Spline WebGL shaders, scripts and WASM runtime in background */}
+      <iframe
+        src={SPLINE_IFRAME_URL}
+        title="Spline Asset Preloader"
+        style={{
+          position: 'absolute',
+          width: '1px',
+          height: '1px',
+          opacity: 0.001,
+          pointerEvents: 'none',
+          zIndex: -1,
+          border: 'none',
+        }}
+      />
 
       {/* Subtle Refraction Glow behind the loader */}
       <div
@@ -294,19 +382,20 @@ export default function WaterLoader({ onComplete }) {
           </div>
         </div>
 
-        {/* Micro Subtitle Note */}
+        {/* Live Asset Download Subtitle */}
         <div
           style={{
             marginTop: '14px',
             fontSize: '11px',
             fontWeight: 600,
-            color: '#94A3B8',
+            color: '#64748B',
             letterSpacing: '0.04em',
-            textTransform: 'uppercase',
             fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+            minHeight: '18px',
+            transition: 'color 0.2s ease',
           }}
         >
-          Initializing Candidate Pipeline
+          {getSubStatus(progress)}
         </div>
       </div>
     </div>
