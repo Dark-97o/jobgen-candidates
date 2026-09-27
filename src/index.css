@@ -445,3 +445,21 @@ html, body {
 .frictionless-scroll::-webkit-scrollbar-thumb:hover {
   background: rgba(37, 99, 235, 0.65);
 }
+
+/* ==========================================================================
+   HIDDEN SCROLLBAR UTILITY (Smooth scrolling without visible scrollbar)
+   ========================================================================== */
+.hide-scrollbar {
+  scroll-behavior: smooth !important;
+  overscroll-behavior-y: contain;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+}
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+

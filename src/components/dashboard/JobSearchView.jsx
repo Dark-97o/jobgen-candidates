@@ -2060,22 +2060,24 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
       <div 
         style={{ 
           display: 'grid', 
-          gridTemplateColumns: '385px 1fr', 
+          gridTemplateColumns: '435px 1fr', 
           gap: '20px', 
           alignItems: 'start',
           width: '100%',
           boxSizing: 'border-box',
+          position: 'relative',
+          zIndex: 5,
         }}
       >
         
-        {/* Left Column: Job Cards List with Smooth Frictionless Scrolling */}
+        {/* Left Column: Job Cards List with Smooth Frictionless Scrolling (Enlarged Column) */}
         <div 
           className="frictionless-scroll"
           style={{ 
             display: 'flex', 
             flexDirection: 'column', 
             gap: '14px', 
-            maxHeight: 'calc(100vh - 220px)', 
+            maxHeight: 'calc(100vh - 160px)', 
             overflowY: 'auto', 
             scrollBehavior: 'smooth',
             overscrollBehavior: 'contain',
@@ -2084,8 +2086,10 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             paddingLeft: '4px',
             paddingRight: '6px', 
             width: '100%', 
-            maxWidth: '385px',
-            boxSizing: 'border-box'
+            maxWidth: '435px',
+            boxSizing: 'border-box',
+            position: 'relative',
+            zIndex: 5,
           }}
         >
           {filteredJobs.length === 0 ? (
@@ -2192,15 +2196,15 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
                           width: '100%',
                           height: '100%',
                           objectFit: 'cover',
-                          filter: 'brightness(0.55) contrast(1.25)',
+                          filter: 'brightness(0.92) contrast(1.08)',
                         }}
                       />
-                      {/* Seamless Gradient Fade: Pure White on left fading into deep photo tint on right */}
+                      {/* Seamless Gradient Fade: Pure White on left fading softly into bright photo on right */}
                       <div
                         style={{
                           position: 'absolute',
                           inset: 0,
-                          background: 'linear-gradient(90deg, #FFFFFF 0%, rgba(255, 255, 255, 0.95) 8%, rgba(9, 12, 21, 0.45) 45%, rgba(9, 12, 21, 0.85) 100%)',
+                          background: 'linear-gradient(90deg, #FFFFFF 0%, rgba(255, 255, 255, 0.92) 10%, rgba(9, 12, 21, 0.14) 50%, rgba(9, 12, 21, 0.38) 100%)',
                         }}
                       />
                     </div>
@@ -2221,16 +2225,31 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
                       </span>
                     </div>
 
-                    {/* Right Side: Pure White Text Over the Dark Image */}
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', zIndex: 2 }}>
+                    {/* Right Side: Work Type & Career Level pill with crisp frosted backing */}
+                    <div 
+                      style={{ 
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        gap: '6px', 
+                        zIndex: 2,
+                        backgroundColor: 'rgba(9, 12, 21, 0.62)',
+                        backdropFilter: 'blur(8px)',
+                        WebkitBackdropFilter: 'blur(8px)',
+                        padding: '3px 8px',
+                        borderRadius: '7px',
+                        border: '1px solid rgba(255, 255, 255, 0.22)',
+                        boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
+                      }}
+                    >
                       <span
                         style={{
-                          fontSize: '11.5px',
-                          fontWeight: 700,
+                          fontSize: '11px',
+                          fontWeight: 750,
                           color: '#FFFFFF',
                           fontFamily: '"Plus Jakarta Sans", sans-serif',
                           letterSpacing: '-0.01em',
-                          textShadow: '0 1px 4px rgba(0, 0, 0, 0.9), 0 0 8px rgba(0, 0, 0, 0.7)',
+                          textShadow: '0 1px 3px rgba(0, 0, 0, 0.8)',
+                          whiteSpace: 'nowrap',
                         }}
                       >
                         {job.workType} · {job.careerLevel}
@@ -2353,9 +2372,9 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
           )}
         </div>
 
-        {/* Right Column: Deep Job Inspection & 1-Click Action Terminal with Smooth Frictionless Scrolling */}
+        {/* Right Column: Deep Job Inspection & 1-Click Action Terminal (Scrollbar Hidden with Smooth Frictionless Scrolling) */}
         <div 
-          className="frictionless-scroll"
+          className="hide-scrollbar"
           style={{ 
             background: 'rgba(255, 255, 255, 0.92)', 
             backdropFilter: 'blur(20px)',
@@ -2370,6 +2389,8 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             overflowY: 'auto',
             scrollBehavior: 'smooth',
             overscrollBehavior: 'contain',
+            scrollbarWidth: 'none',
+            msOverflowStyle: 'none',
           }}
         >
           {/* Header with Actual Company Logo */}
