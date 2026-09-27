@@ -332,3 +332,7 @@
 - Timestamp: `2026-09-27T14:31:05+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] fix(auth): unblock pointer events to enable full 3D cursor follow tracking
+- Timestamp: `2026-09-27T14:34:20+05:30`
+- Status: Completed & Verified
+
