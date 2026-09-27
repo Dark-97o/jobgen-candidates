@@ -324,3 +324,7 @@
 - Timestamp: `2026-09-27T14:23:10+05:30`
 - Status: Completed & Verified
 
+## [2026-09-27] style(auth): set Spline 3D scene as card background with smooth fade mask
+- Timestamp: `2026-09-27T14:27:40+05:30`
+- Status: Completed & Verified
+
