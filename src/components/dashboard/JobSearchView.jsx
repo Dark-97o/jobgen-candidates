@@ -547,7 +547,7 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
           borderRadius: '20px', 
           border: '1px solid rgba(226, 232, 240, 0.9)', 
           boxShadow: '0 8px 30px rgba(0, 0, 0, 0.04)',
-          marginBottom: '20px', 
+          marginBottom: '32px', 
           display: 'flex', 
           flexDirection: 'column',
           gap: '14px',
@@ -1032,7 +1032,22 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
       >
         
         {/* Left Column: Job Cards List */}
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', maxHeight: 'calc(100vh - 220px)', overflowY: 'auto', paddingRight: '6px', width: '100%', maxWidth: '380px' }}>
+        <div 
+          style={{ 
+            display: 'flex', 
+            flexDirection: 'column', 
+            gap: '14px', 
+            maxHeight: 'calc(100vh - 220px)', 
+            overflowY: 'auto', 
+            paddingTop: '8px',
+            paddingBottom: '16px',
+            paddingLeft: '4px',
+            paddingRight: '6px', 
+            width: '100%', 
+            maxWidth: '380px',
+            boxSizing: 'border-box'
+          }}
+        >
           {filteredJobs.length === 0 ? (
             <div 
               style={{ 
