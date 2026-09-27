@@ -250,27 +250,20 @@ export default function TopHeader({ currentTab }) {
     };
   }, [profileMenuOpen]);
 
-  // Page name definitions split into 50% Black & 50% Blue
-  const PAGE_TITLES = {
-    overview: { black: 'Ho', blue: 'me' },
-    jobs: { black: 'Job ', blue: 'Hunt' },
-    pipeline: { black: 'Tra', blue: 'cker' },
-    resume: { black: 'Res', blue: 'ume' },
-    coverletter: { black: 'Cover ', blue: 'Letter' },
-    workspace: { black: 'Work', blue: 'space' },
-    interview: { black: 'Interview ', blue: 'Prep' },
-    events: { black: 'Career ', blue: 'Events' },
-    careerplan: { black: 'Career ', blue: 'Plan' },
+  // Page name definitions
+  const PAGE_NAMES = {
+    overview: 'Home',
+    jobs: 'Job Hunt',
+    pipeline: 'Tracker',
+    resume: 'Resume',
+    coverletter: 'Cover Letter',
+    workspace: 'Workspace',
+    interview: 'Interview Prep',
+    events: 'Career Events',
+    careerplan: 'Career Plan',
   };
 
-  const getPageTitle = (tab) => {
-    if (PAGE_TITLES[tab]) return PAGE_TITLES[tab];
-    const str = String(tab || 'Dashboard');
-    const mid = Math.ceil(str.length / 2);
-    return { black: str.slice(0, mid), blue: str.slice(mid) };
-  };
-
-  const currentTitle = getPageTitle(currentTab);
+  const pageTitle = PAGE_NAMES[currentTab] || (typeof currentTab === 'string' ? currentTab.charAt(0).toUpperCase() + currentTab.slice(1) : 'Dashboard');
 
   return (
     <>
@@ -317,28 +310,53 @@ export default function TopHeader({ currentTab }) {
           }}
         />
 
-        {/* Left: Prominent Page Name Only (Time & Date cards removed) */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '12px', zIndex: 10, flexShrink: 0 }}>
+        {/* Left: Prominent Page Name with /back.png image behind white text */}
+        <div 
+          style={{ 
+            position: 'relative', 
+            display: 'inline-flex', 
+            alignItems: 'center', 
+            justifyContent: 'center',
+            padding: '7px 28px 8px 28px', 
+            minHeight: '44px',
+            zIndex: 10, 
+            flexShrink: 0 
+          }}
+        >
+          {/* Background Image /back.png */}
+          <img 
+            src="/back.png" 
+            alt="Page Badge" 
+            style={{ 
+              position: 'absolute', 
+              inset: 0, 
+              width: '100%', 
+              height: '100%', 
+              objectFit: 'fill', 
+              pointerEvents: 'none', 
+              zIndex: 0,
+              filter: 'drop-shadow(0 3px 10px rgba(26, 83, 207, 0.35))',
+            }} 
+          />
+
           <h1 
             style={{ 
-              fontSize: '24px', 
-              fontWeight: 900, 
-              letterSpacing: '-0.03em', 
+              position: 'relative',
+              zIndex: 1,
+              fontSize: '21px', 
+              fontWeight: 800, 
+              letterSpacing: '-0.02em', 
               margin: 0,
+              color: '#FFFFFF',
               display: 'flex', 
               alignItems: 'center',
               lineHeight: 1,
-              fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif'
+              fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif',
+              textShadow: '0 1px 4px rgba(0, 0, 0, 0.4)',
+              whiteSpace: 'nowrap',
             }}
           >
-            {/* First Half: Solid Black */}
-            <span style={{ color: '#090C15' }}>
-              {currentTitle.black}
-            </span>
-            {/* Second Half: Electric / Royal Blue */}
-            <span style={{ color: '#1A53CF' }}>
-              {currentTitle.blue}
-            </span>
+            {pageTitle}
           </h1>
         </div>
 
