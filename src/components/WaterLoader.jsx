@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 
-// Heavy assets to actively download and cache during the 5-second loading phase
+// Heavy assets to actively download and cache during loading
 const PRELOAD_IMAGES = [
   '/caln.png',
   '/jobgen-logo.png',
@@ -22,89 +22,130 @@ const SPLINE_IFRAME_URL = 'https://my.spline.design/cutecomputerfollowcursor-kTc
 const SPLINE_SCENE_URL = 'https://my.spline.design/cutecomputerfollowcursor-kTcoNww7cfTrcF5RhfaBxgaq/scene.splinecode';
 
 export default function WaterLoader({ onComplete }) {
-  const [progress, setProgress] = useState(0);
+  const [displayProgress, setDisplayProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
-  const [loadedCount, setLoadedCount] = useState(0);
-  const startTimeRef = useRef(null);
-  const DURATION = 5000; // Exactly 5 seconds
+  const [currentAssetLabel, setCurrentAssetLabel] = useState('Downloading 3D mascot & assets...');
 
-  // 1. Active Parallel Asset & Spline Downloader
+  // Tracking real download progress
+  const completedCountRef = useRef(0);
+  const totalAssetsCount = PRELOAD_IMAGES.length + PRELOAD_VIDEOS.length + 2; // +2 for Spline iframe and scene
+  const targetProgressRef = useRef(5);
+  const isDoneRef = useRef(false);
+  const startTimeRef = useRef(Date.now());
+  const MIN_DISPLAY_TIME = 2000; // Minimum 2s so animation feels smooth even on fast cache
+
+  // 1. Actively download all assets and Spline things in parallel
   useEffect(() => {
-    let completed = 0;
-    const increment = () => {
-      completed += 1;
-      setLoadedCount(completed);
+    let active = true;
+
+    const handleOneAssetLoaded = (label) => {
+      if (!active) return;
+      completedCountRef.current += 1;
+      const count = completedCountRef.current;
+      
+      // Calculate real download percentage (up to 95% while loading; hits 100% when everything is done)
+      const realRatio = count / totalAssetsCount;
+      const computedTarget = Math.min(95, Math.max(targetProgressRef.current, realRatio * 95));
+      targetProgressRef.current = computedTarget;
+
+      if (label) {
+        setCurrentAssetLabel(label);
+      }
+
+      // When all assets have completed downloading
+      if (count >= totalAssetsCount) {
+        targetProgressRef.current = 100;
+        setCurrentAssetLabel('Assets cached • Launching candidate portal');
+      }
     };
 
-    // A. Pre-download images into browser cache
+    // A. Preload Images
     PRELOAD_IMAGES.forEach((src) => {
       const img = new Image();
-      img.onload = increment;
-      img.onerror = increment;
+      img.onload = () => handleOneAssetLoaded(`Cached ${src.replace('/', '')}`);
+      img.onerror = () => handleOneAssetLoaded();
       img.src = src;
     });
 
-    // B. Pre-download videos into browser media cache
+    // B. Preload Videos
     PRELOAD_VIDEOS.forEach((src) => {
       try {
         const video = document.createElement('video');
         video.preload = 'auto';
-        video.onloadeddata = increment;
-        video.onerror = increment;
+        video.onloadeddata = () => handleOneAssetLoaded(`Streamed ${src.replace('/', '')}`);
+        video.onerror = () => handleOneAssetLoaded();
         video.src = src;
         video.load();
 
-        // Also fetch to warm HTTP cache
         fetch(src, { cache: 'force-cache' }).catch(() => {});
       } catch {
-        increment();
+        handleOneAssetLoaded();
       }
     });
 
-    // C. Pre-download Spline 3D Scene Binary
+    // C. Preload Spline Scene Binary
     try {
       fetch(SPLINE_SCENE_URL, { mode: 'no-cors', cache: 'force-cache' })
-        .then(increment)
-        .catch(increment);
+        .then(() => handleOneAssetLoaded('3D Mascot Scene Code Downloaded'))
+        .catch(() => handleOneAssetLoaded());
     } catch {
-      increment();
+      handleOneAssetLoaded();
     }
-  }, []);
 
-  // 2. 5-Second Liquid Progress Timer Loop
+    // Safety fallback: if any asset stalls on network, finish after 15 seconds
+    const safetyTimer = setTimeout(() => {
+      if (!isDoneRef.current) {
+        targetProgressRef.current = 100;
+      }
+    }, 15000);
+
+    return () => {
+      active = false;
+      clearTimeout(safetyTimer);
+    };
+  }, [totalAssetsCount]);
+
+  // 2. Monotonic Forward-Only RAF Loop (Guarantees no reverse animation or jumping)
   useEffect(() => {
     let animId;
+    let currentVal = 0;
 
-    const tick = (timestamp) => {
-      if (!startTimeRef.current) startTimeRef.current = timestamp;
-      const elapsed = timestamp - startTimeRef.current;
-      const rawProgress = Math.min(100, (elapsed / DURATION) * 100);
+    const loop = () => {
+      const target = targetProgressRef.current;
+      const elapsed = Date.now() - startTimeRef.current;
 
-      setProgress(rawProgress);
+      // Smooth forward lerp towards target
+      if (currentVal < target) {
+        const diff = target - currentVal;
+        // Natural fluid acceleration: faster if far behind, gentle as it approaches
+        const step = Math.max(0.2, diff * 0.07);
+        currentVal = Math.min(target, currentVal + step);
+      }
 
-      if (elapsed < DURATION) {
-        animId = requestAnimationFrame(tick);
-      } else {
-        setProgress(100);
+      setDisplayProgress(currentVal);
+
+      // Check if all downloads finished AND minimum graceful time elapsed AND progress is 100%
+      if (
+        completedCountRef.current >= totalAssetsCount &&
+        elapsed >= MIN_DISPLAY_TIME &&
+        currentVal >= 99.8 &&
+        !isDoneRef.current
+      ) {
+        isDoneRef.current = true;
+        setDisplayProgress(100);
         setIsExiting(true);
         setTimeout(() => {
           if (onComplete) onComplete();
-        }, 450);
+        }, 400);
+        return;
       }
+
+      animId = requestAnimationFrame(loop);
     };
 
-    animId = requestAnimationFrame(tick);
+    animId = requestAnimationFrame(loop);
     return () => cancelAnimationFrame(animId);
-  }, [onComplete]);
-
-  // Informative micro status tracking what is downloading
-  const getSubStatus = (pct) => {
-    if (pct < 24) return 'Downloading 3D interactive mascot & Spline runtime...';
-    if (pct < 52) return 'Caching cinematic video streams & herow.mp4...';
-    if (pct < 78) return 'Pre-buffering calendar textures & candidate assets...';
-    if (pct < 98) return 'Optimizing neural pipeline & liquid workspace...';
-    return 'Assets cached • Launching candidate portal';
-  };
+  }, [totalAssetsCount, onComplete]);
 
   return (
     <div
@@ -125,28 +166,37 @@ export default function WaterLoader({ onComplete }) {
         pointerEvents: isExiting ? 'none' : 'auto',
         opacity: isExiting ? 0 : 1,
         transform: isExiting ? 'scale(1.02)' : 'scale(1)',
-        transition: 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1), transform 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
+        transition: 'opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1), transform 0.4s cubic-bezier(0.16, 1, 0.3, 1)',
         userSelect: 'none',
       }}
     >
       <style>{`
-        @keyframes waterFlow {
+        /* Forward-only wave shimmer across water (Left to Right) */
+        @keyframes waterShimmerForward {
+          0% { transform: translateX(-100%); }
+          100% { transform: translateX(200%); }
+        }
+
+        /* Forward-only micro-ripples */
+        @keyframes waterFlowForward {
           0% { background-position: 0% 50%; }
-          100% { background-position: 200% 50%; }
+          100% { background-position: -200% 50%; }
         }
+
         @keyframes waveOscillate {
-          0% { transform: translateY(0px) rotate(0deg); }
-          50% { transform: translateY(-2px) rotate(1.5deg); }
-          100% { transform: translateY(0px) rotate(0deg); }
+          0%, 100% { transform: translateY(0px); }
+          50% { transform: translateY(-3px); }
         }
-        @keyframes bubbleFloat {
+
+        /* Bubbles drift gently upward and forward with the current */
+        @keyframes bubbleFloatForward {
           0% { transform: translate(0, 4px) scale(0.6); opacity: 0; }
-          40% { opacity: 0.8; }
-          100% { transform: translate(-8px, -18px) scale(1.2); opacity: 0; }
+          40% { opacity: 0.85; }
+          100% { transform: translate(6px, -18px) scale(1.15); opacity: 0; }
         }
       `}</style>
 
-      {/* Hidden Spline Preload iframe: fully loads & caches Spline WebGL shaders, scripts and WASM runtime in background */}
+      {/* Hidden Spline Preload iframe: fully downloads and caches WebGL shaders and WASM */}
       <iframe
         src={SPLINE_IFRAME_URL}
         title="Spline Asset Preloader"
@@ -159,14 +209,21 @@ export default function WaterLoader({ onComplete }) {
           zIndex: -1,
           border: 'none',
         }}
+        onLoad={() => {
+          completedCountRef.current += 1;
+          const count = completedCountRef.current;
+          const realRatio = count / totalAssetsCount;
+          targetProgressRef.current = Math.min(95, Math.max(targetProgressRef.current, realRatio * 95));
+          setCurrentAssetLabel('3D Mascot & Spline Runtime Cached');
+        }}
       />
 
-      {/* Subtle Refraction Glow behind the loader */}
+      {/* Ambient Atmospheric Refraction Glow */}
       <div
         style={{
           position: 'absolute',
-          width: '380px',
-          height: '380px',
+          width: '400px',
+          height: '400px',
           borderRadius: '50%',
           background: 'radial-gradient(circle, rgba(56, 189, 248, 0.18) 0%, rgba(14, 165, 233, 0.06) 50%, transparent 70%)',
           filter: 'blur(50px)',
@@ -277,11 +334,11 @@ export default function WaterLoader({ onComplete }) {
               textAlign: 'left',
             }}
           >
-            {Math.round(progress)}%
+            {Math.round(displayProgress)}%
           </span>
         </div>
 
-        {/* 3. The Water Tank / Bar (Filling with Water) */}
+        {/* 3. The Water Tank / Bar (Forward Filling with Liquid Water) */}
         <div
           style={{
             width: 'clamp(280px, 42vw, 420px)',
@@ -296,60 +353,70 @@ export default function WaterLoader({ onComplete }) {
             overflow: 'hidden',
           }}
         >
-          {/* Water Liquid Body */}
+          {/* Water Liquid Body - Strictly Forward-Moving Direct Width (No conflicting CSS transitions) */}
           <div
             style={{
               height: '100%',
-              width: `${progress}%`,
+              width: `${displayProgress}%`,
               borderRadius: '999px',
               position: 'relative',
               overflow: 'hidden',
-              background: 'linear-gradient(90deg, #38BDF8 0%, #0284C7 50%, #0369A1 100%)',
-              backgroundSize: '200% 100%',
-              animation: 'waterFlow 2.8s linear infinite',
+              background: 'linear-gradient(90deg, #38BDF8 0%, #0284C7 60%, #0369A1 100%)',
               boxShadow: '0 2px 14px rgba(2, 132, 199, 0.5), inset 0 2px 4px rgba(255, 255, 255, 0.55)',
-              transition: 'width 0.08s linear',
+              transition: 'none', // Strictly disabled to avoid conflicting with RAF ticks
             }}
           >
-            {/* Liquid Surface Gloss Reflection */}
+            {/* Forward-Flowing Surface Highlight Stream */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                width: '60%',
+                background: 'linear-gradient(90deg, transparent 0%, rgba(255, 255, 255, 0.45) 50%, transparent 100%)',
+                animation: 'waterShimmerForward 2.2s linear infinite',
+                pointerEvents: 'none',
+              }}
+            />
+
+            {/* Top Gloss Surface Reflection */}
             <div
               style={{
                 position: 'absolute',
                 top: 0,
                 left: 0,
                 right: 0,
-                height: '48%',
+                height: '46%',
                 background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.65) 0%, rgba(255, 255, 255, 0.1) 80%, transparent 100%)',
                 borderRadius: '999px',
                 pointerEvents: 'none',
               }}
             />
 
-            {/* Rising Micro-Bubbles inside water */}
+            {/* Rising Micro-Bubbles that float upward and forward with the stream */}
             <div
               style={{
                 position: 'absolute',
-                right: '18px',
+                right: '16px',
                 bottom: '2px',
                 width: '5px',
                 height: '5px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(255, 255, 255, 0.85)',
+                backgroundColor: 'rgba(255, 255, 255, 0.9)',
                 boxShadow: '0 0 4px rgba(255, 255, 255, 0.9)',
-                animation: 'bubbleFloat 1.2s ease-in infinite',
+                animation: 'bubbleFloatForward 1.3s ease-in infinite',
               }}
             />
             <div
               style={{
                 position: 'absolute',
-                right: '34px',
+                right: '32px',
                 bottom: '3px',
                 width: '4px',
                 height: '4px',
                 borderRadius: '50%',
-                backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                backgroundColor: 'rgba(255, 255, 255, 0.8)',
                 boxShadow: '0 0 4px rgba(255, 255, 255, 0.9)',
-                animation: 'bubbleFloat 1.6s ease-in infinite 0.5s',
+                animation: 'bubbleFloatForward 1.7s ease-in infinite 0.5s',
               }}
             />
             <div
@@ -362,11 +429,11 @@ export default function WaterLoader({ onComplete }) {
                 borderRadius: '50%',
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
                 boxShadow: '0 0 5px rgba(255, 255, 255, 0.9)',
-                animation: 'bubbleFloat 1.4s ease-in infinite 0.9s',
+                animation: 'bubbleFloatForward 1.5s ease-in infinite 0.9s',
               }}
             />
 
-            {/* Leading Edge Water Splash / Glow Crest */}
+            {/* Forward Leading Edge Wave Crest */}
             <div
               style={{
                 position: 'absolute',
@@ -374,7 +441,7 @@ export default function WaterLoader({ onComplete }) {
                 bottom: 0,
                 right: 0,
                 width: '14px',
-                background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.75))',
+                background: 'linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.85))',
                 borderRadius: '0 999px 999px 0',
                 filter: 'blur(1px)',
               }}
@@ -382,7 +449,7 @@ export default function WaterLoader({ onComplete }) {
           </div>
         </div>
 
-        {/* Live Asset Download Subtitle */}
+        {/* Live Asset Download Status Subtitle */}
         <div
           style={{
             marginTop: '14px',
@@ -395,7 +462,7 @@ export default function WaterLoader({ onComplete }) {
             transition: 'color 0.2s ease',
           }}
         >
-          {getSubStatus(progress)}
+          {currentAssetLabel}
         </div>
       </div>
     </div>
