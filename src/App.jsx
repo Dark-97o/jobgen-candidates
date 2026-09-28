@@ -16,12 +16,14 @@ import AtsScanModal from './components/dashboard/AtsScanModal';
 import Footer from './components/dashboard/Footer';
 import LoginView from './components/auth/LoginView';
 import WaterLoader from './components/WaterLoader';
+import LandingPage from './components/landing/LandingPage';
 
 export default function App() {
   const [isLoadingInitial, setIsLoadingInitial] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem('jobgen_candidate_auth') === 'true';
   });
+  const [authMode, setAuthMode] = useState('landing'); // 'landing' | 'login'
   const [currentTab, setCurrentTab] = useState('overview');
   const [atsModalOpen, setAtsModalOpen] = useState(false);
 
@@ -76,7 +78,7 @@ export default function App() {
     } else {
       window.scrollTo(0, 0);
     }
-  }, [currentTab]);
+  }, [currentTab, authMode]);
 
   const handleLoginSuccess = () => {
     sessionStorage.setItem('jobgen_candidate_auth', 'true');
@@ -86,16 +88,30 @@ export default function App() {
   const handleLogout = () => {
     sessionStorage.removeItem('jobgen_candidate_auth');
     setIsAuthenticated(false);
+    setAuthMode('landing');
   };
 
-  // 1. Initial State: 5-sec Water Loading Bar on top of everything, then Login shows
+  // 1. Initial State: 5-sec Water Loading Bar on top of everything, then Landing / Login shows
   if (!isAuthenticated) {
     return (
       <>
         {isLoadingInitial && (
           <WaterLoader onComplete={() => setIsLoadingInitial(false)} />
         )}
-        <LoginView onLogin={handleLoginSuccess} />
+        {authMode === 'login' ? (
+          <LoginView 
+            onLogin={handleLoginSuccess} 
+            onBackToLanding={() => setAuthMode('landing')} 
+          />
+        ) : (
+          <LandingPage 
+            onSignIn={() => setAuthMode('login')} 
+            onLaunchApp={() => {
+              sessionStorage.setItem('jobgen_candidate_auth', 'true');
+              setIsAuthenticated(true);
+            }} 
+          />
+        )}
       </>
     );
   }

@@ -11,7 +11,7 @@ import {
   ShieldCheck 
 } from 'lucide-react';
 
-export default function LoginView({ onLogin }) {
+export default function LoginView({ onLogin, onBackToLanding }) {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [showPassword, setShowPassword] = useState(false);
@@ -175,6 +175,43 @@ export default function LoginView({ onLogin }) {
       }}
       onMouseMove={(e) => forwardPointerToSpline(e.clientX, e.clientY)}
     >
+      {/* Back to Homepage Button */}
+      {onBackToLanding && (
+        <button
+          onClick={onBackToLanding}
+          style={{
+            position: 'absolute',
+            top: '24px',
+            left: '96px',
+            zIndex: 100,
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            backgroundColor: 'rgba(255, 255, 255, 0.92)',
+            border: '1px solid rgba(255, 255, 255, 0.8)',
+            borderRadius: '999px',
+            padding: '7px 16px',
+            fontSize: '12.5px',
+            fontWeight: 800,
+            color: '#1A53CF',
+            cursor: 'pointer',
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
+            backdropFilter: 'blur(10px)',
+            transition: 'transform 0.15s ease, background-color 0.15s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateX(-2px)';
+            e.currentTarget.style.backgroundColor = '#FFFFFF';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateX(0)';
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.92)';
+          }}
+        >
+          <span>← Back to Homepage</span>
+        </button>
+      )}
+
       {/* 1. Blue Side Top Corner: Vertical Text "Candidates" in Crisp White */}
       <div
         className="login-corner-text"
