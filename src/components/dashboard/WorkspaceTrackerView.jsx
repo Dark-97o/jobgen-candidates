@@ -261,6 +261,106 @@ const TAILORED_RESUMES = [
   }
 ];
 
+// Mist-like organic particle and smoke simulation on HTML5 Canvas
+function MistCanvas() {
+  const canvasRef = React.useRef(null);
+
+  React.useEffect(() => {
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animId;
+    let width = (canvas.width = canvas.parentElement?.offsetWidth || 800);
+    let height = (canvas.height = canvas.parentElement?.offsetHeight || 400);
+
+    const handleResize = () => {
+      if (!canvas || !canvas.parentElement) return;
+      width = canvas.width = canvas.parentElement.offsetWidth;
+      height = canvas.height = canvas.parentElement.offsetHeight;
+    };
+    window.addEventListener('resize', handleResize);
+
+    // Create mist clouds / vapor puffs
+    const particleCount = 28;
+    const particles = [];
+
+    for (let i = 0; i < particleCount; i++) {
+      particles.push({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        radius: Math.random() * 150 + 90,
+        vx: (Math.random() - 0.48) * 0.45,
+        vy: (Math.random() - 0.5) * 0.22,
+        baseAlpha: Math.random() * 0.085 + 0.035,
+        phase: Math.random() * Math.PI * 2,
+        phaseSpeed: Math.random() * 0.012 + 0.005,
+        isAccent: Math.random() > 0.5
+      });
+    }
+
+    const render = () => {
+      ctx.clearRect(0, 0, width, height);
+
+      for (let p of particles) {
+        p.x += p.vx;
+        p.y += p.vy;
+        p.phase += p.phaseSpeed;
+
+        if (p.x < -p.radius) p.x = width + p.radius;
+        if (p.x > width + p.radius) p.x = -p.radius;
+        if (p.y < -p.radius) p.y = height + p.radius;
+        if (p.y > height + p.radius) p.y = -p.radius;
+
+        const currentAlpha = p.baseAlpha * (0.7 + 0.3 * Math.sin(p.phase));
+
+        const grad = ctx.createRadialGradient(p.x, p.y, 0, p.x, p.y, p.radius);
+        if (p.isAccent) {
+          // Subtle frosty blue mist
+          grad.addColorStop(0, `rgba(186, 230, 253, ${currentAlpha})`);
+          grad.addColorStop(0.45, `rgba(125, 211, 252, ${currentAlpha * 0.4})`);
+          grad.addColorStop(1, 'rgba(56, 189, 248, 0)');
+        } else {
+          // Ethereal white smoke mist
+          grad.addColorStop(0, `rgba(240, 249, 255, ${currentAlpha})`);
+          grad.addColorStop(0.5, `rgba(224, 242, 254, ${currentAlpha * 0.35})`);
+          grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+        }
+
+        ctx.fillStyle = grad;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
+        ctx.fill();
+      }
+
+      animId = requestAnimationFrame(render);
+    };
+
+    render();
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+      cancelAnimationFrame(animId);
+    };
+  }, []);
+
+  return (
+    <canvas
+      ref={canvasRef}
+      style={{
+        position: 'absolute',
+        inset: 0,
+        width: '100%',
+        height: '100%',
+        pointerEvents: 'none',
+        zIndex: 1,
+        opacity: 0.95
+      }}
+    />
+  );
+}
+
 export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
   // Section 1: Active Stage Selection for the 4-Card Attached Design
   // 'saved' | 'applied' | 'interviewing' | 'offers'
@@ -569,21 +669,24 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
             })}
           </div>
 
-          {/* Right Main Container: Attached flush on left with zig-zag edge on right */}
+          {/* Right Main Container: Black canvas with mist animations, attached flush on left with zig-zag edge on right */}
           <div 
             style={{ 
               flex: 1, 
-              backgroundColor: '#CBD5E1', 
+              backgroundColor: '#05070F', 
               borderTopLeftRadius: '0px',
               borderBottomLeftRadius: '20px',
               borderTopRightRadius: '0px',
               borderBottomRightRadius: '0px',
-              padding: '24px 38px 24px 28px',
-              boxShadow: '0 16px 40px -8px rgba(15, 23, 42, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.95)',
+              border: '1px solid rgba(255, 255, 255, 0.12)',
+              borderLeft: 'none',
+              padding: '26px 42px 26px 30px',
+              boxShadow: '0 24px 60px -12px rgba(0, 0, 0, 0.85), inset 0 1px 2px rgba(255, 255, 255, 0.15)',
               display: 'flex',
               flexDirection: 'column',
               minHeight: '380px',
               position: 'relative',
+              overflow: 'hidden',
               zIndex: 8,
               WebkitMaskImage: `
                 linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
@@ -601,6 +704,45 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
               maskRepeat: 'no-repeat, repeat-y',
             }}
           >
+            {/* Ambient CSS Keyframe and Animation Styles */}
+            <style>{`
+              @keyframes mistDriftAmbient {
+                0% { transform: scale(1) translate3d(-3%, -2%, 0); opacity: 0.45; }
+                50% { transform: scale(1.1) translate3d(3%, 3%, 0); opacity: 0.75; }
+                100% { transform: scale(1) translate3d(-3%, -2%, 0); opacity: 0.45; }
+              }
+              @keyframes liquidSheen {
+                0% { opacity: 0.4; transform: translateX(-100%); }
+                100% { opacity: 0.8; transform: translateX(200%); }
+              }
+            `}</style>
+
+            {/* Canvas-Driven Dynamic Mist Simulation */}
+            <MistCanvas />
+
+            {/* Layered Atmospheric Glowing Mist Clouds */}
+            <div 
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'radial-gradient(ellipse 65% 50% at 20% 25%, rgba(56, 189, 248, 0.12) 0%, transparent 70%), radial-gradient(ellipse 70% 60% at 85% 75%, rgba(139, 92, 246, 0.1) 0%, transparent 70%)',
+                filter: 'blur(32px)',
+                pointerEvents: 'none',
+                zIndex: 2,
+                animation: 'mistDriftAmbient 16s ease-in-out infinite alternate'
+              }}
+            />
+            <div 
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'radial-gradient(ellipse 55% 45% at 50% 50%, rgba(255, 255, 255, 0.05) 0%, transparent 65%)',
+                filter: 'blur(24px)',
+                pointerEvents: 'none',
+                zIndex: 2
+              }}
+            />
+
             {/* Header inside the selected stage container */}
             <div 
               style={{ 
@@ -609,48 +751,64 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                 justifyContent: 'space-between', 
                 marginBottom: '18px', 
                 paddingBottom: '14px', 
-                borderBottom: '1.5px solid rgba(255, 255, 255, 0.45)',
+                borderBottom: '1px solid rgba(255, 255, 255, 0.12)',
+                position: 'relative',
+                zIndex: 5,
                 flexWrap: 'wrap',
                 gap: '12px'
               }}
             >
               <div>
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#090C15', margin: 0 }}>
+                  <h3 
+                    style={{ 
+                      fontSize: '18px', 
+                      fontWeight: 900, 
+                      color: '#FFFFFF', 
+                      margin: 0,
+                      letterSpacing: '-0.015em',
+                      textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
+                    }}
+                  >
                     {currentStageInfo.fullLabel}
                   </h3>
                   <span 
                     style={{ 
                       fontSize: '11.5px', 
                       fontWeight: 800, 
-                      padding: '2px 8px', 
+                      padding: '3px 10px', 
                       borderRadius: '999px',
-                      backgroundColor: currentStageInfo.badgeBg,
-                      color: currentStageInfo.badgeColor
+                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
+                      color: '#FFFFFF',
+                      border: '1px solid rgba(255, 255, 255, 0.22)',
+                      backdropFilter: 'blur(8px)',
+                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
                     }}
                   >
                     {activeJobs.length} active
                   </span>
                 </div>
-                <p style={{ fontSize: '12px', color: '#475569', margin: '3px 0 0 0' }}>
+                <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.65)', margin: '3px 0 0 0' }}>
                   {currentStageInfo.description}
                 </p>
               </div>
 
-              {/* Search filter for this stage */}
+              {/* Search filter for this stage - Liquid Glass Search Pill */}
               <div 
                 style={{ 
                   display: 'flex', 
                   alignItems: 'center', 
                   gap: '8px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.75)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.07)',
+                  backdropFilter: 'blur(16px)',
+                  WebkitBackdropFilter: 'blur(16px)',
                   padding: '7px 14px',
                   borderRadius: '999px',
-                  border: '1px solid rgba(255, 255, 255, 0.95)',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
+                  border: '1px solid rgba(255, 255, 255, 0.18)',
+                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.35), inset 0 1px 1px rgba(255, 255, 255, 0.2)'
                 }}
               >
-                <Search size={14} color="#64748B" />
+                <Search size={14} color="rgba(255, 255, 255, 0.65)" />
                 <input 
                   type="text"
                   placeholder={`Search ${currentStageInfo.label.toLowerCase()} jobs...`}
@@ -661,7 +819,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                     background: 'transparent',
                     outline: 'none',
                     fontSize: '12px',
-                    color: '#090C15',
+                    color: '#FFFFFF',
                     width: '160px'
                   }}
                 />
@@ -670,7 +828,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                     onClick={() => setSearchQuery('')}
                     style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                   >
-                    <X size={13} color="#64748B" />
+                    <X size={13} color="rgba(255, 255, 255, 0.65)" />
                   </button>
                 )}
               </div>
@@ -686,41 +844,48 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                   alignItems: 'center', 
                   justifyContent: 'center',
                   padding: '48px 24px',
-                  textAlign: 'center'
+                  textAlign: 'center',
+                  position: 'relative',
+                  zIndex: 5
                 }}
               >
                 <div 
                   style={{ 
-                    width: '48px', 
-                    height: '48px', 
+                    width: '52px', 
+                    height: '52px', 
                     borderRadius: '50%', 
-                    backgroundColor: 'rgba(255, 255, 255, 0.6)', 
+                    backgroundColor: 'rgba(255, 255, 255, 0.08)', 
+                    border: '1px solid rgba(255, 255, 255, 0.15)',
+                    backdropFilter: 'blur(12px)',
                     display: 'flex', 
                     alignItems: 'center', 
                     justifyContent: 'center',
-                    marginBottom: '12px'
+                    marginBottom: '14px',
+                    boxShadow: '0 8px 24px rgba(0, 0, 0, 0.4)'
                   }}
                 >
-                  <Briefcase size={22} color="#64748B" />
+                  <Briefcase size={22} color="#94A3B8" />
                 </div>
-                <h4 style={{ fontSize: '15px', fontWeight: 800, color: '#090C15', margin: '0 0 6px 0' }}>
+                <h4 style={{ fontSize: '15.5px', fontWeight: 800, color: '#FFFFFF', margin: '0 0 6px 0', textShadow: '0 2px 10px rgba(0,0,0,0.7)' }}>
                   No roles currently in {currentStageInfo.label}
                 </h4>
-                <p style={{ fontSize: '12.5px', color: '#475569', maxWidth: '340px', margin: '0 0 16px 0' }}>
+                <p style={{ fontSize: '12.5px', color: 'rgba(255, 255, 255, 0.6)', maxWidth: '340px', margin: '0 0 16px 0' }}>
                   Move opportunities here from other stages or explore verified openings.
                 </p>
                 {onNavigateToJobSearch && (
                   <button
                     onClick={onNavigateToJobSearch}
                     style={{
-                      padding: '8px 16px',
-                      borderRadius: '8px',
-                      backgroundColor: '#090C15',
+                      padding: '8px 18px',
+                      borderRadius: '999px',
+                      background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.18) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                      backdropFilter: 'blur(12px)',
                       color: '#FFFFFF',
                       fontSize: '12px',
                       fontWeight: 700,
-                      border: 'none',
-                      cursor: 'pointer'
+                      border: '1px solid rgba(255, 255, 255, 0.28)',
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 16px rgba(0, 0, 0, 0.3)'
                     }}
                   >
                     Find Roles in Job Hunt →
@@ -728,56 +893,87 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                 )}
               </div>
             ) : (
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', gap: '14px' }}>
+              <div 
+                style={{ 
+                  display: 'grid', 
+                  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
+                  gap: '16px',
+                  position: 'relative',
+                  zIndex: 5
+                }}
+              >
                 {filteredJobs.map((job) => {
                   return (
                     <div 
                       key={job.id}
                       style={{
-                        backgroundColor: 'rgba(255, 255, 255, 0.92)',
-                        backdropFilter: 'blur(20px)',
-                        borderRadius: '18px',
-                        border: '1.5px solid rgba(255, 255, 255, 0.98)',
-                        padding: '18px',
-                        boxShadow: '0 6px 20px rgba(15, 23, 42, 0.06), inset 0 1px 2px #FFFFFF',
+                        backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.11) 0%, rgba(255, 255, 255, 0.02) 45%, rgba(255, 255, 255, 0.07) 100%)',
+                        backdropFilter: 'blur(24px) saturate(190%)',
+                        WebkitBackdropFilter: 'blur(24px) saturate(190%)',
+                        borderRadius: '20px',
+                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                        padding: '18px 20px',
+                        boxShadow: '0 12px 36px 0 rgba(0, 0, 0, 0.55), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.3)',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
-                        gap: '12px',
-                        transition: 'transform 0.18s ease, box-shadow 0.18s ease'
+                        gap: '14px',
+                        position: 'relative',
+                        overflow: 'hidden',
+                        transition: 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.22s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.boxShadow = '0 10px 28px rgba(15, 23, 42, 0.1), inset 0 1px 2px #FFFFFF';
+                        e.currentTarget.style.transform = 'translateY(-3px)';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.45)';
+                        e.currentTarget.style.boxShadow = '0 20px 45px -4px rgba(0, 0, 0, 0.75), 0 0 24px rgba(255, 255, 255, 0.18), inset 0 1px 2px 0 rgba(255, 255, 255, 0.7)';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(15, 23, 42, 0.06), inset 0 1px 2px #FFFFFF';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                        e.currentTarget.style.boxShadow = '0 12px 36px 0 rgba(0, 0, 0, 0.55), inset 0 1px 1px 0 rgba(255, 255, 255, 0.5), inset 0 -1px 2px 0 rgba(0, 0, 0, 0.3)';
                       }}
                     >
+                      {/* Top Specular Liquid Light Sheen */}
+                      <div 
+                        style={{
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                          right: 0,
+                          height: '42%',
+                          background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.13) 0%, rgba(255, 255, 255, 0) 100%)',
+                          pointerEvents: 'none',
+                          borderRadius: '20px 20px 0 0'
+                        }}
+                      />
+
                       {/* Card Header: Company, Source & ATS Score */}
-                      <div>
-                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                      <div style={{ position: 'relative', zIndex: 2 }}>
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                           <span 
                             style={{ 
                               fontSize: '12px', 
                               fontWeight: 900, 
-                              color: '#1A53CF', 
+                              color: '#93C5FD', 
                               textTransform: 'uppercase', 
-                              letterSpacing: '0.04em' 
+                              letterSpacing: '0.05em',
+                              textShadow: '0 0 14px rgba(147, 197, 253, 0.45)'
                             }}
                           >
                             {job.company}
                           </span>
                           <span 
                             style={{ 
-                              fontSize: '10.5px', 
+                              fontSize: '11px', 
                               fontWeight: 800, 
-                              color: '#059669', 
-                              backgroundColor: '#ECFDF5', 
-                              padding: '2px 8px', 
-                              borderRadius: '6px',
-                              border: '1px solid #A7F3D0'
+                              color: '#34D399', 
+                              backgroundColor: 'rgba(16, 185, 129, 0.16)', 
+                              border: '1px solid rgba(52, 211, 153, 0.4)',
+                              padding: '3px 9px', 
+                              borderRadius: '8px',
+                              backdropFilter: 'blur(8px)',
+                              boxShadow: '0 0 12px rgba(52, 211, 153, 0.22)'
                             }}
                           >
                             {job.score}% ATS Match
@@ -785,48 +981,96 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                         </div>
 
                         {/* Title */}
-                        <h4 style={{ fontSize: '14.5px', fontWeight: 800, color: '#090C15', margin: '0 0 6px 0', lineHeight: 1.3 }}>
+                        <h4 
+                          style={{ 
+                            fontSize: '15px', 
+                            fontWeight: 800, 
+                            color: '#FFFFFF', 
+                            margin: '0 0 7px 0', 
+                            lineHeight: 1.3,
+                            letterSpacing: '-0.01em',
+                            textShadow: '0 2px 10px rgba(0, 0, 0, 0.7)'
+                          }}
+                        >
                           {job.title}
                         </h4>
 
                         {/* Salary & Location */}
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11.5px', color: '#64748B', marginBottom: '8px', flexWrap: 'wrap' }}>
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '11.5px', color: 'rgba(255, 255, 255, 0.72)', marginBottom: '10px', flexWrap: 'wrap' }}>
                           <span>{job.salary}</span>
-                          <span>•</span>
+                          <span style={{ color: 'rgba(255, 255, 255, 0.35)' }}>•</span>
                           <span>{job.location}</span>
                         </div>
 
                         {/* Stage Specific Badges */}
                         {job.status && (
-                          <div style={{ backgroundColor: '#EFF6FF', color: '#1A53CF', padding: '4px 8px', borderRadius: '6px', fontSize: '11px', fontWeight: 700, marginBottom: '8px' }}>
+                          <div 
+                            style={{ 
+                              backgroundColor: 'rgba(59, 130, 246, 0.15)', 
+                              color: '#93C5FD', 
+                              border: '1px solid rgba(96, 165, 250, 0.3)',
+                              padding: '5px 10px', 
+                              borderRadius: '8px', 
+                              fontSize: '11px', 
+                              fontWeight: 700, 
+                              marginBottom: '8px',
+                              backdropFilter: 'blur(6px)'
+                            }}
+                          >
                             ℹ️ {job.status}
                           </div>
                         )}
 
                         {job.nextEvent && (
-                          <div style={{ backgroundColor: '#FEF3C7', color: '#92400E', padding: '5px 10px', borderRadius: '8px', fontSize: '11px', fontWeight: 700, marginBottom: '8px' }}>
+                          <div 
+                            style={{ 
+                              backgroundColor: 'rgba(245, 158, 11, 0.15)', 
+                              color: '#FCD34D', 
+                              border: '1px solid rgba(251, 191, 36, 0.35)',
+                              padding: '5px 10px', 
+                              borderRadius: '8px', 
+                              fontSize: '11px', 
+                              fontWeight: 700, 
+                              marginBottom: '8px',
+                              backdropFilter: 'blur(6px)'
+                            }}
+                          >
                             🗓️ {job.nextEvent}
                           </div>
                         )}
 
                         {job.expiry && (
-                          <div style={{ backgroundColor: '#DCFCE7', color: '#15803D', padding: '5px 10px', borderRadius: '8px', fontSize: '11px', fontWeight: 800, marginBottom: '8px' }}>
+                          <div 
+                            style={{ 
+                              backgroundColor: 'rgba(16, 185, 129, 0.15)', 
+                              color: '#6EE7B7', 
+                              border: '1px solid rgba(52, 211, 153, 0.35)',
+                              padding: '5px 10px', 
+                              borderRadius: '8px', 
+                              fontSize: '11px', 
+                              fontWeight: 800, 
+                              marginBottom: '8px',
+                              backdropFilter: 'blur(6px)'
+                            }}
+                          >
                             🎉 {job.expiry}
                           </div>
                         )}
 
                         {/* Tag Chips */}
-                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px', marginBottom: '8px' }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px', marginBottom: '8px' }}>
                           {job.tags.slice(0, 3).map((tag, tIdx) => (
                             <span 
                               key={tIdx} 
                               style={{ 
                                 fontSize: '10px', 
                                 fontWeight: 600, 
-                                backgroundColor: '#F1F5F9', 
-                                color: '#475569', 
-                                padding: '2px 7px', 
-                                borderRadius: '4px' 
+                                backgroundColor: 'rgba(255, 255, 255, 0.08)', 
+                                color: 'rgba(255, 255, 255, 0.85)', 
+                                border: '1px solid rgba(255, 255, 255, 0.12)',
+                                padding: '3px 8px', 
+                                borderRadius: '6px',
+                                backdropFilter: 'blur(6px)'
                               }}
                             >
                               {tag}
@@ -835,15 +1079,17 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                         </div>
                       </div>
 
-                      {/* Card Footer: Previous & Next Stage Move Buttons */}
+                      {/* Card Footer: Previous & Next Stage Move Buttons in Liquid Glass */}
                       <div 
                         style={{ 
-                          paddingTop: '10px', 
-                          borderTop: '1px solid #E2E8F0', 
+                          paddingTop: '12px', 
+                          borderTop: '1px solid rgba(255, 255, 255, 0.12)', 
                           display: 'flex', 
                           alignItems: 'center', 
                           justifyContent: 'space-between',
-                          gap: '8px' 
+                          gap: '8px',
+                          position: 'relative',
+                          zIndex: 2
                         }}
                       >
                         {/* PREVIOUS BUTTON (disabled/hidden if in 'saved') */}
@@ -854,15 +1100,16 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: '4px',
-                              padding: '6px 10px',
+                              padding: '7px 11px',
                               borderRadius: '8px',
-                              border: '1px solid #CBD5E1',
-                              backgroundColor: '#FFFFFF',
-                              color: '#475569',
+                              border: '1px solid rgba(255, 255, 255, 0.22)',
+                              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                              color: 'rgba(255, 255, 255, 0.85)',
                               fontSize: '11px',
                               fontWeight: 700,
                               cursor: 'pointer',
-                              transition: 'background 0.15s ease'
+                              backdropFilter: 'blur(8px)',
+                              transition: 'all 0.15s ease'
                             }}
                             title="Move back to Saved"
                           >
@@ -878,14 +1125,16 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: '4px',
-                              padding: '6px 10px',
+                              padding: '7px 11px',
                               borderRadius: '8px',
-                              border: '1px solid #CBD5E1',
-                              backgroundColor: '#FFFFFF',
-                              color: '#475569',
+                              border: '1px solid rgba(255, 255, 255, 0.22)',
+                              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                              color: 'rgba(255, 255, 255, 0.85)',
                               fontSize: '11px',
                               fontWeight: 700,
-                              cursor: 'pointer'
+                              cursor: 'pointer',
+                              backdropFilter: 'blur(8px)',
+                              transition: 'all 0.15s ease'
                             }}
                             title="Move back to Applied"
                           >
@@ -901,14 +1150,16 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: '4px',
-                              padding: '6px 10px',
+                              padding: '7px 11px',
                               borderRadius: '8px',
-                              border: '1px solid #CBD5E1',
-                              backgroundColor: '#FFFFFF',
-                              color: '#475569',
+                              border: '1px solid rgba(255, 255, 255, 0.22)',
+                              backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                              color: 'rgba(255, 255, 255, 0.85)',
                               fontSize: '11px',
                               fontWeight: 700,
-                              cursor: 'pointer'
+                              cursor: 'pointer',
+                              backdropFilter: 'blur(8px)',
+                              transition: 'all 0.15s ease'
                             }}
                             title="Move back to Interviewing"
                           >
@@ -919,7 +1170,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
 
                         {/* Center / Fallback spacer when no previous button */}
                         {activeStage === 'saved' && (
-                          <span style={{ fontSize: '10.5px', color: '#94A3B8' }}>{job.date}</span>
+                          <span style={{ fontSize: '10.5px', color: 'rgba(255, 255, 255, 0.55)' }}>{job.date}</span>
                         )}
 
                         {/* NEXT BUTTON (disabled/hidden if in 'offers') */}
@@ -930,15 +1181,17 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: '4px',
-                              padding: '6px 12px',
+                              padding: '7px 13px',
                               borderRadius: '8px',
-                              border: 'none',
-                              backgroundColor: '#1A53CF',
+                              border: '1px solid rgba(255, 255, 255, 0.3)',
+                              background: 'linear-gradient(135deg, rgba(26, 83, 207, 0.9) 0%, rgba(37, 99, 235, 0.9) 100%)',
                               color: '#FFFFFF',
                               fontSize: '11.5px',
                               fontWeight: 700,
                               cursor: 'pointer',
-                              boxShadow: '0 2px 8px rgba(26, 83, 207, 0.25)'
+                              backdropFilter: 'blur(8px)',
+                              boxShadow: '0 4px 16px rgba(26, 83, 207, 0.45)',
+                              transition: 'all 0.15s ease'
                             }}
                           >
                             <span>Move to Applied</span>
@@ -953,15 +1206,17 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: '4px',
-                              padding: '6px 12px',
+                              padding: '7px 13px',
                               borderRadius: '8px',
-                              border: 'none',
-                              backgroundColor: '#D97706',
+                              border: '1px solid rgba(255, 255, 255, 0.3)',
+                              background: 'linear-gradient(135deg, rgba(217, 119, 6, 0.9) 0%, rgba(245, 158, 11, 0.9) 100%)',
                               color: '#FFFFFF',
                               fontSize: '11.5px',
                               fontWeight: 700,
                               cursor: 'pointer',
-                              boxShadow: '0 2px 8px rgba(217, 119, 6, 0.25)'
+                              backdropFilter: 'blur(8px)',
+                              boxShadow: '0 4px 16px rgba(217, 119, 6, 0.45)',
+                              transition: 'all 0.15s ease'
                             }}
                           >
                             <span>Move to Interview</span>
@@ -976,15 +1231,17 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: '4px',
-                              padding: '6px 12px',
+                              padding: '7px 13px',
                               borderRadius: '8px',
-                              border: 'none',
-                              backgroundColor: '#16A34A',
+                              border: '1px solid rgba(255, 255, 255, 0.3)',
+                              background: 'linear-gradient(135deg, rgba(22, 163, 74, 0.9) 0%, rgba(34, 197, 94, 0.9) 100%)',
                               color: '#FFFFFF',
                               fontSize: '11.5px',
                               fontWeight: 700,
                               cursor: 'pointer',
-                              boxShadow: '0 2px 8px rgba(22, 163, 74, 0.25)'
+                              backdropFilter: 'blur(8px)',
+                              boxShadow: '0 4px 16px rgba(22, 163, 74, 0.45)',
+                              transition: 'all 0.15s ease'
                             }}
                           >
                             <span>Move to Offer 🎉</span>
@@ -999,15 +1256,17 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                               display: 'inline-flex',
                               alignItems: 'center',
                               gap: '4px',
-                              padding: '6px 12px',
+                              padding: '7px 13px',
                               borderRadius: '8px',
-                              border: 'none',
-                              backgroundColor: '#059669',
+                              border: '1px solid rgba(255, 255, 255, 0.4)',
+                              background: 'linear-gradient(135deg, rgba(5, 150, 105, 0.95) 0%, rgba(16, 185, 129, 0.95) 100%)',
                               color: '#FFFFFF',
                               fontSize: '11.5px',
                               fontWeight: 800,
                               cursor: 'pointer',
-                              boxShadow: '0 2px 8px rgba(5, 150, 105, 0.3)'
+                              backdropFilter: 'blur(8px)',
+                              boxShadow: '0 4px 18px rgba(16, 185, 129, 0.5)',
+                              transition: 'all 0.15s ease'
                             }}
                           >
                             <span>Accept Offer 🎉</span>
