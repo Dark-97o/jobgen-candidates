@@ -1681,17 +1681,31 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
 
             </div>
 
-            {/* Slow Blue Fade along the Jagged Teeth - No hard stroke line, pure slow inward dissolution */}
+            {/* Ambient Deep Blue Radial Atmosphere continuing inward */}
             <div 
               style={{
                 position: 'absolute',
                 top: 0,
                 bottom: 0,
                 right: '0px',
-                width: '54px',
+                width: '180px',
+                pointerEvents: 'none',
+                zIndex: 24,
+                background: 'radial-gradient(ellipse 95% 65% at 100% 50%, rgba(37, 99, 235, 0.28) 0%, rgba(59, 130, 246, 0.14) 40%, rgba(147, 197, 253, 0.05) 75%, transparent 100%)',
+                filter: 'blur(16px)'
+              }}
+            />
+            {/* Extended Slow Blue Fade along the Jagged Teeth - Deep inward dissolution */}
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                right: '0px',
+                width: '140px',
                 pointerEvents: 'none',
                 zIndex: 25,
-                background: 'linear-gradient(to left, rgba(37, 99, 235, 0.42) 0%, rgba(59, 130, 246, 0.22) 16px, rgba(96, 165, 250, 0.08) 32px, transparent 100%)',
+                background: 'linear-gradient(to left, rgba(37, 99, 235, 0.48) 0%, rgba(37, 99, 235, 0.35) 16px, rgba(59, 130, 246, 0.22) 42px, rgba(96, 165, 250, 0.12) 75px, rgba(147, 197, 253, 0.04) 110px, transparent 100%)',
                 WebkitMaskImage: `
                   linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
                   url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
@@ -1718,11 +1732,11 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                 width: '16px',
                 pointerEvents: 'none',
                 zIndex: 26,
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cdefs%3E%3ClinearGradient id='softFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='0.65'/%3E%3Cstop offset='45%25' stop-color='%233B82F6' stop-opacity='0.3'/%3E%3Cstop offset='100%25' stop-color='%2393C5FD' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='0,0 16,13 0,26' fill='url(%23softFade)'/%3E%3C/svg%3E")`,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cdefs%3E%3ClinearGradient id='softFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='0.68'/%3E%3Cstop offset='45%25' stop-color='%233B82F6' stop-opacity='0.34'/%3E%3Cstop offset='100%25' stop-color='%2393C5FD' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='0,0 16,13 0,26' fill='url(%23softFade)'/%3E%3C/svg%3E")`,
                 backgroundSize: '16px 26px',
                 backgroundPosition: 'right top',
                 backgroundRepeat: 'repeat-y',
-                filter: 'drop-shadow(-2px 0 6px rgba(37, 99, 235, 0.3))'
+                filter: 'drop-shadow(-2px 0 6px rgba(37, 99, 235, 0.35))'
               }}
             />
           </div>
