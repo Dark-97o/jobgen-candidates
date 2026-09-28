@@ -744,7 +744,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
       )}
 
       {/* Section 1: Attached Stage Tracker */}
-      <section style={{ marginBottom: '48px', marginTop: '12px' }}>
+      <section style={{ marginBottom: '48px', marginTop: '22px' }}>
 
         {/* =====================================================================
             ATTACHED GEOMETRY: 4 LEFT STACKED CARDS JOINED INTO LARGE RIGHT CONTAINER
@@ -911,44 +911,52 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
             </div>
           </div>
 
-          {/* Right Main Container: White container with bluish mist, brought OVER the left cards with zig-zag edge on right */}
+          {/* Right Main Container Wrapper: keeps the right container and zagged edge outline strictly matching in height and bounds */}
           <div 
             style={{ 
               flex: 1, 
-              backgroundColor: '#FFFFFF', 
-              borderTopLeftRadius: '16px',
-              borderBottomLeftRadius: '16px',
-              borderTopRightRadius: '0px',
-              borderBottomRightRadius: '0px',
-              border: '1px solid #E2E8F0',
-              borderLeft: '1.5px solid #E2E8F0',
+              position: 'relative', 
+              height: '520px', 
+              minHeight: '520px', 
+              maxHeight: '520px',
               marginLeft: '-14px',
-              padding: '24px 38px 24px 28px',
-              boxShadow: '-8px 0 24px rgba(15, 23, 42, 0.08), 0 16px 40px -8px rgba(15, 23, 42, 0.08)',
-              display: 'flex',
-              flexDirection: 'column',
-              minHeight: '440px',
-              height: '440px',
-              maxHeight: '440px',
-              position: 'relative',
-              overflow: 'hidden',
-              zIndex: 15,
-              WebkitMaskImage: `
-                linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
-              `,
-              WebkitMaskSize: 'auto, 16px 26px',
-              WebkitMaskPosition: 'left top, right top',
-              WebkitMaskRepeat: 'no-repeat, repeat-y',
-              maskImage: `
-                linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
-                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
-              `,
-              maskSize: 'auto, 16px 26px',
-              maskPosition: 'left top, right top',
-              maskRepeat: 'no-repeat, repeat-y',
+              zIndex: 15
             }}
           >
+            {/* White container with bluish mist, brought OVER the left cards with zig-zag edge on right */}
+            <div 
+              style={{ 
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#FFFFFF', 
+                borderTopLeftRadius: '16px',
+                borderBottomLeftRadius: '16px',
+                borderTopRightRadius: '0px',
+                borderBottomRightRadius: '0px',
+                border: '1px solid #E2E8F0',
+                borderLeft: '1.5px solid #E2E8F0',
+                padding: '36px 38px 24px 28px',
+                boxShadow: '-8px 0 24px rgba(15, 23, 42, 0.08), 0 16px 40px -8px rgba(15, 23, 42, 0.08)',
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+                overflow: 'hidden',
+                WebkitMaskImage: `
+                  linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+                `,
+                WebkitMaskSize: 'auto, 16px 26px',
+                WebkitMaskPosition: 'left top, right top',
+                WebkitMaskRepeat: 'no-repeat, repeat-y',
+                maskImage: `
+                  linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+                `,
+                maskSize: 'auto, 16px 26px',
+                maskPosition: 'left top, right top',
+                maskRepeat: 'no-repeat, repeat-y',
+              }}
+            >
             {/* Ambient CSS Keyframe and Animation Styles */}
             <style>{`
               @keyframes mistDriftAmbient {
@@ -1173,13 +1181,13 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                   gap: '12px',
                   position: 'relative',
                   zIndex: 5,
-                  height: '350px',
-                  minHeight: '350px',
-                  maxHeight: '350px',
+                  height: '385px',
+                  minHeight: '385px',
+                  maxHeight: '385px',
                   overflowY: 'auto',
                   overscrollBehavior: 'auto',
                   paddingRight: '6px',
-                  paddingBottom: '6px'
+                  paddingBottom: '36px'
                 }}
               >
                 {filteredJobs.map((job) => {
@@ -1476,25 +1484,26 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
               </div>
             )}
 
-          </div>
+            </div>
 
-          {/* Faded Blue Zagged Edge Outline */}
-          <div 
-            style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              right: '-1px',
-              width: '24px',
-              pointerEvents: 'none',
-              zIndex: 30,
-              backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='26' viewBox='0 0 24 26'%3E%3Cdefs%3E%3ClinearGradient id='strokeFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='1'/%3E%3Cstop offset='45%25' stop-color='%233B82F6' stop-opacity='0.6'/%3E%3Cstop offset='100%25' stop-color='%2360A5FA' stop-opacity='0.05'/%3E%3C/linearGradient%3E%3ClinearGradient id='glowFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='0.35'/%3E%3Cstop offset='65%25' stop-color='%2360A5FA' stop-opacity='0.1'/%3E%3Cstop offset='100%25' stop-color='%2393C5FD' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='0,0 18,13 0,26' fill='url(%23glowFade)'/%3E%3Cpolyline points='1,0 18,13 1,26' fill='none' stroke='url(%23strokeFade)' stroke-width='4' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E")`,
-              backgroundSize: '24px 26px',
-              backgroundPosition: 'right top',
-              backgroundRepeat: 'repeat-y',
-              filter: 'drop-shadow(-2px 0 6px rgba(37, 99, 235, 0.4))'
-            }}
-          />
+            {/* Faded Blue Zagged Edge Outline - strictly bound to the 520px container height */}
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                right: '0px',
+                width: '18px',
+                pointerEvents: 'none',
+                zIndex: 30,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='26' viewBox='0 0 18 26'%3E%3Cdefs%3E%3ClinearGradient id='strokeFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='1'/%3E%3Cstop offset='50%25' stop-color='%233B82F6' stop-opacity='0.6'/%3E%3Cstop offset='100%25' stop-color='%2360A5FA' stop-opacity='0.05'/%3E%3C/linearGradient%3E%3ClinearGradient id='glowFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='0.35'/%3E%3Cstop offset='60%25' stop-color='%2360A5FA' stop-opacity='0.12'/%3E%3Cstop offset='100%25' stop-color='%2393C5FD' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='0,0 16,13 0,26' fill='url(%23glowFade)'/%3E%3Cpolyline points='0,0 16,13 0,26' fill='none' stroke='url(%23strokeFade)' stroke-width='3.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E")`,
+                backgroundSize: '18px 26px',
+                backgroundPosition: 'right top',
+                backgroundRepeat: 'repeat-y',
+                filter: 'drop-shadow(-2px 0 6px rgba(37, 99, 235, 0.4))'
+              }}
+            />
+          </div>
         </div>
 
       </section>
