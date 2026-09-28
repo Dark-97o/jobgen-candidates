@@ -254,10 +254,11 @@ export default function TopHeader({ currentTab, onLogout }) {
   const PAGE_NAMES = {
     overview: 'Home',
     jobs: 'Job Hunt',
-    pipeline: 'Tracker',
+    workspace: 'Workspace',
+    pipeline: 'Workspace',
+    emma: 'Workspace',
     resume: 'Resume',
     coverletter: 'Cover Letter',
-    workspace: 'Workspace',
     interview: 'Interview Prep',
     events: 'Career Events',
     careerplan: 'Career Plan',

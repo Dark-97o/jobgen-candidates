@@ -32,10 +32,9 @@ export default function Sidebar({ currentTab, onSelectTab }) {
   const NAV_ITEMS = [
     { id: 'overview', label: 'Home', icon: Home },
     { id: 'jobs', label: 'Job Hunt', icon: Search },
-    { id: 'pipeline', label: 'Tracker', icon: KanbanSquare },
+    { id: 'workspace', label: 'Workspace', icon: Briefcase },
     { id: 'resume', label: 'Resume', icon: FileText },
     { id: 'coverletter', label: 'Cover letter', icon: Mail },
-    { id: 'workspace', label: 'Workspace', icon: Briefcase },
     { id: 'interview', label: 'Interview prep', icon: Mic },
     { id: 'events', label: 'Career events', icon: Calendar },
     { id: 'careerplan', label: 'Career plan', icon: Compass }
@@ -153,7 +152,7 @@ export default function Sidebar({ currentTab, onSelectTab }) {
         >
           {NAV_ITEMS.map((item) => {
             const Icon = item.icon;
-            const isActive = currentTab === item.id;
+            const isActive = currentTab === item.id || (item.id === 'workspace' && (currentTab === 'pipeline' || currentTab === 'emma'));
 
             return (
               <button

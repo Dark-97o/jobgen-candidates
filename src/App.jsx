@@ -5,13 +5,12 @@ import Sidebar from './components/dashboard/Sidebar';
 import TopHeader from './components/dashboard/TopHeader';
 import OverviewView from './components/dashboard/OverviewView';
 import JobSearchView from './components/dashboard/JobSearchView';
-import PipelineView from './components/dashboard/PipelineView';
 import ResumeStudioView from './components/dashboard/ResumeStudioView';
 import CoverLetterView from './components/dashboard/CoverLetterView';
 import InterviewPrepView from './components/dashboard/InterviewPrepView';
 import CareerPlanView from './components/dashboard/CareerPlanView';
 import CareerEventsView from './components/dashboard/CareerEventsView';
-import EmmaCopilotView from './components/dashboard/EmmaCopilotView';
+import WorkspaceTrackerView from './components/dashboard/WorkspaceTrackerView';
 import AtsScanModal from './components/dashboard/AtsScanModal';
 import Footer from './components/dashboard/Footer';
 import LoginView from './components/auth/LoginView';
@@ -203,9 +202,10 @@ export default function App() {
               />
             )}
 
-            {currentTab === 'pipeline' && (
-              <PipelineView 
+            {(currentTab === 'workspace' || currentTab === 'pipeline' || currentTab === 'emma') && (
+              <WorkspaceTrackerView 
                 onNavigateToJobSearch={() => setCurrentTab('jobs')}
+                initialMode={currentTab === 'pipeline' ? 'tracker' : 'split'}
               />
             )}
 
@@ -227,10 +227,6 @@ export default function App() {
 
             {currentTab === 'events' && (
               <CareerEventsView />
-            )}
-
-            {(currentTab === 'workspace' || currentTab === 'emma') && (
-              <EmmaCopilotView />
             )}
           </main>
 
