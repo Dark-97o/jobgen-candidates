@@ -26,7 +26,9 @@ import {
   TrendingUp,
   Tag,
   Briefcase,
-  Trash2
+  Trash2,
+  Copy,
+  Mail
 } from 'lucide-react';
 
 // Initial Pipeline Data across the 4 stages
@@ -441,6 +443,110 @@ const TAILORED_RESUMES = [
   }
 ];
 
+// Cover Letters tailored for target roles (Section 2: Document Manager)
+const TAILORED_COVER_LETTERS = [
+  {
+    id: 'cov-canva',
+    jobId: 'job-4',
+    targetRole: 'Lead Product Manager',
+    company: 'Canva',
+    matchScore: 97,
+    updatedAt: '2 hours ago',
+    tone: 'Strategic & Visionary',
+    wordCount: 385,
+    summary: 'Emphasizes enterprise design systems adoption, creator ecosystem monetization, and API developer platform scaling.',
+    opening: 'Dear Canva Hiring Team, having spearheaded high-velocity product initiatives and enterprise design systems across hyper-growth ecosystems, I was thrilled to see the Lead Product Manager opening for Canva’s Creator and Enterprise Platform.',
+    body: 'Throughout my tenure driving product architecture across APAC, I have prioritized telemetry-backed feature discovery and engineering pod velocity. At my current organization, I led the cross-functional rollout of design tokens and federated modules that cut release friction by 35% while expanding tier-1 enterprise API adoption by 180%. Canva’s commitment to empowering the world to design deeply aligns with my passion for zero-friction user experiences and developer platforms.',
+    bullets: [
+      'Scaled enterprise API adoption by 180% across 40+ Tier-1 banking partners through iterative sprint restructuring.',
+      'Governed design system standardization adopted by 14 distributed engineering teams, reducing frontend cycle times by 35%.',
+      'Championed data-driven product telemetry resulting in 24% MAU growth across self-serve creator workflows.'
+    ],
+    closing: 'I look forward to discussing how my product execution playbook and technical depth can accelerate Canva’s next phase of enterprise platform dominance.',
+    signOff: 'Warm regards,\nAlexander Wright'
+  },
+  {
+    id: 'cov-atlassian',
+    jobId: 'job-1',
+    targetRole: 'Senior Staff Frontend Architect',
+    company: 'Atlassian',
+    matchScore: 95,
+    updatedAt: 'Yesterday',
+    tone: 'Technical & Architectural',
+    wordCount: 410,
+    summary: 'Tailored for Jira Cloud platform scale, micro-frontend module federation, and sub-second Web Vitals.',
+    opening: 'Dear Atlassian Engineering Leadership, as an architect dedicated to large-scale distributed frontend systems, I am writing to express my strong enthusiasm for the Senior Staff Frontend Architect role at Atlassian.',
+    body: 'Atlassian’s mission to unleash the potential of every team resonates with my decade of experience architecting resilient, decentralized web platforms. Most recently, I led the migration of a monolithic enterprise UI into 14 federated micro-frontends, cutting release turnaround from weeks to continuous daily deploys while reducing Core Web Vitals LCP by 48%.',
+    bullets: [
+      'Architected module-federated micro-frontend platform supporting 2M+ daily active sessions with zero downtime.',
+      'Authored decentralized state hydration RFC adopted across 6 cross-regional engineering centers.',
+      'Established automated bundle analyzer tooling and performance budgets saving 620KB per initial client payload.'
+    ],
+    closing: 'I would welcome the opportunity to dive deep into your platform roadmap and discuss how my distributed frontend experience can benefit Jira Cloud.',
+    signOff: 'Best regards,\nAlexander Wright'
+  },
+  {
+    id: 'cov-stripe',
+    jobId: 'job-8',
+    targetRole: 'Product Operations Lead',
+    company: 'Stripe',
+    matchScore: 93,
+    updatedAt: '3 days ago',
+    tone: 'Operational & High-Reliability',
+    wordCount: 395,
+    summary: 'Focused on high-concurrency payment reliability, idempotent APIs, and partner integration velocity.',
+    opening: 'Dear Stripe Talent Team, with deep expertise scaling financial infrastructure operations and mission-critical developer workflows, I am eager to contribute to Stripe as Product Operations Lead.',
+    body: 'Having operated at the intersection of high-availability payment rails and developer experience, I understand the paramount importance of 99.999% reliability. In my previous role, I instituted automated incident command escalation protocols that decreased mean time to resolution by 42% while managing $120M+ monthly throughput.',
+    bullets: [
+      'Streamlined incident escalation protocols for high-concurrency payment transactions, upholding 99.995% SLA.',
+      'Compressed partner integration onboarding cycles from 18 days to 4 days through standardized API checklists.',
+      'Partnered directly with risk engineering to deploy automated anomaly filters processing high-velocity settlement traffic.'
+    ],
+    closing: 'I am excited by Stripe’s relentless focus on increasing the GDP of the internet and look forward to speaking with the team.',
+    signOff: 'Sincerely,\nAlexander Wright'
+  },
+  {
+    id: 'cov-microsoft',
+    jobId: 'job-10',
+    targetRole: 'Principal Azure PM',
+    company: 'Microsoft',
+    matchScore: 96,
+    updatedAt: '4 days ago',
+    tone: 'Executive & Strategic',
+    wordCount: 425,
+    summary: 'Emphasizes enterprise cloud roadmap execution, hybrid cloud security frameworks, and multi-million ARR expansion.',
+    opening: 'Dear Microsoft Cloud Recruiting Team, I am writing to submit my application for the Principal Azure PM opportunity, bringing a proven history of multi-million dollar cloud enablement blueprints and enterprise transformation.',
+    body: 'Leading enterprise cloud initiatives across Asia-Pacific has shown me that technical excellence must be paired with trusted advisory relationships. Over the past four years, I have architected and delivered hybrid infrastructure solutions securing over $14M in ARR, while directly steering executive steering committees through rigorous compliance validations.',
+    bullets: [
+      'Delivered multi-year cloud enablement blueprint securing $14M enterprise ARR across Tier-1 APAC institutions.',
+      'Orchestrated technical discovery loops aligning cognitive AI accelerators with bank-grade security protocols.',
+      'Mobilized cross-division solution taskforces through quarterly executive reviews with c-suite sponsors.'
+    ],
+    closing: 'I look forward to discussing how my experience driving enterprise cloud adoption can support Azure’s mission.',
+    signOff: 'Respectfully,\nAlexander Wright'
+  },
+  {
+    id: 'cov-afterpay',
+    jobId: 'job-2',
+    targetRole: 'Lead Full-Stack Engineer',
+    company: 'Afterpay',
+    matchScore: 91,
+    updatedAt: '5 days ago',
+    tone: 'Full-Stack Performance',
+    wordCount: 375,
+    summary: 'Engineered for sub-100ms merchant checkout SDKs, real-time risk worker pipelines, and event-driven architecture.',
+    opening: 'Dear Afterpay Engineering Team, I am thrilled to apply for the Lead Full-Stack Engineer role, combining full-stack execution with real-time distributed systems engineering.',
+    body: 'Afterpay revolutionized modern consumer commerce, and building high-throughput consumer checkout experiences requires obsessive attention to latency and fault tolerance. In my recent work, I built event-driven worker pipelines capable of handling 3,200 requests/sec with sub-100ms response targets.',
+    bullets: [
+      'Designed event-driven fraud assessment worker pipeline handling 3,200 req/sec with Redis cluster caching.',
+      'Optimized React checkout SDK asset delivery, reducing merchant iframe load overhead by 40%.',
+      'Implemented robust end-to-end integration test harnesses covering 450+ unit and latency degradation scenarios.'
+    ],
+    closing: 'I would love the opportunity to contribute to Afterpay’s engineering culture and next-generation payments stack.',
+    signOff: 'Warm regards,\nAlexander Wright'
+  }
+];
+
 // Mist-like organic particle and smoke simulation on HTML5 Canvas
 function MistCanvas() {
   const canvasRef = React.useRef(null);
@@ -774,8 +880,114 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
   const [actionToast, setActionToast] = useState(null);
   const [showAddJobModal, setShowAddJobModal] = useState(false);
 
-  // Section 2: Resume Modal Preview State
+  // Section 2: Document Manager State
+  const [activeDocTab, setActiveDocTab] = useState('resumes'); // 'resumes' | 'coverLetters'
+  const [docSearchQuery, setDocSearchQuery] = useState('');
   const [previewResume, setPreviewResume] = useState(null);
+  const [previewCoverLetter, setPreviewCoverLetter] = useState(null);
+  const [showAddDocModal, setShowAddDocModal] = useState(false);
+
+  // Stored resumes & cover letters lists with sessionStorage persistence
+  const [resumesList, setResumesList] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('jobgen_resumes_list_v2');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return TAILORED_RESUMES;
+  });
+
+  const [coverLettersList, setCoverLettersList] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('jobgen_coverletters_list_v2');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return TAILORED_COVER_LETTERS;
+  });
+
+  const handleDeleteResume = (id) => {
+    const doc = resumesList.find(r => r.id === id);
+    setResumesList(prev => {
+      const updated = prev.filter(r => r.id !== id);
+      try {
+        sessionStorage.setItem('jobgen_resumes_list_v2', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+    showToast(`Deleted resume tailored for ${doc?.company || 'job'}`);
+  };
+
+  const handleDeleteCoverLetter = (id) => {
+    const doc = coverLettersList.find(c => c.id === id);
+    setCoverLettersList(prev => {
+      const updated = prev.filter(c => c.id !== id);
+      try {
+        sessionStorage.setItem('jobgen_coverletters_list_v2', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+    showToast(`Deleted cover letter tailored for ${doc?.company || 'job'}`);
+  };
+
+  const handleAddNewDocument = (newDoc, docType = 'resume') => {
+    if (docType === 'resume') {
+      setResumesList(prev => {
+        const updated = [newDoc, ...prev];
+        try {
+          sessionStorage.setItem('jobgen_resumes_list_v2', JSON.stringify(updated));
+        } catch (e) {}
+        return updated;
+      });
+      setActiveDocTab('resumes');
+      showToast(`Generated tailored resume for ${newDoc.company}`);
+    } else {
+      setCoverLettersList(prev => {
+        const updated = [newDoc, ...prev];
+        try {
+          sessionStorage.setItem('jobgen_coverletters_list_v2', JSON.stringify(updated));
+        } catch (e) {}
+        return updated;
+      });
+      setActiveDocTab('coverLetters');
+      showToast(`Generated tailored cover letter for ${newDoc.company}`);
+    }
+  };
+
+  // 2 Document Tabs (Resumes and Cover Letters)
+  const DOC_TABS = [
+    {
+      id: 'resumes',
+      label: 'Resumes',
+      icon: FileText,
+      count: resumesList.length,
+      badgeColor: '#1A53CF',
+      badgeBg: '#EFF6FF'
+    },
+    {
+      id: 'coverLetters',
+      label: 'Cover Letters',
+      icon: Mail,
+      count: coverLettersList.length,
+      badgeColor: '#2563EB',
+      badgeBg: '#DBEAFE'
+    }
+  ];
+
+  const filteredResumes = resumesList.filter(res => {
+    if (!docSearchQuery.trim()) return true;
+    const q = docSearchQuery.toLowerCase();
+    return res.company.toLowerCase().includes(q) ||
+           res.targetRole.toLowerCase().includes(q) ||
+           (res.summary && res.summary.toLowerCase().includes(q));
+  });
+
+  const filteredCoverLetters = coverLettersList.filter(cov => {
+    if (!docSearchQuery.trim()) return true;
+    const q = docSearchQuery.toLowerCase();
+    return cov.company.toLowerCase().includes(q) ||
+           cov.targetRole.toLowerCase().includes(q) ||
+           (cov.summary && cov.summary.toLowerCase().includes(q)) ||
+           (cov.tone && cov.tone.toLowerCase().includes(q));
+  });
 
   const showToast = (message) => {
     setActionToast(message);
@@ -1752,215 +1964,1004 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
       </section>
 
       {/* =========================================================================
-          SECTION 2: ROLE-TAILORED RESUMES VAULT
-          - Container showing all resumes tailored for different job roles
+          SECTION 2: DOCUMENT MANAGER (RESUMES & COVER LETTERS)
+          - Attached Geometry matching Tracker: 2 Left Tabs + Right Container with Zagged Edge, Mist & Blur
           ========================================================================= */}
-      <section>
-        {/* Main Resumes Container */}
+      <section style={{ marginBottom: '48px', marginTop: '22px' }}>
         <div 
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.75)',
-            backdropFilter: 'blur(24px) saturate(180%)',
-            WebkitBackdropFilter: 'blur(24px) saturate(180%)',
-            borderRadius: '24px',
-            border: '1px solid rgba(255, 255, 255, 0.95)',
-            padding: '24px',
-            boxShadow: '0 8px 32px rgba(15, 23, 42, 0.05), inset 0 1px 2px #FFFFFF'
+          style={{ 
+            display: 'flex', 
+            alignItems: 'stretch',
+            position: 'relative',
+            borderRadius: '28px',
+            overflow: 'visible'
           }}
         >
-
-          {/* Resumes Grid */}
+          {/* Left Column: 2 Stacked Tab Cards (Resumes & Cover Letters) + Pulsating Add Doc Button */}
           <div 
             style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(360px, 1fr))', 
-              gap: '18px' 
+              width: '210px', 
+              flexShrink: 0, 
+              display: 'flex', 
+              flexDirection: 'column', 
+              gap: '6px',
+              zIndex: 5,
+              paddingRight: '0px'
             }}
           >
-            {TAILORED_RESUMES.map((res) => (
-              <div 
-                key={res.id}
-                style={{
-                  backgroundColor: '#FFFFFF',
-                  borderRadius: '18px',
-                  border: '1.5px solid #E2E8F0',
-                  padding: '20px',
-                  boxShadow: '0 4px 16px rgba(15, 23, 42, 0.04)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  gap: '16px',
-                  transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 10px 28px rgba(15, 23, 42, 0.08)';
-                  e.currentTarget.style.borderColor = '#BFDBFE';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 16px rgba(15, 23, 42, 0.04)';
-                  e.currentTarget.style.borderColor = '#E2E8F0';
-                }}
-              >
-                {/* Resume Header */}
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'flex-start', justifyContent: 'space-between', marginBottom: '8px' }}>
-                    <div>
+            {DOC_TABS.map((tab) => {
+              const Icon = tab.icon;
+              const isSelected = activeDocTab === tab.id;
+
+              return (
+                <button
+                  key={tab.id}
+                  onClick={() => {
+                    setActiveDocTab(tab.id);
+                    setDocSearchQuery('');
+                  }}
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    padding: '0 20px',
+                    borderTopLeftRadius: '18px',
+                    borderBottomLeftRadius: '18px',
+                    borderTopRightRadius: '0px',
+                    borderBottomRightRadius: '0px',
+                    backgroundColor: isSelected ? '#1A53CF' : '#FFFFFF',
+                    background: isSelected 
+                      ? 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)' 
+                      : '#FFFFFF',
+                    color: isSelected ? '#FFFFFF' : '#090C15',
+                    border: isSelected 
+                      ? '1px solid #1A53CF' 
+                      : '1px solid #E2E8F0',
+                    borderRight: 'none',
+                    cursor: 'pointer',
+                    position: 'relative',
+                    textAlign: 'left',
+                    boxShadow: isSelected 
+                      ? '0 6px 20px rgba(26, 83, 207, 0.4)' 
+                      : '0 2px 6px rgba(15, 23, 42, 0.04)',
+                    transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
+                    transform: isSelected ? 'translateX(2px)' : 'translateX(0)',
+                    zIndex: isSelected ? 8 : 4,
+                    minHeight: '76px'
+                  }}
+                  onMouseEnter={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.backgroundColor = '#F8FAFC';
+                      e.currentTarget.style.transform = 'translateX(-2px)';
+                    }
+                  }}
+                  onMouseLeave={(e) => {
+                    if (!isSelected) {
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                      e.currentTarget.style.transform = 'translateX(0)';
+                    }
+                  }}
+                >
+                  {/* Card Content: Icon and Name */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div 
+                      style={{ 
+                        width: '36px', 
+                        height: '36px', 
+                        borderRadius: '10px', 
+                        backgroundColor: isSelected ? 'rgba(255, 255, 255, 0.22)' : '#F1F5F9',
+                        border: isSelected ? '1px solid rgba(255, 255, 255, 0.35)' : '1px solid #E2E8F0',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        flexShrink: 0,
+                        transition: 'all 0.2s ease'
+                      }}
+                    >
+                      <Icon size={18} color={isSelected ? '#FFFFFF' : '#090C15'} strokeWidth={2.4} />
+                    </div>
+
+                    <div style={{ display: 'flex', flexDirection: 'column' }}>
+                      <span 
+                        style={{ 
+                          fontSize: '15.5px', 
+                          fontWeight: 800, 
+                          color: isSelected ? '#FFFFFF' : '#090C15',
+                          fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+                          letterSpacing: '-0.015em',
+                          transition: 'color 0.2s ease',
+                          lineHeight: 1.2
+                        }}
+                      >
+                        {tab.label}
+                      </span>
                       <span 
                         style={{ 
                           fontSize: '11px', 
-                          fontWeight: 800, 
-                          color: '#1A53CF', 
-                          textTransform: 'uppercase', 
-                          letterSpacing: '0.06em' 
+                          fontWeight: 700, 
+                          color: isSelected ? 'rgba(255, 255, 255, 0.85)' : '#64748B',
+                          marginTop: '2px'
                         }}
                       >
-                        Tailored for {res.company}
+                        {tab.count} {tab.count === 1 ? 'doc' : 'docs'}
                       </span>
-                      <h4 style={{ fontSize: '16px', fontWeight: 900, color: '#090C15', margin: '2px 0 0 0' }}>
-                        {res.targetRole}
-                      </h4>
-                    </div>
-
-                    <div 
-                      style={{ 
-                        display: 'flex', 
-                        flexDirection: 'column', 
-                        alignItems: 'flex-end',
-                        gap: '2px'
-                      }}
-                    >
-                      <span 
-                        style={{ 
-                          fontSize: '12px', 
-                          fontWeight: 900, 
-                          color: '#059669', 
-                          backgroundColor: '#ECFDF5', 
-                          padding: '3px 8px', 
-                          borderRadius: '6px',
-                          border: '1px solid #A7F3D0'
-                        }}
-                      >
-                        {res.matchScore}% ATS
-                      </span>
-                      <span style={{ fontSize: '10px', color: '#94A3B8' }}>{res.updatedAt}</span>
                     </div>
                   </div>
+                </button>
+              );
+            })}
 
-                  {/* Summary */}
-                  <p style={{ fontSize: '12px', color: '#64748B', lineHeight: 1.45, margin: '0 0 12px 0' }}>
-                    {res.summary}
-                  </p>
+            {/* Circular Pulsating Add Doc Button directly below Cover Letters card */}
+            <div 
+              style={{ 
+                marginTop: '46px', 
+                marginLeft: '-13px',
+                display: 'flex', 
+                flexDirection: 'column', 
+                alignItems: 'center', 
+                gap: '8px' 
+              }}
+            >
+              <button
+                onClick={() => setShowAddDocModal(true)}
+                title="Create New Tailored Document"
+                className="pulsating-add-job-btn"
+                style={{
+                  width: '68px',
+                  height: '68px',
+                  borderRadius: '50%',
+                  background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+                  color: '#FFFFFF',
+                  border: '3px solid #FFFFFF',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  position: 'relative',
+                  animation: 'pulseAddJobButton 2.2s infinite ease-in-out',
+                  transition: 'transform 0.2s ease, filter 0.2s ease',
+                  boxShadow: '0 6px 20px rgba(26, 83, 207, 0.4)'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'scale(1.1)';
+                  e.currentTarget.style.filter = 'brightness(1.15)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'scale(1)';
+                  e.currentTarget.style.filter = 'brightness(1)';
+                }}
+              >
+                <Plus size={34} strokeWidth={2.8} />
+              </button>
+              <span 
+                style={{ 
+                  fontSize: '11px', 
+                  fontWeight: 800, 
+                  color: '#1A53CF', 
+                  letterSpacing: '0.04em', 
+                  textTransform: 'uppercase' 
+                }}
+              >
+                New Doc
+              </span>
+            </div>
+          </div>
 
-                  {/* Matched Keywords Tags */}
-                  <div style={{ marginBottom: '12px' }}>
-                    <div style={{ fontSize: '10.5px', fontWeight: 700, color: '#475569', textTransform: 'uppercase', marginBottom: '6px' }}>
-                      Keywords Injected:
-                    </div>
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '4px' }}>
-                      {res.keywords.map((kw, kwIdx) => (
-                        <span 
-                          key={kwIdx}
-                          style={{
-                            fontSize: '10.5px',
-                            fontWeight: 600,
-                            backgroundColor: '#EFF6FF',
-                            color: '#1A53CF',
-                            padding: '2px 8px',
-                            borderRadius: '4px',
-                            border: '1px solid #BFDBFE'
-                          }}
-                        >
-                          {kw}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
+          {/* Right Main Container Wrapper: 520px height, jagged edge with deep blue fade */}
+          <div 
+            style={{ 
+              flex: 1, 
+              position: 'relative', 
+              height: '520px', 
+              minHeight: '520px', 
+              maxHeight: '520px',
+              marginLeft: '-14px',
+              zIndex: 15
+            }}
+          >
+            {/* White container with bluish mist, brought OVER the left cards with zig-zag edge on right */}
+            <div 
+              style={{ 
+                width: '100%',
+                height: '100%',
+                backgroundColor: '#FFFFFF', 
+                borderTopLeftRadius: '16px',
+                borderBottomLeftRadius: '16px',
+                borderTopRightRadius: '0px',
+                borderBottomRightRadius: '0px',
+                border: '1px solid #E2E8F0',
+                borderLeft: '1.5px solid #E2E8F0',
+                padding: '36px 38px 24px 28px',
+                boxShadow: '-8px 0 24px rgba(15, 23, 42, 0.08), 0 16px 40px -8px rgba(15, 23, 42, 0.08)',
+                display: 'flex',
+                flexDirection: 'column',
+                position: 'relative',
+                overflow: 'hidden',
+                WebkitMaskImage: `
+                  linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+                `,
+                WebkitMaskSize: 'auto, 16px 26px',
+                WebkitMaskPosition: 'left top, right top',
+                WebkitMaskRepeat: 'no-repeat, repeat-y',
+                maskImage: `
+                  linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+                `,
+                maskSize: 'auto, 16px 26px',
+                maskPosition: 'left top, right top',
+                maskRepeat: 'no-repeat, repeat-y',
+              }}
+            >
+              {/* Canvas-Driven Dynamic Bluish Mist Simulation */}
+              <MistCanvas />
 
-                  {/* Sample Tailored Bullet Point */}
-                  <div 
+              {/* Layered Atmospheric Glowing Bluish Mist Clouds */}
+              <div 
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'radial-gradient(ellipse 65% 50% at 20% 25%, rgba(191, 219, 254, 0.45) 0%, transparent 70%), radial-gradient(ellipse 70% 60% at 85% 75%, rgba(186, 230, 253, 0.4) 0%, transparent 70%)',
+                  filter: 'blur(36px)',
+                  pointerEvents: 'none',
+                  zIndex: 2,
+                  animation: 'mistDriftAmbient 16s ease-in-out infinite alternate'
+                }}
+              />
+              <div 
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  background: 'radial-gradient(ellipse 55% 45% at 50% 50%, rgba(219, 234, 254, 0.35) 0%, transparent 65%)',
+                  filter: 'blur(28px)',
+                  pointerEvents: 'none',
+                  zIndex: 2
+                }}
+              />
+
+              {/* Ambient Deep Blue Radial Atmosphere continuing inward */}
+              <div 
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  right: '0px',
+                  width: '180px',
+                  pointerEvents: 'none',
+                  zIndex: 3,
+                  background: 'radial-gradient(ellipse 95% 65% at 100% 50%, rgba(37, 99, 235, 0.28) 0%, rgba(59, 130, 246, 0.14) 40%, rgba(147, 197, 253, 0.05) 75%, transparent 100%)',
+                  filter: 'blur(16px)'
+                }}
+              />
+              {/* Extended Slow Blue Fade along the Jagged Teeth - Deep inward dissolution */}
+              <div 
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  right: '0px',
+                  width: '140px',
+                  pointerEvents: 'none',
+                  zIndex: 4,
+                  background: 'linear-gradient(to left, rgba(37, 99, 235, 0.48) 0%, rgba(37, 99, 235, 0.35) 16px, rgba(59, 130, 246, 0.22) 42px, rgba(96, 165, 250, 0.12) 75px, rgba(147, 197, 253, 0.04) 110px, transparent 100%)',
+                  WebkitMaskImage: `
+                    linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+                  `,
+                  WebkitMaskSize: 'auto, 16px 26px',
+                  WebkitMaskPosition: 'left top, right top',
+                  WebkitMaskRepeat: 'no-repeat, repeat-y',
+                  maskImage: `
+                    linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+                  `,
+                  maskSize: 'auto, 16px 26px',
+                  maskPosition: 'left top, right top',
+                  maskRepeat: 'no-repeat, repeat-y',
+                }}
+              />
+              {/* Soft luminous gradient on the teeth tips themselves */}
+              <div 
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  bottom: 0,
+                  right: '0px',
+                  width: '16px',
+                  pointerEvents: 'none',
+                  zIndex: 5,
+                  backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cdefs%3E%3ClinearGradient id='softFadeDoc' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='0.68'/%3E%3Cstop offset='45%25' stop-color='%233B82F6' stop-opacity='0.34'/%3E%3Cstop offset='100%25' stop-color='%2393C5FD' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='0,0 16,13 0,26' fill='url(%23softFadeDoc)'/%3E%3C/svg%3E")`,
+                  backgroundSize: '16px 26px',
+                  backgroundPosition: 'right top',
+                  backgroundRepeat: 'repeat-y',
+                  filter: 'drop-shadow(-2px 0 6px rgba(37, 99, 235, 0.35))'
+                }}
+              />
+
+              {/* Header inside the Document Manager container */}
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'space-between', 
+                  marginBottom: '18px', 
+                  paddingBottom: '14px', 
+                  borderBottom: '1.5px solid #F1F5F9',
+                  position: 'relative',
+                  zIndex: 5,
+                  flexWrap: 'wrap',
+                  gap: '12px'
+                }}
+              >
+                <div>
+                  <h3 
                     style={{ 
-                      backgroundColor: '#F8FAFC', 
-                      borderRadius: '10px', 
-                      padding: '10px 12px', 
-                      border: '1px solid #E2E8F0',
-                      fontSize: '11px',
-                      color: '#334155',
-                      lineHeight: 1.45
+                      fontSize: '32px', 
+                      fontWeight: 900, 
+                      margin: 0,
+                      letterSpacing: '-0.025em',
+                      fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+                      display: 'flex',
+                      alignItems: 'center',
+                      lineHeight: 1
                     }}
                   >
-                    <span style={{ fontWeight: 700, color: '#090C15' }}>Featured Bullet: </span>
-                    "{res.bullets[0]}"
-                  </div>
+                    <span style={{ color: '#090C15' }}>DOC</span>
+                    <span 
+                      style={{ 
+                        color: '#2563EB', 
+                        background: 'linear-gradient(135deg, #2563EB 0%, #1A53CF 100%)',
+                        WebkitBackgroundClip: 'text',
+                        WebkitTextFillColor: 'transparent',
+                        filter: 'drop-shadow(0 2px 8px rgba(37, 99, 235, 0.25))'
+                      }}
+                    >
+                      UMENTS
+                    </span>
+                  </h3>
                 </div>
 
-                {/* Resume Card Action Buttons */}
+                {/* Search filter pill */}
                 <div 
                   style={{ 
                     display: 'flex', 
                     alignItems: 'center', 
-                    justifyContent: 'space-between', 
-                    paddingTop: '12px', 
-                    borderTop: '1px solid #F1F5F9',
-                    gap: '8px'
+                    gap: '8px',
+                    backgroundColor: '#FFFFFF',
+                    padding: '7px 14px',
+                    borderRadius: '999px',
+                    border: '1px solid #E2E8F0',
+                    boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)'
                   }}
                 >
-                  <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
-                    {res.template} · {res.pages} Pages
-                  </span>
-
-                  <div style={{ display: 'flex', gap: '6px' }}>
-                    <button
-                      onClick={() => setPreviewResume(res)}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        padding: '6px 12px',
-                        borderRadius: '8px',
-                        backgroundColor: '#F1F5F9',
-                        color: '#090C15',
-                        border: '1px solid #E2E8F0',
-                        fontSize: '11.5px',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        transition: 'background 0.15s ease'
-                      }}
-                      title="Preview this tailored resume"
+                  <Search size={14} color="#64748B" />
+                  <input 
+                    type="text"
+                    placeholder={`Search ${activeDocTab === 'resumes' ? 'resumes' : 'cover letters'}...`}
+                    value={docSearchQuery}
+                    onChange={(e) => setDocSearchQuery(e.target.value)}
+                    style={{
+                      border: 'none',
+                      background: 'transparent',
+                      outline: 'none',
+                      fontSize: '12px',
+                      color: '#090C15',
+                      width: '180px'
+                    }}
+                  />
+                  {docSearchQuery && (
+                    <button 
+                      onClick={() => setDocSearchQuery('')}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0 }}
                     >
-                      <Eye size={13} />
-                      <span>Preview</span>
+                      <X size={13} color="#64748B" />
                     </button>
-
-                    <button
-                      onClick={() => showToast(`Downloaded PDF for ${res.company} (${res.targetRole})`)}
-                      style={{
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '4px',
-                        padding: '6px 12px',
-                        borderRadius: '8px',
-                        backgroundColor: '#1A53CF',
-                        color: '#FFFFFF',
-                        border: 'none',
-                        fontSize: '11.5px',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        boxShadow: '0 2px 8px rgba(26, 83, 207, 0.25)'
-                      }}
-                    >
-                      <Download size={13} />
-                      <span>PDF</span>
-                    </button>
-                  </div>
+                  )}
                 </div>
               </div>
-            ))}
+
+              {/* Tab 1: Resumes List */}
+              {activeDocTab === 'resumes' && (
+                filteredResumes.length === 0 ? (
+                  <div 
+                    style={{ 
+                      flex: 1, 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      padding: '48px 24px',
+                      textAlign: 'center',
+                      position: 'relative',
+                      zIndex: 5
+                    }}
+                  >
+                    <div 
+                      style={{ 
+                        width: '52px', 
+                        height: '52px', 
+                        borderRadius: '50%', 
+                        backgroundColor: '#F1F5F9', 
+                        border: '1px solid #E2E8F0',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        marginBottom: '14px',
+                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.04)'
+                      }}
+                    >
+                      <FileText size={22} color="#64748B" />
+                    </div>
+                    <h4 style={{ fontSize: '15.5px', fontWeight: 800, color: '#090C15', margin: '0 0 6px 0' }}>
+                      No tailored resumes found
+                    </h4>
+                    <p style={{ fontSize: '12.5px', color: '#64748B', maxWidth: '340px', margin: '0 0 16px 0' }}>
+                      Generate custom ATS-tailored resumes for your saved and target roles.
+                    </p>
+                    <button
+                      onClick={() => setShowAddDocModal(true)}
+                      style={{
+                        padding: '8px 18px',
+                        borderRadius: '999px',
+                        backgroundColor: '#090C15',
+                        color: '#FFFFFF',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        border: 'none',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)'
+                      }}
+                    >
+                      + Generate Tailored Resume
+                    </button>
+                  </div>
+                ) : (
+                  <div 
+                    className="custom-stage-scrollbar"
+                    onWheel={(e) => {
+                      const el = e.currentTarget;
+                      const isAtBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 2;
+                      const isAtTop = el.scrollTop <= 0;
+                      if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
+                        window.scrollBy({ top: e.deltaY, behavior: 'auto' });
+                      }
+                    }}
+                    style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', 
+                      gap: '12px',
+                      alignContent: 'start',
+                      alignItems: 'start',
+                      gridAutoRows: '142px',
+                      position: 'relative',
+                      zIndex: 20,
+                      height: '385px',
+                      minHeight: '385px',
+                      maxHeight: '385px',
+                      overflowY: 'auto',
+                      overscrollBehavior: 'auto',
+                      paddingRight: '6px',
+                      paddingBottom: '36px'
+                    }}
+                  >
+                    {filteredResumes.map((res) => {
+                      return (
+                        <div 
+                          key={res.id}
+                          style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.72)',
+                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)',
+                            backdropFilter: 'blur(16px) saturate(180%)',
+                            WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+                            borderRadius: '14px',
+                            border: '1.5px solid rgba(255, 255, 255, 0.88)',
+                            padding: '12px 14px',
+                            height: '142px',
+                            minHeight: '142px',
+                            maxHeight: '142px',
+                            boxSizing: 'border-box',
+                            boxShadow: '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            gap: '6px',
+                            position: 'relative',
+                            zIndex: 20,
+                            transition: 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-3px)';
+                            e.currentTarget.style.borderColor = 'rgba(191, 219, 254, 0.95)';
+                            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.76) 100%)';
+                            e.currentTarget.style.boxShadow = '0 16px 36px -4px rgba(37, 99, 235, 0.16), 0 6px 14px -2px rgba(15, 23, 42, 0.06), inset 0 1px 2px rgba(255, 255, 255, 1)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.88)';
+                            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)';
+                            e.currentTarget.style.boxShadow = '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)';
+                          }}
+                        >
+                          {/* Top: Logo & Company Name + ATS Badge & Red Dustbin */}
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0, overflow: 'hidden' }}>
+                                <TrackerCompanyLogo company={res.company} size={20} />
+                                <span 
+                                  style={{ 
+                                    fontSize: '12px', 
+                                    fontWeight: 900, 
+                                    color: '#1A53CF', 
+                                    textTransform: 'uppercase', 
+                                    letterSpacing: '0.04em',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                  }}
+                                >
+                                  {res.company}
+                                </span>
+                              </div>
+
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span 
+                                  style={{ 
+                                    fontSize: '10.5px', 
+                                    fontWeight: 900, 
+                                    color: '#059669', 
+                                    backgroundColor: '#ECFDF5', 
+                                    padding: '2px 6px', 
+                                    borderRadius: '5px',
+                                    border: '1px solid #A7F3D0'
+                                  }}
+                                >
+                                  {res.matchScore}% ATS
+                                </span>
+
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteResume(res.id);
+                                  }}
+                                  title="Delete resume"
+                                  style={{
+                                    width: '24px',
+                                    height: '24px',
+                                    borderRadius: '6px',
+                                    border: '1px solid #FECACA',
+                                    backgroundColor: '#FEF2F2',
+                                    color: '#DC2626',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    padding: 0,
+                                    transition: 'all 0.15s ease'
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#DC2626';
+                                    e.currentTarget.style.color = '#FFFFFF';
+                                    e.currentTarget.style.borderColor = '#B91C1C';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#FEF2F2';
+                                    e.currentTarget.style.color = '#DC2626';
+                                    e.currentTarget.style.borderColor = '#FECACA';
+                                  }}
+                                >
+                                  <Trash2 size={12} strokeWidth={2.5} />
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Target Role Title */}
+                            <h4 
+                              style={{ 
+                                fontSize: '13.5px', 
+                                fontWeight: 900, 
+                                color: '#090C15', 
+                                margin: '2px 0 2px 0',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                letterSpacing: '-0.015em'
+                              }}
+                              title={res.targetRole}
+                            >
+                              {res.targetRole}
+                            </h4>
+
+                            {/* Subtext: Template & Pages & Updated */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
+                              <span>{res.template}</span>
+                              <span>·</span>
+                              <span>{res.pages} Pages</span>
+                              <span>·</span>
+                              <span style={{ color: '#94A3B8' }}>{res.updatedAt}</span>
+                            </div>
+                          </div>
+
+                          {/* Bottom: Action Buttons */}
+                          <div 
+                            style={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'space-between', 
+                              paddingTop: '6px', 
+                              borderTop: '1px solid rgba(226, 232, 240, 0.7)',
+                              marginTop: 'auto'
+                            }}
+                          >
+                            <span 
+                              style={{ 
+                                fontSize: '10.5px', 
+                                color: '#1A53CF', 
+                                fontWeight: 700,
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                maxWidth: '130px'
+                              }}
+                            >
+                              {res.keywords ? `${res.keywords.slice(0, 2).join(', ')}` : 'Tailored'}
+                            </span>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <button
+                                onClick={() => setPreviewResume(res)}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '3px',
+                                  padding: '5px 10px',
+                                  borderRadius: '6px',
+                                  backgroundColor: '#F1F5F9',
+                                  color: '#090C15',
+                                  border: '1px solid #E2E8F0',
+                                  fontSize: '11px',
+                                  fontWeight: 700,
+                                  cursor: 'pointer',
+                                  transition: 'background 0.15s ease'
+                                }}
+                                title="Preview this tailored resume"
+                              >
+                                <Eye size={12} />
+                                <span>Preview</span>
+                              </button>
+
+                              <button
+                                onClick={() => showToast(`Downloaded PDF for ${res.company} (${res.targetRole})`)}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '3px',
+                                  padding: '5px 10px',
+                                  borderRadius: '6px',
+                                  background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+                                  color: '#FFFFFF',
+                                  border: 'none',
+                                  fontSize: '11px',
+                                  fontWeight: 700,
+                                  cursor: 'pointer',
+                                  boxShadow: '0 2px 6px rgba(26, 83, 207, 0.25)'
+                                }}
+                              >
+                                <Download size={12} />
+                                <span>PDF</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )
+              )}
+
+              {/* Tab 2: Cover Letters List */}
+              {activeDocTab === 'coverLetters' && (
+                filteredCoverLetters.length === 0 ? (
+                  <div 
+                    style={{ 
+                      flex: 1, 
+                      display: 'flex', 
+                      flexDirection: 'column', 
+                      alignItems: 'center', 
+                      justifyContent: 'center',
+                      padding: '48px 24px',
+                      textAlign: 'center',
+                      position: 'relative',
+                      zIndex: 5
+                    }}
+                  >
+                    <div 
+                      style={{ 
+                        width: '52px', 
+                        height: '52px', 
+                        borderRadius: '50%', 
+                        backgroundColor: '#F1F5F9', 
+                        border: '1px solid #E2E8F0',
+                        display: 'flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        marginBottom: '14px',
+                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.04)'
+                      }}
+                    >
+                      <Mail size={22} color="#64748B" />
+                    </div>
+                    <h4 style={{ fontSize: '15.5px', fontWeight: 800, color: '#090C15', margin: '0 0 6px 0' }}>
+                      No tailored cover letters found
+                    </h4>
+                    <p style={{ fontSize: '12.5px', color: '#64748B', maxWidth: '340px', margin: '0 0 16px 0' }}>
+                      Generate custom company-specific cover letters highlighting your verified achievements.
+                    </p>
+                    <button
+                      onClick={() => setShowAddDocModal(true)}
+                      style={{
+                        padding: '8px 18px',
+                        borderRadius: '999px',
+                        backgroundColor: '#090C15',
+                        color: '#FFFFFF',
+                        fontSize: '12px',
+                        fontWeight: 700,
+                        border: 'none',
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 12px rgba(15, 23, 42, 0.15)'
+                      }}
+                    >
+                      + Generate Cover Letter
+                    </button>
+                  </div>
+                ) : (
+                  <div 
+                    className="custom-stage-scrollbar"
+                    onWheel={(e) => {
+                      const el = e.currentTarget;
+                      const isAtBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 2;
+                      const isAtTop = el.scrollTop <= 0;
+                      if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
+                        window.scrollBy({ top: e.deltaY, behavior: 'auto' });
+                      }
+                    }}
+                    style={{ 
+                      display: 'grid', 
+                      gridTemplateColumns: 'repeat(3, minmax(0, 1fr))', 
+                      gap: '12px',
+                      alignContent: 'start',
+                      alignItems: 'start',
+                      gridAutoRows: '142px',
+                      position: 'relative',
+                      zIndex: 20,
+                      height: '385px',
+                      minHeight: '385px',
+                      maxHeight: '385px',
+                      overflowY: 'auto',
+                      overscrollBehavior: 'auto',
+                      paddingRight: '6px',
+                      paddingBottom: '36px'
+                    }}
+                  >
+                    {filteredCoverLetters.map((cov) => {
+                      return (
+                        <div 
+                          key={cov.id}
+                          style={{
+                            backgroundColor: 'rgba(255, 255, 255, 0.72)',
+                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)',
+                            backdropFilter: 'blur(16px) saturate(180%)',
+                            WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+                            borderRadius: '14px',
+                            border: '1.5px solid rgba(255, 255, 255, 0.88)',
+                            padding: '12px 14px',
+                            height: '142px',
+                            minHeight: '142px',
+                            maxHeight: '142px',
+                            boxSizing: 'border-box',
+                            boxShadow: '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            justifyContent: 'space-between',
+                            gap: '6px',
+                            position: 'relative',
+                            zIndex: 20,
+                            transition: 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease'
+                          }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.transform = 'translateY(-3px)';
+                            e.currentTarget.style.borderColor = 'rgba(191, 219, 254, 0.95)';
+                            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.76) 100%)';
+                            e.currentTarget.style.boxShadow = '0 16px 36px -4px rgba(37, 99, 235, 0.16), 0 6px 14px -2px rgba(15, 23, 42, 0.06), inset 0 1px 2px rgba(255, 255, 255, 1)';
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.transform = 'translateY(0)';
+                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.88)';
+                            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)';
+                            e.currentTarget.style.boxShadow = '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)';
+                          }}
+                        >
+                          {/* Top: Logo & Company Name + Match Badge & Red Dustbin */}
+                          <div>
+                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0, overflow: 'hidden' }}>
+                                <TrackerCompanyLogo company={cov.company} size={20} />
+                                <span 
+                                  style={{ 
+                                    fontSize: '12px', 
+                                    fontWeight: 900, 
+                                    color: '#1A53CF', 
+                                    textTransform: 'uppercase', 
+                                    letterSpacing: '0.04em',
+                                    whiteSpace: 'nowrap',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                  }}
+                                >
+                                  {cov.company}
+                                </span>
+                              </div>
+
+                              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                                <span 
+                                  style={{ 
+                                    fontSize: '10.5px', 
+                                    fontWeight: 900, 
+                                    color: '#2563EB', 
+                                    backgroundColor: '#EFF6FF', 
+                                    padding: '2px 6px', 
+                                    borderRadius: '5px',
+                                    border: '1px solid #BFDBFE'
+                                  }}
+                                >
+                                  {cov.matchScore}% Match
+                                </span>
+
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleDeleteCoverLetter(cov.id);
+                                  }}
+                                  title="Delete cover letter"
+                                  style={{
+                                    width: '24px',
+                                    height: '24px',
+                                    borderRadius: '6px',
+                                    border: '1px solid #FECACA',
+                                    backgroundColor: '#FEF2F2',
+                                    color: '#DC2626',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    cursor: 'pointer',
+                                    padding: 0,
+                                    transition: 'all 0.15s ease'
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#DC2626';
+                                    e.currentTarget.style.color = '#FFFFFF';
+                                    e.currentTarget.style.borderColor = '#B91C1C';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#FEF2F2';
+                                    e.currentTarget.style.color = '#DC2626';
+                                    e.currentTarget.style.borderColor = '#FECACA';
+                                  }}
+                                >
+                                  <Trash2 size={12} strokeWidth={2.5} />
+                                </button>
+                              </div>
+                            </div>
+
+                            {/* Target Role Title */}
+                            <h4 
+                              style={{ 
+                                fontSize: '13.5px', 
+                                fontWeight: 900, 
+                                color: '#090C15', 
+                                margin: '2px 0 2px 0',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                letterSpacing: '-0.015em'
+                              }}
+                              title={cov.targetRole}
+                            >
+                              {cov.targetRole}
+                            </h4>
+
+                            {/* Subtext: Tone & Word Count & Updated */}
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
+                              <span>{cov.tone}</span>
+                              <span>·</span>
+                              <span>{cov.wordCount} words</span>
+                              <span>·</span>
+                              <span style={{ color: '#94A3B8' }}>{cov.updatedAt}</span>
+                            </div>
+                          </div>
+
+                          {/* Bottom: Action Buttons */}
+                          <div 
+                            style={{ 
+                              display: 'flex', 
+                              alignItems: 'center', 
+                              justifyContent: 'space-between', 
+                              paddingTop: '6px', 
+                              borderTop: '1px solid rgba(226, 232, 240, 0.7)',
+                              marginTop: 'auto'
+                            }}
+                          >
+                            <span 
+                              style={{ 
+                                fontSize: '10.5px', 
+                                color: '#2563EB', 
+                                fontWeight: 700,
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis',
+                                maxWidth: '130px'
+                              }}
+                            >
+                              Tailored Narrative
+                            </span>
+
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                              <button
+                                onClick={() => setPreviewCoverLetter(cov)}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '3px',
+                                  padding: '5px 10px',
+                                  borderRadius: '6px',
+                                  backgroundColor: '#F1F5F9',
+                                  color: '#090C15',
+                                  border: '1px solid #E2E8F0',
+                                  fontSize: '11px',
+                                  fontWeight: 700,
+                                  cursor: 'pointer',
+                                  transition: 'background 0.15s ease'
+                                }}
+                                title="Preview this tailored cover letter"
+                              >
+                                <Eye size={12} />
+                                <span>Preview</span>
+                              </button>
+
+                              <button
+                                onClick={() => {
+                                  const text = `${cov.opening}\n\n${cov.body}\n\nKey Highlights:\n${cov.bullets.map(b => '• ' + b).join('\n')}\n\n${cov.closing}\n\n${cov.signOff}`;
+                                  navigator.clipboard?.writeText(text);
+                                  showToast(`Copied cover letter for ${cov.company} to clipboard!`);
+                                }}
+                                style={{
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  gap: '3px',
+                                  padding: '5px 10px',
+                                  borderRadius: '6px',
+                                  background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+                                  color: '#FFFFFF',
+                                  border: 'none',
+                                  fontSize: '11px',
+                                  fontWeight: 700,
+                                  cursor: 'pointer',
+                                  boxShadow: '0 2px 6px rgba(26, 83, 207, 0.25)'
+                                }}
+                              >
+                                <Copy size={12} />
+                                <span>Copy</span>
+                              </button>
+                            </div>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                )
+              )}
+
+            </div>
           </div>
-
         </div>
-
       </section>
 
       {/* =========================================================================
@@ -2142,6 +3143,206 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
         </div>
       )}
 
+      {/* =========================================================================
+          COVER LETTER PREVIEW MODAL
+          ========================================================================= */}
+      {previewCoverLetter && (
+        <div 
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 9999,
+            backgroundColor: 'rgba(9, 12, 21, 0.75)',
+            backdropFilter: 'blur(14px)',
+            WebkitBackdropFilter: 'blur(14px)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            padding: '24px'
+          }}
+          onClick={() => setPreviewCoverLetter(null)}
+        >
+          <div 
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '24px',
+              maxWidth: '780px',
+              width: '100%',
+              maxHeight: '90vh',
+              overflowY: 'auto',
+              boxShadow: '0 24px 70px rgba(0, 0, 0, 0.4)',
+              padding: '32px',
+              position: 'relative'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* Modal Header */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '16px', borderBottom: '1.5px solid #E2E8F0', marginBottom: '20px' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <div style={{ width: '36px', height: '36px', borderRadius: '10px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                  <Mail size={18} color="#1A53CF" />
+                </div>
+                <div>
+                  <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#090C15', margin: 0 }}>
+                    {previewCoverLetter.targetRole} — {previewCoverLetter.company}
+                  </h3>
+                  <span style={{ fontSize: '11.5px', color: '#64748B' }}>
+                    {previewCoverLetter.tone} · {previewCoverLetter.matchScore}% Alignment · {previewCoverLetter.wordCount} words
+                  </span>
+                </div>
+              </div>
+
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <button
+                  onClick={() => {
+                    const text = `${previewCoverLetter.opening}\n\n${previewCoverLetter.body}\n\nKey Highlights:\n${previewCoverLetter.bullets.map(b => '• ' + b).join('\n')}\n\n${previewCoverLetter.closing}\n\n${previewCoverLetter.signOff}`;
+                    navigator.clipboard?.writeText(text);
+                    showToast(`Copied ${previewCoverLetter.company} cover letter to clipboard`);
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 14px',
+                    borderRadius: '8px',
+                    backgroundColor: '#F1F5F9',
+                    color: '#090C15',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    border: '1px solid #E2E8F0',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <Copy size={13} />
+                  <span>Copy</span>
+                </button>
+
+                <button
+                  onClick={() => {
+                    showToast(`Exported ${previewCoverLetter.company} cover letter PDF`);
+                    setPreviewCoverLetter(null);
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '6px',
+                    padding: '8px 16px',
+                    borderRadius: '8px',
+                    backgroundColor: '#1A53CF',
+                    color: '#FFFFFF',
+                    fontSize: '12px',
+                    fontWeight: 700,
+                    border: 'none',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <Download size={14} />
+                  <span>PDF</span>
+                </button>
+
+                <button
+                  onClick={() => setPreviewCoverLetter(null)}
+                  style={{
+                    width: '32px',
+                    height: '32px',
+                    borderRadius: '50%',
+                    backgroundColor: '#F1F5F9',
+                    border: 'none',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
+                >
+                  <X size={16} color="#475569" />
+                </button>
+              </div>
+            </div>
+
+            {/* Document Sheet Simulation */}
+            <div 
+              style={{ 
+                backgroundColor: '#FFFFFF', 
+                border: '1px solid #CBD5E1', 
+                borderRadius: '12px', 
+                padding: '32px',
+                boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
+                fontFamily: 'Inter, system-ui, sans-serif'
+              }}
+            >
+              {/* Candidate Info Header */}
+              <div style={{ textAlign: 'center', borderBottom: '2px solid #090C15', paddingBottom: '14px', marginBottom: '22px' }}>
+                <h2 style={{ fontSize: '20px', fontWeight: 900, color: '#090C15', margin: '0 0 4px 0', letterSpacing: '-0.02em' }}>
+                  ALEXANDER WRIGHT
+                </h2>
+                <p style={{ fontSize: '11.5px', color: '#475569', margin: '0 0 6px 0', fontWeight: 600 }}>
+                  Sydney, NSW, Australia · alexander.wright@jobgen.ai · +61 400 123 456
+                </p>
+                <div style={{ display: 'flex', justifyContent: 'center', gap: '12px', fontSize: '11px', color: '#1A53CF', fontWeight: 700 }}>
+                  <span>linkedin.com/in/alexander-wright</span>
+                  <span>•</span>
+                  <span>github.com/alexwright</span>
+                </div>
+              </div>
+
+              {/* Date & Addressee */}
+              <div style={{ marginBottom: '18px', fontSize: '12px', color: '#475569' }}>
+                <p style={{ margin: '0 0 6px 0', fontWeight: 600 }}>Date: September 28, 2026</p>
+                <p style={{ margin: '0 0 2px 0', fontWeight: 800, color: '#090C15' }}>Hiring Team, {previewCoverLetter.company}</p>
+                <p style={{ margin: 0, fontWeight: 700, color: '#1A53CF' }}>Application: {previewCoverLetter.targetRole}</p>
+              </div>
+
+              {/* Letter Body */}
+              <div style={{ fontSize: '12.5px', color: '#334155', lineHeight: 1.65, display: 'flex', flexDirection: 'column', gap: '14px' }}>
+                <p style={{ margin: 0 }}>
+                  {previewCoverLetter.opening}
+                </p>
+
+                <p style={{ margin: 0 }}>
+                  {previewCoverLetter.body}
+                </p>
+
+                {previewCoverLetter.bullets && (
+                  <div>
+                    <span style={{ fontWeight: 800, color: '#090C15', display: 'block', marginBottom: '6px' }}>
+                      Key Strategic & Technical Highlights:
+                    </span>
+                    <ul style={{ margin: 0, paddingLeft: '20px', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      {previewCoverLetter.bullets.map((b, bIdx) => (
+                        <li key={bIdx} style={{ color: '#334155' }}>
+                          {b}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}
+
+                <p style={{ margin: 0 }}>
+                  {previewCoverLetter.closing}
+                </p>
+
+                <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid #F1F5F9', whiteSpace: 'pre-line', fontWeight: 700, color: '#090C15' }}>
+                  {previewCoverLetter.signOff}
+                </div>
+              </div>
+
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          ADD NEW DOCUMENT MODAL
+          ========================================================================= */}
+      {showAddDocModal && (
+        <AddDocumentModal 
+          isOpen={showAddDocModal}
+          onClose={() => setShowAddDocModal(false)}
+          onAddDocument={handleAddNewDocument}
+        />
+      )}
+
       {/* Add Job Modal Pop-Up */}
       <AddJobModal 
         isOpen={showAddJobModal} 
@@ -2149,6 +3350,270 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
         onAddJob={handleAddNewJob} 
       />
 
+    </div>
+  );
+}
+
+// Inline Helper Modal for Generating Tailored Documents
+function AddDocumentModal({ isOpen, onClose, onAddDocument }) {
+  const [docType, setDocType] = React.useState('resume');
+  const [company, setCompany] = React.useState('');
+  const [role, setRole] = React.useState('');
+  const [tone, setTone] = React.useState('Strategic & Visionary');
+
+  if (!isOpen) return null;
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (!company.trim() || !role.trim()) return;
+
+    if (docType === 'resume') {
+      const newResume = {
+        id: `res-${Date.now()}`,
+        jobId: `job-${Date.now()}`,
+        targetRole: role.trim(),
+        company: company.trim(),
+        matchScore: Math.floor(Math.random() * 6) + 94, // 94-99%
+        updatedAt: 'Just now',
+        template: 'Executive Modern',
+        pages: 2,
+        summary: `Tailored for ${company.trim()} high-impact initiatives, verified metrics, and technical leadership in ${role.trim()}.`,
+        keywords: ['Distributed Systems', 'Enterprise Architecture', 'API Scaling', 'Execution Velocity', 'Zero-Downtime'],
+        bullets: [
+          `Spearheaded core platform initiatives at scale, driving 35% improvements in engineering throughput.`,
+          `Architected reliable production systems meeting 99.99% availability targets across enterprise workloads.`,
+          `Governed cross-functional alignment loops and technical design specifications for tier-1 partner integrations.`
+        ],
+        skills: ['System Design', 'TypeScript/React', 'Cloud Services', 'Telemetry', 'Cross-Pod Scaling']
+      };
+      onAddDocument(newResume, 'resume');
+    } else {
+      const newCoverLetter = {
+        id: `cov-${Date.now()}`,
+        jobId: `job-${Date.now()}`,
+        targetRole: role.trim(),
+        company: company.trim(),
+        matchScore: Math.floor(Math.random() * 5) + 95, // 95-99%
+        updatedAt: 'Just now',
+        tone: tone,
+        wordCount: 395,
+        summary: `Custom cover letter emphasizing verified track record, mission alignment, and leadership for ${company.trim()}.`,
+        opening: `Dear ${company.trim()} Hiring Team, I am writing to submit my application for the ${role.trim()} position, bringing a proven background of software engineering excellence and leadership.`,
+        body: `Throughout my career, I have focused on delivering demonstrable business impact, reducing latency, and building scalable developer ecosystems. ${company.trim()}'s culture of innovation and execution makes this the ideal platform for my skills.`,
+        bullets: [
+          `Delivered high-throughput systems scaling to millions of daily requests with sub-100ms response latencies.`,
+          `Partnered across product and executive teams to compress integration cycles by over 40%.`,
+          `Instituted automated quality gates and engineering standards adopted cross-functionally.`
+        ],
+        closing: `I welcome the opportunity to speak with your team and discuss how my expertise can accelerate ${company.trim()}'s key objectives.`,
+        signOff: `Warm regards,\nAlexander Wright`
+      };
+      onAddDocument(newCoverLetter, 'coverLetter');
+    }
+
+    onClose();
+  };
+
+  return (
+    <div 
+      style={{
+        position: 'fixed',
+        inset: 0,
+        zIndex: 9999,
+        backgroundColor: 'rgba(9, 12, 21, 0.72)',
+        backdropFilter: 'blur(14px)',
+        WebkitBackdropFilter: 'blur(14px)',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        padding: '20px'
+      }}
+      onClick={onClose}
+    >
+      <div 
+        style={{
+          backgroundColor: '#FFFFFF',
+          borderRadius: '22px',
+          maxWidth: '520px',
+          width: '100%',
+          boxShadow: '0 25px 60px rgba(0, 0, 0, 0.35)',
+          padding: '28px',
+          position: 'relative'
+        }}
+        onClick={(e) => e.stopPropagation()}
+      >
+        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '20px', paddingBottom: '14px', borderBottom: '1px solid #E2E8F0' }}>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{ width: '36px', height: '36px', borderRadius: '10px', background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+              <Plus size={20} color="#FFFFFF" />
+            </div>
+            <div>
+              <h3 style={{ fontSize: '17px', fontWeight: 900, color: '#090C15', margin: 0 }}>
+                Create Tailored Document
+              </h3>
+              <p style={{ fontSize: '11.5px', color: '#64748B', margin: '2px 0 0 0' }}>
+                Dynamically generated with verified metrics & ATS keywords
+              </p>
+            </div>
+          </div>
+          <button onClick={onClose} style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 4 }}>
+            <X size={18} color="#64748B" />
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
+              Document Type
+            </label>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '8px' }}>
+              <button
+                type="button"
+                onClick={() => setDocType('resume')}
+                style={{
+                  padding: '10px',
+                  borderRadius: '10px',
+                  border: docType === 'resume' ? '2px solid #1A53CF' : '1px solid #E2E8F0',
+                  backgroundColor: docType === 'resume' ? '#EFF6FF' : '#FFFFFF',
+                  color: docType === 'resume' ? '#1A53CF' : '#475569',
+                  fontSize: '12.5px',
+                  fontWeight: 800,
+                  cursor: 'pointer'
+                }}
+              >
+                Tailored Resume
+              </button>
+              <button
+                type="button"
+                onClick={() => setDocType('coverLetter')}
+                style={{
+                  padding: '10px',
+                  borderRadius: '10px',
+                  border: docType === 'coverLetter' ? '2px solid #1A53CF' : '1px solid #E2E8F0',
+                  backgroundColor: docType === 'coverLetter' ? '#EFF6FF' : '#FFFFFF',
+                  color: docType === 'coverLetter' ? '#1A53CF' : '#475569',
+                  fontSize: '12.5px',
+                  fontWeight: 800,
+                  cursor: 'pointer'
+                }}
+              >
+                Cover Letter
+              </button>
+            </div>
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 800, color: '#090C15', marginBottom: '6px' }}>
+              Company Name *
+            </label>
+            <input 
+              type="text" 
+              placeholder="e.g. Google, Stripe, Figma, Apple"
+              value={company}
+              onChange={(e) => setCompany(e.target.value)}
+              required
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                borderRadius: '9px',
+                border: '1.5px solid #CBD5E1',
+                fontSize: '13px',
+                color: '#090C15',
+                outline: 'none',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+
+          <div>
+            <label style={{ display: 'block', fontSize: '12px', fontWeight: 800, color: '#090C15', marginBottom: '6px' }}>
+              Target Role *
+            </label>
+            <input 
+              type="text" 
+              placeholder="e.g. Lead Frontend Architect, Staff Product PM"
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              required
+              style={{
+                width: '100%',
+                padding: '10px 14px',
+                borderRadius: '9px',
+                border: '1.5px solid #CBD5E1',
+                fontSize: '13px',
+                color: '#090C15',
+                outline: 'none',
+                boxSizing: 'border-box'
+              }}
+            />
+          </div>
+
+          {docType === 'coverLetter' && (
+            <div>
+              <label style={{ display: 'block', fontSize: '12px', fontWeight: 800, color: '#090C15', marginBottom: '6px' }}>
+                Narrative Tone
+              </label>
+              <select
+                value={tone}
+                onChange={(e) => setTone(e.target.value)}
+                style={{
+                  width: '100%',
+                  padding: '10px 14px',
+                  borderRadius: '9px',
+                  border: '1.5px solid #CBD5E1',
+                  fontSize: '13px',
+                  color: '#090C15',
+                  outline: 'none',
+                  backgroundColor: '#FFFFFF',
+                  boxSizing: 'border-box'
+                }}
+              >
+                <option value="Strategic & Visionary">Strategic & Visionary</option>
+                <option value="Technical & Architectural">Technical & Architectural</option>
+                <option value="Operational & High-Reliability">Operational & High-Reliability</option>
+                <option value="Executive & Commercial">Executive & Commercial</option>
+              </select>
+            </div>
+          )}
+
+          <div style={{ display: 'flex', gap: '10px', marginTop: '10px' }}>
+            <button
+              type="button"
+              onClick={onClose}
+              style={{
+                flex: 1,
+                padding: '11px',
+                borderRadius: '10px',
+                border: '1px solid #E2E8F0',
+                backgroundColor: '#F8FAFC',
+                color: '#475569',
+                fontSize: '13px',
+                fontWeight: 700,
+                cursor: 'pointer'
+              }}
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              style={{
+                flex: 2,
+                padding: '11px',
+                borderRadius: '10px',
+                border: 'none',
+                background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+                color: '#FFFFFF',
+                fontSize: '13px',
+                fontWeight: 800,
+                cursor: 'pointer',
+                boxShadow: '0 4px 14px rgba(26, 83, 207, 0.35)'
+              }}
+            >
+              Generate {docType === 'resume' ? 'Resume' : 'Cover Letter'} ✨
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }
