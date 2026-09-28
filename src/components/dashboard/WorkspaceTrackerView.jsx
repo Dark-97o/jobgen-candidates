@@ -541,6 +541,188 @@ function MistCanvas() {
   );
 }
 
+// Real Company Logos rendered from high-res WebP assets, authentic brand SVGs, or dynamic logo services
+function TrackerCompanyLogo({ company, size = 20, style = {} }) {
+  const [imgError, setImgError] = React.useState(false);
+  const normalized = (company || '').toLowerCase();
+
+  // 1. Direct WebP high-res authentic brand assets available in public/logos/
+  if (normalized.includes('canva')) {
+    return (
+      <img 
+        src="/logos/canva.webp" 
+        alt="Canva" 
+        style={{ width: `${size}px`, height: `${size}px`, objectFit: 'contain', borderRadius: '5px', flexShrink: 0, ...style }} 
+      />
+    );
+  }
+  if (normalized.includes('atlassian')) {
+    return (
+      <img 
+        src="/logos/atlassian.webp" 
+        alt="Atlassian" 
+        style={{ width: `${size}px`, height: `${size}px`, objectFit: 'contain', borderRadius: '5px', flexShrink: 0, ...style }} 
+      />
+    );
+  }
+  if (normalized.includes('afterpay')) {
+    return (
+      <img 
+        src="/logos/afterpay.webp" 
+        alt="Afterpay" 
+        style={{ width: `${size}px`, height: `${size}px`, objectFit: 'contain', borderRadius: '5px', flexShrink: 0, ...style }} 
+      />
+    );
+  }
+  if (normalized.includes('microsoft')) {
+    return (
+      <img 
+        src="/logos/microsoft.webp" 
+        alt="Microsoft" 
+        style={{ width: `${size}px`, height: `${size}px`, objectFit: 'contain', borderRadius: '5px', flexShrink: 0, ...style }} 
+      />
+    );
+  }
+  if (normalized.includes('amazon') || normalized.includes('aws')) {
+    return (
+      <img 
+        src="/logos/amazon.webp" 
+        alt="Amazon" 
+        style={{ width: `${size}px`, height: `${size}px`, objectFit: 'contain', borderRadius: '5px', flexShrink: 0, ...style }} 
+      />
+    );
+  }
+  if (normalized.includes('anz')) {
+    return (
+      <img 
+        src="/logos/anz.webp" 
+        alt="ANZ" 
+        style={{ width: `${size}px`, height: `${size}px`, objectFit: 'contain', borderRadius: '5px', flexShrink: 0, ...style }} 
+      />
+    );
+  }
+  if (normalized.includes('deloitte')) {
+    return (
+      <img 
+        src="/logos/deloitte.webp" 
+        alt="Deloitte" 
+        style={{ width: `${size}px`, height: `${size}px`, objectFit: 'contain', borderRadius: '5px', flexShrink: 0, ...style }} 
+      />
+    );
+  }
+  if (normalized.includes('visa')) {
+    return (
+      <img 
+        src="/logos/visa.webp" 
+        alt="Visa" 
+        style={{ width: `${size}px`, height: `${size}px`, objectFit: 'contain', borderRadius: '5px', flexShrink: 0, ...style }} 
+      />
+    );
+  }
+
+  // 2. High-precision vector SVGs for Stripe, Google, Wise, Macquarie, Telstra, Airtasker, etc.
+  if (normalized.includes('stripe')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '5px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="6" fill="#635BFF" />
+        <path d="M16.8 12.8c-1.3-.4-2.1-.8-2.1-1.5 0-.8.8-1.3 2.1-1.3 1.5 0 2.8.5 3.7 1.2l.9-2.1c-1.1-.8-2.8-1.3-4.6-1.3-3.2 0-5.3 1.7-5.3 4.4 0 2.4 1.7 3.5 4.3 4.3 1.5.5 2.1.9 2.1 1.7 0 .9-.9 1.4-2.3 1.4-1.8 0-3.4-.7-4.4-1.6l-1 2.2c1.3 1.1 3.2 1.7 5.4 1.7 3.4 0 5.6-1.7 5.6-4.5 0-2.6-1.8-3.7-4.4-4.6z" fill="#FFFFFF" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('google')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '5px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="6" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="1" />
+        <path d="M22.8 16.2c0-.5-.04-1-.13-1.5H16v2.9h3.8c-.16.9-.67 1.7-1.43 2.2v1.8h2.3c1.36-1.3 2.13-3.1 2.13-5.4z" fill="#4285F4" />
+        <path d="M16 23.2c1.9 0 3.6-.6 4.8-1.7l-2.3-1.8c-.6.4-1.5.7-2.5.7-1.9 0-3.5-1.3-4.1-3.1H9.4v1.9c1.2 2.4 3.7 4 6.6 4z" fill="#34A853" />
+        <path d="M11.9 17.3c-.2-.5-.3-1-.3-1.6s.1-1.1.3-1.6V12.2H9.4c-.5 1-1 2.3-1 3.8s.5 2.8 1 3.8l2.5-2.5z" fill="#FBBC05" />
+        <path d="M16 11.5c1.1 0 2 .4 2.8 1.1l2.1-2.1C19.5 9.4 17.9 8.8 16 8.8c-2.9 0-5.4 1.6-6.6 4l2.5 1.9c.6-1.8 2.2-3.2 4.1-3.2z" fill="#EA4335" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('wise')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '5px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="6" fill="#9FE870" />
+        <path d="M9 10h6l-3.5 12h-3L9 10zm7.5 0h6.5l-4.5 12h-3l2.5-7.5h-2.5l1-4.5z" fill="#163300" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('macquarie')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '5px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="6" fill="#000000" />
+        <circle cx="16" cy="16" r="8" stroke="#FFFFFF" strokeWidth="2.5" fill="none" />
+        <circle cx="16" cy="16" r="3.5" fill="#FFFFFF" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('telstra')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '5px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="6" fill="#0057B8" />
+        <path d="M10 11h12v3.2h-4.3V22h-3.4v-7.8H10V11z" fill="#FFFFFF" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('airtasker')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '5px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="6" fill="#00C48C" />
+        <path d="M11 21l5-11 5 11h-3l-2-4.5-2 4.5h-3zm3.5-6h3l-1.5-3.5-1.5 3.5z" fill="#FFFFFF" />
+      </svg>
+    );
+  }
+
+  if (normalized.includes('commbank') || normalized.includes('commonwealth')) {
+    return (
+      <svg width={size} height={size} viewBox="0 0 32 32" fill="none" style={{ borderRadius: '5px', flexShrink: 0, ...style }}>
+        <rect width="32" height="32" rx="6" fill="#FFCC00" />
+        <polygon points="16,8 24,16 16,24 8,16" fill="#000000" />
+      </svg>
+    );
+  }
+
+  // Fallback: Dynamic domain favicon or stylized monogram
+  const domainGuess = normalized.replace(/[^a-z0-9]/g, '') + '.com';
+  if (!imgError) {
+    return (
+      <img
+        src={`https://www.google.com/s2/favicons?domain=${domainGuess}&sz=64`}
+        alt={company}
+        onError={() => setImgError(true)}
+        style={{ width: `${size}px`, height: `${size}px`, objectFit: 'contain', borderRadius: '5px', flexShrink: 0, ...style }}
+      />
+    );
+  }
+
+  return (
+    <div
+      style={{
+        width: `${size}px`,
+        height: `${size}px`,
+        borderRadius: '5px',
+        backgroundColor: '#1A53CF',
+        color: '#FFFFFF',
+        display: 'flex',
+        alignItems: 'center',
+        justifyContent: 'center',
+        fontWeight: 900,
+        fontSize: `${Math.round(size * 0.5)}px`,
+        flexShrink: 0,
+        ...style
+      }}
+    >
+      {(company || 'J').charAt(0).toUpperCase()}
+    </div>
+  );
+}
+
 export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
   // Section 1: Active Stage Selection for the 4-Card Attached Design
   // 'saved' | 'applied' | 'interviewing' | 'offers'
@@ -1228,17 +1410,23 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                       {/* Top: Company Header & Red Dustbin Delete Button */}
                       <div>
                         <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
-                          <span 
-                            style={{ 
-                              fontSize: '12px', 
-                              fontWeight: 900, 
-                              color: '#1A53CF', 
-                              textTransform: 'uppercase', 
-                              letterSpacing: '0.04em' 
-                            }}
-                          >
-                            {job.company}
-                          </span>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0, overflow: 'hidden' }}>
+                            <TrackerCompanyLogo company={job.company} size={20} />
+                            <span 
+                              style={{ 
+                                fontSize: '12px', 
+                                fontWeight: 900, 
+                                color: '#1A53CF', 
+                                textTransform: 'uppercase', 
+                                letterSpacing: '0.04em',
+                                whiteSpace: 'nowrap',
+                                overflow: 'hidden',
+                                textOverflow: 'ellipsis'
+                              }}
+                            >
+                              {job.company}
+                            </span>
+                          </div>
 
                           {/* Small Red Dustbin Button to Delete Job */}
                           <button
@@ -1493,21 +1681,48 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
 
             </div>
 
-            {/* Faded Blue Zagged Edge Outline - strictly bound to the 520px container height */}
+            {/* Slow Blue Fade along the Jagged Teeth - No hard stroke line, pure slow inward dissolution */}
             <div 
               style={{
                 position: 'absolute',
                 top: 0,
                 bottom: 0,
                 right: '0px',
-                width: '18px',
+                width: '54px',
                 pointerEvents: 'none',
-                zIndex: 30,
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='18' height='26' viewBox='0 0 18 26'%3E%3Cdefs%3E%3ClinearGradient id='strokeFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='1'/%3E%3Cstop offset='50%25' stop-color='%233B82F6' stop-opacity='0.6'/%3E%3Cstop offset='100%25' stop-color='%2360A5FA' stop-opacity='0.05'/%3E%3C/linearGradient%3E%3ClinearGradient id='glowFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='0.35'/%3E%3Cstop offset='60%25' stop-color='%2360A5FA' stop-opacity='0.12'/%3E%3Cstop offset='100%25' stop-color='%2393C5FD' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='0,0 16,13 0,26' fill='url(%23glowFade)'/%3E%3Cpolyline points='0,0 16,13 0,26' fill='none' stroke='url(%23strokeFade)' stroke-width='3.2' stroke-linejoin='round' stroke-linecap='round'/%3E%3C/svg%3E")`,
-                backgroundSize: '18px 26px',
+                zIndex: 25,
+                background: 'linear-gradient(to left, rgba(37, 99, 235, 0.42) 0%, rgba(59, 130, 246, 0.22) 16px, rgba(96, 165, 250, 0.08) 32px, transparent 100%)',
+                WebkitMaskImage: `
+                  linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+                `,
+                WebkitMaskSize: 'auto, 16px 26px',
+                WebkitMaskPosition: 'left top, right top',
+                WebkitMaskRepeat: 'no-repeat, repeat-y',
+                maskImage: `
+                  linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+                `,
+                maskSize: 'auto, 16px 26px',
+                maskPosition: 'left top, right top',
+                maskRepeat: 'no-repeat, repeat-y',
+              }}
+            />
+            {/* Soft luminous gradient on the teeth tips themselves (gradient polygon without hard stroke line) */}
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                right: '0px',
+                width: '16px',
+                pointerEvents: 'none',
+                zIndex: 26,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cdefs%3E%3ClinearGradient id='softFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='0.65'/%3E%3Cstop offset='45%25' stop-color='%233B82F6' stop-opacity='0.3'/%3E%3Cstop offset='100%25' stop-color='%2393C5FD' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='0,0 16,13 0,26' fill='url(%23softFade)'/%3E%3C/svg%3E")`,
+                backgroundSize: '16px 26px',
                 backgroundPosition: 'right top',
                 backgroundRepeat: 'repeat-y',
-                filter: 'drop-shadow(-2px 0 6px rgba(37, 99, 235, 0.4))'
+                filter: 'drop-shadow(-2px 0 6px rgba(37, 99, 235, 0.3))'
               }}
             />
           </div>
