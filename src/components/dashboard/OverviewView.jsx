@@ -30,9 +30,11 @@ import {
   MessageCircle,
   Users,
   X,
-  UserPlus
+  UserPlus,
+  CheckCircle2
 } from 'lucide-react';
 import freeCardsImg from '../../assets/free.png';
+import AddJobModal from './AddJobModal';
 
 // Persist in memory across SPA tab navigation so herow.mp4 only plays on first website load
 let globalHasSeenHeroVideo = false;
@@ -55,6 +57,22 @@ export default function OverviewView({ onNavigate }) {
 
   // Interactive selected day in calendar widget (0-13 for 2 weeks, defaulting to Wednesday index 2)
   const [selectedCalendarDay, setSelectedCalendarDay] = useState(2);
+  const [showAddJobModal, setShowAddJobModal] = useState(false);
+  const [overviewToast, setOverviewToast] = useState(null);
+
+  const handleAddNewJob = (newJob, targetStage = 'saved') => {
+    try {
+      const existing = sessionStorage.getItem('jobgen_candidate_pipeline');
+      let pipeline = existing ? JSON.parse(existing) : null;
+      if (!pipeline) {
+        pipeline = { saved: [], applied: [], interviewing: [], offers: [] };
+      }
+      pipeline[targetStage] = [newJob, ...(pipeline[targetStage] || [])];
+      sessionStorage.setItem('jobgen_candidate_pipeline', JSON.stringify(pipeline));
+    } catch (e) {}
+    setOverviewToast(`Added ${newJob.title} at ${newJob.company} to pipeline!`);
+    setTimeout(() => setOverviewToast(null), 3500);
+  };
 
   // Live real-time clock (hours & mins)
   const [liveTime, setLiveTime] = useState(new Date());
@@ -566,7 +584,7 @@ export default function OverviewView({ onNavigate }) {
               <div style={{ display: 'flex', alignItems: 'center', gap: '10px', pointerEvents: 'auto', marginTop: '2px' }}>
                 {/* Button 1: Add Job */}
                 <button
-                  onClick={() => onNavigate('jobs')}
+                  onClick={() => setShowAddJobModal(true)}
                   style={{
                     display: 'flex',
                     alignItems: 'center',
@@ -2813,6 +2831,39 @@ export default function OverviewView({ onNavigate }) {
                 </div>
               </form>
             </div>
+          </div>
+        )}
+
+        {/* Add Job Modal Pop-Up */}
+        <AddJobModal 
+          isOpen={showAddJobModal} 
+          onClose={() => setShowAddJobModal(false)} 
+          onAddJob={handleAddNewJob} 
+        />
+
+        {/* Action Toast */}
+        {overviewToast && (
+          <div
+            style={{
+              position: 'fixed',
+              bottom: '28px',
+              right: '36px',
+              zIndex: 9999,
+              backgroundColor: '#090C15',
+              color: '#FFFFFF',
+              padding: '12px 20px',
+              borderRadius: '999px',
+              boxShadow: '0 10px 30px rgba(0, 0, 0, 0.35)',
+              fontSize: '13px',
+              fontWeight: 700,
+              display: 'flex',
+              alignItems: 'center',
+              gap: '8px',
+              border: '1px solid rgba(255, 255, 255, 0.2)',
+            }}
+          >
+            <CheckCircle2 size={16} color="#34D399" />
+            <span>{overviewToast}</span>
           </div>
         )}
 

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import AddJobModal from './AddJobModal';
 import { 
   Bookmark, 
   Send, 
@@ -264,9 +265,16 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
   // Section 1: Active Stage Selection for the 4-Card Attached Design
   // 'saved' | 'applied' | 'interviewing' | 'offers'
   const [activeStage, setActiveStage] = useState('applied');
-  const [pipeline, setPipeline] = useState(INITIAL_PIPELINE);
+  const [pipeline, setPipeline] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('jobgen_candidate_pipeline');
+      if (saved) return JSON.parse(saved);
+    } catch (e) {}
+    return INITIAL_PIPELINE;
+  });
   const [searchQuery, setSearchQuery] = useState('');
   const [actionToast, setActionToast] = useState(null);
+  const [showAddJobModal, setShowAddJobModal] = useState(false);
 
   // Section 2: Resume Modal Preview State
   const [previewResume, setPreviewResume] = useState(null);
@@ -274,6 +282,22 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
   const showToast = (message) => {
     setActionToast(message);
     setTimeout(() => setActionToast(null), 3200);
+  };
+
+  const handleAddNewJob = (newJob, targetStage = 'saved') => {
+    const stageKey = targetStage || 'saved';
+    setPipeline(prev => {
+      const updated = {
+        ...prev,
+        [stageKey]: [newJob, ...(prev[stageKey] || [])]
+      };
+      try {
+        sessionStorage.setItem('jobgen_candidate_pipeline', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
+    setActiveStage(stageKey);
+    showToast(`Added ${newJob.title} at ${newJob.company} to ${stageKey.toUpperCase()}`);
   };
 
   // Move card between stages (Previous and Next)
@@ -381,109 +405,47 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
         </div>
       )}
 
-      {/* =========================================================================
-          PAGE HERO HEADER
-          ========================================================================= */}
+      {/* Top Action Bar with Add Job Button */}
       <div 
         style={{ 
           display: 'flex', 
           alignItems: 'center', 
-          justifyContent: 'space-between', 
-          marginBottom: '28px', 
-          flexWrap: 'wrap', 
-          gap: '16px' 
+          justifyContent: 'flex-end', 
+          marginBottom: '20px' 
         }}
       >
-        <div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '4px' }}>
-            <h1 
-              style={{ 
-                fontSize: '28px', 
-                fontWeight: 900, 
-                color: '#090C15', 
-                letterSpacing: '-0.03em', 
-                margin: 0,
-                fontFamily: '"Plus Jakarta Sans", system-ui, -apple-system, sans-serif'
-              }}
-            >
-              Workspace
-            </h1>
-            <div 
-              style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '6px', 
-                background: 'rgba(236, 253, 245, 0.9)', 
-                padding: '4px 12px', 
-                borderRadius: '999px', 
-                border: '1px solid #A7F3D0' 
-              }}
-            >
-              <ShieldCheck size={13} color="#059669" />
-              <span style={{ fontSize: '11px', fontWeight: 800, color: '#059669' }}>Pipeline & Resumes Synced</span>
-            </div>
-          </div>
-          <p style={{ fontSize: '13.5px', color: '#64748B', margin: 0 }}>
-            Unified stage tracker and role-tailored resume repository.
-          </p>
-        </div>
-
-        {/* Global Action: Add Opportunity from Job Hunt */}
-        {onNavigateToJobSearch && (
-          <button
-            onClick={onNavigateToJobSearch}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '8px',
-              padding: '10px 20px',
-              borderRadius: '999px',
-              background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
-              color: '#FFFFFF',
-              fontSize: '13px',
-              fontWeight: 700,
-              border: '1px solid rgba(255, 255, 255, 0.25)',
-              boxShadow: '0 4px 16px rgba(26, 83, 207, 0.35)',
-              cursor: 'pointer',
-              transition: 'transform 0.18s ease, box-shadow 0.18s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-1px)';
-              e.currentTarget.style.boxShadow = '0 6px 22px rgba(26, 83, 207, 0.45)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 16px rgba(26, 83, 207, 0.35)';
-            }}
-          >
-            <Plus size={16} strokeWidth={2.4} />
-            <span>Discover More Roles</span>
-          </button>
-        )}
+        <button
+          onClick={() => setShowAddJobModal(true)}
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '8px',
+            padding: '10px 22px',
+            borderRadius: '999px',
+            background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+            color: '#FFFFFF',
+            fontSize: '13px',
+            fontWeight: 800,
+            border: '1px solid rgba(255, 255, 255, 0.25)',
+            boxShadow: '0 4px 16px rgba(26, 83, 207, 0.35)',
+            cursor: 'pointer',
+            transition: 'transform 0.18s ease, box-shadow 0.18s ease'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-1px)';
+            e.currentTarget.style.boxShadow = '0 6px 22px rgba(26, 83, 207, 0.45)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(26, 83, 207, 0.35)';
+          }}
+        >
+          <Plus size={16} strokeWidth={2.6} />
+          <span>Add Job</span>
+        </button>
       </div>
 
-      {/* =========================================================================
-          SECTION 1: PIPELINE STAGE TRACKER (Using Attached Design)
-          - Left: 4 Stacked Tab Cards (Saved, Applied, Interviewing, Offers)
-          - Right: Large Joined Canvas showing jobs in selected stage with previous/next buttons
-          ========================================================================= */}
       <section style={{ marginBottom: '48px' }}>
-        
-        {/* Section Label */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '14px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#1A53CF' }}>
-              Section 1
-            </span>
-            <span style={{ fontSize: '12px', color: '#94A3B8' }}>•</span>
-            <h3 style={{ fontSize: '16px', fontWeight: 800, color: '#090C15', margin: 0 }}>
-              Opportunity Stage Pipeline
-            </h3>
-          </div>
-          <span style={{ fontSize: '12px', color: '#64748B' }}>
-            Select any stage on the left to inspect and advance applications.
-          </span>
-        </div>
 
         {/* =====================================================================
             ATTACHED GEOMETRY: 4 LEFT STACKED CARDS JOINED INTO LARGE RIGHT CONTAINER
@@ -1501,6 +1463,13 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
           </div>
         </div>
       )}
+
+      {/* Add Job Modal Pop-Up */}
+      <AddJobModal 
+        isOpen={showAddJobModal} 
+        onClose={() => setShowAddJobModal(false)} 
+        onAddJob={handleAddNewJob} 
+      />
 
     </div>
   );
