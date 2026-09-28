@@ -858,8 +858,8 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
             {/* Circular Pulsating Add Job Button directly below the Offers card */}
             <div 
               style={{ 
-                marginTop: '66px', 
-                marginLeft: '-5px',
+                marginTop: '46px', 
+                marginLeft: '-13px',
                 display: 'flex', 
                 flexDirection: 'column', 
                 alignItems: 'center', 
