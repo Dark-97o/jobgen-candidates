@@ -1756,35 +1756,6 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
           - Container showing all resumes tailored for different job roles
           ========================================================================= */}
       <section>
-        
-        {/* Section Header */}
-        <div 
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'space-between', 
-            marginBottom: '16px',
-            flexWrap: 'wrap',
-            gap: '12px'
-          }}
-        >
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.1em', color: '#1A53CF' }}>
-              Section 2
-            </span>
-            <span style={{ fontSize: '12px', color: '#94A3B8' }}>•</span>
-            <h3 style={{ fontSize: '18px', fontWeight: 900, color: '#090C15', margin: 0 }}>
-              Role-Tailored Resumes Vault
-            </h3>
-          </div>
-
-          <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-            <span style={{ fontSize: '12px', color: '#64748B' }}>
-              {TAILORED_RESUMES.length} targeted versions generated
-            </span>
-          </div>
-        </div>
-
         {/* Main Resumes Container */}
         <div 
           style={{
@@ -1797,45 +1768,6 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
             boxShadow: '0 8px 32px rgba(15, 23, 42, 0.05), inset 0 1px 2px #FFFFFF'
           }}
         >
-          {/* Subtitle / Vault Info Bar */}
-          <div 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between', 
-              paddingBottom: '16px', 
-              marginBottom: '20px', 
-              borderBottom: '1px solid #E2E8F0',
-              flexWrap: 'wrap',
-              gap: '12px'
-            }}
-          >
-            <div>
-              <p style={{ fontSize: '13px', color: '#475569', margin: 0 }}>
-                Every resume is dynamically compiled from your verified master profile, incorporating ATS keywords and metrics specific to each target employer.
-              </p>
-            </div>
-            
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <div 
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '6px', 
-                  backgroundColor: '#F8FAFC', 
-                  padding: '5px 12px', 
-                  borderRadius: '999px',
-                  border: '1px solid #E2E8F0',
-                  fontSize: '11.5px',
-                  fontWeight: 700,
-                  color: '#1A53CF'
-                }}
-              >
-                <Sparkles size={13} color="#1A53CF" />
-                <span>Zero-Hallucination Verified</span>
-              </div>
-            </div>
-          </div>
 
           {/* Resumes Grid */}
           <div 
