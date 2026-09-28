@@ -66,6 +66,30 @@ const INITIAL_PIPELINE = {
       date: 'Saved 4d ago',
       tags: ['Cloud Governance', 'Enterprise AI', 'AWS', 'Client Advisory'],
       resumeId: null
+    },
+    { 
+      id: 'job-11', 
+      company: 'Canva', 
+      title: 'Staff Frontend Architect', 
+      salary: '$200k - $230k AUD', 
+      location: 'Sydney (Surry Hills)', 
+      score: 95, 
+      source: 'LinkedIn', 
+      date: 'Saved 3d ago',
+      tags: ['React 19', 'Design Tokens', 'Web Vitals', 'Module Federation'],
+      resumeId: 'res-canva'
+    },
+    { 
+      id: 'job-12', 
+      company: 'SafetyCulture', 
+      title: 'Principal Backend Engineer', 
+      salary: '$190k - $215k AUD', 
+      location: 'Sydney (Hybrid)', 
+      score: 92, 
+      source: 'Seek', 
+      date: 'Saved 5d ago',
+      tags: ['Go', 'gRPC', 'Distributed Systems', 'PostgreSQL'],
+      resumeId: null
     }
   ],
   applied: [
@@ -120,6 +144,32 @@ const INITIAL_PIPELINE = {
       status: 'Review in Progress',
       tags: ['High Concurrency', 'eCommerce', 'Checkout Microservices', 'GCP'],
       resumeId: null
+    },
+    { 
+      id: 'job-13', 
+      company: 'Atlassian', 
+      title: 'Group Product Manager', 
+      salary: '$210k - $235k AUD', 
+      location: 'Sydney (Remote)', 
+      score: 94, 
+      source: 'Internal Referral', 
+      date: 'Applied 1w ago', 
+      status: 'Recruiter Screen Passed',
+      tags: ['SaaS Growth', 'Platform APIs', 'Enterprise ARR', 'Team Playbooks'],
+      resumeId: 'res-atlassian'
+    },
+    { 
+      id: 'job-14', 
+      company: 'Macquarie Bank', 
+      title: 'Principal Solution Architect', 
+      salary: '$195k AUD + Bonus', 
+      location: 'Sydney (Barangaroo)', 
+      score: 91, 
+      source: 'LinkedIn', 
+      date: 'Applied 1w ago', 
+      status: 'Hiring Manager Review',
+      tags: ['FinTech', 'Cloud Transformation', 'AWS', 'Zero Trust'],
+      resumeId: null
     }
   ],
   interviewing: [
@@ -148,6 +198,19 @@ const INITIAL_PIPELINE = {
       nextEvent: 'Friday 10:00 AM (Executive Leadership Loop with Melanie & Cameron)',
       tags: ['Platform Ecosystem', 'Creator Economy', 'Developer APIs', 'Monetization'],
       resumeId: 'res-canva'
+    },
+    { 
+      id: 'job-15', 
+      company: 'Google Cloud', 
+      title: 'Staff Solutions Engineer', 
+      salary: '$230k - $260k AUD', 
+      location: 'Sydney (Pyrmont)', 
+      score: 95, 
+      source: 'Seek Premium', 
+      date: 'Round 1 Scheduled', 
+      nextEvent: 'Monday 11:30 AM (Distributed Architecture Screen)',
+      tags: ['Kubernetes', 'GCP AI', 'Large-Scale Systems', 'Client Eng'],
+      resumeId: null
     }
   ],
   offers: [
@@ -699,6 +762,25 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                 50% { transform: scale(1.1) translate3d(3%, 3%, 0); opacity: 0.75; }
                 100% { transform: scale(1) translate3d(-3%, -2%, 0); opacity: 0.45; }
               }
+              .custom-stage-scrollbar {
+                scrollbar-width: thin;
+                scrollbar-color: #CBD5E1 #F8FAFC;
+                overscroll-behavior: auto;
+              }
+              .custom-stage-scrollbar::-webkit-scrollbar {
+                width: 6px;
+              }
+              .custom-stage-scrollbar::-webkit-scrollbar-track {
+                background: #F8FAFC;
+                border-radius: 999px;
+              }
+              .custom-stage-scrollbar::-webkit-scrollbar-thumb {
+                background: #CBD5E1;
+                border-radius: 999px;
+              }
+              .custom-stage-scrollbar::-webkit-scrollbar-thumb:hover {
+                background: #94A3B8;
+              }
             `}</style>
 
             {/* Canvas-Driven Dynamic Bluish Mist Simulation */}
@@ -868,12 +950,18 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
               </div>
             ) : (
               <div 
+                className="custom-stage-scrollbar"
                 style={{ 
                   display: 'grid', 
                   gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
                   gap: '16px',
                   position: 'relative',
-                  zIndex: 5
+                  zIndex: 5,
+                  maxHeight: '520px',
+                  overflowY: 'auto',
+                  overscrollBehavior: 'auto',
+                  paddingRight: '8px',
+                  paddingBottom: '8px'
                 }}
               >
                 {filteredJobs.map((job) => {
