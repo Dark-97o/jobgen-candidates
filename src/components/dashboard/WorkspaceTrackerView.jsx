@@ -90,6 +90,18 @@ const INITIAL_PIPELINE = {
       date: 'Saved 5d ago',
       tags: ['Go', 'gRPC', 'Distributed Systems', 'PostgreSQL'],
       resumeId: null
+    },
+    { 
+      id: 'job-21', 
+      company: 'Qantas Loyalty', 
+      title: 'Staff Systems Architect', 
+      salary: '$195k - $220k AUD', 
+      location: 'Sydney (Mascot)', 
+      score: 93, 
+      source: 'Seek', 
+      date: 'Saved 1d ago',
+      tags: ['Enterprise Arch', 'Event-Driven', 'Kafka', 'PCI-DSS'],
+      resumeId: null
     }
   ],
   applied: [
@@ -211,6 +223,45 @@ const INITIAL_PIPELINE = {
       nextEvent: 'Monday 11:30 AM (Distributed Architecture Screen)',
       tags: ['Kubernetes', 'GCP AI', 'Large-Scale Systems', 'Client Eng'],
       resumeId: null
+    },
+    { 
+      id: 'job-16', 
+      company: 'Wise', 
+      title: 'Principal Platform Architect', 
+      salary: '$205k - $230k AUD', 
+      location: 'Melbourne (Remote-first)', 
+      score: 93, 
+      source: 'Internal Referral', 
+      date: 'Round 3 Scheduled', 
+      nextEvent: 'Wednesday 3:00 PM (Executive Leadership Round)',
+      tags: ['Multi-Region', 'FX Rails', 'Compliance', 'Platform Scale'],
+      resumeId: null
+    },
+    { 
+      id: 'job-17', 
+      company: 'Telstra Purple', 
+      title: 'Lead Cloud Solutions Consultant', 
+      salary: '$190k AUD + Super', 
+      location: 'Sydney (Hybrid)', 
+      score: 90, 
+      source: 'LinkedIn', 
+      date: 'Final Loop', 
+      nextEvent: 'Thursday 1:00 PM (Customer Advisory Simulation)',
+      tags: ['Cloud Strategy', 'Azure', 'Enterprise Architecture'],
+      resumeId: null
+    },
+    { 
+      id: 'job-22', 
+      company: 'Airtasker', 
+      title: 'Head of Engineering Operations', 
+      salary: '$205k - $230k AUD', 
+      location: 'Sydney (Surry Hills)', 
+      score: 92, 
+      source: 'LinkedIn', 
+      date: 'Round 2 Scheduled', 
+      nextEvent: 'Tuesday 2:00 PM (Org Design & Architecture Loop)',
+      tags: ['Engineering Leadership', 'Microservices', 'Ruby/Go', 'Scale'],
+      resumeId: null
     }
   ],
   offers: [
@@ -226,6 +277,71 @@ const INITIAL_PIPELINE = {
       expiry: 'Decision Required by Oct 5, 2026',
       tags: ['Azure AI Services', 'Enterprise Scale', 'Cross-Divisional Pods', 'Enterprise ARR'],
       resumeId: 'res-microsoft'
+    },
+    { 
+      id: 'job-18', 
+      company: 'Salesforce', 
+      title: 'Lead Solutions Architect', 
+      salary: '$225,000 Total Package AUD', 
+      location: 'Sydney (Sydney Tower Hybrid)', 
+      score: 96, 
+      source: 'Executive Search', 
+      date: 'Offer Received 3d ago', 
+      expiry: 'Decision Required by Oct 8, 2026',
+      tags: ['Agentforce', 'Enterprise Scale', 'Data Cloud', 'Financial Services'],
+      resumeId: null
+    },
+    { 
+      id: 'job-19', 
+      company: 'Snowflake', 
+      title: 'Senior Solutions Engineer', 
+      salary: '$210,000 Base + RSUs AUD', 
+      location: 'Sydney (CBD)', 
+      score: 94, 
+      source: 'Direct Referral', 
+      date: 'Offer Received Yesterday', 
+      expiry: 'Decision Required by Oct 6, 2026',
+      tags: ['Data Cloud', 'Data Warehousing', 'Python', 'Customer Engineering'],
+      resumeId: null
+    },
+    { 
+      id: 'job-20', 
+      company: 'Adobe', 
+      title: 'Senior Product Manager', 
+      salary: '$195,000 AUD + Bonus', 
+      location: 'Sydney (Hybrid)', 
+      score: 92, 
+      source: 'LinkedIn', 
+      date: 'Offer In Final Review', 
+      expiry: 'Signing Window Opens Friday',
+      tags: ['Firefly AI', 'Design Ecosystem', 'SaaS Growth', 'B2B Licensing'],
+      resumeId: null
+    },
+    { 
+      id: 'job-23', 
+      company: 'Atlassian', 
+      title: 'Principal Cloud Architect', 
+      salary: '$220,000 Base + RSUs AUD', 
+      location: 'Sydney (Remote)', 
+      score: 97, 
+      source: 'Executive Referral', 
+      date: 'Offer Extended 2d ago', 
+      expiry: 'Decision Required by Oct 10, 2026',
+      tags: ['Jira Platform', 'Microservices', 'Distributed Systems', 'Cloud Scale'],
+      resumeId: 'res-atlassian'
+    },
+    { 
+      id: 'job-24', 
+      company: 'Amazon Web Services', 
+      title: 'Enterprise Solutions Director', 
+      salary: '$240,000 Total Package AUD', 
+      location: 'Sydney (Barangaroo)', 
+      score: 95, 
+      source: 'Recruiter Loop', 
+      date: 'Offer Received 1d ago', 
+      expiry: 'Decision Required by Oct 12, 2026',
+      tags: ['AWS Cloud', 'Multi-Region', 'Enterprise ARR', 'Executive Discovery'],
+      resumeId: null
     }
   ]
 };
@@ -430,11 +546,47 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
   const [activeStage, setActiveStage] = useState('applied');
   const [pipeline, setPipeline] = useState(() => {
     try {
-      const saved = sessionStorage.getItem('jobgen_candidate_pipeline');
-      if (saved) return JSON.parse(saved);
+      // Clear all legacy pipeline keys that may contain single-row stale data
+      sessionStorage.removeItem('jobgen_candidate_pipeline');
+      sessionStorage.removeItem('jobgen_candidate_pipeline_v2');
+      sessionStorage.removeItem('jobgen_candidate_pipeline_v3');
+      const saved = sessionStorage.getItem('jobgen_pipeline_v6_fixed2rows');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (
+          parsed.saved?.length >= 4 &&
+          parsed.applied?.length >= 4 &&
+          parsed.interviewing?.length >= 4 &&
+          parsed.offers?.length >= 4
+        ) {
+          return parsed;
+        }
+      }
     } catch (e) {}
     return INITIAL_PIPELINE;
   });
+
+  // Ensure pipeline always has enough items for 2 full rows across all stages
+  React.useEffect(() => {
+    setPipeline(prev => {
+      let needsUpdate = false;
+      const next = { ...prev };
+      for (const stage of ['saved', 'applied', 'interviewing', 'offers']) {
+        if (!next[stage] || next[stage].length < 4) {
+          next[stage] = INITIAL_PIPELINE[stage];
+          needsUpdate = true;
+        }
+      }
+      if (needsUpdate) {
+        try {
+          sessionStorage.setItem('jobgen_pipeline_v6_fixed2rows', JSON.stringify(next));
+        } catch (e) {}
+        return next;
+      }
+      return prev;
+    });
+  }, []);
+
   const [searchQuery, setSearchQuery] = useState('');
   const [actionToast, setActionToast] = useState(null);
   const [showAddJobModal, setShowAddJobModal] = useState(false);
@@ -455,7 +607,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
         [stageKey]: [newJob, ...(prev[stageKey] || [])]
       };
       try {
-        sessionStorage.setItem('jobgen_candidate_pipeline', JSON.stringify(updated));
+        sessionStorage.setItem('jobgen_pipeline_v6_fixed2rows', JSON.stringify(updated));
       } catch (e) {}
       return updated;
     });
@@ -468,11 +620,17 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
     const card = pipeline[fromCol].find(c => c.id === cardId);
     if (!card) return;
 
-    setPipeline(prev => ({
-      ...prev,
-      [fromCol]: prev[fromCol].filter(c => c.id !== cardId),
-      [toCol]: [card, ...prev[toCol]]
-    }));
+    setPipeline(prev => {
+      const updated = {
+        ...prev,
+        [fromCol]: prev[fromCol].filter(c => c.id !== cardId),
+        [toCol]: [card, ...prev[toCol]]
+      };
+      try {
+        sessionStorage.setItem('jobgen_pipeline_v6_fixed2rows', JSON.stringify(updated));
+      } catch (e) {}
+      return updated;
+    });
 
     showToast(`Moved ${card.company} (${card.title}) to ${label}`);
   };
@@ -951,13 +1109,23 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
             ) : (
               <div 
                 className="custom-stage-scrollbar"
+                onWheel={(e) => {
+                  const el = e.currentTarget;
+                  const isAtBottom = el.scrollHeight - el.scrollTop <= el.clientHeight + 2;
+                  const isAtTop = el.scrollTop <= 0;
+                  if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
+                    window.scrollBy({ top: e.deltaY, behavior: 'auto' });
+                  }
+                }}
                 style={{ 
                   display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fill, minmax(320px, 1fr))', 
+                  gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', 
                   gap: '16px',
                   position: 'relative',
                   zIndex: 5,
-                  maxHeight: '520px',
+                  height: '530px',
+                  minHeight: '530px',
+                  maxHeight: '530px',
                   overflowY: 'auto',
                   overscrollBehavior: 'auto',
                   paddingRight: '8px',
@@ -970,14 +1138,15 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                       key={job.id}
                       style={{
                         backgroundColor: '#FFFFFF',
-                        borderRadius: '18px',
+                        borderRadius: '16px',
                         border: '1px solid #E2E8F0',
-                        padding: '18px 20px',
+                        padding: '16px 18px',
                         boxShadow: '0 4px 16px rgba(15, 23, 42, 0.05), 0 1px 3px rgba(15, 23, 42, 0.04)',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
-                        gap: '14px',
+                        gap: '10px',
+                        minHeight: '235px',
                         position: 'relative',
                         transition: 'transform 0.2s ease, box-shadow 0.2s ease, border-color 0.2s ease'
                       }}
