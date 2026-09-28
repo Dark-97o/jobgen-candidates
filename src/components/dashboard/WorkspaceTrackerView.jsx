@@ -759,38 +759,31 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
               }}
             >
               <div>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <h3 
-                    style={{ 
-                      fontSize: '18px', 
-                      fontWeight: 900, 
-                      color: '#FFFFFF', 
-                      margin: 0,
-                      letterSpacing: '-0.015em',
-                      textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
-                    }}
-                  >
-                    {currentStageInfo.fullLabel}
-                  </h3>
+                <h3 
+                  style={{ 
+                    fontSize: '24px', 
+                    fontWeight: 900, 
+                    margin: 0,
+                    letterSpacing: '-0.02em',
+                    fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+                    display: 'flex',
+                    alignItems: 'center',
+                    lineHeight: 1
+                  }}
+                >
+                  <span style={{ color: '#FFFFFF', textShadow: '0 2px 10px rgba(0, 0, 0, 0.8)' }}>Tra</span>
                   <span 
                     style={{ 
-                      fontSize: '11.5px', 
-                      fontWeight: 800, 
-                      padding: '3px 10px', 
-                      borderRadius: '999px',
-                      backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                      color: '#FFFFFF',
-                      border: '1px solid rgba(255, 255, 255, 0.22)',
-                      backdropFilter: 'blur(8px)',
-                      boxShadow: '0 2px 8px rgba(0, 0, 0, 0.3)'
+                      color: '#2563EB', 
+                      background: 'linear-gradient(135deg, #3B82F6 0%, #1A53CF 100%)',
+                      WebkitBackgroundClip: 'text',
+                      WebkitTextFillColor: 'transparent',
+                      filter: 'drop-shadow(0 0 16px rgba(37, 99, 235, 0.65))'
                     }}
                   >
-                    {activeJobs.length} active
+                    cker
                   </span>
-                </div>
-                <p style={{ fontSize: '12px', color: 'rgba(255, 255, 255, 0.65)', margin: '3px 0 0 0' }}>
-                  {currentStageInfo.description}
-                </p>
+                </h3>
               </div>
 
               {/* Search filter for this stage - Liquid Glass Search Pill */}
