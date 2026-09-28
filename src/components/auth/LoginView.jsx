@@ -175,40 +175,42 @@ export default function LoginView({ onLogin, onBackToLanding }) {
       }}
       onMouseMove={(e) => forwardPointerToSpline(e.clientX, e.clientY)}
     >
-      {/* Back to Homepage Button */}
+      {/* Back Button */}
       {onBackToLanding && (
         <button
           onClick={onBackToLanding}
           style={{
             position: 'absolute',
-            top: '24px',
-            left: '96px',
+            top: '28px',
+            right: '36px',
             zIndex: 100,
             display: 'inline-flex',
             alignItems: 'center',
-            gap: '8px',
+            justifyContent: 'center',
             backgroundColor: 'rgba(255, 255, 255, 0.92)',
-            border: '1px solid rgba(255, 255, 255, 0.8)',
+            border: '1px solid rgba(226, 232, 240, 0.9)',
             borderRadius: '999px',
-            padding: '7px 16px',
-            fontSize: '12.5px',
-            fontWeight: 800,
+            padding: '8px 20px',
+            fontSize: '13px',
+            fontWeight: 700,
             color: '#1A53CF',
             cursor: 'pointer',
-            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.15)',
-            backdropFilter: 'blur(10px)',
-            transition: 'transform 0.15s ease, background-color 0.15s ease'
+            boxShadow: '0 4px 16px rgba(0, 0, 0, 0.08)',
+            backdropFilter: 'blur(12px)',
+            transition: 'transform 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease'
           }}
           onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateX(-2px)';
+            e.currentTarget.style.transform = 'translateY(-1px)';
             e.currentTarget.style.backgroundColor = '#FFFFFF';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 83, 207, 0.15)';
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateX(0)';
+            e.currentTarget.style.transform = 'translateY(0)';
             e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.92)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 0, 0, 0.08)';
           }}
         >
-          <span>← Back to Homepage</span>
+          <span>Back</span>
         </button>
       )}
 

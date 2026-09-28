@@ -387,35 +387,10 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             ))}
           </nav>
 
-          {/* Action Buttons: Sign In + Launch Portal */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Action Button: Sign In */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <button
               onClick={onSignIn}
-              style={{
-                background: 'none',
-                border: 'none',
-                color: '#334155',
-                fontSize: '13.5px',
-                fontWeight: 700,
-                padding: '8px 14px',
-                borderRadius: '999px',
-                cursor: 'pointer',
-                transition: 'background 0.15s ease, color 0.15s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.backgroundColor = 'rgba(241, 245, 249, 0.8)';
-                e.currentTarget.style.color = '#090C15';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.backgroundColor = 'transparent';
-                e.currentTarget.style.color = '#334155';
-              }}
-            >
-              Sign In
-            </button>
-
-            <button
-              onClick={onLaunchApp}
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
@@ -425,7 +400,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 color: '#FFFFFF',
                 fontSize: '13.5px',
                 fontWeight: 700,
-                padding: '9px 18px',
+                padding: '9px 20px',
                 borderRadius: '999px',
                 border: '1px solid rgba(255, 255, 255, 0.2)',
                 boxShadow: '0 4px 14px rgba(26, 83, 207, 0.35)',
@@ -441,8 +416,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 e.currentTarget.style.boxShadow = '0 4px 14px rgba(26, 83, 207, 0.35)';
               }}
             >
-              <span>Launch Portal</span>
-              <ArrowUpRight size={15} strokeWidth={2.4} />
+              <span>Sign In</span>
             </button>
           </div>
         </div>
