@@ -1207,6 +1207,65 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
               }}
             />
 
+            {/* Ambient Deep Blue Radial Atmosphere continuing inward */}
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                right: '0px',
+                width: '180px',
+                pointerEvents: 'none',
+                zIndex: 3,
+                background: 'radial-gradient(ellipse 95% 65% at 100% 50%, rgba(37, 99, 235, 0.28) 0%, rgba(59, 130, 246, 0.14) 40%, rgba(147, 197, 253, 0.05) 75%, transparent 100%)',
+                filter: 'blur(16px)'
+              }}
+            />
+            {/* Extended Slow Blue Fade along the Jagged Teeth - Deep inward dissolution */}
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                right: '0px',
+                width: '140px',
+                pointerEvents: 'none',
+                zIndex: 4,
+                background: 'linear-gradient(to left, rgba(37, 99, 235, 0.48) 0%, rgba(37, 99, 235, 0.35) 16px, rgba(59, 130, 246, 0.22) 42px, rgba(96, 165, 250, 0.12) 75px, rgba(147, 197, 253, 0.04) 110px, transparent 100%)',
+                WebkitMaskImage: `
+                  linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+                `,
+                WebkitMaskSize: 'auto, 16px 26px',
+                WebkitMaskPosition: 'left top, right top',
+                WebkitMaskRepeat: 'no-repeat, repeat-y',
+                maskImage: `
+                  linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+                `,
+                maskSize: 'auto, 16px 26px',
+                maskPosition: 'left top, right top',
+                maskRepeat: 'no-repeat, repeat-y',
+              }}
+            />
+            {/* Soft luminous gradient on the teeth tips themselves (gradient polygon without hard stroke line) */}
+            <div 
+              style={{
+                position: 'absolute',
+                top: 0,
+                bottom: 0,
+                right: '0px',
+                width: '16px',
+                pointerEvents: 'none',
+                zIndex: 5,
+                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cdefs%3E%3ClinearGradient id='softFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='0.68'/%3E%3Cstop offset='45%25' stop-color='%233B82F6' stop-opacity='0.34'/%3E%3Cstop offset='100%25' stop-color='%2393C5FD' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='0,0 16,13 0,26' fill='url(%23softFade)'/%3E%3C/svg%3E")`,
+                backgroundSize: '16px 26px',
+                backgroundPosition: 'right top',
+                backgroundRepeat: 'repeat-y',
+                filter: 'drop-shadow(-2px 0 6px rgba(37, 99, 235, 0.35))'
+              }}
+            />
+
             {/* Header inside the selected stage container */}
             <div 
               style={{ 
@@ -1365,7 +1424,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                   alignItems: 'start',
                   gridAutoRows: '142px',
                   position: 'relative',
-                  zIndex: 5,
+                  zIndex: 20,
                   height: '385px',
                   minHeight: '385px',
                   maxHeight: '385px',
@@ -1380,31 +1439,37 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                     <div 
                       key={job.id}
                       style={{
-                        backgroundColor: '#FFFFFF',
-                        borderRadius: '13px',
-                        border: '1px solid #E2E8F0',
+                        backgroundColor: 'rgba(255, 255, 255, 0.72)',
+                        background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)',
+                        backdropFilter: 'blur(16px) saturate(180%)',
+                        WebkitBackdropFilter: 'blur(16px) saturate(180%)',
+                        borderRadius: '14px',
+                        border: '1.5px solid rgba(255, 255, 255, 0.88)',
                         padding: '12px 14px',
                         height: '142px',
                         minHeight: '142px',
                         maxHeight: '142px',
                         boxSizing: 'border-box',
-                        boxShadow: '0 2px 10px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.03)',
+                        boxShadow: '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)',
                         display: 'flex',
                         flexDirection: 'column',
                         justifyContent: 'space-between',
                         gap: '6px',
                         position: 'relative',
-                        transition: 'transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease'
+                        zIndex: 20,
+                        transition: 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-2px)';
-                        e.currentTarget.style.borderColor = '#BFDBFE';
-                        e.currentTarget.style.boxShadow = '0 6px 18px rgba(37, 99, 235, 0.1), 0 2px 6px rgba(15, 23, 42, 0.05)';
+                        e.currentTarget.style.transform = 'translateY(-3px)';
+                        e.currentTarget.style.borderColor = 'rgba(191, 219, 254, 0.95)';
+                        e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.76) 100%)';
+                        e.currentTarget.style.boxShadow = '0 16px 36px -4px rgba(37, 99, 235, 0.16), 0 6px 14px -2px rgba(15, 23, 42, 0.06), inset 0 1px 2px rgba(255, 255, 255, 1)';
                       }}
                       onMouseLeave={(e) => {
                         e.currentTarget.style.transform = 'translateY(0)';
-                        e.currentTarget.style.borderColor = '#E2E8F0';
-                        e.currentTarget.style.boxShadow = '0 2px 10px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.03)';
+                        e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.88)';
+                        e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)';
+                        e.currentTarget.style.boxShadow = '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)';
                       }}
                     >
                       {/* Top: Company Header & Red Dustbin Delete Button */}
@@ -1681,64 +1746,6 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
 
             </div>
 
-            {/* Ambient Deep Blue Radial Atmosphere continuing inward */}
-            <div 
-              style={{
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                right: '0px',
-                width: '180px',
-                pointerEvents: 'none',
-                zIndex: 24,
-                background: 'radial-gradient(ellipse 95% 65% at 100% 50%, rgba(37, 99, 235, 0.28) 0%, rgba(59, 130, 246, 0.14) 40%, rgba(147, 197, 253, 0.05) 75%, transparent 100%)',
-                filter: 'blur(16px)'
-              }}
-            />
-            {/* Extended Slow Blue Fade along the Jagged Teeth - Deep inward dissolution */}
-            <div 
-              style={{
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                right: '0px',
-                width: '140px',
-                pointerEvents: 'none',
-                zIndex: 25,
-                background: 'linear-gradient(to left, rgba(37, 99, 235, 0.48) 0%, rgba(37, 99, 235, 0.35) 16px, rgba(59, 130, 246, 0.22) 42px, rgba(96, 165, 250, 0.12) 75px, rgba(147, 197, 253, 0.04) 110px, transparent 100%)',
-                WebkitMaskImage: `
-                  linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
-                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
-                `,
-                WebkitMaskSize: 'auto, 16px 26px',
-                WebkitMaskPosition: 'left top, right top',
-                WebkitMaskRepeat: 'no-repeat, repeat-y',
-                maskImage: `
-                  linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
-                  url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
-                `,
-                maskSize: 'auto, 16px 26px',
-                maskPosition: 'left top, right top',
-                maskRepeat: 'no-repeat, repeat-y',
-              }}
-            />
-            {/* Soft luminous gradient on the teeth tips themselves (gradient polygon without hard stroke line) */}
-            <div 
-              style={{
-                position: 'absolute',
-                top: 0,
-                bottom: 0,
-                right: '0px',
-                width: '16px',
-                pointerEvents: 'none',
-                zIndex: 26,
-                backgroundImage: `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cdefs%3E%3ClinearGradient id='softFade' x1='100%25' y1='0%25' x2='0%25' y2='0%25'%3E%3Cstop offset='0%25' stop-color='%232563EB' stop-opacity='0.68'/%3E%3Cstop offset='45%25' stop-color='%233B82F6' stop-opacity='0.34'/%3E%3Cstop offset='100%25' stop-color='%2393C5FD' stop-opacity='0'/%3E%3C/linearGradient%3E%3C/defs%3E%3Cpolygon points='0,0 16,13 0,26' fill='url(%23softFade)'/%3E%3C/svg%3E")`,
-                backgroundSize: '16px 26px',
-                backgroundPosition: 'right top',
-                backgroundRepeat: 'repeat-y',
-                filter: 'drop-shadow(-2px 0 6px rgba(37, 99, 235, 0.35))'
-              }}
-            />
           </div>
         </div>
 
