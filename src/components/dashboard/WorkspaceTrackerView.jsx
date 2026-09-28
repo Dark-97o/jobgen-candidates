@@ -322,8 +322,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
       fullLabel: 'Saved Opportunities',
       icon: Bookmark, 
       count: pipeline.saved.length,
-      // Color tones styled to reflect the reference image's layered card aesthetic
-      bgCard: '#C8D2DC', // Lightest slate / blue-gray (active reference color)
+      image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=600&q=80',
       badgeColor: '#1A53CF',
       badgeBg: '#EFF6FF',
       description: 'Bookmarked jobs tracked across LinkedIn, Seek, and Indeed ready for tailored application.'
@@ -334,7 +333,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
       fullLabel: 'Applied Applications',
       icon: Send, 
       count: pipeline.applied.length,
-      bgCard: '#9CA3AF', // Medium gray
+      image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=600&q=80',
       badgeColor: '#2563EB',
       badgeBg: '#DBEAFE',
       description: 'Live applications currently submitted and tracked across recruiter applicant portals.'
@@ -345,7 +344,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
       fullLabel: 'Interviewing Rounds',
       icon: Calendar, 
       count: pipeline.interviewing.length,
-      bgCard: '#E2E8F0', // Lighter off-white/gray
+      image: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80',
       badgeColor: '#D97706',
       badgeBg: '#FEF3C7',
       description: 'Active technical evaluations, system architecture rounds, and executive loops in flight.'
@@ -356,10 +355,10 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
       fullLabel: 'Offers Received',
       icon: Award, 
       count: pipeline.offers.length,
-      bgCard: '#64748B', // Darker gray
+      image: 'https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&w=600&q=80',
       badgeColor: '#16A34A',
       badgeBg: '#DCFCE7',
-      description: 'Secured formal offer packages, equity equity breakdowns, and decision deadlines.'
+      description: 'Secured formal offer packages, equity breakdowns, and decision deadlines.'
     }
   ];
 
@@ -459,19 +458,20 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
             overflow: 'visible'
           }}
         >
-          {/* Left Column: 4 Stacked Horizontal Tab Cards with Rounded Left Edges */}
+          {/* Left Column: 4 Stacked Tab Cards Attached Flush to Big Container */}
           <div 
             style={{ 
-              width: '240px', 
+              width: '210px', 
               flexShrink: 0, 
               display: 'flex', 
               flexDirection: 'column', 
-              gap: '10px',
+              gap: '6px',
               zIndex: 10,
-              paddingRight: '0px'
+              paddingRight: '0px',
+              marginRight: '-1px'
             }}
           >
-            {STAGES.map((stage, idx) => {
+            {STAGES.map((stage) => {
               const Icon = stage.icon;
               const isSelected = activeStage === stage.id;
 
@@ -482,103 +482,123 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                   style={{
                     display: 'flex',
                     alignItems: 'center',
-                    justifyContent: 'space-between',
-                    padding: '16px 20px',
-                    borderTopLeftRadius: '22px',
-                    borderBottomLeftRadius: '22px',
-                    borderTopRightRadius: isSelected ? '0px' : '14px',
-                    borderBottomRightRadius: isSelected ? '0px' : '14px',
-                    backgroundColor: isSelected 
-                      ? '#CBD5E1' // Matches the light blue-gray tone of the connected right canvas in the reference image
-                      : stage.bgCard,
-                    color: isSelected ? '#090C15' : (stage.id === 'offers' ? '#FFFFFF' : '#1E293B'),
-                    border: 'none',
-                    borderRight: isSelected ? 'none' : '1px solid rgba(0, 0, 0, 0.05)',
+                    padding: '0 20px',
+                    borderTopLeftRadius: '18px',
+                    borderBottomLeftRadius: '18px',
+                    borderTopRightRadius: '0px',
+                    borderBottomRightRadius: '0px',
+                    backgroundImage: `url(${stage.image})`,
+                    backgroundSize: 'cover',
+                    backgroundPosition: 'center',
+                    color: '#FFFFFF',
+                    border: isSelected 
+                      ? '2px solid #FFFFFF' 
+                      : '1px solid rgba(255, 255, 255, 0.2)',
+                    borderRight: 'none',
                     cursor: 'pointer',
                     position: 'relative',
                     textAlign: 'left',
                     boxShadow: isSelected 
-                      ? '-4px 6px 20px rgba(15, 23, 42, 0.12)' 
-                      : '0 2px 8px rgba(0, 0, 0, 0.06)',
-                    transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                      ? '-4px 0 22px rgba(255, 255, 255, 0.95), 0 -4px 16px rgba(255, 255, 255, 0.6), 0 4px 16px rgba(255, 255, 255, 0.6), inset 0 0 14px rgba(255, 255, 255, 0.4)' 
+                      : '0 2px 8px rgba(0, 0, 0, 0.25)',
+                    transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)',
                     transform: isSelected ? 'translateX(2px)' : 'translateX(0)',
-                    zIndex: isSelected ? 15 : 5,
-                    minHeight: '68px'
+                    zIndex: isSelected ? 25 : 5,
+                    minHeight: '76px',
+                    overflow: 'hidden'
                   }}
                   onMouseEnter={(e) => {
                     if (!isSelected) {
-                      e.currentTarget.style.transform = 'translateX(-3px)';
-                      e.currentTarget.style.filter = 'brightness(1.05)';
+                      e.currentTarget.style.transform = 'translateX(-2px)';
                     }
                   }}
                   onMouseLeave={(e) => {
                     if (!isSelected) {
                       e.currentTarget.style.transform = 'translateX(0)';
-                      e.currentTarget.style.filter = 'none';
                     }
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  {/* Dark overlay for contrast and crisp white text & icon */}
+                  <div 
+                    style={{
+                      position: 'absolute',
+                      inset: 0,
+                      background: isSelected 
+                        ? 'linear-gradient(90deg, rgba(9, 12, 21, 0.6) 0%, rgba(9, 12, 21, 0.45) 100%)' 
+                        : 'linear-gradient(90deg, rgba(9, 12, 21, 0.8) 0%, rgba(9, 12, 21, 0.68) 100%)',
+                      zIndex: 1,
+                      transition: 'background 0.2s ease'
+                    }}
+                  />
+
+                  {/* Card Content: Icon and Name only in white (no stage or number markings) */}
+                  <div style={{ position: 'relative', zIndex: 2, display: 'flex', alignItems: 'center', gap: '12px' }}>
                     <div 
                       style={{ 
-                        width: '32px', 
-                        height: '32px', 
+                        width: '36px', 
+                        height: '36px', 
                         borderRadius: '10px', 
-                        backgroundColor: isSelected ? '#FFFFFF' : 'rgba(255, 255, 255, 0.4)',
+                        backgroundColor: 'rgba(255, 255, 255, 0.22)',
+                        backdropFilter: 'blur(8px)',
+                        border: '1px solid rgba(255, 255, 255, 0.35)',
                         display: 'flex', 
                         alignItems: 'center', 
                         justifyContent: 'center',
-                        boxShadow: isSelected ? '0 2px 8px rgba(0, 0, 0, 0.08)' : 'none'
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.4)',
+                        flexShrink: 0
                       }}
                     >
-                      <Icon size={16} color={isSelected ? '#1A53CF' : '#0F172A'} strokeWidth={2.4} />
+                      <Icon size={18} color="#FFFFFF" strokeWidth={2.4} />
                     </div>
-                    <div>
-                      <div style={{ fontSize: '13.5px', fontWeight: 800, lineHeight: 1.2 }}>
-                        {stage.label}
-                      </div>
-                      <div style={{ fontSize: '10.5px', opacity: 0.75, marginTop: '2px', fontWeight: 600 }}>
-                        Stage {idx + 1}
-                      </div>
-                    </div>
-                  </div>
 
-                  {/* Count Pill */}
-                  <span 
-                    style={{ 
-                      fontSize: '12px', 
-                      fontWeight: 800, 
-                      padding: '3px 9px', 
-                      borderRadius: '999px',
-                      backgroundColor: isSelected ? '#FFFFFF' : 'rgba(255, 255, 255, 0.65)',
-                      color: isSelected ? '#1A53CF' : '#0F172A',
-                      boxShadow: '0 1px 4px rgba(0, 0, 0, 0.06)'
-                    }}
-                  >
-                    {stage.count}
-                  </span>
+                    <span 
+                      style={{ 
+                        fontSize: '15.5px', 
+                        fontWeight: 800, 
+                        color: '#FFFFFF',
+                        fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+                        letterSpacing: '-0.015em',
+                        textShadow: '0 2px 10px rgba(0, 0, 0, 0.95)'
+                      }}
+                    >
+                      {stage.label}
+                    </span>
+                  </div>
                 </button>
               );
             })}
           </div>
 
-          {/* Right Main Container: Seamlessly connects to the active left card (exact silhouette as attached) */}
+          {/* Right Main Container: Attached flush on left with zig-zag edge on right */}
           <div 
             style={{ 
               flex: 1, 
-              backgroundColor: '#CBD5E1', // Connected body matching reference image
-              borderTopRightRadius: '28px',
-              borderBottomRightRadius: '28px',
-              borderBottomLeftRadius: '28px',
-              borderTopLeftRadius: activeStage === 'saved' ? '0px' : '18px', // Forms seamless inverted L when top is selected
-              padding: '24px 28px',
+              backgroundColor: '#CBD5E1', 
+              borderTopLeftRadius: '0px',
+              borderBottomLeftRadius: '20px',
+              borderTopRightRadius: '0px',
+              borderBottomRightRadius: '0px',
+              padding: '24px 38px 24px 28px',
               boxShadow: '0 16px 40px -8px rgba(15, 23, 42, 0.12), inset 0 1px 2px rgba(255, 255, 255, 0.95)',
               display: 'flex',
               flexDirection: 'column',
               minHeight: '380px',
               position: 'relative',
               zIndex: 8,
-              transition: 'border-radius 0.2s ease'
+              WebkitMaskImage: `
+                linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+              `,
+              WebkitMaskSize: 'auto, 16px 26px',
+              WebkitMaskPosition: 'left top, right top',
+              WebkitMaskRepeat: 'no-repeat, repeat-y',
+              maskImage: `
+                linear-gradient(to right, #000 calc(100% - 16px), transparent calc(100% - 16px)),
+                url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='26' viewBox='0 0 16 26'%3E%3Cpolygon points='0,0 16,13 0,26' fill='%23000'/%3E%3C/svg%3E")
+              `,
+              maskSize: 'auto, 16px 26px',
+              maskPosition: 'left top, right top',
+              maskRepeat: 'no-repeat, repeat-y',
             }}
           >
             {/* Header inside the selected stage container */}
