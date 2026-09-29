@@ -37,6 +37,7 @@ import {
   X
 } from 'lucide-react';
 import AddJobModal from './AddJobModal';
+import GlowingGridBackground from './GlowingGridBackground';
 
 // Resume Templates list with clean style names
 const RESUME_TEMPLATES = [
@@ -2749,9 +2750,9 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
           style={{ 
             flex: 1, 
             minWidth: 0,
-            backgroundColor: '#E5E9F0', 
+            backgroundColor: '#EFF3F8', 
             overflowY: 'auto', 
-            overflowX: 'auto',
+            overflowX: 'auto', 
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center', 
@@ -2760,6 +2761,9 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
           }}
           data-lenis-prevent="true"
         >
+          {/* Animated Glowing Square Grid Canvas Background */}
+          <GlowingGridBackground />
+
           {/* Floating Zoom & Canvas Controls */}
           <div 
             style={{ 
@@ -2813,6 +2817,7 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
               width: `${794 * (zoomLevel / 100)}px`,
               minHeight: `${1123 * (zoomLevel / 100)}px`,
               position: 'relative',
+              zIndex: 10,
               flexShrink: 0,
               margin: '0 auto',
               transition: 'width 0.15s ease, min-height 0.15s ease'

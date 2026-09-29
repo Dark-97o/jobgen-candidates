@@ -24,6 +24,7 @@ import {
   Sparkles 
 } from 'lucide-react';
 import AddJobModal from './AddJobModal';
+import GlowingGridBackground from './GlowingGridBackground';
 
 const COVER_LETTER_TEMPLATES = [
   {
@@ -1607,7 +1608,7 @@ export default function CoverLetterView({ onBackToDocuments }) {
         <div 
           style={{ 
             flex: 1, 
-            backgroundColor: '#EEF2F6', 
+            backgroundColor: '#EFF3F8', 
             overflowY: 'auto', 
             display: 'flex', 
             flexDirection: 'column', 
@@ -1616,6 +1617,9 @@ export default function CoverLetterView({ onBackToDocuments }) {
             position: 'relative'
           }}
         >
+          {/* Animated Glowing Square Grid Canvas Background */}
+          <GlowingGridBackground />
+
           {/* Zoom bar */}
           <div 
             style={{ 
@@ -1667,6 +1671,8 @@ export default function CoverLetterView({ onBackToDocuments }) {
             style={{
               width: '794px',
               minHeight: '1123px',
+              position: 'relative',
+              zIndex: 10,
               backgroundColor: '#FFFFFF',
               boxShadow: '0 18px 50px rgba(15, 23, 42, 0.12), 0 2px 10px rgba(0, 0, 0, 0.04)',
               borderRadius: '2px',
