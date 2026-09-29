@@ -1108,7 +1108,38 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
   });
 
   return (
-    <div style={{ paddingBottom: '60px', paddingRight: '28px', maxWidth: '1440px', margin: '0 auto' }}>
+    <div style={{ paddingBottom: '60px', paddingRight: '28px', maxWidth: '1440px', margin: '0 auto', position: 'relative' }}>
+
+      {/* Atmospheric Thin Lines Background just like in Home */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-20px',
+          left: '-40px',
+          right: '-20px',
+          height: '750px',
+          overflow: 'hidden',
+          pointerEvents: 'none',
+          zIndex: 0,
+          maskImage: 'radial-gradient(ellipse 85% 75% at 50% 35%, rgba(0,0,0,0.65) 30%, rgba(0,0,0,0.2) 65%, transparent 100%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 85% 75% at 50% 35%, rgba(0,0,0,0.65) 30%, rgba(0,0,0,0.2) 65%, transparent 100%)',
+        }}
+      >
+        <video
+          src="/waves.mp4"
+          autoPlay
+          loop
+          muted
+          playsInline
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            opacity: 0.45,
+            display: 'block',
+          }}
+        />
+      </div>
 
       {/* Floating Action Toast Notification */}
       {actionToast && (
@@ -1138,7 +1169,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
       )}
 
       {/* Section 1: Attached Stage Tracker */}
-      <section style={{ marginBottom: '48px', marginTop: '22px' }}>
+      <section style={{ marginBottom: '48px', marginTop: '22px', position: 'relative', zIndex: 1 }}>
 
         {/* =====================================================================
             ATTACHED GEOMETRY: 4 LEFT STACKED CARDS JOINED INTO LARGE RIGHT CONTAINER
@@ -1967,7 +1998,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
           SECTION 2: DOCUMENT MANAGER (RESUMES & COVER LETTERS)
           - Attached Geometry matching Tracker: 2 Left Tabs + Right Container with Zagged Edge, Mist & Blur
           ========================================================================= */}
-      <section style={{ marginBottom: '48px', marginTop: '22px' }}>
+      <section style={{ marginBottom: '48px', marginTop: '22px', position: 'relative', zIndex: 1 }}>
         <div 
           style={{ 
             display: 'flex', 
