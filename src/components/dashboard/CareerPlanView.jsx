@@ -462,7 +462,7 @@ export default function CareerPlanView() {
   return (
     <div style={{ paddingBottom: '70px', paddingRight: '28px', maxWidth: '1440px', margin: '0 auto', position: 'relative' }}>
       
-      {/* Scoped CSS Animations for 60fps Smooth Continuous Blue Wipe Effect */}
+      {/* Scoped CSS Animations for 60fps Smooth Continuous Blue Wipe Effect & Mist Blue Atmosphere */}
       <style>{`
         @keyframes blueContinuousWipe {
           0% {
@@ -483,6 +483,87 @@ export default function CareerPlanView() {
         @keyframes pulseSuccess {
           0%, 100% { transform: scale(1); }
           50% { transform: scale(1.03); }
+        }
+        @keyframes mistDriftOne {
+          0% {
+            transform: translate(-10%, -10%) scale(1);
+            opacity: 0.5;
+          }
+          50% {
+            transform: translate(12%, 14%) scale(1.2);
+            opacity: 0.85;
+          }
+          100% {
+            transform: translate(-10%, -10%) scale(1);
+            opacity: 0.5;
+          }
+        }
+        @keyframes mistDriftTwo {
+          0% {
+            transform: translate(15%, 25%) scale(1.1);
+            opacity: 0.65;
+          }
+          50% {
+            transform: translate(-12%, -8%) scale(0.9);
+            opacity: 0.4;
+          }
+          100% {
+            transform: translate(15%, 25%) scale(1.1);
+            opacity: 0.65;
+          }
+        }
+        @keyframes mistDriftThree {
+          0% {
+            transform: translate(0%, 15%) scale(1);
+            opacity: 0.45;
+          }
+          50% {
+            transform: translate(8%, -12%) scale(1.25);
+            opacity: 0.75;
+          }
+          100% {
+            transform: translate(0%, 15%) scale(1);
+            opacity: 0.45;
+          }
+        }
+        .mist-blue-orb-1 {
+          position: absolute;
+          top: -12%;
+          right: -8%;
+          width: 550px;
+          height: 550px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(147, 197, 253, 0.45) 0%, rgba(59, 130, 246, 0.22) 45%, transparent 75%);
+          filter: blur(65px);
+          animation: mistDriftOne 14s ease-in-out infinite;
+          will-change: transform, opacity;
+          pointer-events: none;
+        }
+        .mist-blue-orb-2 {
+          position: absolute;
+          bottom: 2%;
+          left: 5%;
+          width: 620px;
+          height: 500px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(191, 219, 254, 0.5) 0%, rgba(96, 165, 250, 0.2) 48%, transparent 75%);
+          filter: blur(80px);
+          animation: mistDriftTwo 18s ease-in-out infinite;
+          will-change: transform, opacity;
+          pointer-events: none;
+        }
+        .mist-blue-orb-3 {
+          position: absolute;
+          top: 35%;
+          right: 20%;
+          width: 480px;
+          height: 480px;
+          border-radius: 50%;
+          background: radial-gradient(circle, rgba(56, 189, 248, 0.35) 0%, rgba(37, 99, 235, 0.18) 50%, transparent 75%);
+          filter: blur(75px);
+          animation: mistDriftThree 16s ease-in-out infinite;
+          will-change: transform, opacity;
+          pointer-events: none;
         }
         .career-task-card {
           transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.2s cubic-bezier(0.16, 1, 0.3, 1);
@@ -720,17 +801,36 @@ export default function CareerPlanView() {
             position: 'relative'
           }}
         >
+          {/* Ambient Mist Blue Animation Atmosphere */}
+          <div 
+            style={{
+              position: 'absolute',
+              inset: 0,
+              overflow: 'hidden',
+              pointerEvents: 'none',
+              zIndex: 0
+            }}
+          >
+            <div className="mist-blue-orb-1" />
+            <div className="mist-blue-orb-2" />
+            <div className="mist-blue-orb-3" />
+          </div>
+
           {/* Active Phase Header Banner */}
           <div 
             style={{
               padding: '24px 28px',
-              backgroundColor: '#FFFFFF',
+              backgroundColor: 'rgba(255, 255, 255, 0.86)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
               borderBottom: '1px solid #F1F5F9',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
-              gap: '16px'
+              gap: '16px',
+              position: 'relative',
+              zIndex: 2
             }}
           >
             <div style={{ maxWidth: '820px' }}>
@@ -852,13 +952,17 @@ export default function CareerPlanView() {
           <div 
             style={{
               padding: '14px 28px',
-              backgroundColor: '#F8FAFC',
+              backgroundColor: 'rgba(248, 250, 252, 0.82)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
               borderBottom: '1px solid #E2E8F0',
               display: 'flex',
               justifyContent: 'space-between',
               alignItems: 'center',
               flexWrap: 'wrap',
-              gap: '12px'
+              gap: '12px',
+              position: 'relative',
+              zIndex: 2
             }}
           >
             <div style={{ display: 'flex', gap: '6px' }}>

@@ -110,53 +110,69 @@ const COLLECTION_VIDEOS = [
 ];
 
 export default function CareerEventsView() {
-  const [showIntro, setShowIntro] = useState(true);
+  const [showIntro, setShowIntro] = useState(() => {
+    try {
+      return sessionStorage.getItem('jobgen_career_intro_played') !== 'true';
+    } catch (e) {
+      return false;
+    }
+  });
   const [introFading, setIntroFading] = useState(false);
   const [selectedModalVideo, setSelectedModalVideo] = useState(null);
   const [activeCategory, setActiveCategory] = useState('all');
   const [copyToast, setCopyToast] = useState('');
+  const videoRef = React.useRef(null);
 
-  // Handle Soothing Intro Animation Lifecycle
+  // Guarantee muted audio and autoplay compliance
   useEffect(() => {
-    const hasSeen = sessionStorage.getItem('jobgen_events_intro_viewed');
-    if (hasSeen === 'true') {
-      setShowIntro(false);
-      return;
+    if (showIntro) {
+      try {
+        sessionStorage.setItem('jobgen_career_intro_played', 'true');
+      } catch (e) {}
+
+      if (videoRef.current) {
+        videoRef.current.muted = true;
+        videoRef.current.volume = 0;
+        const playPromise = videoRef.current.play();
+        if (playPromise !== undefined) {
+          playPromise.catch(() => {});
+        }
+      }
     }
+  }, [showIntro]);
 
-    const fadeTimer = setTimeout(() => {
-      setIntroFading(true);
-    }, 2400);
-
-    const finishTimer = setTimeout(() => {
+  const handleVideoEnded = () => {
+    setIntroFading(true);
+    try {
+      sessionStorage.setItem('jobgen_career_intro_played', 'true');
+    } catch (e) {}
+    setTimeout(() => {
       setShowIntro(false);
-      sessionStorage.setItem('jobgen_events_intro_viewed', 'true');
-    }, 3200);
-
-    return () => {
-      clearTimeout(fadeTimer);
-      clearTimeout(finishTimer);
-    };
-  }, []);
+    }, 450);
+  };
 
   const handleSkipIntro = () => {
     setIntroFading(true);
+    try {
+      sessionStorage.setItem('jobgen_career_intro_played', 'true');
+    } catch (e) {}
     setTimeout(() => {
       setShowIntro(false);
-      sessionStorage.setItem('jobgen_events_intro_viewed', 'true');
     }, 300);
   };
 
-  // Keyboard shortcut (Escape) to close modal
+  // Keyboard shortcut (Escape, Space, Enter) to skip intro or close modal
   useEffect(() => {
     const handleKeyDown = (e) => {
-      if (e.key === 'Escape' && selectedModalVideo) {
+      if (showIntro && ['Escape', ' ', 'Enter'].includes(e.key)) {
+        handleSkipIntro();
+      } else if (e.key === 'Escape' && selectedModalVideo) {
         setSelectedModalVideo(null);
       }
     };
     window.addEventListener('keydown', handleKeyDown);
     return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [selectedModalVideo]);
+  }, [showIntro, selectedModalVideo]);
 
   const showToastNotification = (msg) => {
     setCopyToast(msg);
@@ -215,199 +231,38 @@ export default function CareerEventsView() {
       `}</style>
 
       {/* =========================================================================
-          1. SOOTHING INTRO ANIMATION OVERLAY
+          1. VIDEO INTRO OVERLAY (intronew.mp4 played once with sound muted)
           ========================================================================= */}
       {showIntro && (
         <div
           style={{
             position: 'fixed',
             inset: 0,
-            zIndex: 9999,
-            backgroundColor: '#090C15',
+            zIndex: 99999,
+            backgroundColor: '#000000',
             display: 'flex',
-            flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
             opacity: introFading ? 0 : 1,
-            transform: introFading ? 'scale(1.02)' : 'scale(1)',
             pointerEvents: introFading ? 'none' : 'auto',
-            transition: 'opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1)',
+            transition: 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
             overflow: 'hidden'
           }}
         >
-          {/* Ambient Soothing Radial Light Orbs */}
-          <div 
+          <video
+            ref={videoRef}
+            src="/intronew.mp4"
+            autoPlay
+            muted
+            playsInline
+            onEnded={handleVideoEnded}
+            onError={handleVideoEnded}
             style={{
-              position: 'absolute',
-              width: '600px',
-              height: '600px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(26, 83, 207, 0.28) 0%, rgba(6, 182, 212, 0.12) 40%, transparent 70%)',
-              filter: 'blur(70px)',
-              animation: 'pulseGlow 4s ease-in-out infinite'
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover'
             }}
           />
-          <div 
-            style={{
-              position: 'absolute',
-              width: '450px',
-              height: '450px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(239, 68, 68, 0.16) 0%, transparent 60%)',
-              filter: 'blur(80px)',
-              top: '15%',
-              right: '20%',
-              animation: 'floatSlow 6s ease-in-out infinite'
-            }}
-          />
-
-          {/* Central Soothing Content */}
-          <div 
-            style={{
-              position: 'relative',
-              zIndex: 2,
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              textAlign: 'center',
-              padding: '0 24px',
-              maxWidth: '680px'
-            }}
-          >
-            {/* Soft Glowing Emblem */}
-            <div 
-              style={{
-                width: '76px',
-                height: '76px',
-                borderRadius: '24px',
-                background: 'linear-gradient(135deg, rgba(26, 83, 207, 0.2), rgba(255, 255, 255, 0.08))',
-                border: '1.5px solid rgba(255, 255, 255, 0.18)',
-                boxShadow: '0 12px 36px rgba(0, 0, 0, 0.4), inset 0 0 20px rgba(26, 83, 207, 0.3)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                marginBottom: '24px',
-                position: 'relative'
-              }}
-            >
-              <img 
-                src="/NewLogo.webp" 
-                alt="JobGen" 
-                style={{ width: '42px', height: '42px', objectFit: 'contain' }}
-                onError={(e) => { e.currentTarget.style.display = 'none'; }}
-              />
-              <div 
-                style={{
-                  position: 'absolute',
-                  inset: '-4px',
-                  borderRadius: '28px',
-                  border: '1px solid rgba(6, 182, 212, 0.35)',
-                  animation: 'pulseGlow 2.5s ease-in-out infinite'
-                }}
-              />
-            </div>
-
-            {/* Pill Badge */}
-            <div 
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '6px 16px',
-                borderRadius: '999px',
-                backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                color: '#60A5FA',
-                fontSize: '11px',
-                fontWeight: 800,
-                letterSpacing: '0.1em',
-                textTransform: 'uppercase',
-                marginBottom: '16px'
-              }}
-            >
-              <Sparkles size={13} color="#38BDF8" />
-              <span>JobGen Studio & Masterclasses</span>
-            </div>
-
-            {/* Soothing Title */}
-            <h1 
-              style={{
-                fontSize: '36px',
-                fontWeight: 800,
-                color: '#FFFFFF',
-                letterSpacing: '-0.03em',
-                lineHeight: 1.25,
-                margin: '0 0 12px 0'
-              }}
-            >
-              Accelerate Your Tech Career
-            </h1>
-
-            {/* Subtitle */}
-            <p 
-              style={{
-                fontSize: '15px',
-                color: '#94A3B8',
-                lineHeight: 1.6,
-                margin: '0 0 32px 0',
-                maxWidth: '520px',
-                fontWeight: 400
-              }}
-            >
-              Curated keynote videos, recruiter secrets, and live engineering masterclasses designed to give you an unfair hiring advantage.
-            </p>
-
-            {/* Gentle Progress Breathing Bar */}
-            <div 
-              style={{
-                width: '180px',
-                height: '3px',
-                borderRadius: '999px',
-                backgroundColor: 'rgba(255, 255, 255, 0.1)',
-                overflow: 'hidden',
-                position: 'relative'
-              }}
-            >
-              <div 
-                style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  width: '100%',
-                  height: '100%',
-                  background: 'linear-gradient(90deg, #1A53CF, #00C2FF, #10B981)',
-                  animation: 'shimmerLine 2s ease-in-out infinite'
-                }}
-              />
-            </div>
-          </div>
-
-          {/* Quick Skip Button */}
-          <button
-            onClick={handleSkipIntro}
-            style={{
-              position: 'absolute',
-              bottom: '36px',
-              right: '36px',
-              padding: '8px 18px',
-              borderRadius: '999px',
-              backgroundColor: 'rgba(255, 255, 255, 0.08)',
-              border: '1px solid rgba(255, 255, 255, 0.14)',
-              color: '#94A3B8',
-              fontSize: '12px',
-              fontWeight: 600,
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              gap: '6px',
-              transition: 'all 0.15s ease'
-            }}
-            onMouseEnter={(e) => { e.currentTarget.style.color = '#FFFFFF'; e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'; }}
-            onMouseLeave={(e) => { e.currentTarget.style.color = '#94A3B8'; e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)'; }}
-          >
-            <span>Skip Intro</span>
-            <ChevronRight size={13} />
-          </button>
         </div>
       )}
 
@@ -465,7 +320,7 @@ export default function CareerEventsView() {
           }}
         >
           <iframe
-            src={`https://www.youtube.com/embed/${HERO_VIDEO.id}?autoplay=1&mute=0&rel=0&enablejsapi=1`}
+            src={`https://www.youtube.com/embed/${HERO_VIDEO.id}?autoplay=0&rel=0&enablejsapi=1`}
             title={HERO_VIDEO.title}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
