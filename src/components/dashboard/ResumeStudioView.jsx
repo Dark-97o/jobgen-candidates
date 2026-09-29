@@ -829,12 +829,12 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
       {/* Main Split Body: Left Editor Workspace + Right A4 Paper Canvas */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         
-        {/* Left Column: Responsive Width clamp(460px, 33vw, 540px) */}
+        {/* Left Column: Responsive Width clamp(480px, 34vw, 560px) */}
         <div 
           style={{ 
-            width: 'clamp(460px, 33vw, 540px)', 
-            minWidth: '440px',
-            maxWidth: '560px',
+            width: 'clamp(480px, 34vw, 560px)', 
+            minWidth: '460px',
+            maxWidth: '580px',
             flexShrink: 0, 
             display: 'flex', 
             flexDirection: 'column', 
