@@ -879,7 +879,7 @@ export default function InterviewPrepView() {
             })}
           </div>
 
-          {/* Interview Container Body with Translucent ipbg Background (Flat top, NO rounded edges at top, fixed minHeight) */}
+          {/* Interview Container Body with Translucent ipbg Background (Fixed height + scrollable content) */}
           <div 
             style={{ 
               flex: 1,
@@ -888,15 +888,17 @@ export default function InterviewPrepView() {
               borderTopRightRadius: '0px',
               borderTopLeftRadius: '0px',
               border: '1.5px solid #E2E8F0',
-              padding: '32px 34px',
+              padding: '28px 32px',
               boxShadow: '0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 4px 14px rgba(15, 23, 42, 0.04)',
               position: 'relative',
               zIndex: 15,
               overflow: 'hidden',
-              minHeight: '610px',
+              height: '665px',
+              minHeight: '665px',
+              maxHeight: '665px',
+              boxSizing: 'border-box',
               display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between'
+              flexDirection: 'column'
             }}
           >
             {/* Slightly Transparent Paper-Cut Waves Background Image */}
@@ -914,7 +916,18 @@ export default function InterviewPrepView() {
               }}
             />
 
-            <div style={{ position: 'relative', zIndex: 5, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
+            <div 
+              style={{ 
+                position: 'relative', 
+                zIndex: 5, 
+                display: 'flex', 
+                flexDirection: 'column', 
+                height: '100%', 
+                minHeight: 0,
+                overflowY: 'auto',
+                paddingRight: '6px'
+              }}
+            >
               <div>
                 {/* Top Stage Header Inside Folder */}
                 <div 
@@ -1282,7 +1295,9 @@ export default function InterviewPrepView() {
         <div 
           style={{ 
             width: '280px', 
-            height: '660px',
+            height: '710px',
+            minHeight: '710px',
+            maxHeight: '710px',
             flexShrink: 0, 
             display: 'flex', 
             flexDirection: 'column',
@@ -1293,9 +1308,9 @@ export default function InterviewPrepView() {
           <div 
             style={{ 
               width: '100%', 
-              height: '660px', 
-              minHeight: '660px',
-              maxHeight: '660px',
+              height: '710px', 
+              minHeight: '710px', 
+              maxHeight: '710px',
               position: 'relative',
               clipPath: 'polygon(0 42px, 100% 0, 100% calc(100% - 42px), 0 100%)',
               overflow: 'hidden',
@@ -1362,7 +1377,8 @@ export default function InterviewPrepView() {
                 flexDirection: 'column',
                 justifyContent: 'space-between',
                 padding: '52px 24px 50px 24px',
-                boxSizing: 'border-box'
+                boxSizing: 'border-box',
+                overflowY: 'auto'
               }}
             >
               {/* Top Switch Job Button - Blue with white text */}
