@@ -33,70 +33,266 @@ import {
   User,
   X
 } from 'lucide-react';
+import AddJobModal from './AddJobModal';
 
-// Resume Templates with high-res visual mockups
+// Resume Templates list with clean style names
 const RESUME_TEMPLATES = [
   {
     id: 'jake',
     name: 'Classic ATS',
-    subtitle: 'Standard Single-Column',
-    description: 'Gold-standard ATS-friendly format preferred by Fortune 500 recruiters.',
-    image: '/templates/template_jake.jpg',
     font: 'serif',
-    accentColor: '#171717',
-    badge: '98% ATS'
+    accentColor: '#171717'
   },
   {
     id: 'consultantpolished',
     name: 'Advisory',
-    subtitle: 'Executive Consulting',
-    description: 'Polished layout with navy headings and crisp consultant-style section rules.',
-    image: '/templates/template_advisory.jpg',
     font: 'serif',
-    accentColor: '#1E3A8A',
-    badge: 'Executive'
+    accentColor: '#1E3A8A'
   },
   {
     id: 'architectsportfolio',
     name: 'Portfolio',
-    subtitle: 'Architectural Tech',
-    description: 'Airy architectural resume with tech stack pills and project impact.',
-    image: '/templates/template_portfolio.jpg',
     font: 'sans',
-    accentColor: '#334155',
-    badge: 'Tech Lead'
+    accentColor: '#334155'
   },
   {
     id: 'londonbureau',
     name: 'Bureau',
-    subtitle: 'Editorial Typography',
-    description: 'Swiss-inspired editorial resume with refined typographic hierarchy.',
-    image: '/templates/template_bureau.jpg',
     font: 'serif',
-    accentColor: '#2563EB',
-    badge: 'Editorial'
+    accentColor: '#2563EB'
   },
   {
     id: 'operationsprecision',
     name: 'Precision',
-    subtitle: 'DevOps & Systems',
-    description: 'High-density layout for engineering, DevOps, and systems operations.',
-    image: '/templates/template_precision.jpg',
     font: 'sans',
-    accentColor: '#0D9488',
-    badge: 'DevOps'
+    accentColor: '#0D9488'
   },
   {
     id: 'nordicminimal',
     name: 'Minimalist',
-    subtitle: 'Nordic Clean Modern',
-    description: 'Ample whitespace, subtle dividers, and clean Scandinavian aesthetics.',
-    image: '/templates/template_minimal.jpg',
     font: 'sans',
-    accentColor: '#475569',
-    badge: 'Minimalist'
+    accentColor: '#475569'
   }
 ];
+
+// Clean White Background Skeletal Framework Wireframes (No Text)
+function ResumeSkeletonPreview({ templateId }) {
+  return (
+    <div 
+      style={{ 
+        width: '100%', 
+        height: '144px', 
+        backgroundColor: '#FFFFFF', 
+        position: 'relative', 
+        display: 'flex', 
+        alignItems: 'center', 
+        justifyContent: 'center', 
+        overflow: 'hidden', 
+        padding: '8px',
+        boxSizing: 'border-box'
+      }}
+    >
+      <svg 
+        viewBox="0 0 100 135" 
+        style={{ 
+          width: '100%', 
+          height: '100%', 
+          display: 'block',
+          filter: 'drop-shadow(0 1px 3px rgba(0,0,0,0.06))'
+        }}
+      >
+        {/* White Paper Base */}
+        <rect x="4" y="3" width="92" height="129" rx="2" fill="#FFFFFF" stroke="#E2E8F0" strokeWidth="0.8" />
+
+        {/* 1. Classic ATS (Jake Single-Column) */}
+        {templateId === 'jake' && (
+          <g>
+            {/* Centered Name & Subline */}
+            <rect x="34" y="9" width="32" height="4.5" rx="1.5" fill="#0F172A" />
+            <rect x="24" y="16" width="52" height="2" rx="0.5" fill="#94A3B8" />
+            <line x1="10" y1="21" x2="90" y2="21" stroke="#0F172A" strokeWidth="0.8" />
+            {/* Section 1 */}
+            <rect x="10" y="25" width="22" height="2.8" rx="0.5" fill="#0F172A" />
+            <rect x="10" y="30" width="80" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="10" y="34" width="76" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="10" y="38" width="52" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <line x1="10" y1="43" x2="90" y2="43" stroke="#E2E8F0" strokeWidth="0.6" />
+            {/* Section 2 */}
+            <rect x="10" y="47" width="26" height="2.8" rx="0.5" fill="#0F172A" />
+            <rect x="10" y="52" width="30" height="2" rx="0.5" fill="#334155" />
+            <rect x="70" y="52" width="20" height="1.8" rx="0.5" fill="#94A3B8" />
+            <circle cx="12" cy="58" r="0.9" fill="#0F172A" />
+            <rect x="16" y="57" width="74" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <circle cx="12" cy="63" r="0.9" fill="#0F172A" />
+            <rect x="16" y="62" width="68" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="10" y="68" width="26" height="2" rx="0.5" fill="#334155" />
+            <rect x="72" y="68" width="18" height="1.8" rx="0.5" fill="#94A3B8" />
+            <circle cx="12" cy="74" r="0.9" fill="#0F172A" />
+            <rect x="16" y="73" width="74" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <circle cx="12" cy="79" r="0.9" fill="#0F172A" />
+            <rect x="16" y="78" width="60" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <line x1="10" y1="84" x2="90" y2="84" stroke="#E2E8F0" strokeWidth="0.6" />
+            {/* Section 3 Skills */}
+            <rect x="10" y="88" width="20" height="2.8" rx="0.5" fill="#0F172A" />
+            <rect x="10" y="93" width="80" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="10" y="97" width="65" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="10" y="104" width="22" height="2.8" rx="0.5" fill="#0F172A" />
+            <rect x="10" y="109" width="80" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="10" y="113" width="58" height="1.8" rx="0.5" fill="#CBD5E1" />
+          </g>
+        )}
+
+        {/* 2. Advisory (Executive Two-Column with Navy Header) */}
+        {templateId === 'consultantpolished' && (
+          <g>
+            <rect x="4" y="3" width="92" height="14" rx="2" fill="#1E3A8A" />
+            <rect x="10" y="8" width="34" height="4" rx="1" fill="#FFFFFF" />
+            <rect x="58" y="9" width="30" height="2" rx="0.5" fill="#93C5FD" opacity="0.8" />
+            <line x1="33" y1="21" x2="33" y2="126" stroke="#E2E8F0" strokeWidth="0.8" />
+            {/* Left Column */}
+            <rect x="8" y="24" width="16" height="2.5" rx="0.5" fill="#1E3A8A" />
+            <rect x="8" y="29" width="20" height="1.6" rx="0.5" fill="#94A3B8" />
+            <rect x="8" y="33" width="18" height="1.6" rx="0.5" fill="#94A3B8" />
+            <rect x="8" y="37" width="14" height="1.6" rx="0.5" fill="#94A3B8" />
+            <rect x="8" y="46" width="18" height="2.5" rx="0.5" fill="#1E3A8A" />
+            <rect x="8" y="51" width="20" height="1.6" rx="0.5" fill="#CBD5E1" />
+            <rect x="8" y="55" width="18" height="1.6" rx="0.5" fill="#CBD5E1" />
+            <rect x="8" y="59" width="20" height="1.6" rx="0.5" fill="#CBD5E1" />
+            <rect x="8" y="68" width="15" height="2.5" rx="0.5" fill="#1E3A8A" />
+            <rect x="8" y="73" width="19" height="1.6" rx="0.5" fill="#CBD5E1" />
+            <rect x="8" y="77" width="16" height="1.6" rx="0.5" fill="#CBD5E1" />
+            {/* Right Column */}
+            <rect x="38" y="24" width="28" height="2.8" rx="0.5" fill="#1E3A8A" />
+            <rect x="38" y="29" width="54" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="38" y="33" width="50" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="38" y="42" width="30" height="2.8" rx="0.5" fill="#1E3A8A" />
+            <rect x="38" y="48" width="34" height="2" rx="0.5" fill="#0F172A" />
+            <rect x="38" y="52" width="54" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="38" y="56" width="48" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="38" y="60" width="52" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="38" y="68" width="32" height="2" rx="0.5" fill="#0F172A" />
+            <rect x="38" y="72" width="54" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="38" y="76" width="46" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="38" y="85" width="26" height="2.8" rx="0.5" fill="#1E3A8A" />
+            <rect x="38" y="90" width="54" height="1.8" rx="0.5" fill="#CBD5E1" />
+          </g>
+        )}
+
+        {/* 3. Portfolio (Architectural Tech) */}
+        {templateId === 'architectsportfolio' && (
+          <g>
+            <circle cx="16" cy="13" r="5" fill="#F1F5F9" stroke="#CBD5E1" strokeWidth="0.8" />
+            <rect x="25" y="9" width="32" height="4" rx="1" fill="#334155" />
+            <rect x="25" y="15" width="42" height="2" rx="0.5" fill="#94A3B8" />
+            {/* Tech Chips */}
+            <rect x="8" y="23" width="18" height="4.5" rx="2.2" fill="#EFF6FF" stroke="#BFDBFE" strokeWidth="0.6" />
+            <rect x="29" y="23" width="22" height="4.5" rx="2.2" fill="#EFF6FF" stroke="#BFDBFE" strokeWidth="0.6" />
+            <rect x="54" y="23" width="18" height="4.5" rx="2.2" fill="#EFF6FF" stroke="#BFDBFE" strokeWidth="0.6" />
+            <rect x="75" y="23" width="16" height="4.5" rx="2.2" fill="#EFF6FF" stroke="#BFDBFE" strokeWidth="0.6" />
+            {/* Project Box Cards */}
+            <rect x="8" y="32" width="39" height="22" rx="2.5" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="0.8" />
+            <rect x="12" y="36" width="20" height="2" rx="0.5" fill="#334155" />
+            <rect x="12" y="40" width="31" height="1.5" rx="0.5" fill="#CBD5E1" />
+            <rect x="12" y="43" width="26" height="1.5" rx="0.5" fill="#CBD5E1" />
+            <rect x="52" y="32" width="39" height="22" rx="2.5" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="0.8" />
+            <rect x="56" y="36" width="20" height="2" rx="0.5" fill="#334155" />
+            <rect x="56" y="40" width="31" height="1.5" rx="0.5" fill="#CBD5E1" />
+            <rect x="56" y="43" width="26" height="1.5" rx="0.5" fill="#CBD5E1" />
+            {/* Experience Track */}
+            <rect x="8" y="60" width="26" height="2.8" rx="0.5" fill="#334155" />
+            <line x1="8" y1="65" x2="92" y2="65" stroke="#E2E8F0" strokeWidth="0.6" />
+            <rect x="8" y="70" width="34" height="2" rx="0.5" fill="#0F172A" />
+            <rect x="8" y="74" width="84" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="8" y="78" width="76" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="8" y="85" width="30" height="2" rx="0.5" fill="#0F172A" />
+            <rect x="8" y="89" width="84" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="8" y="93" width="68" height="1.8" rx="0.5" fill="#CBD5E1" />
+          </g>
+        )}
+
+        {/* 4. Bureau (Editorial Typography) */}
+        {templateId === 'londonbureau' && (
+          <g>
+            <rect x="10" y="10" width="50" height="6.5" rx="1" fill="#2563EB" />
+            <rect x="10" y="19" width="32" height="2" rx="0.5" fill="#94A3B8" />
+            <line x1="10" y1="24" x2="90" y2="24" stroke="#2563EB" strokeWidth="1" />
+            {/* Asymmetric Section 1 */}
+            <rect x="10" y="30" width="16" height="2" rx="0.5" fill="#64748B" />
+            <rect x="30" y="30" width="32" height="2.8" rx="0.5" fill="#0F172A" />
+            <rect x="30" y="35" width="60" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="30" y="39" width="56" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="30" y="43" width="48" height="1.8" rx="0.5" fill="#CBD5E1" />
+            {/* Asymmetric Section 2 */}
+            <rect x="10" y="53" width="16" height="2" rx="0.5" fill="#64748B" />
+            <rect x="30" y="53" width="36" height="2.8" rx="0.5" fill="#0F172A" />
+            <rect x="30" y="58" width="60" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="30" y="62" width="52" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="30" y="66" width="58" height="1.8" rx="0.5" fill="#CBD5E1" />
+            {/* Asymmetric Section 3 */}
+            <rect x="10" y="76" width="16" height="2" rx="0.5" fill="#64748B" />
+            <rect x="30" y="76" width="30" height="2.8" rx="0.5" fill="#0F172A" />
+            <rect x="30" y="81" width="60" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="30" y="85" width="46" height="1.8" rx="0.5" fill="#CBD5E1" />
+            {/* Editorial Tags */}
+            <rect x="30" y="94" width="18" height="5" rx="1.5" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="0.8" />
+            <rect x="51" y="94" width="20" height="5" rx="1.5" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="0.8" />
+            <rect x="74" y="94" width="16" height="5" rx="1.5" fill="#F8FAFC" stroke="#E2E8F0" strokeWidth="0.8" />
+          </g>
+        )}
+
+        {/* 5. Precision (Operations & DevOps) */}
+        {templateId === 'operationsprecision' && (
+          <g>
+            <rect x="8" y="8" width="84" height="10" rx="2" fill="#F0FDFA" stroke="#0D9488" strokeWidth="0.8" />
+            <rect x="14" y="11.5" width="30" height="3" rx="0.5" fill="#0D9488" />
+            <rect x="58" y="12" width="30" height="2" rx="0.5" fill="#14B8A6" />
+            {/* Timeline track */}
+            <line x1="16" y1="24" x2="16" y2="120" stroke="#CCFBF1" strokeWidth="1.2" />
+            {/* Node 1 */}
+            <circle cx="16" cy="30" r="2" fill="#0D9488" />
+            <rect x="23" y="28.5" width="28" height="2.5" rx="0.5" fill="#0F172A" />
+            <rect x="23" y="33" width="68" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="23" y="37" width="62" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="23" y="41" width="56" height="1.8" rx="0.5" fill="#CBD5E1" />
+            {/* Node 2 */}
+            <circle cx="16" cy="56" r="2" fill="#0D9488" />
+            <rect x="23" y="54.5" width="32" height="2.5" rx="0.5" fill="#0F172A" />
+            <rect x="23" y="59" width="68" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="23" y="63" width="64" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="23" y="67" width="50" height="1.8" rx="0.5" fill="#CBD5E1" />
+            {/* Node 3 */}
+            <circle cx="16" cy="82" r="2" fill="#0D9488" />
+            <rect x="23" y="80.5" width="26" height="2.5" rx="0.5" fill="#0F172A" />
+            <rect x="23" y="85" width="68" height="1.8" rx="0.5" fill="#CBD5E1" />
+            <rect x="23" y="89" width="58" height="1.8" rx="0.5" fill="#CBD5E1" />
+          </g>
+        )}
+
+        {/* 6. Minimalist (Nordic Clean Scandinavian) */}
+        {templateId === 'nordicminimal' && (
+          <g>
+            <rect x="12" y="12" width="32" height="3.5" rx="0.5" fill="#475569" />
+            <rect x="12" y="18" width="22" height="1.8" rx="0.5" fill="#94A3B8" />
+            <line x1="12" y1="24" x2="88" y2="24" stroke="#E2E8F0" strokeWidth="0.5" />
+            {/* Airy section 1 */}
+            <rect x="12" y="32" width="18" height="2.2" rx="0.5" fill="#64748B" />
+            <rect x="12" y="38" width="76" height="1.6" rx="0.5" fill="#CBD5E1" />
+            <rect x="12" y="43" width="62" height="1.6" rx="0.5" fill="#CBD5E1" />
+            {/* Airy section 2 */}
+            <rect x="12" y="55" width="22" height="2.2" rx="0.5" fill="#64748B" />
+            <rect x="12" y="61" width="76" height="1.6" rx="0.5" fill="#CBD5E1" />
+            <rect x="12" y="66" width="68" height="1.6" rx="0.5" fill="#CBD5E1" />
+            <rect x="12" y="71" width="56" height="1.6" rx="0.5" fill="#CBD5E1" />
+            {/* Airy section 3 */}
+            <rect x="12" y="83" width="16" height="2.2" rx="0.5" fill="#64748B" />
+            <rect x="12" y="89" width="76" height="1.6" rx="0.5" fill="#CBD5E1" />
+            <rect x="12" y="94" width="50" height="1.6" rx="0.5" fill="#CBD5E1" />
+          </g>
+        )}
+      </svg>
+    </div>
+  );
+}
 
 // Initial Resume Data (Alexander Wright, Verified Master Profile)
 const INITIAL_RESUME_DATA = {
@@ -205,13 +401,40 @@ export default function ResumeStudioView({ onBackToDocuments }) {
 
   const carouselRef = useRef(null);
 
-  // Section Open/Collapse States (Independently toggled, no squishing)
+  // Saved Jobs for Dropdown
+  const [savedJobsList, setSavedJobsList] = useState(() => {
+    try {
+      const stored = sessionStorage.getItem('jobgen_candidate_pipeline');
+      if (stored) {
+        const parsed = JSON.parse(stored);
+        const allJobs = [
+          ...(parsed.saved || []),
+          ...(parsed.applied || []),
+          ...(parsed.interviewing || []),
+          ...(parsed.offers || [])
+        ];
+        if (allJobs.length > 0) return allJobs;
+      }
+    } catch {}
+    return [
+      { id: 'job-canva', company: 'Canva', title: 'Lead Product Manager (Creator Ecosystem)' },
+      { id: 'job-atlassian', company: 'Atlassian', title: 'Senior Staff Frontend Architect' },
+      { id: 'job-afterpay', company: 'Afterpay', title: 'Lead Full-Stack Engineer' },
+      { id: 'job-deloitte', company: 'Deloitte', title: 'Principal Cloud Strategist' },
+      { id: 'job-safetyculture', company: 'SafetyCulture', title: 'Principal Backend Engineer' }
+    ];
+  });
+
+  const [selectedJobId, setSelectedJobId] = useState('job-canva');
+  const [showAddJobModal, setShowAddJobModal] = useState(false);
+
+  // Requirement: Keep all editing sections NOT expanded when first opened
   const [openSections, setOpenSections] = useState({
-    details: true,
-    summary: true,
-    experience: true,
-    skills: true,
-    education: true
+    details: false,
+    summary: false,
+    experience: false,
+    skills: false,
+    education: false
   });
 
   const toggleSection = (key) => {
@@ -330,6 +553,37 @@ export default function ResumeStudioView({ onBackToDocuments }) {
     }));
   };
 
+  const handleSelectJob = (jobId) => {
+    setSelectedJobId(jobId);
+    const job = savedJobsList.find(j => j.id === jobId);
+    if (job) {
+      setResumeData(prev => ({
+        ...prev,
+        targetJob: {
+          ...prev.targetJob,
+          company: job.company,
+          title: job.title
+        }
+      }));
+      showToast(`Selected ${job.company} — ${job.title}`);
+    }
+  };
+
+  const handleAddNewJob = (newJob) => {
+    setSavedJobsList(prev => [newJob, ...prev]);
+    setSelectedJobId(newJob.id);
+    setResumeData(prev => ({
+      ...prev,
+      targetJob: {
+        ...prev.targetJob,
+        company: newJob.company,
+        title: newJob.title
+      }
+    }));
+    setShowAddJobModal(false);
+    showToast(`Added ${newJob.company} — ${newJob.title}! ✨`);
+  };
+
   return (
     <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)', overflow: 'hidden', backgroundColor: '#F8FAFC' }}>
       
@@ -360,7 +614,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
         </div>
       )}
 
-      {/* Modern Top Bar: Title Left, Circular ATS Card + Export PDF Right */}
+      {/* Top Action Bar: Title Left, Circular ATS Card + Export PDF Right */}
       <header 
         style={{ 
           height: '62px', 
@@ -374,7 +628,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
           zIndex: 40
         }}
       >
-        {/* Left: Editable Document Title & Saved Status */}
+        {/* Left: Document Title & Saved Status */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
@@ -517,7 +771,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
       {/* Main Split Body: Left Editor Workspace + Right A4 Paper Canvas */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         
-        {/* Left Column: Fixed Width 640px with Dedicated Carousel & Modern Editing Sections */}
+        {/* Left Column: Fixed Width 640px */}
         <div 
           style={{ 
             width: '640px', 
@@ -530,7 +784,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
           }}
         >
           {/* =========================================================================
-              CAROUSEL: SHOWCASING DIFFERENT DESIGNS OF RESUMES WITH PREVIEW IMAGES
+              CAROUSEL: SKELETAL FRAMEWORK OF DIFFERENT PAGES (NO TEXT, WHITE BACKGROUND)
               ========================================================================= */}
           <div 
             style={{ 
@@ -546,9 +800,6 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                   <Sparkles size={14} color="#1A53CF" />
                 </div>
                 <span style={{ fontSize: '13px', fontWeight: 800, color: '#090C15' }}>Resume Designs</span>
-                <span style={{ fontSize: '10.5px', fontWeight: 700, backgroundColor: '#EFF6FF', color: '#1A53CF', padding: '1px 7px', borderRadius: '999px', border: '1px solid #BFDBFE' }}>
-                  6 Styles
-                </span>
               </div>
               <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
                 <button
@@ -569,7 +820,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F1F5F9'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FFFFFF'}
-                  title="Previous templates"
+                  title="Previous styles"
                 >
                   <ChevronLeft size={15} />
                 </button>
@@ -591,7 +842,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                   }}
                   onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#F1F5F9'}
                   onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#FFFFFF'}
-                  title="Next templates"
+                  title="Next styles"
                 >
                   <ChevronRight size={15} />
                 </button>
@@ -618,10 +869,10 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                     key={tpl.id}
                     onClick={() => {
                       setResumeData(prev => ({ ...prev, template: tpl.id }));
-                      showToast(`Switched layout to ${tpl.name}! ✨`);
+                      showToast(`Applied ${tpl.name} design! ✨`);
                     }}
                     style={{
-                      width: '130px',
+                      width: '122px',
                       flexShrink: 0,
                       borderRadius: '12px',
                       backgroundColor: '#FFFFFF',
@@ -649,44 +900,17 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                       }
                     }}
                   >
-                    {/* Visual Preview Image */}
-                    <div style={{ position: 'relative', height: '144px', overflow: 'hidden', backgroundColor: '#F1F5F9' }}>
-                      <img
-                        src={tpl.image}
-                        alt={tpl.name}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                          display: 'block'
-                        }}
-                      />
-                      {/* ATS Score Tag */}
-                      <span
-                        style={{
-                          position: 'absolute',
-                          top: '6px',
-                          right: '6px',
-                          backgroundColor: 'rgba(9, 12, 21, 0.78)',
-                          backdropFilter: 'blur(6px)',
-                          color: '#FFFFFF',
-                          fontSize: '8.5px',
-                          fontWeight: 800,
-                          padding: '2px 6px',
-                          borderRadius: '999px',
-                          letterSpacing: '0.02em'
-                        }}
-                      >
-                        {tpl.badge}
-                      </span>
+                    {/* Skeletal Framework Preview on Pure White Background (No Text) */}
+                    <div style={{ position: 'relative', height: '144px', backgroundColor: '#FFFFFF', borderBottom: '1px solid #F1F5F9' }}>
+                      <ResumeSkeletonPreview templateId={tpl.id} />
                       {isSelected && (
                         <div
                           style={{
                             position: 'absolute',
                             top: '6px',
                             left: '6px',
-                            width: '20px',
-                            height: '20px',
+                            width: '18px',
+                            height: '18px',
                             borderRadius: '50%',
                             backgroundColor: '#1A53CF',
                             color: '#FFFFFF',
@@ -696,18 +920,15 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                             boxShadow: '0 2px 6px rgba(26, 83, 207, 0.4)'
                           }}
                         >
-                          <Check size={12} strokeWidth={3} />
+                          <Check size={11} strokeWidth={3} />
                         </div>
                       )}
                     </div>
 
-                    {/* Card Label */}
-                    <div style={{ padding: '7px 9px', backgroundColor: isSelected ? '#EFF6FF' : '#FFFFFF' }}>
-                      <p style={{ margin: 0, fontSize: '11.5px', fontWeight: 800, color: isSelected ? '#1A53CF' : '#090C15', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                    {/* Card Label: JUST THE STYLE NAME */}
+                    <div style={{ padding: '8px 10px', backgroundColor: isSelected ? '#EFF6FF' : '#FFFFFF', textAlign: 'center' }}>
+                      <p style={{ margin: 0, fontSize: '12px', fontWeight: 800, color: isSelected ? '#1A53CF' : '#090C15', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                         {tpl.name}
-                      </p>
-                      <p style={{ margin: '1px 0 0 0', fontSize: '9.5px', color: '#64748B', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                        {tpl.subtitle}
                       </p>
                     </div>
                   </div>
@@ -717,7 +938,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
           </div>
 
           {/* =========================================================================
-              MODERN EDITING SECTIONS (INDEPENDENT CARDS — NO EXPANSION DISRUPTION)
+              MODERN EDITING SECTIONS (ALL COLLAPSED INITIALLY, NO OVERLAP)
               ========================================================================= */}
           <div 
             style={{ 
@@ -732,56 +953,80 @@ export default function ResumeStudioView({ onBackToDocuments }) {
             }}
             data-lenis-prevent="true"
           >
-            {/* Target Job Quick Banner */}
+            {/* SAVED JOBS DROPDOWN SELECTOR WITH "+ ADD JOB" BUTTON BESIDE IT */}
             <div 
               style={{ 
                 flexShrink: 0,
                 display: 'flex', 
                 alignItems: 'center', 
-                justifyContent: 'space-between',
-                padding: '12px 16px', 
+                gap: '10px',
+                padding: '12px 14px', 
                 borderRadius: '12px', 
-                backgroundColor: '#F0FDF4', 
-                border: '1px solid #BBF7D0',
-                boxShadow: '0 1px 3px rgba(16, 185, 129, 0.06)'
+                backgroundColor: '#FFFFFF', 
+                border: '1px solid #E2E8F0',
+                boxShadow: '0 1px 4px rgba(15, 23, 42, 0.04)'
               }}
             >
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <div style={{ width: '28px', height: '28px', borderRadius: '8px', backgroundColor: '#DCFCE7', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                  <Building2 size={15} color="#16A34A" />
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flex: 1, minWidth: 0 }}>
+                <div style={{ width: '28px', height: '28px', borderRadius: '8px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0 }}>
+                  <Briefcase size={15} color="#1A53CF" />
                 </div>
-                <div>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#166534' }}>Target Opening:</span>
-                    <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#090C15' }}>Canva · Lead Product Manager</span>
-                  </div>
-                  <span style={{ fontSize: '11px', color: '#15803D', fontWeight: 600 }}>96% Verified Keyword Alignment</span>
-                </div>
+                <select
+                  value={selectedJobId}
+                  onChange={(e) => handleSelectJob(e.target.value)}
+                  style={{
+                    flex: 1,
+                    minWidth: 0,
+                    padding: '8px 12px',
+                    borderRadius: '8px',
+                    border: '1.5px solid #E2E8F0',
+                    backgroundColor: '#F8FAFC',
+                    color: '#090C15',
+                    fontSize: '12.5px',
+                    fontWeight: 700,
+                    outline: 'none',
+                    cursor: 'pointer',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                  onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
+                >
+                  {savedJobsList.map(job => (
+                    <option key={job.id} value={job.id}>
+                      {job.company} — {job.title}
+                    </option>
+                  ))}
+                </select>
               </div>
-              <div style={{ display: 'flex', gap: '4px' }}>
-                {['compact', 'standard', 'relaxed'].map(sp => (
-                  <button
-                    key={sp}
-                    onClick={() => setResumeData(prev => ({ ...prev, spacing: sp }))}
-                    style={{
-                      padding: '4px 8px',
-                      borderRadius: '6px',
-                      border: resumeData.spacing === sp ? '1px solid #16A34A' : '1px solid #E2E8F0',
-                      backgroundColor: resumeData.spacing === sp ? '#DCFCE7' : '#FFFFFF',
-                      color: resumeData.spacing === sp ? '#166534' : '#64748B',
-                      fontSize: '10.5px',
-                      fontWeight: 700,
-                      textTransform: 'capitalize',
-                      cursor: 'pointer'
-                    }}
-                  >
-                    {sp}
-                  </button>
-                ))}
-              </div>
+
+              {/* Button Beside Dropdown: Add Job */}
+              <button
+                onClick={() => setShowAddJobModal(true)}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  padding: '8px 14px',
+                  borderRadius: '8px',
+                  backgroundColor: '#1A53CF',
+                  color: '#FFFFFF',
+                  border: 'none',
+                  fontSize: '12px',
+                  fontWeight: 700,
+                  cursor: 'pointer',
+                  flexShrink: 0,
+                  boxShadow: '0 2px 6px rgba(26, 83, 207, 0.25)',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1545B0'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1A53CF'}
+              >
+                <Plus size={14} strokeWidth={2.5} />
+                <span>Add Job</span>
+              </button>
             </div>
 
-            {/* Section 1: Personal Details */}
+            {/* Section 1: Personal Details (Initially Collapsed) */}
             <div 
               style={{ 
                 flexShrink: 0,
@@ -895,7 +1140,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
               )}
             </div>
 
-            {/* Section 2: Professional Summary */}
+            {/* Section 2: Professional Summary (Initially Collapsed) */}
             <div 
               style={{ 
                 flexShrink: 0,
@@ -996,7 +1241,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
               )}
             </div>
 
-            {/* Section 3: Work Experience (Completely Isolated & Expandable with Zero Layout Disruption) */}
+            {/* Section 3: Work Experience (Initially Collapsed, Clean Downward Flow) */}
             <div 
               style={{ 
                 flexShrink: 0,
@@ -1126,7 +1371,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                         </div>
                       </div>
 
-                      {/* Quantified Bullets List */}
+                      {/* Quantified Bullets */}
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
                         <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
                           Quantified Achievement Bullets:
@@ -1246,7 +1491,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                     </div>
                   ))}
 
-                  {/* Add New Experience Role Button */}
+                  {/* Add Position Button */}
                   <button
                     onClick={addExperienceRole}
                     style={{
@@ -1280,7 +1525,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
               )}
             </div>
 
-            {/* Section 4: Skills & Competencies */}
+            {/* Section 4: Skills & Competencies (Initially Collapsed) */}
             <div 
               style={{ 
                 flexShrink: 0,
@@ -1378,7 +1623,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
               )}
             </div>
 
-            {/* Section 5: Education & Credentials */}
+            {/* Section 5: Education & Credentials (Initially Collapsed) */}
             <div 
               style={{ 
                 flexShrink: 0,
@@ -1433,7 +1678,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
         </div>
 
         {/* =========================================================================
-            RIGHT COLUMN: AUTHENTIC A4 PAPER CONTAINER WITH GENEROUS SURROUNDING SPACE
+            RIGHT COLUMN: PHYSICAL A4 PAPER CONTAINER WITH GENEROUS CANVAS SPACE
             ========================================================================= */}
         <div 
           style={{ 
@@ -1494,7 +1739,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
             </span>
           </div>
 
-          {/* Authentic Physical A4 Paper Page Container with Space Around It */}
+          {/* Authentic Physical A4 Paper Page Container */}
           <div 
             style={{
               width: '794px',
@@ -1688,6 +1933,13 @@ export default function ResumeStudioView({ onBackToDocuments }) {
         </div>
 
       </div>
+
+      {/* Add Job Modal Integration */}
+      <AddJobModal 
+        isOpen={showAddJobModal} 
+        onClose={() => setShowAddJobModal(false)}
+        onAddJob={handleAddNewJob}
+      />
 
     </div>
   );
