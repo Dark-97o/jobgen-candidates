@@ -205,16 +205,18 @@ export default function App() {
             {(currentTab === 'workspace' || currentTab === 'pipeline' || currentTab === 'emma') && (
               <WorkspaceTrackerView 
                 onNavigateToJobSearch={() => setCurrentTab('jobs')}
+                onNavigateToResume={() => setCurrentTab('resume')}
+                onNavigateToCoverLetter={() => setCurrentTab('coverletter')}
                 initialMode={currentTab === 'pipeline' ? 'tracker' : 'split'}
               />
             )}
 
             {currentTab === 'resume' && (
-              <ResumeStudioView />
+              <ResumeStudioView onBackToDocuments={() => setCurrentTab('workspace')} />
             )}
 
             {currentTab === 'coverletter' && (
-              <CoverLetterView />
+              <CoverLetterView onBackToDocuments={() => setCurrentTab('workspace')} />
             )}
 
             {currentTab === 'interview' && (

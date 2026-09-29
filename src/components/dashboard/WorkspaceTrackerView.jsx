@@ -829,7 +829,7 @@ function TrackerCompanyLogo({ company, size = 20, style = {} }) {
   );
 }
 
-export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
+export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigateToResume, onNavigateToCoverLetter }) {
   // Section 1: Active Stage Selection for the 4-Card Attached Design
   // 'saved' | 'applied' | 'interviewing' | 'offers'
   const [activeStage, setActiveStage] = useState('applied');
@@ -2605,7 +2605,29 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                               {res.keywords ? `${res.keywords.slice(0, 2).join(', ')}` : 'Tailored'}
                             </span>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                              {onNavigateToResume && (
+                                <button
+                                  onClick={() => onNavigateToResume()}
+                                  style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '3px',
+                                    padding: '5px 8px',
+                                    borderRadius: '6px',
+                                    backgroundColor: '#EFF6FF',
+                                    color: '#1A53CF',
+                                    border: '1px solid #BFDBFE',
+                                    fontSize: '11px',
+                                    fontWeight: 700,
+                                    cursor: 'pointer'
+                                  }}
+                                  title="Open in Resume Builder"
+                                >
+                                  <Edit3 size={11} />
+                                  <span>Builder</span>
+                                </button>
+                              )}
                               <button
                                 onClick={() => setPreviewResume(res)}
                                 style={{
@@ -2903,7 +2925,29 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                               Tailored Narrative
                             </span>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                              {onNavigateToCoverLetter && (
+                                <button
+                                  onClick={() => onNavigateToCoverLetter()}
+                                  style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '3px',
+                                    padding: '5px 8px',
+                                    borderRadius: '6px',
+                                    backgroundColor: '#EFF6FF',
+                                    color: '#1A53CF',
+                                    border: '1px solid #BFDBFE',
+                                    fontSize: '11px',
+                                    fontWeight: 700,
+                                    cursor: 'pointer'
+                                  }}
+                                  title="Open in Cover Letter Builder"
+                                >
+                                  <Edit3 size={11} />
+                                  <span>Builder</span>
+                                </button>
+                              )}
                               <button
                                 onClick={() => setPreviewCoverLetter(cov)}
                                 style={{
@@ -3014,6 +3058,30 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
               </div>
 
               <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                {onNavigateToResume && (
+                  <button
+                    onClick={() => {
+                      setPreviewResume(null);
+                      onNavigateToResume();
+                    }}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      backgroundColor: '#EFF6FF',
+                      color: '#1A53CF',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      border: '1px solid #BFDBFE',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Edit3 size={13} />
+                    <span>Open Builder</span>
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     showToast(`Exported ${previewResume.company} resume PDF`);
@@ -3217,6 +3285,30 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch }) {
                   <span>Copy</span>
                 </button>
 
+                {onNavigateToCoverLetter && (
+                  <button
+                    onClick={() => {
+                      setPreviewCoverLetter(null);
+                      onNavigateToCoverLetter();
+                    }}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '8px 14px',
+                      borderRadius: '8px',
+                      backgroundColor: '#EFF6FF',
+                      color: '#1A53CF',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      border: '1px solid #BFDBFE',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Edit3 size={13} />
+                    <span>Open Builder</span>
+                  </button>
+                )}
                 <button
                   onClick={() => {
                     showToast(`Exported ${previewCoverLetter.company} cover letter PDF`);
