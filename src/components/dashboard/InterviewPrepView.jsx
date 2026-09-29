@@ -45,7 +45,7 @@ const STAGES = [
   },
   { 
     id: 'hiring_manager', 
-    name: 'Hiring Manager Interview', 
+    name: 'Hiring Manager', 
     icon: Briefcase, 
     color: '#D97706', 
     lightBg: '#FEF3C7', 
@@ -481,6 +481,7 @@ export default function InterviewPrepView() {
 
   // Active round stage tab: Screening, HR, Technical, Hiring Manager, Final
   const [activeStage, setActiveStage] = useState('screening');
+  const [isDone, setIsDone] = useState(false);
 
   const videoRef = useRef(null);
 
@@ -503,6 +504,7 @@ export default function InterviewPrepView() {
   const handleConfirmJob = () => {
     const job = SAVED_JOBS.find(j => j.id === selectedJobId) || SAVED_JOBS[0];
     setConfirmedJob(job);
+    setIsDone(false);
     setShowJobModal(false);
   };
 
@@ -510,8 +512,6 @@ export default function InterviewPrepView() {
     const currentIndex = STAGES.findIndex(s => s.id === activeStage);
     if (currentIndex < STAGES.length - 1) {
       setActiveStage(STAGES[currentIndex + 1].id);
-    } else {
-      setActiveStage(STAGES[0].id);
     }
   };
 
@@ -1025,14 +1025,10 @@ export default function InterviewPrepView() {
                     justifyContent: 'space-between'
                   }}
                 >
-                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '6px' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
                     <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#1A53CF' }}>
                       Primary Behavioral & Scenario Question
                     </span>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#059669', fontWeight: 700, backgroundColor: '#ECFDF5', border: '1px solid #A7F3D0', padding: '2px 8px', borderRadius: '6px' }}>
-                      <CheckCircle2 size={13} color="#059669" />
-                      <span>AI Confidence: {activeStageData.score}</span>
-                    </div>
                   </div>
 
                   <h3 
@@ -1212,35 +1208,69 @@ export default function InterviewPrepView() {
                 </button>
 
                 <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <button
-                    onClick={handleNextStage}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      padding: '9px 20px',
-                      borderRadius: '10px',
-                      background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
-                      color: '#FFFFFF',
-                      border: 'none',
-                      fontSize: '12.5px',
-                      fontWeight: 800,
-                      cursor: 'pointer',
-                      boxShadow: '0 4px 14px rgba(26, 83, 207, 0.35)',
-                      transition: 'all 0.15s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.transform = 'translateY(-1px)';
-                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 83, 207, 0.45)';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.transform = 'translateY(0)';
-                      e.currentTarget.style.boxShadow = '0 4px 14px rgba(26, 83, 207, 0.35)';
-                    }}
-                  >
-                    <span>Next Stage: {STAGES[(STAGES.findIndex(s => s.id === activeStage) + 1) % STAGES.length].name}</span>
-                    <ArrowRight size={14} />
-                  </button>
+                  {activeStage === 'final' ? (
+                    <button
+                      onClick={() => setIsDone(!isDone)}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '9px 22px',
+                        borderRadius: '10px',
+                        background: isDone 
+                          ? 'linear-gradient(135deg, #059669 0%, #10B981 100%)' 
+                          : 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        fontSize: '12.5px',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        boxShadow: isDone 
+                          ? '0 4px 14px rgba(16, 185, 129, 0.35)' 
+                          : '0 4px 14px rgba(26, 83, 207, 0.35)',
+                        transition: 'all 0.18s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                      }}
+                    >
+                      <Check size={16} strokeWidth={2.8} />
+                      <span>{isDone ? 'Marked as DONE ✓' : 'Mark as DONE'}</span>
+                    </button>
+                  ) : (
+                    <button
+                      onClick={handleNextStage}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        padding: '9px 20px',
+                        borderRadius: '10px',
+                        background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+                        color: '#FFFFFF',
+                        border: 'none',
+                        fontSize: '12.5px',
+                        fontWeight: 800,
+                        cursor: 'pointer',
+                        boxShadow: '0 4px 14px rgba(26, 83, 207, 0.35)',
+                        transition: 'all 0.15s ease'
+                      }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.transform = 'translateY(-1px)';
+                        e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 83, 207, 0.45)';
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.transform = 'translateY(0)';
+                        e.currentTarget.style.boxShadow = '0 4px 14px rgba(26, 83, 207, 0.35)';
+                      }}
+                    >
+                      <span>Next Stage: {STAGES[STAGES.findIndex(s => s.id === activeStage) + 1]?.name}</span>
+                      <ArrowRight size={14} />
+                    </button>
+                  )}
                 </div>
               </div>
 
