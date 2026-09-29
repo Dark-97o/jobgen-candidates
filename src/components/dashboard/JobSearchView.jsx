@@ -1775,19 +1775,6 @@ export default function JobSearchView({ onNavigateToInterview, onNavigateToResum
             <ChevronDown size={15} color={selectedLocation !== 'All' ? '#2563EB' : '#64748B'} />
           </button>
 
-          {/* Coffee Image right next to Select Location */}
-          <img 
-            src="/cofe.png" 
-            alt="Coffee" 
-            style={{ 
-              height: '38px', 
-              width: 'auto', 
-              objectFit: 'contain',
-              flexShrink: 0,
-              filter: 'drop-shadow(0 2px 6px rgba(0, 0, 0, 0.08))'
-            }} 
-          />
-
           {/* Quick Active Opportunity Count badge with Casual Animation */}
           <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12.5px', color: '#64748B' }}>
             <span 

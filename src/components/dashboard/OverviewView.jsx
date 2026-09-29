@@ -534,7 +534,7 @@ export default function OverviewView({ onNavigate }) {
           >
             {/* Left Column: Big Greeting + Animated Name & Two Rounded Rectangle Buttons (Shifted up 15px) */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', paddingTop: '6px', transform: 'translateY(-15px)' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', lineHeight: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', lineHeight: 1, flexWrap: 'wrap' }}>
                 <span style={{
                   fontSize: 'clamp(28px, 3.4vw, 48px)',
                   fontWeight: 800,
@@ -562,12 +562,14 @@ export default function OverviewView({ onNavigate }) {
                   src="/cofe.png" 
                   alt="Coffee" 
                   style={{ 
-                    height: 'clamp(32px, 3.8vw, 48px)', 
+                    height: 'clamp(34px, 4vw, 50px)', 
                     width: 'auto', 
                     objectFit: 'contain',
                     verticalAlign: 'middle',
-                    marginLeft: '-4px',
-                    filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08))'
+                    marginLeft: '-2px',
+                    filter: 'drop-shadow(0 3px 10px rgba(0, 0, 0, 0.08))',
+                    userSelect: 'none',
+                    pointerEvents: 'none'
                   }} 
                 />
               </div>
