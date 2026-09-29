@@ -20,40 +20,24 @@ import {
 
 const STAGES = [
   { 
-    id: 'screening', 
-    name: 'Screening', 
-    icon: PhoneCall, 
+    id: 'hr', 
+    name: 'HR Interview', 
+    icon: Users, 
     color: '#1A53CF', 
     lightBg: '#EFF6FF', 
     border: '#BFDBFE' 
   },
   { 
-    id: 'hr', 
-    name: 'HR', 
-    icon: Users, 
-    color: '#6366F1', 
-    lightBg: '#EEF2FF', 
-    border: '#C7D2FE' 
-  },
-  { 
     id: 'technical', 
-    name: 'Technical', 
+    name: 'Technical Interview', 
     icon: Code2, 
     color: '#0284C7', 
     lightBg: '#E0F2FE', 
     border: '#BAE6FD' 
   },
   { 
-    id: 'hiring_manager', 
-    name: 'Hiring Manager', 
-    icon: Briefcase, 
-    color: '#D97706', 
-    lightBg: '#FEF3C7', 
-    border: '#FDE68A' 
-  },
-  { 
     id: 'final', 
-    name: 'Final', 
+    name: 'Final Interview', 
     icon: Award, 
     color: '#16A34A', 
     lightBg: '#DCFCE7', 
@@ -65,6 +49,7 @@ const SAVED_JOBS = [
   {
     id: 'canva',
     company: 'Canva',
+    logo: '/logos/canva.webp',
     role: 'Lead Product Manager',
     stages: {
       screening: {
@@ -132,6 +117,7 @@ const SAVED_JOBS = [
   {
     id: 'atlassian',
     company: 'Atlassian',
+    logo: '/logos/atlassian.webp',
     role: 'Senior Staff Frontend Architect',
     stages: {
       screening: {
@@ -197,9 +183,10 @@ const SAVED_JOBS = [
     }
   },
   {
-    id: 'stripe',
-    company: 'Stripe',
-    role: 'Product Operations Lead',
+    id: 'amazon',
+    company: 'Amazon',
+    logo: '/logos/amazon.webp',
+    role: 'Principal Solutions Architect',
     stages: {
       screening: {
         roundName: 'Round 1: Operations Screening',
@@ -266,6 +253,7 @@ const SAVED_JOBS = [
   {
     id: 'afterpay',
     company: 'Afterpay',
+    logo: '/logos/afterpay.webp',
     role: 'Lead Full-Stack Engineer',
     stages: {
       screening: {
@@ -331,9 +319,10 @@ const SAVED_JOBS = [
     }
   },
   {
-    id: 'safetyculture',
-    company: 'SafetyCulture',
-    role: 'Principal Backend Engineer',
+    id: 'microsoft',
+    company: 'Microsoft',
+    logo: '/logos/microsoft.webp',
+    role: 'Senior Cloud Architect',
     stages: {
       screening: {
         roundName: 'Round 1: Initial Technical Screen',
@@ -398,9 +387,10 @@ const SAVED_JOBS = [
     }
   },
   {
-    id: 'qantas',
-    company: 'Qantas Loyalty',
-    role: 'Staff Systems Architect',
+    id: 'deloitte',
+    company: 'Deloitte',
+    logo: '/logos/deloitte.webp',
+    role: 'Technology Strategy Consultant',
     stages: {
       screening: {
         roundName: 'Round 1: Enterprise Talent Screen',
@@ -474,7 +464,7 @@ export default function InterviewPrepView() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Active round stage tab: Screening, HR, Technical, Hiring Manager, Final
-  const [activeStage, setActiveStage] = useState('screening');
+  const [activeStage, setActiveStage] = useState('hr');
 
   const videoRef = useRef(null);
 
@@ -492,7 +482,7 @@ export default function InterviewPrepView() {
   }, []);
 
   const currentJob = confirmedJob || SAVED_JOBS[0];
-  const activeStageData = currentJob.stages?.[activeStage] || currentJob.stages?.screening;
+  const activeStageData = currentJob.stages?.[activeStage] || currentJob.stages?.hr;
 
   const handleConfirmJob = () => {
     const job = SAVED_JOBS.find(j => j.id === selectedJobId) || SAVED_JOBS[0];
@@ -633,8 +623,16 @@ export default function InterviewPrepView() {
                   transition: 'border-color 0.18s ease'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', overflow: 'hidden' }}>
-                  <Briefcase size={16} color="#1A53CF" style={{ flexShrink: 0 }} />
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px', overflow: 'hidden' }}>
+                  {SAVED_JOBS.find(j => j.id === selectedJobId)?.logo ? (
+                    <img 
+                      src={SAVED_JOBS.find(j => j.id === selectedJobId)?.logo} 
+                      alt="" 
+                      style={{ width: '22px', height: '22px', objectFit: 'contain', borderRadius: '4px', flexShrink: 0 }} 
+                    />
+                  ) : (
+                    <Briefcase size={16} color="#1A53CF" style={{ flexShrink: 0 }} />
+                  )}
                   <span style={{ whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
                     {SAVED_JOBS.find(j => j.id === selectedJobId)?.company} — {SAVED_JOBS.find(j => j.id === selectedJobId)?.role}
                   </span>
@@ -687,12 +685,23 @@ export default function InterviewPrepView() {
                           if (!isSelected) e.currentTarget.style.backgroundColor = 'transparent';
                         }}
                       >
-                        <div>
-                          <div style={{ fontSize: '13px', fontWeight: 800, color: isSelected ? '#1A53CF' : '#090C15' }}>
-                            {job.company}
-                          </div>
-                          <div style={{ fontSize: '11.5px', color: '#64748B', fontWeight: 600 }}>
-                            {job.role}
+                        <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                          {job.logo ? (
+                            <img 
+                              src={job.logo} 
+                              alt={job.company} 
+                              style={{ width: '26px', height: '26px', objectFit: 'contain', borderRadius: '6px', backgroundColor: '#FFFFFF', padding: '2px', border: '1px solid #E2E8F0', flexShrink: 0 }} 
+                            />
+                          ) : (
+                            <Briefcase size={16} color="#64748B" style={{ flexShrink: 0 }} />
+                          )}
+                          <div>
+                            <div style={{ fontSize: '13px', fontWeight: 800, color: isSelected ? '#1A53CF' : '#090C15' }}>
+                              {job.company}
+                            </div>
+                            <div style={{ fontSize: '11.5px', color: '#64748B', fontWeight: 600 }}>
+                              {job.role}
+                            </div>
                           </div>
                         </div>
                         {isSelected && <Check size={16} color="#1A53CF" />}
@@ -853,11 +862,15 @@ export default function InterviewPrepView() {
             })}
           </div>
 
-          {/* Interview Container Body (Flat top, NO rounded edges at top, fixed minHeight so it doesn't grow) */}
+          {/* Interview Container Body with ipbg Background (Flat top, NO rounded edges at top, fixed minHeight) */}
           <div 
             style={{ 
               flex: 1,
               backgroundColor: '#FFFFFF',
+              backgroundImage: 'url(/ipbg.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'right center',
+              backgroundRepeat: 'no-repeat',
               borderRadius: '0 0 20px 20px',
               borderTopRightRadius: '0px',
               borderTopLeftRadius: '0px',
@@ -873,17 +886,6 @@ export default function InterviewPrepView() {
               justifyContent: 'space-between'
             }}
           >
-            {/* Atmospheric Glowing Bluish Mist Clouds inside container (matching workspace) */}
-            <div 
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'radial-gradient(ellipse 65% 50% at 20% 25%, rgba(191, 219, 254, 0.45) 0%, transparent 70%), radial-gradient(ellipse 70% 60% at 85% 75%, rgba(186, 230, 253, 0.4) 0%, transparent 70%)',
-                filter: 'blur(36px)',
-                pointerEvents: 'none',
-                zIndex: 1
-              }}
-            />
 
             <div style={{ position: 'relative', zIndex: 5, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
               <div>
@@ -919,18 +921,43 @@ export default function InterviewPrepView() {
                         {activeStageData.roundName}
                       </span>
                     </div>
-                    <h2 
-                      style={{ 
-                        fontSize: '24px', 
-                        fontWeight: 900, 
-                        color: '#090C15', 
-                        margin: 0,
-                        letterSpacing: '-0.025em',
-                        fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif'
-                      }}
-                    >
-                      {currentJob.company} — {currentJob.role}
-                    </h2>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                      {currentJob.logo && (
+                        <div 
+                          style={{ 
+                            width: '38px', 
+                            height: '38px', 
+                            borderRadius: '10px', 
+                            backgroundColor: '#FFFFFF', 
+                            border: '1.5px solid #E2E8F0', 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center',
+                            padding: '4px',
+                            boxShadow: '0 2px 8px rgba(15, 23, 42, 0.05)',
+                            flexShrink: 0
+                          }}
+                        >
+                          <img 
+                            src={currentJob.logo} 
+                            alt={currentJob.company} 
+                            style={{ width: '100%', height: '100%', objectFit: 'contain' }} 
+                          />
+                        </div>
+                      )}
+                      <h2 
+                        style={{ 
+                          fontSize: '24px', 
+                          fontWeight: 900, 
+                          color: '#090C15', 
+                          margin: 0,
+                          letterSpacing: '-0.025em',
+                          fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif'
+                        }}
+                      >
+                        {currentJob.company} — {currentJob.role}
+                      </h2>
+                    </div>
                   </div>
 
                   {/* Interviewer Persona Card */}
@@ -1239,7 +1266,7 @@ export default function InterviewPrepView() {
               boxShadow: '0 20px 45px rgba(15, 23, 42, 0.18)'
             }}
           >
-            {/* Background Playing Video */}
+            {/* Background Playing Video (Crisp and natural) */}
             <video
               ref={videoRef}
               autoPlay
@@ -1252,19 +1279,21 @@ export default function InterviewPrepView() {
                 inset: 0,
                 width: '100%',
                 height: '100%',
-                objectFit: 'cover',
-                filter: 'brightness(0.92) contrast(1.05)'
+                objectFit: 'cover'
               }}
             >
               <source src="/vidmg.mp4" type="video/mp4" />
             </video>
 
-            {/* Dark Cinematic Gradient Overlay for High Contrast Text */}
+            {/* Gradient Overlay ONLY near the bottom text for contrast */}
             <div 
               style={{
                 position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(180deg, rgba(9, 12, 21, 0.42) 0%, rgba(9, 12, 21, 0.15) 35%, rgba(9, 12, 21, 0.45) 65%, rgba(9, 12, 21, 0.85) 100%)',
+                left: 0,
+                right: 0,
+                bottom: 0,
+                height: '240px',
+                background: 'linear-gradient(180deg, transparent 0%, rgba(9, 12, 21, 0.52) 45%, rgba(9, 12, 21, 0.94) 100%)',
                 zIndex: 2,
                 pointerEvents: 'none'
               }}
@@ -1299,7 +1328,7 @@ export default function InterviewPrepView() {
                 boxSizing: 'border-box'
               }}
             >
-              {/* Top Switch Job Button */}
+              {/* Top Switch Job Button - Blue with white text */}
               <div>
                 <button
                   onClick={() => {
@@ -1310,30 +1339,30 @@ export default function InterviewPrepView() {
                     display: 'inline-flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    padding: '8px 18px',
+                    gap: '6px',
+                    padding: '9px 18px',
                     borderRadius: '999px',
-                    backgroundColor: 'rgba(255, 255, 255, 0.16)',
-                    backdropFilter: 'blur(12px)',
-                    WebkitBackdropFilter: 'blur(12px)',
-                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    backgroundColor: '#1A53CF',
                     color: '#FFFFFF',
+                    border: '1px solid rgba(255, 255, 255, 0.25)',
                     fontSize: '12px',
                     fontWeight: 800,
                     cursor: 'pointer',
-                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
+                    boxShadow: '0 4px 14px rgba(26, 83, 207, 0.45)',
                     transition: 'all 0.18s ease'
                   }}
                   onMouseEnter={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.28)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
+                    e.currentTarget.style.backgroundColor = '#1648B8';
                     e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.boxShadow = '0 6px 18px rgba(26, 83, 207, 0.55)';
                   }}
                   onMouseLeave={(e) => {
-                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
-                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.style.backgroundColor = '#1A53CF';
                     e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(26, 83, 207, 0.45)';
                   }}
                 >
+                  <RefreshCw size={12} color="#FFFFFF" />
                   <span>Switch Job</span>
                 </button>
               </div>
