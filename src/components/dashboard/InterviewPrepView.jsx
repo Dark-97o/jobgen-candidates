@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import { 
   Bot, 
   Volume2,
@@ -476,6 +476,21 @@ export default function InterviewPrepView() {
   // Active round stage tab: Screening, HR, Technical, Hiring Manager, Final
   const [activeStage, setActiveStage] = useState('screening');
 
+  const videoRef = useRef(null);
+
+  useEffect(() => {
+    if (videoRef.current) {
+      videoRef.current.defaultMuted = true;
+      videoRef.current.muted = true;
+      const playPromise = videoRef.current.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn("Autoplay was prevented:", err);
+        });
+      }
+    }
+  }, []);
+
   const currentJob = confirmedJob || SAVED_JOBS[0];
   const activeStageData = currentJob.stages?.[activeStage] || currentJob.stages?.screening;
 
@@ -506,7 +521,7 @@ export default function InterviewPrepView() {
   const activeStageConfig = STAGES.find(s => s.id === activeStage) || STAGES[0];
 
   return (
-    <div style={{ paddingTop: '28px', paddingBottom: '60px', position: 'relative' }}>
+    <div style={{ paddingTop: '28px', paddingBottom: '60px', paddingRight: '28px', position: 'relative' }}>
       
       {/* =========================================================================
           POP-UP MODAL WITH COFFEE IMAGE: SELECT SAVED JOB BEFORE SHOWING PAGE
@@ -1207,7 +1222,8 @@ export default function InterviewPrepView() {
             flexShrink: 0, 
             display: 'flex', 
             flexDirection: 'column',
-            position: 'relative'
+            position: 'relative',
+            marginRight: '8px'
           }}
         >
           <div 
@@ -1225,28 +1241,32 @@ export default function InterviewPrepView() {
           >
             {/* Background Playing Video */}
             <video
-              src="/vidmg.mp4"
+              ref={videoRef}
               autoPlay
               loop
               muted
               playsInline
+              preload="auto"
               style={{
                 position: 'absolute',
                 inset: 0,
                 width: '100%',
                 height: '100%',
                 objectFit: 'cover',
-                filter: 'brightness(0.85) contrast(1.1)'
+                filter: 'brightness(0.92) contrast(1.05)'
               }}
-            />
+            >
+              <source src="/vidmg.mp4" type="video/mp4" />
+            </video>
 
             {/* Dark Cinematic Gradient Overlay for High Contrast Text */}
             <div 
               style={{
                 position: 'absolute',
                 inset: 0,
-                background: 'linear-gradient(180deg, rgba(9, 12, 21, 0.5) 0%, rgba(9, 12, 21, 0.2) 30%, rgba(9, 12, 21, 0.65) 60%, rgba(9, 12, 21, 0.95) 100%)',
-                zIndex: 2
+                background: 'linear-gradient(180deg, rgba(9, 12, 21, 0.42) 0%, rgba(9, 12, 21, 0.15) 35%, rgba(9, 12, 21, 0.45) 65%, rgba(9, 12, 21, 0.85) 100%)',
+                zIndex: 2,
+                pointerEvents: 'none'
               }}
             />
 
