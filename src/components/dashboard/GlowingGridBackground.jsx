@@ -3,8 +3,8 @@ import React, { useEffect, useRef } from 'react';
 /**
  * GlowingGridBackground
  * 
- * An animated high-tech square grid with glowing laser/energy lines that glide
- * along horizontal and vertical grid paths, creating an elite Figma/Linear/CAD canvas.
+ * An animated square grid with smooth glowing laser lines that glide along
+ * horizontal and vertical grid paths without dots or pulsing effects.
  */
 export default function GlowingGridBackground({
   gridSize = 40,
@@ -29,25 +29,22 @@ export default function GlowingGridBackground({
 
     // Palette of glowing beam colors
     const BEAM_COLORS = [
-      { core: '#60A5FA', glow: '#2563EB', rgb: '37, 99, 235' }, // Electric Blue
-      { core: '#67E8F9', glow: '#06B6D4', rgb: '6, 182, 212' }, // Neon Cyan
-      { core: '#93C5FD', glow: '#3B82F6', rgb: '59, 130, 246' }, // Sky Blue
-      { core: '#A5B4FC', glow: '#6366F1', rgb: '99, 102, 241' }, // Indigo
+      { glow: '#2563EB', rgb: '37, 99, 235' }, // Electric Blue
+      { glow: '#06B6D4', rgb: '6, 182, 212' }, // Neon Cyan
+      { glow: '#3B82F6', rgb: '59, 130, 246' }, // Sky Blue
+      { glow: '#6366F1', rgb: '99, 102, 241' }, // Indigo
     ];
 
     // Energy beams traveling along grid lines
     const maxBeams = 8;
     const beams = [];
 
-    // Periodic intersection pulses
-    const pulses = [];
-
     const spawnBeam = (forceAxis) => {
       if (!width || !height) return null;
       const isHorizontal = forceAxis !== undefined ? forceAxis === 'h' : Math.random() > 0.45;
       const theme = BEAM_COLORS[Math.floor(Math.random() * BEAM_COLORS.length)];
-      const speed = (Math.random() * 1.8 + 1.2) * (Math.random() > 0.5 ? 1 : -1);
-      const length = Math.random() * 140 + 100;
+      const speed = (Math.random() * 1.6 + 1.2) * (Math.random() > 0.5 ? 1 : -1);
+      const length = Math.random() * 150 + 110;
 
       if (isHorizontal) {
         const rows = Math.floor(height / gridSize);
@@ -61,8 +58,8 @@ export default function GlowingGridBackground({
           speed,
           length,
           theme,
-          width: Math.random() > 0.7 ? 2 : 1.5,
-          alpha: Math.random() * 0.35 + 0.65
+          width: Math.random() > 0.6 ? 2 : 1.5,
+          alpha: Math.random() * 0.3 + 0.65
         };
       } else {
         const cols = Math.floor(width / gridSize);
@@ -76,23 +73,10 @@ export default function GlowingGridBackground({
           speed,
           length,
           theme,
-          width: Math.random() > 0.7 ? 2 : 1.5,
-          alpha: Math.random() * 0.35 + 0.65
+          width: Math.random() > 0.6 ? 2 : 1.5,
+          alpha: Math.random() * 0.3 + 0.65
         };
       }
-    };
-
-    const triggerPulse = (x, y, colorRgb) => {
-      if (pulses.length > 25) return;
-      pulses.push({
-        x,
-        y,
-        radius: 2,
-        maxRadius: Math.random() * 8 + 8,
-        alpha: 0.9,
-        decay: Math.random() * 0.02 + 0.025,
-        colorRgb: colorRgb || '59, 130, 246'
-      });
     };
 
     const updateSize = () => {
@@ -118,7 +102,6 @@ export default function GlowingGridBackground({
         for (let i = 0; i < maxBeams; i++) {
           const b = spawnBeam(i % 2 === 0 ? 'h' : 'v');
           if (b) {
-            // disperse initial positions
             b.coord = Math.random() * (b.axis === 'h' ? width : height);
             beams.push(b);
           }
@@ -128,7 +111,6 @@ export default function GlowingGridBackground({
 
     updateSize();
 
-    // Use ResizeObserver for accurate container dimensions
     let ro = null;
     const parent = containerRef.current || canvas.parentElement;
     if (parent && typeof ResizeObserver !== 'undefined') {
@@ -139,16 +121,13 @@ export default function GlowingGridBackground({
     }
     window.addEventListener('resize', updateSize);
 
-    let frameCount = 0;
-
     const render = () => {
-      frameCount++;
       ctx.clearRect(0, 0, width, height);
 
       // 1. Draw Static Base Square Grid Lines
       ctx.beginPath();
       ctx.lineWidth = 1;
-      ctx.strokeStyle = 'rgba(37, 99, 235, 0.085)'; // Clean blueprint-grade crisp grid
+      ctx.strokeStyle = 'rgba(37, 99, 235, 0.085)';
 
       // Vertical lines
       for (let x = 0; x <= width; x += gridSize) {
@@ -162,33 +141,11 @@ export default function GlowingGridBackground({
       }
       ctx.stroke();
 
-      // 2. Draw Subtle Cross Intersection Dots
-      ctx.fillStyle = 'rgba(37, 99, 235, 0.18)';
-      const dotStep = gridSize * 2; // Every 2nd intersection for elegance
-      for (let x = 0; x <= width; x += dotStep) {
-        for (let y = 0; y <= height; y += dotStep) {
-          ctx.fillRect(x - 1, y - 1, 2, 2);
-        }
-      }
-
-      // 3. Draw & Update Glowing Laser Energy Beams
+      // 2. Draw & Update Glowing Laser Lines along Grid Tracks
       for (let i = 0; i < beams.length; i++) {
         const b = beams[i];
         b.coord += b.speed;
 
-        // Occasional pulse spark at grid intersections
-        if (frameCount % 6 === 0 && Math.random() > 0.8) {
-          const roundedCoord = Math.round(b.coord / gridSize) * gridSize;
-          if (Math.abs(b.coord - roundedCoord) < Math.abs(b.speed) * 1.5) {
-            triggerPulse(
-              b.axis === 'h' ? roundedCoord : b.pos,
-              b.axis === 'h' ? b.pos : roundedCoord,
-              b.theme.rgb
-            );
-          }
-        }
-
-        // Draw Beam Segment with High-Intensity Glowing Gradient
         ctx.save();
         ctx.shadowColor = b.theme.glow;
         ctx.shadowBlur = 14;
@@ -201,7 +158,7 @@ export default function GlowingGridBackground({
           const endX = b.coord;
           grad = ctx.createLinearGradient(startX, b.pos, endX, b.pos);
           grad.addColorStop(0, `rgba(${b.theme.rgb}, 0)`);
-          grad.addColorStop(0.7, `rgba(${b.theme.rgb}, ${b.alpha * 0.5})`);
+          grad.addColorStop(0.7, `rgba(${b.theme.rgb}, ${b.alpha * 0.45})`);
           grad.addColorStop(1, `rgba(${b.theme.rgb}, ${b.alpha})`);
 
           ctx.strokeStyle = grad;
@@ -209,19 +166,12 @@ export default function GlowingGridBackground({
           ctx.moveTo(startX, b.pos);
           ctx.lineTo(endX, b.pos);
           ctx.stroke();
-
-          // Intense glowing leading head dot
-          ctx.fillStyle = '#FFFFFF';
-          ctx.shadowBlur = 18;
-          ctx.beginPath();
-          ctx.arc(endX, b.pos, b.width + 0.8, 0, Math.PI * 2);
-          ctx.fill();
         } else {
           const startY = b.speed > 0 ? b.coord - b.length : b.coord + b.length;
           const endY = b.coord;
           grad = ctx.createLinearGradient(b.pos, startY, b.pos, endY);
           grad.addColorStop(0, `rgba(${b.theme.rgb}, 0)`);
-          grad.addColorStop(0.7, `rgba(${b.theme.rgb}, ${b.alpha * 0.5})`);
+          grad.addColorStop(0.7, `rgba(${b.theme.rgb}, ${b.alpha * 0.45})`);
           grad.addColorStop(1, `rgba(${b.theme.rgb}, ${b.alpha})`);
 
           ctx.strokeStyle = grad;
@@ -229,13 +179,6 @@ export default function GlowingGridBackground({
           ctx.moveTo(b.pos, startY);
           ctx.lineTo(b.pos, endY);
           ctx.stroke();
-
-          // Intense glowing leading head dot
-          ctx.fillStyle = '#FFFFFF';
-          ctx.shadowBlur = 18;
-          ctx.beginPath();
-          ctx.arc(b.pos, endY, b.width + 0.8, 0, Math.PI * 2);
-          ctx.fill();
         }
         ctx.restore();
 
@@ -247,34 +190,6 @@ export default function GlowingGridBackground({
         if (isOut) {
           beams[i] = spawnBeam();
         }
-      }
-
-      // 4. Draw Expanding Pulses / Intersection Rings
-      for (let i = pulses.length - 1; i >= 0; i--) {
-        const p = pulses[i];
-        p.radius += 0.45;
-        p.alpha -= p.decay;
-
-        if (p.alpha <= 0) {
-          pulses.splice(i, 1);
-          continue;
-        }
-
-        ctx.save();
-        ctx.strokeStyle = `rgba(${p.colorRgb}, ${p.alpha})`;
-        ctx.shadowColor = `rgba(${p.colorRgb}, ${p.alpha * 0.8})`;
-        ctx.shadowBlur = 8;
-        ctx.lineWidth = 1.2;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, p.radius, 0, Math.PI * 2);
-        ctx.stroke();
-
-        // Tiny center flash
-        ctx.fillStyle = `rgba(255, 255, 255, ${p.alpha})`;
-        ctx.beginPath();
-        ctx.arc(p.x, p.y, 1.2, 0, Math.PI * 2);
-        ctx.fill();
-        ctx.restore();
       }
 
       animId = requestAnimationFrame(render);
@@ -305,7 +220,7 @@ export default function GlowingGridBackground({
         ...style
       }}
     >
-      {/* Dynamic atmospheric radial glow focusing on canvas center */}
+      {/* Soft atmospheric gradient */}
       {showAtmosphere && (
         <div
           style={{
@@ -318,7 +233,7 @@ export default function GlowingGridBackground({
         />
       )}
 
-      {/* HTML5 High-Performance Grid & Glowing Beams Canvas */}
+      {/* HTML5 Clean Grid & Glowing Lines Canvas */}
       <canvas
         ref={canvasRef}
         style={{
