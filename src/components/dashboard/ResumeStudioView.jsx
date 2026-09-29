@@ -728,71 +728,69 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
           </div>
         </div>
 
-        {/* Right: Circular Card showing ATS left next to Export PDF */}
+        {/* Right: Attached Green Circle + Pill showing ATS left next to Export PDF */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
           
-          {/* Circular Card showing ATS */}
+          {/* Attached ATS Score Badge: Green Circle with White Number (no %) + Attached Pill with text ATS */}
           <div
             onClick={onOpenAtsScan}
-            title="ATS Match Score: 96% · Click to view keyword alignment"
+            title="ATS Match Score: 96 · Click to view keyword alignment"
             style={{
-              position: 'relative',
-              width: '46px',
-              height: '46px',
+              display: 'inline-flex',
+              alignItems: 'center',
               cursor: 'pointer',
               flexShrink: 0,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              borderRadius: '50%',
-              backgroundColor: '#FFFFFF',
-              boxShadow: '0 2px 10px rgba(16, 185, 129, 0.18)',
+              backgroundColor: '#F0FDF4',
+              border: '1.5px solid #10B981',
+              borderRadius: '999px',
+              padding: '3px 12px 3px 3px',
+              gap: '8px',
+              boxShadow: '0 2px 8px rgba(16, 185, 129, 0.16)',
               transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
             onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'scale(1.08)';
-              e.currentTarget.style.boxShadow = '0 4px 18px rgba(16, 185, 129, 0.36)';
+              e.currentTarget.style.transform = 'translateY(-1px) scale(1.03)';
+              e.currentTarget.style.boxShadow = '0 4px 14px rgba(16, 185, 129, 0.32)';
             }}
             onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 2px 10px rgba(16, 185, 129, 0.18)';
+              e.currentTarget.style.transform = 'none';
+              e.currentTarget.style.boxShadow = '0 2px 8px rgba(16, 185, 129, 0.16)';
             }}
           >
-            {/* Circular SVG Progress Ring */}
-            <svg
-              width="46"
-              height="46"
-              viewBox="0 0 46 46"
-              style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
+            {/* Green Circle with White Text showing the number (No percentage sign) */}
+            <div
+              style={{
+                width: '32px',
+                height: '32px',
+                borderRadius: '50%',
+                backgroundColor: '#10B981',
+                color: '#FFFFFF',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                fontSize: '13.5px',
+                fontWeight: 900,
+                letterSpacing: '-0.02em',
+                boxShadow: '0 2px 6px rgba(16, 185, 129, 0.35)',
+                flexShrink: 0
+              }}
             >
-              {/* Background Ring */}
-              <circle
-                cx="23"
-                cy="23"
-                r="19"
-                fill="none"
-                stroke="#E2E8F0"
-                strokeWidth="2.8"
-              />
-              {/* Emerald Progress Ring (96% of 119.38 circumference = 114.6) */}
-              <circle
-                cx="23"
-                cy="23"
-                r="19"
-                fill="none"
-                stroke="#10B981"
-                strokeWidth="2.8"
-                strokeDasharray="119.38"
-                strokeDashoffset="4.78"
-                strokeLinecap="round"
-              />
-            </svg>
-
-            {/* Inner Content */}
-            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 1, pointerEvents: 'none' }}>
-              <span style={{ fontSize: '11px', fontWeight: 900, color: '#047857', lineHeight: 1 }}>96%</span>
-              <span style={{ fontSize: '7.5px', fontWeight: 800, color: '#059669', letterSpacing: '0.04em', lineHeight: 1, marginTop: '1.5px' }}>ATS</span>
+              96
             </div>
+
+            {/* Attached Pill Text: ATS */}
+            <span
+              style={{
+                fontSize: '11px',
+                fontWeight: 800,
+                color: '#065F46',
+                letterSpacing: '0.06em',
+                textTransform: 'uppercase',
+                lineHeight: 1
+              }}
+            >
+              ATS
+            </span>
           </div>
 
           {/* Export PDF Button */}
@@ -831,12 +829,12 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
       {/* Main Split Body: Left Editor Workspace + Right A4 Paper Canvas */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         
-        {/* Left Column: Responsive Width clamp(360px, 30vw, 420px) */}
+        {/* Left Column: Responsive Width clamp(440px, 32vw, 520px) */}
         <div 
           style={{ 
-            width: 'clamp(360px, 30vw, 420px)', 
-            minWidth: '340px',
-            maxWidth: '440px',
+            width: 'clamp(440px, 32vw, 520px)', 
+            minWidth: '420px',
+            maxWidth: '540px',
             flexShrink: 0, 
             display: 'flex', 
             flexDirection: 'column', 

@@ -1110,69 +1110,41 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
   return (
     <div style={{ paddingBottom: '60px', paddingRight: '28px', maxWidth: '1440px', margin: '0 auto', position: 'relative' }}>
 
-      {/* Thin Vertical Lines Background Near Top-Left Corner (Reference Image Match) */}
+      {/* 2 Thick Blue Lines on Right Side Running Behind Tracker & Document Containers (Fading smoothly before JOBGEN.AI) */}
       <div
         style={{
           position: 'absolute',
-          top: '-15px',
-          left: '-25px',
-          width: '520px',
-          height: '420px',
+          top: '-20px',
+          bottom: '-10px',
+          right: '54px',
+          width: '32px',
+          display: 'flex',
+          justifyContent: 'space-between',
           pointerEvents: 'none',
           zIndex: 0,
-          backgroundImage: `
-            repeating-linear-gradient(
-              to right,
-              rgba(37, 99, 235, 0.42) 0px,
-              rgba(37, 99, 235, 0.42) 1.5px,
-              transparent 1.5px,
-              transparent 140px
-            ),
-            repeating-linear-gradient(
-              to right,
-              rgba(96, 165, 250, 0.32) 0px,
-              rgba(96, 165, 250, 0.32) 1px,
-              transparent 1px,
-              transparent 28px
-            ),
-            linear-gradient(135deg, rgba(224, 242, 254, 0.6) 0%, rgba(238, 242, 255, 0.3) 50%, transparent 100%)
-          `,
-          maskImage: 'radial-gradient(ellipse 90% 85% at 0% 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 55%, transparent 85%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 90% 85% at 0% 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 55%, transparent 85%)',
         }}
-      />
-
-      {/* Thin Vertical Lines Background Near Top-Right Corner (Reference Image Match) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: '-15px',
-          right: '-15px',
-          width: '560px',
-          height: '420px',
-          pointerEvents: 'none',
-          zIndex: 0,
-          backgroundImage: `
-            repeating-linear-gradient(
-              to right,
-              rgba(37, 99, 235, 0.42) 0px,
-              rgba(37, 99, 235, 0.42) 1.5px,
-              transparent 1.5px,
-              transparent 140px
-            ),
-            repeating-linear-gradient(
-              to right,
-              rgba(96, 165, 250, 0.32) 0px,
-              rgba(96, 165, 250, 0.32) 1px,
-              transparent 1px,
-              transparent 28px
-            ),
-            linear-gradient(225deg, rgba(224, 242, 254, 0.6) 0%, rgba(238, 242, 255, 0.3) 50%, transparent 100%)
-          `,
-          maskImage: 'radial-gradient(ellipse 90% 85% at 100% 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 55%, transparent 85%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 90% 85% at 100% 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 55%, transparent 85%)',
-        }}
-      />
+      >
+        {/* Thick Blue Line 1 (6px) */}
+        <div 
+          style={{
+            width: '6px',
+            height: '100%',
+            borderRadius: '999px',
+            background: 'linear-gradient(to bottom, #1A53CF 0%, #2563EB 60%, rgba(37, 99, 235, 0.75) 75%, rgba(37, 99, 235, 0.25) 88%, transparent 98%)',
+            boxShadow: '0 0 14px rgba(37, 99, 235, 0.3)'
+          }}
+        />
+        {/* Thick Blue Line 2 (6px) */}
+        <div 
+          style={{
+            width: '6px',
+            height: '100%',
+            borderRadius: '999px',
+            background: 'linear-gradient(to bottom, #2563EB 0%, #3B82F6 60%, rgba(59, 130, 246, 0.75) 75%, rgba(59, 130, 246, 0.25) 88%, transparent 98%)',
+            boxShadow: '0 0 14px rgba(59, 130, 246, 0.3)'
+          }}
+        />
+      </div>
 
       {/* Floating Action Toast Notification */}
       {actionToast && (
