@@ -1,25 +1,25 @@
 import React, { useState } from 'react';
 import { 
-  Mic, 
-  MicOff, 
-  Video, 
-  VideoOff, 
-  PhoneOff, 
   Bot, 
   Volume2,
   ChevronDown,
   Sparkles,
   Check,
   RefreshCw,
-  Briefcase
+  Briefcase,
+  ArrowRight,
+  ArrowLeft,
+  Award,
+  CheckCircle2,
+  HelpCircle
 } from 'lucide-react';
 
 const STAGES = [
-  { id: 'screening', name: 'Screening' },
-  { id: 'hr', name: 'HR' },
-  { id: 'technical', name: 'Technical' },
-  { id: 'hiring_manager', name: 'Hiring Manager' },
-  { id: 'final', name: 'Final' }
+  { id: 'screening', name: 'Screening', defaultColor: '#3B6D96' },
+  { id: 'hr', name: 'HR', defaultColor: '#C6D2DC' },
+  { id: 'technical', name: 'Technical', defaultColor: '#9FA5A9' },
+  { id: 'hiring_manager', name: 'Hiring Manager', defaultColor: '#DCE0E2' },
+  { id: 'final', name: 'Final', defaultColor: '#6C7174' }
 ];
 
 const SAVED_JOBS = [
@@ -32,7 +32,6 @@ const SAVED_JOBS = [
         roundName: 'Round 1: Talent Screening',
         interviewerName: 'Sarah Jenkins',
         interviewerRole: 'Senior Technical Recruiter',
-        interviewerInitials: 'SJ',
         score: '94 / 100',
         question: 'Can you walk me through your background and what excites you about leading product velocity at Canva?',
         situation: 'Applying as a Lead Product Manager candidate scaling visual design ecosystems for 170M+ active users.',
@@ -45,7 +44,6 @@ const SAVED_JOBS = [
         roundName: 'Round 2: Culture & Values Alignment',
         interviewerName: 'Elena Rostova',
         interviewerRole: 'Director of People Experience',
-        interviewerInitials: 'ER',
         score: '98 / 100',
         question: 'Tell me about a time you worked through cross-functional resistance while launching a paradigm-shifting feature.',
         situation: 'Design and sales pods had conflicting priorities during the launch of Canva’s enterprise collaboration toolkit.',
@@ -58,7 +56,6 @@ const SAVED_JOBS = [
         roundName: 'Round 3: System Architecture & Product Mechanics',
         interviewerName: 'Craig Press',
         interviewerRole: 'Hiring Director & Head of Product',
-        interviewerInitials: 'CP',
         score: '96 / 100',
         question: 'Tell me about a time you handled a technical deadlock between senior engineering leads and business stakeholders.',
         situation: 'Q3 enterprise contract required custom SSO, while engineering planned core DB migration.',
@@ -71,7 +68,6 @@ const SAVED_JOBS = [
         roundName: 'Round 4: Hiring Manager & Leadership Loop',
         interviewerName: 'Melanie Perkins',
         interviewerRole: 'VP of Product Engineering',
-        interviewerInitials: 'MP',
         score: '95 / 100',
         question: 'How do you prioritize between high-velocity feature experiments and platform technical debt when resources are constrained?',
         situation: 'Rapid sprint velocity was producing 15% regression rates in template rendering microservices.',
@@ -84,7 +80,6 @@ const SAVED_JOBS = [
         roundName: 'Round 5: Executive Vision & Offer Alignment',
         interviewerName: 'Cameron Adams',
         interviewerRole: 'Chief Product Officer & Co-Founder',
-        interviewerInitials: 'CA',
         score: '99 / 100',
         question: 'Looking at your first 90 days at Canva, where will you drive disproportionate leverage across our ecosystem?',
         situation: 'Transitioning into a pivotal product leadership post during global B2B expansion.',
@@ -104,7 +99,6 @@ const SAVED_JOBS = [
         roundName: 'Round 1: Recruiter Phone Screen',
         interviewerName: 'Tom Bradley',
         interviewerRole: 'Lead Engineering Recruiter',
-        interviewerInitials: 'TB',
         score: '92 / 100',
         question: 'What motivated you to explore the Senior Staff Frontend Architect role on the Jira Cloud platform?',
         situation: 'Seeking to architect planet-scale developer tools with 300M+ monthly interactions.',
@@ -117,7 +111,6 @@ const SAVED_JOBS = [
         roundName: 'Round 2: Values & "Open Company, No Bullshit"',
         interviewerName: 'Kylie Morris',
         interviewerRole: 'Head of People Partnering',
-        interviewerInitials: 'KM',
         score: '96 / 100',
         question: 'Give an example of when you had to share difficult technical feedback with leadership or challenge an established consensus.',
         situation: 'An executive initiative proposed an unsustainable third-party SDK that increased bundle size by 350KB.',
@@ -130,7 +123,6 @@ const SAVED_JOBS = [
         roundName: 'Round 3: Micro-Frontend Scaling & Performance',
         interviewerName: 'David Green',
         interviewerRole: 'Head of Web Architecture',
-        interviewerInitials: 'DG',
         score: '97 / 100',
         question: 'How do you design a scalable micro-frontend architecture while maintaining sub-1.5s LCP across distributed squads?',
         situation: 'Legacy monolithic frontend caused 45-minute build pipelines and deployment gridlocks across 14 teams.',
@@ -143,7 +135,6 @@ const SAVED_JOBS = [
         roundName: 'Round 4: Architecture Team Leadership',
         interviewerName: 'Mike Cannon',
         interviewerRole: 'Head of Cloud Platform Engineering',
-        interviewerInitials: 'MC',
         score: '95 / 100',
         question: 'How do you ensure 40+ engineering pods adhere to strict performance budgets without slowing down their daily velocity?',
         situation: 'Autonomous squads were accidentally introducing redundant dependencies into shared vendor bundles.',
@@ -156,7 +147,6 @@ const SAVED_JOBS = [
         roundName: 'Round 5: Executive Technical Loop',
         interviewerName: 'Scott Farquhar',
         interviewerRole: 'Chief Technology Strategist',
-        interviewerInitials: 'SF',
         score: '98 / 100',
         question: 'How do you see web client architecture evolving over the next 5 years with WebAssembly and local-first offline syncing?',
         situation: 'Next-generation cloud applications require instantaneous offline-first responsiveness.',
@@ -176,7 +166,6 @@ const SAVED_JOBS = [
         roundName: 'Round 1: Operations Screening',
         interviewerName: 'David Lee',
         interviewerRole: 'Lead Talent Partner, FinTech',
-        interviewerInitials: 'DL',
         score: '93 / 100',
         question: 'What draws you to managing high-stakes payments operations and developer tooling at Stripe?',
         situation: 'Targeting a mission-critical role operating global payments infrastructure with 99.999% reliability.',
@@ -189,7 +178,6 @@ const SAVED_JOBS = [
         roundName: 'Round 2: Operating Principles & Culture',
         interviewerName: 'Amanda Zhang',
         interviewerRole: 'Global People Business Partner',
-        interviewerInitials: 'AZ',
         score: '95 / 100',
         question: 'Tell me about a time you identified an operational failure that no one else was addressing. How did you take ownership?',
         situation: 'Discrepancies in multi-currency FX settlement were causing partner invoice delays at month-end.',
@@ -202,7 +190,6 @@ const SAVED_JOBS = [
         roundName: 'Round 3: High-Volume Operational Resiliency',
         interviewerName: 'Claire Hughes',
         interviewerRole: 'VP of Global Operations',
-        interviewerInitials: 'CH',
         score: '97 / 100',
         question: 'Describe an instance where a payment settlement pipeline degraded, and how you managed cross-functional incident response.',
         situation: 'High concurrency during Black Friday payment surges caused idempotent ledger reconciliation delays.',
@@ -215,7 +202,6 @@ const SAVED_JOBS = [
         roundName: 'Round 4: FinTech Scaling & Incident Command',
         interviewerName: 'Patrick Collison',
         interviewerRole: 'Head of Payment Operations',
-        interviewerInitials: 'PC',
         score: '96 / 100',
         question: 'How do you design incident response playbooks for distributed payment networks operating across 190+ countries?',
         situation: 'Regional banking partner maintenance windows were triggering false-positive incident alarms in EMEA.',
@@ -228,7 +214,6 @@ const SAVED_JOBS = [
         roundName: 'Round 5: Executive Leadership & Strategic Bet',
         interviewerName: 'John Collison',
         interviewerRole: 'President & Co-Founder',
-        interviewerInitials: 'JC',
         score: '99 / 100',
         question: 'What is the biggest operational leverage point that Stripe has yet to fully unlock in global commerce?',
         situation: 'Evaluating international enterprise expansion and next-generation payments orchestration.',
@@ -248,7 +233,6 @@ const SAVED_JOBS = [
         roundName: 'Round 1: Engineering Talent Screen',
         interviewerName: 'Liam O’Connor',
         interviewerRole: 'Engineering Talent Partner',
-        interviewerInitials: 'LO',
         score: '94 / 100',
         question: 'Tell me about your experience scaling real-time merchant checkout widgets and distributed event queues.',
         situation: 'Exploring lead engineering role building sub-100ms merchant checkout SDKs.',
@@ -261,7 +245,6 @@ const SAVED_JOBS = [
         roundName: 'Round 2: Culture & Autonomous Execution',
         interviewerName: 'Jessica Bell',
         interviewerRole: 'People Business Lead',
-        interviewerInitials: 'JB',
         score: '96 / 100',
         question: 'How do you foster a culture of engineering excellence and rapid iteration without burning out your squad?',
         situation: 'Tight product deadlines during merchant onboarding crunch threatened engineer well-being.',
@@ -274,7 +257,6 @@ const SAVED_JOBS = [
         roundName: 'Round 3: Distributed Real-Time Architecture',
         interviewerName: 'Marcus Chen',
         interviewerRole: 'Staff Engineering Lead',
-        interviewerInitials: 'MC',
         score: '96 / 100',
         question: 'Walk me through how you designed a low-latency fraud evaluation worker pipeline handling thousands of requests per second.',
         situation: 'Checkout approval API was spiking past 250ms during peak merchant flash sales.',
@@ -287,7 +269,6 @@ const SAVED_JOBS = [
         roundName: 'Round 4: Engineering Management & Roadmapping',
         interviewerName: 'Nick Molnar',
         interviewerRole: 'VP of Consumer Engineering',
-        interviewerInitials: 'NM',
         score: '95 / 100',
         question: 'How do you handle technical debt when product managers demand continuous feature releases?',
         situation: 'Legacy checkout codebase had accrued technical debt that was slowing down feature velocity.',
@@ -300,7 +281,6 @@ const SAVED_JOBS = [
         roundName: 'Round 5: Executive Engineering Bar Raiser',
         interviewerName: 'Anthony Eisen',
         interviewerRole: 'Co-Founder & Executive Lead',
-        interviewerInitials: 'AE',
         score: '98 / 100',
         question: 'Where will BNPL consumer commerce be in 5 years, and how should our core architecture prepare today?',
         situation: 'Emergence of AI-agent commerce and instant biometric checkout.',
@@ -320,7 +300,6 @@ const SAVED_JOBS = [
         roundName: 'Round 1: Initial Technical Screen',
         interviewerName: 'Ben Wright',
         interviewerRole: 'Senior Platform Recruiter',
-        interviewerInitials: 'BW',
         score: '93 / 100',
         question: 'What excites you about building high-resilience systems for 75,000+ frontline enterprise inspection workers?',
         situation: 'Applying to lead core distributed services handling millions of daily safety audits.',
@@ -333,7 +312,6 @@ const SAVED_JOBS = [
         roundName: 'Round 2: Culture of Customer Obsession',
         interviewerName: 'Chloe Bennett',
         interviewerRole: 'Culture & People Director',
-        interviewerInitials: 'CB',
         score: '97 / 100',
         question: 'Tell me about a time you went out of your way to understand the lived reality of an end-user before writing code.',
         situation: 'Engineers assumed field workers always had reliable 4G coverage on remote construction sites.',
@@ -346,7 +324,6 @@ const SAVED_JOBS = [
         roundName: 'Round 3: Distributed Systems & gRPC',
         interviewerName: 'Sarah Jenkins',
         interviewerRole: 'Platform Engineering Lead',
-        interviewerInitials: 'SJ',
         score: '97 / 100',
         question: 'How do you ensure data consistency across multiple microservices without introducing synchronous distributed locks?',
         situation: 'Audit inspection sync failed when mobile clients reconnected in low-connectivity offline mode.',
@@ -359,7 +336,6 @@ const SAVED_JOBS = [
         roundName: 'Round 4: Platform Scalability & Reliability',
         interviewerName: 'Luke Anear',
         interviewerRole: 'VP of Platform Engineering',
-        interviewerInitials: 'LA',
         score: '96 / 100',
         question: 'How do you design platform services to survive sudden 10x traffic spikes during critical emergency safety alerts?',
         situation: 'National weather emergencies were causing 12x audit spikes that degraded database connection pools.',
@@ -372,7 +348,6 @@ const SAVED_JOBS = [
         roundName: 'Round 5: Executive Architecture Review',
         interviewerName: 'Mark Adams',
         interviewerRole: 'Chief Technology Officer',
-        interviewerInitials: 'MA',
         score: '99 / 100',
         question: 'If you were rebuilding our core distributed data tier from scratch today, what foundational choices would you make?',
         situation: 'Planning next-decade data architecture for multi-region global compliance.',
@@ -392,7 +367,6 @@ const SAVED_JOBS = [
         roundName: 'Round 1: Enterprise Talent Screen',
         interviewerName: 'Danielle Cooper',
         interviewerRole: 'Talent Acquisition Partner',
-        interviewerInitials: 'DC',
         score: '92 / 100',
         question: 'What motivates you to architect loyalty ledgers and high-concurrency redemption systems at Qantas scale?',
         situation: 'Targeting Staff Systems Architect role modernizing mission-critical loyalty pipelines.',
@@ -405,7 +379,6 @@ const SAVED_JOBS = [
         roundName: 'Round 2: Enterprise Stakeholder Collaboration',
         interviewerName: 'Simon Walsh',
         interviewerRole: 'Head of People & Culture',
-        interviewerInitials: 'SW',
         score: '95 / 100',
         question: 'Describe how you bring non-technical enterprise executives along on complex architectural transformations.',
         situation: 'Board members and commercial leads were hesitant about the multi-million dollar cost of event-driven migration.',
@@ -418,7 +391,6 @@ const SAVED_JOBS = [
         roundName: 'Round 3: Event-Driven Enterprise Architecture',
         interviewerName: 'Robert Vance',
         interviewerRole: 'Enterprise Technology Director',
-        interviewerInitials: 'RV',
         score: '97 / 100',
         question: 'Describe how you scaled an event-driven points ledger while complying with strict financial audit and PCI-DSS requirements.',
         situation: 'Partner redemption spikes were locking core transactional loyalty ledgers during promotional campaigns.',
@@ -431,7 +403,6 @@ const SAVED_JOBS = [
         roundName: 'Round 4: Governance & Systems Modernization',
         interviewerName: 'Olivia Scott',
         interviewerRole: 'General Manager of Technology',
-        interviewerInitials: 'OS',
         score: '96 / 100',
         question: 'How do you execute a core transactional system migration without a single second of maintenance downtime?',
         situation: 'Replacing a 15-year-old mainframe ledger with a modern cloud-native event-sourced architecture.',
@@ -444,7 +415,6 @@ const SAVED_JOBS = [
         roundName: 'Round 5: Executive Board & Strategic Alignment',
         interviewerName: 'Vanessa Hudson',
         interviewerRole: 'Group Executive Director',
-        interviewerInitials: 'VH',
         score: '98 / 100',
         question: 'How can modern technology architecture unlock completely new revenue channels for our loyalty ecosystem?',
         situation: 'Expanding points economy into retail banking, travel micro-services, and real-time merchant POS.',
@@ -458,9 +428,6 @@ const SAVED_JOBS = [
 ];
 
 export default function InterviewPrepView() {
-  const [micActive, setMicActive] = useState(true);
-  const [videoActive, setVideoActive] = useState(true);
-  
   // Pop-up modal state when opening Interview Prep page
   const [showJobModal, setShowJobModal] = useState(true);
   const [selectedJobId, setSelectedJobId] = useState(SAVED_JOBS[0].id);
@@ -468,10 +435,10 @@ export default function InterviewPrepView() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Active round stage tab: Screening, HR, Technical, Hiring Manager, Final
-  const [activeStage, setActiveStage] = useState('technical');
+  const [activeStage, setActiveStage] = useState('screening');
 
   const currentJob = confirmedJob || SAVED_JOBS[0];
-  const activeStageData = currentJob.stages?.[activeStage] || currentJob.stages?.technical;
+  const activeStageData = currentJob.stages?.[activeStage] || currentJob.stages?.screening;
 
   const handleConfirmJob = () => {
     const job = SAVED_JOBS.find(j => j.id === selectedJobId) || SAVED_JOBS[0];
@@ -488,8 +455,27 @@ export default function InterviewPrepView() {
     }
   };
 
+  const handlePrevStage = () => {
+    const currentIndex = STAGES.findIndex(s => s.id === activeStage);
+    if (currentIndex > 0) {
+      setActiveStage(STAGES[currentIndex - 1].id);
+    } else {
+      setActiveStage(STAGES[STAGES.length - 1].id);
+    }
+  };
+
+  // Color palette matching the user's reference image
+  const FOLDER_COLOR = '#3B6D96'; // Deep Slate Blue folder body
+  const INACTIVE_COLORS = {
+    screening: '#3B6D96',
+    hr: '#C6D2DC',
+    technical: '#9FA5A9',
+    hiring_manager: '#DCE0E2',
+    final: '#6C7174'
+  };
+
   return (
-    <div style={{ paddingBottom: '40px', position: 'relative' }}>
+    <div style={{ paddingBottom: '60px', position: 'relative' }}>
       
       {/* =========================================================================
           POP-UP MODAL WITH COFFEE IMAGE: SELECT SAVED JOB BEFORE SHOWING PAGE
@@ -708,27 +694,24 @@ export default function InterviewPrepView() {
       )}
 
       {/* =========================================================================
-          TOP BAR: ACTIVE TARGET ROLE + STAGE TABS: Screening , HR , Technical , Hiring Manager , Final
+          TOP BAR: ROLE PILL + SWITCH JOB
           ========================================================================= */}
       <div 
         style={{ 
           display: 'flex', 
           alignItems: 'center', 
           justifyContent: 'space-between', 
-          marginBottom: '20px', 
-          paddingBottom: '14px',
-          borderBottom: '1px solid rgba(226, 232, 240, 0.75)',
+          marginBottom: '16px', 
           flexWrap: 'wrap', 
           gap: '12px' 
         }}
       >
-        {/* Left: Active Role Pill & Switch Job Button */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
           <div 
             style={{ 
               display: 'inline-flex', 
               alignItems: 'center', 
-              gap: '6px', 
+              gap: '8px', 
               backgroundColor: '#FFFFFF', 
               padding: '6px 14px', 
               borderRadius: '999px', 
@@ -746,7 +729,6 @@ export default function InterviewPrepView() {
             </span>
           </div>
 
-          {/* Change Target Job Button to re-open Coffee Modal */}
           <button
             onClick={() => {
               setSelectedJobId(currentJob.id);
@@ -781,219 +763,389 @@ export default function InterviewPrepView() {
           </button>
         </div>
 
-        {/* Right: The 5 Stage Tabs: Screening , HR , Technical , Hiring Manager , Final */}
+        {/* Global Progress Pill */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#64748B', fontWeight: 600 }}>
+          <span>Stage {STAGES.findIndex(s => s.id === activeStage) + 1} of 5</span>
+          <span>·</span>
+          <span style={{ color: '#059669', fontWeight: 700 }}>{activeStageData.score} Score</span>
+        </div>
+      </div>
+
+      {/* =========================================================================
+          THE FOLDER CONTAINER (Matching user image with 5 Tabs across the top)
+          ========================================================================= */}
+      <div 
+        style={{ 
+          width: '100%', 
+          maxWidth: '1100px', 
+          margin: '0 auto',
+          position: 'relative'
+        }}
+      >
+        {/* Top 5 Folder Tabs Row (Screening , HR , Technical , Hiring Manager , Final) */}
         <div 
           style={{ 
             display: 'flex', 
-            background: 'rgba(255, 255, 255, 0.72)', 
-            backdropFilter: 'blur(20px)', 
-            WebkitBackdropFilter: 'blur(20px)', 
-            padding: '4px', 
-            borderRadius: '14px', 
-            border: '1px solid rgba(226, 232, 240, 0.85)', 
-            gap: '3px', 
-            boxShadow: '0 2px 10px rgba(15, 23, 42, 0.03)',
-            flexWrap: 'wrap'
+            alignItems: 'flex-end', 
+            gap: '0px', 
+            position: 'relative', 
+            zIndex: 10,
+            marginBottom: '-1px'
           }}
         >
-          {STAGES.map((stg) => {
-            const isActive = (activeStage === stg.id);
+          {STAGES.map((stage, idx) => {
+            const isActive = (activeStage === stage.id);
+            // Default background matching user reference image
+            let tabBg = FOLDER_COLOR;
+            if (!isActive) {
+              tabBg = INACTIVE_COLORS[stage.id] || '#A0A6AA';
+            }
+
             return (
               <button
-                key={stg.id}
-                onClick={() => setActiveStage(stg.id)}
+                key={stage.id}
+                onClick={() => setActiveStage(stage.id)}
                 style={{
-                  padding: '6px 14px',
-                  borderRadius: '10px',
-                  fontSize: '11.5px',
-                  fontWeight: isActive ? 800 : 600,
+                  flex: 1,
+                  minWidth: '100px',
+                  height: isActive ? '54px' : '46px',
+                  backgroundColor: tabBg,
+                  borderTopLeftRadius: '22px',
+                  borderTopRightRadius: '22px',
+                  borderBottomLeftRadius: '0px',
+                  borderBottomRightRadius: '0px',
                   border: 'none',
                   cursor: 'pointer',
-                  backgroundColor: isActive ? '#090C15' : 'transparent',
-                  color: isActive ? '#FFFFFF' : '#475569',
-                  boxShadow: isActive ? '0 2px 8px rgba(9, 12, 21, 0.18)' : 'none',
-                  transition: 'all 0.15s ease'
+                  position: 'relative',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '0 12px',
+                  color: isActive ? '#FFFFFF' : '#1E293B',
+                  fontSize: isActive ? '14px' : '12.5px',
+                  fontWeight: isActive ? 900 : 700,
+                  letterSpacing: '-0.01em',
+                  fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+                  boxShadow: isActive 
+                    ? '0 -6px 18px rgba(15, 23, 42, 0.12)' 
+                    : 'inset 0 -2px 6px rgba(0, 0, 0, 0.08)',
+                  zIndex: isActive ? 20 : (10 - idx),
+                  transition: 'height 0.18s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.18s ease'
                 }}
               >
-                {stg.name}
+                <span>{stage.name}</span>
+                {isActive && (
+                  <span 
+                    style={{ 
+                      width: '6px', 
+                      height: '6px', 
+                      borderRadius: '50%', 
+                      backgroundColor: '#34D399', 
+                      marginLeft: '6px',
+                      boxShadow: '0 0 8px #34D399'
+                    }} 
+                  />
+                )}
               </button>
             );
           })}
         </div>
-      </div>
 
-      {/* 2-Column Stage: Left Virtual Office Video Stage / Right STAR Evaluation */}
-      <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)', gap: '20px', alignItems: 'start' }}>
-        
-        {/* Left: Floating Video Stage */}
+        {/* Large Folder Body Container (Same FOLDER_COLOR as the active tab) */}
         <div 
           style={{ 
-            background: 'linear-gradient(180deg, #F8FAFC 0%, #EFF6FF 100%)',
-            borderRadius: '24px',
-            border: '1px solid #E2E8F0',
-            padding: '24px',
-            boxShadow: '0 4px 20px rgba(15,23,42,0.04)',
-            position: 'relative'
+            backgroundColor: FOLDER_COLOR,
+            borderRadius: '0 0 24px 24px',
+            borderTopRightRadius: activeStage === 'final' ? '0px' : '20px',
+            borderTopLeftRadius: activeStage === 'screening' ? '0px' : '20px',
+            padding: '36px 36px 40px 36px',
+            boxShadow: '0 24px 60px -10px rgba(15, 23, 42, 0.22), 0 8px 20px rgba(15, 23, 42, 0.08)',
+            position: 'relative',
+            zIndex: 15,
+            color: '#FFFFFF'
           }}
         >
-          {/* Top Stage Bar */}
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-              <span style={{ width: '8px', height: '8px', borderRadius: '50%', background: '#EF4444' }} />
-              <span style={{ fontSize: '12px', fontWeight: 700, color: '#090C15' }}>
-                {currentJob.company} · {activeStageData.roundName}
-              </span>
-            </div>
-            <span style={{ fontSize: '11px', color: '#10B981', fontWeight: 700, background: '#ECFDF5', padding: '2px 8px', borderRadius: '9999px' }}>
-              ● Live Audio Active
-            </span>
-          </div>
-
-          {/* Floating Video Window */}
+          {/* Top Stage Header Inside Folder */}
           <div 
             style={{ 
-              background: '#090C15', 
-              borderRadius: '20px', 
-              border: '4px solid #FFFFFF', 
-              boxShadow: '0 16px 40px rgba(0,0,0,0.25)', 
-              overflow: 'hidden' 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between', 
+              marginBottom: '24px',
+              flexWrap: 'wrap',
+              gap: '14px'
             }}
           >
-            <div style={{ display: 'grid', gridTemplateColumns: '1.4fr 1fr', height: '300px' }}>
-              
-              {/* Candidate Stream */}
-              <div style={{ position: 'relative', background: '#1E293B', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ width: '90px', height: '90px', borderRadius: '50%', background: 'linear-gradient(135deg, #3B82F6 0%, #1A53CF 100%)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '28px', fontWeight: 800, color: '#FFFFFF', boxShadow: '0 0 30px rgba(59,130,246,0.5)' }}>
-                  SB
-                </div>
-                <div style={{ position: 'absolute', bottom: '12px', left: '12px', background: 'rgba(0,0,0,0.6)', padding: '2px 8px', borderRadius: '4px', fontSize: '10.5px', color: '#FFFFFF' }}>
-                  Subhranil Baul (Candidate)
-                </div>
-                <div style={{ position: 'absolute', top: '12px', right: '12px', display: 'flex', alignItems: 'center', gap: '4px', background: 'rgba(0,0,0,0.6)', padding: '3px 8px', borderRadius: '9999px' }}>
-                  <Volume2 size={12} color="#10B981" />
-                  <span style={{ fontSize: '10px', color: '#10B981', fontWeight: 700 }}>Speaking</span>
-                </div>
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
+                <span 
+                  style={{ 
+                    fontSize: '11px', 
+                    fontWeight: 800, 
+                    textTransform: 'uppercase', 
+                    letterSpacing: '0.08em', 
+                    backgroundColor: 'rgba(255, 255, 255, 0.18)',
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    color: '#E0F2FE'
+                  }}
+                >
+                  {STAGES.find(s => s.id === activeStage)?.name} Round
+                </span>
+                <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.75)', fontWeight: 600 }}>
+                  {activeStageData.roundName}
+                </span>
               </div>
-
-              {/* AI Interviewer Grid */}
-              <div style={{ display: 'grid', gridTemplateRows: '1fr 1fr', gap: '2px', background: '#090C15' }}>
-                <div style={{ background: '#111827', padding: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#1A53CF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Bot size={15} color="#FFFFFF" />
-                  </div>
-                  <div>
-                    <span style={{ fontSize: '11px', color: '#FFFFFF', fontWeight: 700, display: 'block' }}>Emma AI (Host)</span>
-                    <span style={{ fontSize: '9.5px', color: '#10B981' }}>Live STAR grading active</span>
-                  </div>
-                </div>
-
-                <div style={{ background: '#111827', padding: '12px', display: 'flex', alignItems: 'center', gap: '8px' }}>
-                  <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: '#D97706', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', fontWeight: 700, fontSize: '11px' }}>
-                    {activeStageData.interviewerInitials}
-                  </div>
-                  <div>
-                    <span style={{ fontSize: '11px', color: '#FFFFFF', fontWeight: 700, display: 'block' }}>
-                      {activeStageData.interviewerName} ({currentJob.company})
-                    </span>
-                    <span style={{ fontSize: '9.5px', color: '#94A3B8' }}>{activeStageData.interviewerRole}</span>
-                  </div>
-                </div>
-              </div>
-
+              <h2 
+                style={{ 
+                  fontSize: '26px', 
+                  fontWeight: 900, 
+                  color: '#FFFFFF', 
+                  margin: 0,
+                  letterSpacing: '-0.025em',
+                  fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif'
+                }}
+              >
+                {currentJob.company} — {currentJob.role}
+              </h2>
             </div>
 
-            {/* Bottom Meeting Controls */}
-            <div style={{ padding: '10px 16px', background: '#090C15', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '12px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
-              <button 
-                onClick={() => setMicActive(!micActive)}
-                style={{ width: '34px', height: '34px', borderRadius: '50%', background: micActive ? 'rgba(255,255,255,0.12)' : '#EF4444', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', cursor: 'pointer' }}
+            {/* Interviewer Persona Card */}
+            <div 
+              style={{ 
+                display: 'flex', 
+                alignItems: 'center', 
+                gap: '10px', 
+                backgroundColor: 'rgba(255, 255, 255, 0.12)', 
+                backdropFilter: 'blur(10px)',
+                padding: '8px 16px', 
+                borderRadius: '16px',
+                border: '1px solid rgba(255, 255, 255, 0.2)'
+              }}
+            >
+              <div 
+                style={{ 
+                  width: '38px', 
+                  height: '38px', 
+                  borderRadius: '50%', 
+                  backgroundColor: '#FFFFFF', 
+                  color: FOLDER_COLOR,
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  justifyContent: 'center',
+                  fontWeight: 900,
+                  fontSize: '14px'
+                }}
               >
-                {micActive ? <Mic size={15} /> : <MicOff size={15} />}
-              </button>
-              <button 
-                style={{ width: '38px', height: '38px', borderRadius: '50%', background: '#EF4444', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', cursor: 'pointer', boxShadow: '0 4px 12px rgba(239,68,68,0.4)' }}
-              >
-                <PhoneOff size={16} />
-              </button>
-              <button 
-                onClick={() => setVideoActive(!videoActive)}
-                style={{ width: '34px', height: '34px', borderRadius: '50%', background: videoActive ? 'rgba(255,255,255,0.12)' : '#EF4444', border: 'none', display: 'flex', alignItems: 'center', justifyContent: 'center', color: '#FFFFFF', cursor: 'pointer' }}
-              >
-                {videoActive ? <Video size={15} /> : <VideoOff size={15} />}
-              </button>
+                <Bot size={20} color={FOLDER_COLOR} />
+              </div>
+              <div>
+                <span style={{ fontSize: '12.5px', fontWeight: 800, color: '#FFFFFF', display: 'block' }}>
+                  {activeStageData.interviewerName}
+                </span>
+                <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.8)' }}>
+                  {activeStageData.interviewerRole}
+                </span>
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* Right: Live STAR Method Breakdown & Score Evaluation */}
-        <div className="liquid-glass-card" style={{ padding: '24px' }}>
-          <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '16px' }}>
-            <span style={{ fontSize: '11px', fontWeight: 800, color: '#1A53CF', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-              Real-Time Behavioral STAR Score
-            </span>
-            <span style={{ fontSize: '13px', fontWeight: 800, color: '#059669', background: '#ECFDF5', padding: '2px 10px', borderRadius: '9999px', border: '1px solid #A7F3D0' }}>
-              {activeStageData.score}
-            </span>
+          {/* Core Interview Question Card */}
+          <div 
+            style={{ 
+              backgroundColor: '#FFFFFF', 
+              borderRadius: '18px', 
+              padding: '24px 28px', 
+              boxShadow: '0 12px 32px rgba(15, 23, 42, 0.12)', 
+              color: '#090C15',
+              marginBottom: '24px',
+              borderLeft: '5px solid #2563EB'
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+              <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#1A53CF' }}>
+                Primary Behavioral & Scenario Question
+              </span>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#059669', fontWeight: 700, backgroundColor: '#ECFDF5', padding: '2px 8px', borderRadius: '6px' }}>
+                <CheckCircle2 size={13} color="#059669" />
+                <span>AI Confidence: {activeStageData.score}</span>
+              </div>
+            </div>
+
+            <h3 
+              style={{ 
+                fontSize: '18px', 
+                fontWeight: 800, 
+                color: '#090C15', 
+                margin: '0 0 10px 0',
+                lineHeight: 1.45,
+                fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif'
+              }}
+            >
+              "{activeStageData.question}"
+            </h3>
+
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748B', fontSize: '12px' }}>
+              <Sparkles size={14} color="#1A53CF" />
+              <span><strong>Emma AI Tip:</strong> {activeStageData.coachTip}</span>
+            </div>
           </div>
 
-          <h4 style={{ fontSize: '14px', fontWeight: 700, color: '#090C15', marginBottom: '14px', lineHeight: 1.4 }}>
-            "{activeStageData.question}"
-          </h4>
-
-          {/* STAR Accordion Blocks */}
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <div style={{ padding: '10px 12px', borderRadius: '8px', background: '#F8FAFC', borderLeft: '3px solid #1A53CF' }}>
-              <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#1A53CF', textTransform: 'uppercase' }}>Situation</span>
-              <p style={{ fontSize: '12px', color: '#334155', marginTop: '2px' }}>
+          {/* STAR Method Structured Response Cards */}
+          <div 
+            style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', 
+              gap: '14px',
+              marginBottom: '26px'
+            }}
+          >
+            {/* Situation */}
+            <div 
+              style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                borderRadius: '14px', 
+                padding: '16px 18px',
+                color: '#090C15',
+                borderLeft: '4px solid #1A53CF',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)'
+              }}
+            >
+              <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#1A53CF', marginBottom: '4px' }}>
+                S — Situation
+              </div>
+              <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.5 }}>
                 {activeStageData.situation}
               </p>
             </div>
 
-            <div style={{ padding: '10px 12px', borderRadius: '8px', background: '#F8FAFC', borderLeft: '3px solid #10B981' }}>
-              <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#10B981', textTransform: 'uppercase' }}>Task</span>
-              <p style={{ fontSize: '12px', color: '#334155', marginTop: '2px' }}>
+            {/* Task */}
+            <div 
+              style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                borderRadius: '14px', 
+                padding: '16px 18px',
+                color: '#090C15',
+                borderLeft: '4px solid #10B981',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)'
+              }}
+            >
+              <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#10B981', marginBottom: '4px' }}>
+                T — Task
+              </div>
+              <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.5 }}>
                 {activeStageData.task}
               </p>
             </div>
 
-            <div style={{ padding: '10px 12px', borderRadius: '8px', background: '#F8FAFC', borderLeft: '3px solid #F59E0B' }}>
-              <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#F59E0B', textTransform: 'uppercase' }}>Action (AI Highlight)</span>
-              <p style={{ fontSize: '12px', color: '#334155', marginTop: '2px' }}>
+            {/* Action */}
+            <div 
+              style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                borderRadius: '14px', 
+                padding: '16px 18px',
+                color: '#090C15',
+                borderLeft: '4px solid #F59E0B',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)'
+              }}
+            >
+              <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#F59E0B', marginBottom: '4px' }}>
+                A — Action (High-Leverage Execution)
+              </div>
+              <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.5 }}>
                 {activeStageData.action}
               </p>
             </div>
 
-            <div style={{ padding: '10px 12px', borderRadius: '8px', background: '#F8FAFC', borderLeft: '3px solid #8B5CF6' }}>
-              <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#8B5CF6', textTransform: 'uppercase' }}>Result</span>
-              <p style={{ fontSize: '12px', color: '#334155', marginTop: '2px' }}>
+            {/* Result */}
+            <div 
+              style={{ 
+                backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                borderRadius: '14px', 
+                padding: '16px 18px',
+                color: '#090C15',
+                borderLeft: '4px solid #8B5CF6',
+                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)'
+              }}
+            >
+              <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#8B5CF6', marginBottom: '4px' }}>
+                R — Result (Quantified Impact)
+              </div>
+              <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.5 }}>
                 {activeStageData.result}
               </p>
             </div>
           </div>
 
-          <div style={{ marginTop: '18px', paddingTop: '14px', borderTop: '1px solid #F1F5F9', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-            <span style={{ fontSize: '11px', color: '#64748B' }}>Emma Coach: {activeStageData.coachTip}</span>
+          {/* Folder Action Footer */}
+          <div 
+            style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'space-between',
+              paddingTop: '18px',
+              borderTop: '1px solid rgba(255, 255, 255, 0.18)',
+              flexWrap: 'wrap',
+              gap: '12px'
+            }}
+          >
             <button
-              onClick={handleNextStage}
+              onClick={handlePrevStage}
               style={{
-                padding: '6px 14px',
-                borderRadius: '8px',
-                background: '#090C15',
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '8px',
+                padding: '10px 18px',
+                borderRadius: '12px',
+                backgroundColor: 'rgba(255, 255, 255, 0.15)',
                 color: '#FFFFFF',
-                fontSize: '11.5px',
+                border: '1px solid rgba(255, 255, 255, 0.25)',
+                fontSize: '12.5px',
                 fontWeight: 700,
-                border: 'none',
                 cursor: 'pointer',
                 transition: 'all 0.15s ease'
               }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1E293B'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#090C15'}
+              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.25)'}
+              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'}
             >
-              Next Stage →
+              <ArrowLeft size={15} />
+              <span>Previous Stage</span>
             </button>
-          </div>
-        </div>
 
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <button
+                onClick={handleNextStage}
+                style={{
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  padding: '10px 22px',
+                  borderRadius: '12px',
+                  backgroundColor: '#FFFFFF',
+                  color: FOLDER_COLOR,
+                  border: 'none',
+                  fontSize: '13px',
+                  fontWeight: 800,
+                  cursor: 'pointer',
+                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.12)',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.18)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.transform = 'translateY(0)';
+                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 0, 0, 0.12)';
+                }}
+              >
+                <span>Next Stage: {STAGES[(STAGES.findIndex(s => s.id === activeStage) + 1) % STAGES.length].name}</span>
+                <ArrowRight size={15} />
+              </button>
+            </div>
+          </div>
+
+        </div>
       </div>
 
     </div>
