@@ -562,12 +562,12 @@ export default function OverviewView({ onNavigate }) {
                   src="/cofe.png" 
                   alt="Coffee" 
                   style={{ 
-                    height: 'clamp(34px, 4vw, 50px)', 
+                    height: 'clamp(44px, 5.4vw, 66px)', 
                     width: 'auto', 
                     objectFit: 'contain',
                     verticalAlign: 'middle',
-                    marginLeft: '-2px',
-                    filter: 'drop-shadow(0 3px 10px rgba(0, 0, 0, 0.08))',
+                    marginLeft: '-10px',
+                    filter: 'drop-shadow(0 4px 14px rgba(0, 0, 0, 0.09))',
                     userSelect: 'none',
                     pointerEvents: 'none'
                   }} 
