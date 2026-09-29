@@ -7,6 +7,8 @@ import {
   TrendingUp, 
   Copy, 
   Eye, 
+  EyeOff,
+  GripVertical,
   Edit3,
   Sliders,
   ChevronDown,
@@ -31,6 +33,7 @@ import {
   Mail, 
   Phone, 
   User,
+  BookOpen,
   X
 } from 'lucide-react';
 import AddJobModal from './AddJobModal';
@@ -379,18 +382,147 @@ const INITIAL_RESUME_DATA = {
       graduationDate: '2018',
       honors: 'First Class Honours | Dean’s Honour List'
     }
-  ]
+  ],
+
+  projects: [
+    {
+      id: 'proj-1',
+      title: 'Distributed Micro-Frontend Architecture',
+      subtitle: 'Lead Architect & Creator',
+      link: 'github.com/alexwright/mfe-platform',
+      date: '2023 - 2024',
+      description: 'Engineered module federation system scaling to 14M+ active creators, reducing client load times by 38% and standardizing CI/CD bundle gating.'
+    },
+    {
+      id: 'proj-2',
+      title: 'Design Token Compiler & Theme Engine',
+      subtitle: 'Creator',
+      link: 'tokens.alexwright.dev',
+      date: '2022',
+      description: 'Automated multi-platform design token synchronization across React, iOS, and Android with automated WCAG AA compliance verification.'
+    }
+  ],
+
+  certifications: [
+    {
+      id: 'cert-1',
+      name: 'AWS Certified Solutions Architect – Professional',
+      issuer: 'Amazon Web Services',
+      date: '2023',
+      credentialId: 'AWS-PSA-94812'
+    },
+    {
+      id: 'cert-2',
+      name: 'Certified Kubernetes Application Developer (CKAD)',
+      issuer: 'Cloud Native Computing Foundation (CNCF)',
+      date: '2022',
+      credentialId: 'CKAD-2022-8371'
+    }
+  ],
+
+  awards: [
+    {
+      id: 'award-1',
+      title: 'Canva Engineering Impact Award',
+      issuer: 'Canva',
+      date: '2023',
+      description: 'Recognized for pioneering cross-pod architecture that accelerated developer velocity by 48% across enterprise suites.'
+    },
+    {
+      id: 'award-2',
+      title: 'Atlassian Global ShipIt Winner',
+      issuer: 'Atlassian',
+      date: '2020',
+      description: 'Awarded 1st place among 40+ global teams for real-time collaborative document synchronization engine.'
+    }
+  ],
+
+  publications: [
+    {
+      id: 'pub-1',
+      title: 'Scaling Distributed Micro-Frontends at Enterprise Scale',
+      publisher: 'IEEE Software Architecture Journal',
+      date: '2023',
+      link: 'doi.org/10.1109/MS.2023.0182'
+    },
+    {
+      id: 'pub-2',
+      title: 'Real-Time State Synchronization in Web Collaboration',
+      publisher: 'ACM Queue Publications',
+      date: '2021',
+      link: 'queue.acm.org/detail.cfm?id=349281'
+    }
+  ],
+
+  languages: [
+    { id: 'lang-1', language: 'English', proficiency: 'Native / Bilingual' },
+    { id: 'lang-2', language: 'Japanese', proficiency: 'Professional Working Proficiency' },
+    { id: 'lang-3', language: 'German', proficiency: 'Elementary Proficiency' }
+  ],
+
+  customSections: []
 };
+
+// Default Resume Sections Configuration (matching user specifications)
+const DEFAULT_SECTIONS = [
+  { id: 'details', title: 'Personal Information', deletable: false, hasEye: false, hasDrag: false },
+  { id: 'summary', title: 'Professional Summary', deletable: false, hasEye: true, hasDrag: true },
+  { id: 'skills', title: 'Skills & Interests', deletable: false, hasEye: true, hasDrag: true },
+  { id: 'experience', title: 'Work Experience', deletable: false, hasEye: true, hasDrag: true },
+  { id: 'education', title: 'Education', deletable: false, hasEye: true, hasDrag: true },
+  { id: 'projects', title: 'Projects', deletable: true, hasEye: true, hasDrag: true },
+  { id: 'certifications', title: 'Certifications', deletable: true, hasEye: true, hasDrag: true },
+  { id: 'awards', title: 'Awards & Achievements', deletable: true, hasEye: true, hasDrag: true },
+  { id: 'publications', title: 'Publications', deletable: true, hasEye: true, hasDrag: true },
+  { id: 'languages', title: 'Languages', deletable: true, hasEye: true, hasDrag: true },
+];
 
 export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
   const [resumeData, setResumeData] = useState(() => {
     try {
       const saved = sessionStorage.getItem('jobgen_active_resume');
-      return saved ? JSON.parse(saved) : INITIAL_RESUME_DATA;
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        return {
+          ...INITIAL_RESUME_DATA,
+          ...parsed,
+          projects: parsed.projects || INITIAL_RESUME_DATA.projects,
+          certifications: parsed.certifications || INITIAL_RESUME_DATA.certifications,
+          awards: parsed.awards || INITIAL_RESUME_DATA.awards,
+          publications: parsed.publications || INITIAL_RESUME_DATA.publications,
+          languages: parsed.languages || INITIAL_RESUME_DATA.languages,
+          customSections: parsed.customSections || []
+        };
+      }
+      return INITIAL_RESUME_DATA;
     } catch {
       return INITIAL_RESUME_DATA;
     }
   });
+
+  const [activeSections, setActiveSections] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('jobgen_resume_sections');
+      if (saved) {
+        const parsed = JSON.parse(saved);
+        if (Array.isArray(parsed) && parsed.length > 0) return parsed;
+      }
+    } catch {}
+    return DEFAULT_SECTIONS;
+  });
+
+  const [hiddenSections, setHiddenSections] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('jobgen_hidden_sections');
+      if (saved) return JSON.parse(saved);
+    } catch {}
+    return {};
+  });
+
+  const [draggedIndex, setDraggedIndex] = useState(null);
+  const [dragOverIndex, setDragOverIndex] = useState(null);
+  const [showAddSectionMenu, setShowAddSectionMenu] = useState(false);
+  const [customSectionTitle, setCustomSectionTitle] = useState('');
 
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
@@ -462,12 +594,30 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
     summary: false,
     experience: false,
     skills: false,
-    education: false
+    education: false,
+    projects: false,
+    certifications: false,
+    awards: false,
+    publications: false,
+    languages: false
   });
 
   const toggleSection = (key) => {
     setOpenSections(prev => ({ ...prev, [key]: !prev[key] }));
   };
+
+  // Auto-save changes into sessionStorage
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('jobgen_resume_sections', JSON.stringify(activeSections));
+    } catch (e) {}
+  }, [activeSections]);
+
+  useEffect(() => {
+    try {
+      sessionStorage.setItem('jobgen_hidden_sections', JSON.stringify(hiddenSections));
+    } catch (e) {}
+  }, [hiddenSections]);
 
   // Auto-save changes into sessionStorage
   useEffect(() => {
@@ -595,6 +745,295 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
       }));
       showToast(`Selected ${job.company} — ${job.title}`);
     }
+  };
+
+  const updateEducation = (eduIndex, field, val) => {
+    setResumeData(prev => {
+      const education = [...prev.education];
+      education[eduIndex] = { ...education[eduIndex], [field]: val };
+      return { ...prev, education };
+    });
+  };
+
+  const addEducation = () => {
+    const newEdu = {
+      id: `edu-${Date.now()}`,
+      institution: 'University / Institution',
+      degree: 'Degree / Major',
+      graduationDate: '2024',
+      honors: ''
+    };
+    setResumeData(prev => ({
+      ...prev,
+      education: [...prev.education, newEdu]
+    }));
+    showToast('Added education entry');
+  };
+
+  const removeEducation = (eduIndex) => {
+    setResumeData(prev => ({
+      ...prev,
+      education: prev.education.filter((_, i) => i !== eduIndex)
+    }));
+    showToast('Removed education entry');
+  };
+
+  // Projects mutators
+  const updateProject = (projIndex, field, val) => {
+    setResumeData(prev => {
+      const projects = [...(prev.projects || [])];
+      projects[projIndex] = { ...projects[projIndex], [field]: val };
+      return { ...prev, projects };
+    });
+  };
+
+  const addProject = () => {
+    const newProj = {
+      id: `proj-${Date.now()}`,
+      title: 'New High-Impact Project',
+      subtitle: 'Lead Architect',
+      link: 'github.com/project',
+      date: '2024',
+      description: 'Architected high-scale platform improving overall performance and user engagement.'
+    };
+    setResumeData(prev => ({
+      ...prev,
+      projects: [...(prev.projects || []), newProj]
+    }));
+    showToast('Added project to resume!');
+  };
+
+  const removeProject = (projIndex) => {
+    setResumeData(prev => ({
+      ...prev,
+      projects: (prev.projects || []).filter((_, i) => i !== projIndex)
+    }));
+    showToast('Removed project');
+  };
+
+  // Certifications mutators
+  const updateCertification = (certIndex, field, val) => {
+    setResumeData(prev => {
+      const certifications = [...(prev.certifications || [])];
+      certifications[certIndex] = { ...certifications[certIndex], [field]: val };
+      return { ...prev, certifications };
+    });
+  };
+
+  const addCertification = () => {
+    const newCert = {
+      id: `cert-${Date.now()}`,
+      name: 'Professional Certificate / License',
+      issuer: 'Issuing Organization',
+      date: '2024',
+      credentialId: ''
+    };
+    setResumeData(prev => ({
+      ...prev,
+      certifications: [...(prev.certifications || []), newCert]
+    }));
+    showToast('Added certification!');
+  };
+
+  const removeCertification = (certIndex) => {
+    setResumeData(prev => ({
+      ...prev,
+      certifications: (prev.certifications || []).filter((_, i) => i !== certIndex)
+    }));
+    showToast('Removed certification');
+  };
+
+  // Awards mutators
+  const updateAward = (awardIndex, field, val) => {
+    setResumeData(prev => {
+      const awards = [...(prev.awards || [])];
+      awards[awardIndex] = { ...awards[awardIndex], [field]: val };
+      return { ...prev, awards };
+    });
+  };
+
+  const addAward = () => {
+    const newAward = {
+      id: `award-${Date.now()}`,
+      title: 'Excellence or Industry Award',
+      issuer: 'Awarding Organization / Company',
+      date: '2024',
+      description: 'Recognized for top tier performance and contributions.'
+    };
+    setResumeData(prev => ({
+      ...prev,
+      awards: [...(prev.awards || []), newAward]
+    }));
+    showToast('Added award & achievement!');
+  };
+
+  const removeAward = (awardIndex) => {
+    setResumeData(prev => ({
+      ...prev,
+      awards: (prev.awards || []).filter((_, i) => i !== awardIndex)
+    }));
+    showToast('Removed award');
+  };
+
+  // Publications mutators
+  const updatePublication = (pubIndex, field, val) => {
+    setResumeData(prev => {
+      const publications = [...(prev.publications || [])];
+      publications[pubIndex] = { ...publications[pubIndex], [field]: val };
+      return { ...prev, publications };
+    });
+  };
+
+  const addPublication = () => {
+    const newPub = {
+      id: `pub-${Date.now()}`,
+      title: 'Publication / Paper Title',
+      publisher: 'Publisher / Journal / Conference',
+      date: '2024',
+      link: ''
+    };
+    setResumeData(prev => ({
+      ...prev,
+      publications: [...(prev.publications || []), newPub]
+    }));
+    showToast('Added publication!');
+  };
+
+  const removePublication = (pubIndex) => {
+    setResumeData(prev => ({
+      ...prev,
+      publications: (prev.publications || []).filter((_, i) => i !== pubIndex)
+    }));
+    showToast('Removed publication');
+  };
+
+  // Languages mutators
+  const updateLanguage = (langIndex, field, val) => {
+    setResumeData(prev => {
+      const languages = [...(prev.languages || [])];
+      languages[langIndex] = { ...languages[langIndex], [field]: val };
+      return { ...prev, languages };
+    });
+  };
+
+  const addLanguage = () => {
+    const newLang = {
+      id: `lang-${Date.now()}`,
+      language: 'New Language',
+      proficiency: 'Professional Working Proficiency'
+    };
+    setResumeData(prev => ({
+      ...prev,
+      languages: [...(prev.languages || []), newLang]
+    }));
+    showToast('Added language!');
+  };
+
+  const removeLanguage = (langIndex) => {
+    setResumeData(prev => ({
+      ...prev,
+      languages: (prev.languages || []).filter((_, i) => i !== langIndex)
+    }));
+    showToast('Removed language');
+  };
+
+  // Custom sections mutator
+  const updateCustomSectionContent = (secId, content) => {
+    setResumeData(prev => {
+      const customSections = [...(prev.customSections || [])];
+      const idx = customSections.findIndex(c => c.id === secId);
+      if (idx >= 0) {
+        customSections[idx] = { ...customSections[idx], content };
+      } else {
+        customSections.push({ id: secId, content });
+      }
+      return { ...prev, customSections };
+    });
+  };
+
+  // Section Hide / Unhide Toggle
+  const toggleHideSection = (secId) => {
+    setHiddenSections(prev => {
+      const next = { ...prev, [secId]: !prev[secId] };
+      showToast(next[secId] ? 'Section hidden from resume' : 'Section visible on resume');
+      return next;
+    });
+  };
+
+  // Section Delete Handler
+  const handleDeleteSection = (secId) => {
+    const sec = activeSections.find(s => s.id === secId);
+    setActiveSections(prev => prev.filter(s => s.id !== secId));
+    showToast(`Deleted ${sec?.title || 'section'} from resume`);
+  };
+
+  // Re-add deleted section from defaults
+  const handleAddDefaultSection = (secId) => {
+    const templateSec = DEFAULT_SECTIONS.find(s => s.id === secId);
+    if (templateSec && !activeSections.some(s => s.id === secId)) {
+      setActiveSections(prev => [...prev, templateSec]);
+      setShowAddSectionMenu(false);
+      showToast(`Added ${templateSec.title} to resume`);
+    }
+  };
+
+  // Add custom section
+  const handleAddCustomSection = () => {
+    if (!customSectionTitle.trim()) return;
+    const newId = `custom-${Date.now()}`;
+    const newSec = {
+      id: newId,
+      title: customSectionTitle.trim(),
+      deletable: true,
+      hasEye: true,
+      hasDrag: true
+    };
+    setActiveSections(prev => [...prev, newSec]);
+    setResumeData(prev => ({
+      ...prev,
+      customSections: [...(prev.customSections || []), { id: newId, title: customSectionTitle.trim(), content: '' }]
+    }));
+    setCustomSectionTitle('');
+    setShowAddSectionMenu(false);
+    showToast(`Added section: ${newSec.title}`);
+  };
+
+  // Drag & drop handlers
+  const handleDragStart = (e, index) => {
+    setDraggedIndex(index);
+    e.dataTransfer.effectAllowed = 'move';
+    e.dataTransfer.setData('text/plain', index.toString());
+  };
+
+  const handleDragOver = (e, index) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = 'move';
+    if (dragOverIndex !== index) {
+      setDragOverIndex(index);
+    }
+  };
+
+  const handleDrop = (e, index) => {
+    e.preventDefault();
+    if (draggedIndex === null || draggedIndex === index) {
+      setDraggedIndex(null);
+      setDragOverIndex(null);
+      return;
+    }
+    setActiveSections(prev => {
+      const updated = [...prev];
+      const [moved] = updated.splice(draggedIndex, 1);
+      updated.splice(index, 0, moved);
+      return updated;
+    });
+    setDraggedIndex(null);
+    setDragOverIndex(null);
+    showToast('Reordered resume sections! 📄');
+  };
+
+  const handleDragEnd = () => {
+    setDraggedIndex(null);
+    setDragOverIndex(null);
   };
 
   const handleAddNewJob = (newJob) => {
@@ -1102,651 +1541,1187 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
               </button>
             </div>
 
-            {/* Section 1: Personal Details (Initially Collapsed) */}
-            <div 
-              style={{ 
-                flexShrink: 0,
-                borderRadius: '14px', 
-                border: '1px solid #E2E8F0', 
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 2px 8px rgba(15, 23, 42, 0.03)',
-                overflow: 'hidden'
-              }}
-            >
-              <button 
-                onClick={() => toggleSection('details')}
-                style={{ 
-                  width: '100%', 
-                  padding: '14px 18px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between',
-                  border: 'none',
-                  backgroundColor: '#FFFFFF',
-                  cursor: 'pointer',
-                  borderBottom: openSections.details ? '1px solid #F1F5F9' : 'none'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '8px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <User size={15} color="#1A53CF" />
-                  </div>
-                  <span style={{ fontSize: '13.5px', fontWeight: 800, color: '#090C15' }}>Personal Details</span>
-                </div>
-                {openSections.details ? <ChevronUp size={16} color="#64748B" /> : <ChevronDown size={16} color="#64748B" />}
-              </button>
+            {/* Dynamic Reorderable, Hideable, Deletable Section Cards */}
+            {activeSections.map((section, index) => {
+              const isHidden = !!hiddenSections[section.id];
+              const isOpen = !!openSections[section.id];
+              const isBeingDragged = draggedIndex === index;
+              const isDragOver = dragOverIndex === index;
 
-              {openSections.details && (
-                <div style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: '12px', backgroundColor: '#FFFFFF' }}>
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Full Name</label>
-                      <input 
-                        type="text" 
-                        value={resumeData.personalDetails.fullName}
-                        onChange={(e) => updatePersonal('fullName', e.target.value)}
-                        style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
-                        onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
-                        onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Headline</label>
-                      <input 
-                        type="text" 
-                        value={resumeData.personalDetails.headline}
-                        onChange={(e) => updatePersonal('headline', e.target.value)}
-                        style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
-                        onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
-                        onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
-                      />
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Email</label>
-                      <input 
-                        type="email" 
-                        value={resumeData.personalDetails.email}
-                        onChange={(e) => updatePersonal('email', e.target.value)}
-                        style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
-                        onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
-                        onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Phone</label>
-                      <input 
-                        type="text" 
-                        value={resumeData.personalDetails.phone}
-                        onChange={(e) => updatePersonal('phone', e.target.value)}
-                        style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
-                        onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
-                        onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
-                      />
-                    </div>
-                  </div>
-
-                  <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Location</label>
-                      <input 
-                        type="text" 
-                        value={resumeData.personalDetails.location}
-                        onChange={(e) => updatePersonal('location', e.target.value)}
-                        style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
-                        onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
-                        onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
-                      />
-                    </div>
-                    <div>
-                      <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>LinkedIn</label>
-                      <input 
-                        type="text" 
-                        value={resumeData.personalDetails.linkedin}
-                        onChange={(e) => updatePersonal('linkedin', e.target.value)}
-                        style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
-                        onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
-                        onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
-                      />
-                    </div>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Section 2: Professional Summary (Initially Collapsed) */}
-            <div 
-              style={{ 
-                flexShrink: 0,
-                borderRadius: '14px', 
-                border: '1px solid #E2E8F0', 
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 2px 8px rgba(15, 23, 42, 0.03)',
-                overflow: 'hidden'
-              }}
-            >
-              <button 
-                onClick={() => toggleSection('summary')}
-                style={{ 
-                  width: '100%', 
-                  padding: '14px 18px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between',
-                  border: 'none',
-                  backgroundColor: '#FFFFFF',
-                  cursor: 'pointer',
-                  borderBottom: openSections.summary ? '1px solid #F1F5F9' : 'none'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '8px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <FileText size={15} color="#1A53CF" />
-                  </div>
-                  <span style={{ fontSize: '13.5px', fontWeight: 800, color: '#090C15' }}>Professional Summary</span>
-                </div>
-                {openSections.summary ? <ChevronUp size={16} color="#64748B" /> : <ChevronDown size={16} color="#64748B" />}
-              </button>
-
-              {openSections.summary && (
-                <div style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: '10px', backgroundColor: '#FFFFFF' }}>
-                  <textarea 
-                    value={resumeData.summary}
-                    onChange={(e) => updateSummary(e.target.value)}
-                    rows={4}
-                    style={{
-                      width: '100%',
-                      padding: '12px 14px',
-                      borderRadius: '10px',
-                      border: '1.5px solid #E2E8F0',
-                      backgroundColor: '#F8FAFC',
-                      fontSize: '13px',
-                      lineHeight: 1.6,
-                      color: '#090C15',
-                      outline: 'none',
-                      resize: 'vertical',
+              return (
+                <div 
+                  key={section.id}
+                  draggable={section.hasDrag}
+                  onDragStart={(e) => section.hasDrag && handleDragStart(e, index)}
+                  onDragOver={(e) => section.hasDrag && handleDragOver(e, index)}
+                  onDrop={(e) => section.hasDrag && handleDrop(e, index)}
+                  onDragEnd={handleDragEnd}
+                  style={{ 
+                    flexShrink: 0,
+                    borderRadius: '12px', 
+                    border: isDragOver ? '2px solid #1A53CF' : '1px solid #E2E8F0', 
+                    backgroundColor: '#FFFFFF',
+                    boxShadow: isDragOver ? '0 4px 14px rgba(26, 83, 207, 0.18)' : '0 1.5px 5px rgba(15, 23, 42, 0.03)',
+                    overflow: 'hidden',
+                    opacity: isBeingDragged ? 0.45 : 1,
+                    transition: 'border 0.15s ease, box-shadow 0.15s ease, opacity 0.15s ease'
+                  }}
+                >
+                  {/* Section Row Header matching user screenshot */}
+                  <div 
+                    onClick={() => toggleSection(section.id)}
+                    style={{ 
+                      width: '100%', 
+                      padding: '13px 16px', 
+                      display: 'flex', 
+                      alignItems: 'center', 
+                      justifyContent: 'space-between',
+                      backgroundColor: '#FFFFFF',
+                      cursor: 'pointer',
+                      borderBottom: isOpen ? '1px solid #F1F5F9' : 'none',
+                      userSelect: 'none',
                       boxSizing: 'border-box'
                     }}
-                    onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
-                    onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
-                  />
-
-                  {/* AI Quick Enhancers */}
-                  <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
-                    <button
-                      onClick={handleApplyAISummary}
-                      style={{
-                        padding: '6px 12px',
-                        borderRadius: '8px',
-                        backgroundColor: '#EFF6FF',
-                        color: '#1A53CF',
-                        border: '1px solid #BFDBFE',
-                        fontSize: '11.5px',
-                        fontWeight: 700,
-                        cursor: 'pointer',
-                        display: 'inline-flex',
-                        alignItems: 'center',
-                        gap: '5px',
-                        transition: 'all 0.15s ease'
-                      }}
-                      onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#DBEAFE'}
-                      onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#EFF6FF'}
-                    >
-                      <Sparkles size={12} />
-                      <span>Rewrite for Impact</span>
-                    </button>
-                    <button
-                      onClick={() => updateSummary(resumeData.summary.slice(0, 240) + '...')}
-                      style={{
-                        padding: '6px 12px',
-                        borderRadius: '8px',
-                        backgroundColor: '#F8FAFC',
-                        color: '#475569',
-                        border: '1px solid #E2E8F0',
-                        fontSize: '11.5px',
-                        fontWeight: 600,
-                        cursor: 'pointer'
-                      }}
-                    >
-                      Make Concise
-                    </button>
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Section 3: Work Experience (Initially Collapsed, Clean Downward Flow) */}
-            <div 
-              style={{ 
-                flexShrink: 0,
-                borderRadius: '14px', 
-                border: '1px solid #E2E8F0', 
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 2px 8px rgba(15, 23, 42, 0.03)',
-                overflow: 'hidden'
-              }}
-            >
-              <button 
-                onClick={() => toggleSection('experience')}
-                style={{ 
-                  width: '100%', 
-                  padding: '14px 18px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between',
-                  border: 'none',
-                  backgroundColor: '#FFFFFF',
-                  cursor: 'pointer',
-                  borderBottom: openSections.experience ? '1px solid #F1F5F9' : 'none'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '8px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Briefcase size={15} color="#1A53CF" />
-                  </div>
-                  <span style={{ fontSize: '13.5px', fontWeight: 800, color: '#090C15' }}>
-                    Work Experience ({resumeData.experience.length})
-                  </span>
-                </div>
-                {openSections.experience ? <ChevronUp size={16} color="#64748B" /> : <ChevronDown size={16} color="#64748B" />}
-              </button>
-
-              {openSections.experience && (
-                <div style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: '16px', backgroundColor: '#FFFFFF' }}>
-                  {resumeData.experience.map((exp, expIdx) => (
-                    <div 
-                      key={exp.id}
-                      style={{
-                        padding: '16px',
-                        borderRadius: '12px',
-                        border: '1px solid #E2E8F0',
-                        backgroundColor: '#F8FAFC',
-                        display: 'flex',
-                        flexDirection: 'column',
-                        gap: '12px'
-                      }}
-                    >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', flexWrap: 'wrap' }}>
-                        <div style={{ flex: 1, minWidth: '160px' }}>
-                          <input
-                            type="text"
-                            value={exp.title}
-                            onChange={(e) => {
-                              const updated = [...resumeData.experience];
-                              updated[expIdx] = { ...updated[expIdx], title: e.target.value };
-                              setResumeData(prev => ({ ...prev, experience: updated }));
-                            }}
-                            style={{ 
-                              fontSize: '13.5px', 
-                              fontWeight: 800, 
-                              color: '#090C15', 
-                              border: '1px solid transparent', 
-                              backgroundColor: 'transparent',
-                              borderRadius: '6px',
-                              padding: '2px 4px',
-                              width: '100%',
-                              boxSizing: 'border-box',
-                              outline: 'none'
-                            }}
-                            onFocus={(e) => e.target.style.border = '1px solid #CBD5E1'}
-                            onBlur={(e) => e.target.style.border = '1px solid transparent'}
-                          />
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px', flexWrap: 'wrap' }}>
-                            <input
-                              type="text"
-                              value={exp.company}
-                              onChange={(e) => {
-                                const updated = [...resumeData.experience];
-                                updated[expIdx] = { ...updated[expIdx], company: e.target.value };
-                                setResumeData(prev => ({ ...prev, experience: updated }));
-                              }}
-                              style={{ 
-                                fontSize: '12px', 
-                                fontWeight: 700, 
-                                color: '#1A53CF', 
-                                border: '1px solid transparent', 
-                                backgroundColor: 'transparent',
-                                borderRadius: '6px',
-                                padding: '1px 4px',
-                                width: '130px',
-                                outline: 'none'
-                              }}
-                              onFocus={(e) => e.target.style.border = '1px solid #CBD5E1'}
-                              onBlur={(e) => e.target.style.border = '1px solid transparent'}
-                            />
-                            <span style={{ fontSize: '11px', color: '#94A3B8' }}>•</span>
-                            <span style={{ fontSize: '11.5px', color: '#64748B' }}>{exp.location}</span>
-                          </div>
+                  >
+                    {/* Left: Drag Handle (if draggable) + Green Checkmark Circle + Section Title */}
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', minWidth: 0, flex: 1 }}>
+                      {section.hasDrag ? (
+                        <div 
+                          style={{ 
+                            display: 'flex', 
+                            alignItems: 'center', 
+                            justifyContent: 'center', 
+                            color: '#94A3B8', 
+                            cursor: 'grab', 
+                            flexShrink: 0,
+                            padding: '2px 0'
+                          }}
+                          title="Drag to reorder section"
+                          onMouseDown={(e) => e.stopPropagation()}
+                        >
+                          <GripVertical size={16} />
                         </div>
+                      ) : (
+                        <div style={{ width: '6px', flexShrink: 0 }} />
+                      )}
 
-                        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                          <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600, backgroundColor: '#FFFFFF', padding: '3px 8px', borderRadius: '6px', border: '1px solid #E2E8F0' }}>
-                            {exp.startDate} - {exp.endDate}
-                          </span>
-                          {resumeData.experience.length > 1 && (
-                            <button
-                              onClick={() => removeExperienceRole(expIdx)}
-                              style={{
-                                background: 'none',
-                                border: 'none',
-                                cursor: 'pointer',
-                                color: '#94A3B8',
-                                padding: '4px',
-                                borderRadius: '6px',
-                                display: 'flex',
-                                alignItems: 'center'
-                              }}
-                              onMouseEnter={(e) => { e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.backgroundColor = '#FEE2E2'; }}
-                              onMouseLeave={(e) => { e.currentTarget.style.color = '#94A3B8'; e.currentTarget.style.backgroundColor = 'transparent'; }}
-                              title="Delete position"
-                            >
-                              <Trash2 size={14} />
-                            </button>
-                          )}
-                        </div>
+                      {/* Green circle with checkmark badge */}
+                      <div 
+                        style={{ 
+                          width: '20px', 
+                          height: '20px', 
+                          borderRadius: '50%', 
+                          backgroundColor: '#DCFCE7', 
+                          display: 'flex', 
+                          alignItems: 'center', 
+                          justifyContent: 'center', 
+                          flexShrink: 0 
+                        }}
+                      >
+                        <Check size={12} color="#10B981" strokeWidth={3} />
                       </div>
 
-                      {/* Quantified Bullets */}
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                          Quantified Achievement Bullets:
-                        </span>
-                        {exp.bullets.map((b, bIdx) => (
-                          <div key={bIdx} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
-                            <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#1A53CF', marginTop: '14px', flexShrink: 0 }} />
-                            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                              <textarea
-                                value={b}
-                                onChange={(e) => updateExperienceBullet(expIdx, bIdx, e.target.value)}
-                                rows={2}
-                                style={{
-                                  width: '100%',
-                                  padding: '10px 12px',
-                                  borderRadius: '9px',
-                                  border: '1.5px solid #E2E8F0',
-                                  backgroundColor: '#FFFFFF',
-                                  fontSize: '12.5px',
-                                  lineHeight: 1.5,
-                                  color: '#090C15',
-                                  outline: 'none',
-                                  resize: 'vertical',
-                                  boxSizing: 'border-box'
-                                }}
-                                onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; }}
-                                onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; }}
+                      {/* Section Title */}
+                      <span 
+                        style={{ 
+                          fontSize: '13.5px', 
+                          fontWeight: 800, 
+                          color: isHidden ? '#94A3B8' : '#090C15',
+                          textDecoration: isHidden ? 'line-through' : 'none',
+                          overflow: 'hidden',
+                          textOverflow: 'ellipsis',
+                          whiteSpace: 'nowrap'
+                        }}
+                      >
+                        {section.title}
+                        {isHidden && (
+                          <span style={{ fontSize: '11px', fontWeight: 600, color: '#94A3B8', textDecoration: 'none', marginLeft: '6px' }}>
+                            (Hidden)
+                          </span>
+                        )}
+                      </span>
+                    </div>
+
+                    {/* Right: Chevron + Eye/EyeOff + Trash2 */}
+                    <div 
+                      style={{ display: 'flex', alignItems: 'center', gap: '10px', flexShrink: 0 }}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Chevron Toggle */}
+                      <button
+                        type="button"
+                        onClick={() => toggleSection(section.id)}
+                        title={isOpen ? "Collapse section" : "Expand section"}
+                        style={{
+                          background: 'none',
+                          border: 'none',
+                          padding: '4px',
+                          cursor: 'pointer',
+                          display: 'flex',
+                          alignItems: 'center',
+                          color: '#94A3B8',
+                          borderRadius: '6px'
+                        }}
+                        onMouseEnter={(e) => e.currentTarget.style.color = '#475569'}
+                        onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
+                      >
+                        {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                      </button>
+
+                      {/* Eye / EyeOff Icon (Hide/Show on resume) */}
+                      {section.hasEye && (
+                        <button
+                          type="button"
+                          onClick={() => toggleHideSection(section.id)}
+                          title={isHidden ? "Show section on resume" : "Hide section from resume"}
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            padding: '4px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: isHidden ? '#CBD5E1' : '#94A3B8',
+                            borderRadius: '6px',
+                            transition: 'color 0.15s ease'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.color = isHidden ? '#1A53CF' : '#090C15'}
+                          onMouseLeave={(e) => e.currentTarget.style.color = isHidden ? '#CBD5E1' : '#94A3B8'}
+                        >
+                          {isHidden ? <EyeOff size={16} /> : <Eye size={16} />}
+                        </button>
+                      )}
+
+                      {/* Trash2 Icon (Delete section) */}
+                      {section.deletable && (
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteSection(section.id)}
+                          title="Delete section from resume"
+                          style={{
+                            background: 'none',
+                            border: 'none',
+                            padding: '4px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            color: '#94A3B8',
+                            borderRadius: '6px',
+                            transition: 'color 0.15s ease'
+                          }}
+                          onMouseEnter={(e) => e.currentTarget.style.color = '#EF4444'}
+                          onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      )}
+                    </div>
+                  </div>
+
+                  {/* Section Expanded Content Editor */}
+                  {isOpen && (
+                    <div style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: '12px', backgroundColor: '#FFFFFF' }}>
+                      {/* 1. Personal Details Form */}
+                      {section.id === 'details' && (
+                        <>
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Full Name</label>
+                              <input 
+                                type="text" 
+                                value={resumeData.personalDetails.fullName}
+                                onChange={(e) => updatePersonal('fullName', e.target.value)}
+                                style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
+                                onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                                onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
                               />
-                              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Headline</label>
+                              <input 
+                                type="text" 
+                                value={resumeData.personalDetails.headline}
+                                onChange={(e) => updatePersonal('headline', e.target.value)}
+                                style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
+                                onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                                onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
+                              />
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Email</label>
+                              <input 
+                                type="email" 
+                                value={resumeData.personalDetails.email}
+                                onChange={(e) => updatePersonal('email', e.target.value)}
+                                style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
+                                onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                                onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
+                              />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Phone</label>
+                              <input 
+                                type="text" 
+                                value={resumeData.personalDetails.phone}
+                                onChange={(e) => updatePersonal('phone', e.target.value)}
+                                style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
+                                onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                                onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
+                              />
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Location</label>
+                              <input 
+                                type="text" 
+                                value={resumeData.personalDetails.location}
+                                onChange={(e) => updatePersonal('location', e.target.value)}
+                                style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
+                                onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                                onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
+                              />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>LinkedIn</label>
+                              <input 
+                                type="text" 
+                                value={resumeData.personalDetails.linkedin}
+                                onChange={(e) => updatePersonal('linkedin', e.target.value)}
+                                style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
+                                onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                                onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
+                              />
+                            </div>
+                          </div>
+
+                          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '10px' }}>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>GitHub</label>
+                              <input 
+                                type="text" 
+                                value={resumeData.personalDetails.github || ''}
+                                onChange={(e) => updatePersonal('github', e.target.value)}
+                                style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
+                                onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                                onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
+                              />
+                            </div>
+                            <div>
+                              <label style={{ display: 'block', fontSize: '10.5px', fontWeight: 800, color: '#475569', marginBottom: '4px', textTransform: 'uppercase', letterSpacing: '0.04em' }}>Website / Portfolio</label>
+                              <input 
+                                type="text" 
+                                value={resumeData.personalDetails.website || ''}
+                                onChange={(e) => updatePersonal('website', e.target.value)}
+                                style={{ width: '100%', padding: '9px 12px', borderRadius: '9px', border: '1.5px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '13px', color: '#090C15', outline: 'none', boxSizing: 'border-box' }}
+                                onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                                onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
+                              />
+                            </div>
+                          </div>
+                        </>
+                      )}
+
+                      {/* 2. Professional Summary Form */}
+                      {section.id === 'summary' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                          <textarea 
+                            value={resumeData.summary}
+                            onChange={(e) => updateSummary(e.target.value)}
+                            rows={4}
+                            style={{
+                              width: '100%',
+                              padding: '12px 14px',
+                              borderRadius: '10px',
+                              border: '1.5px solid #E2E8F0',
+                              backgroundColor: '#F8FAFC',
+                              fontSize: '13px',
+                              lineHeight: 1.6,
+                              color: '#090C15',
+                              outline: 'none',
+                              resize: 'vertical',
+                              boxSizing: 'border-box'
+                            }}
+                            onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                            onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
+                          />
+
+                          <div style={{ display: 'flex', gap: '8px', flexWrap: 'wrap', alignItems: 'center' }}>
+                            <button
+                              onClick={handleApplyAISummary}
+                              style={{
+                                padding: '6px 12px',
+                                borderRadius: '8px',
+                                backgroundColor: '#EFF6FF',
+                                color: '#1A53CF',
+                                border: '1px solid #BFDBFE',
+                                fontSize: '11.5px',
+                                fontWeight: 700,
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                gap: '5px',
+                                transition: 'all 0.15s ease'
+                              }}
+                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#DBEAFE'}
+                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#EFF6FF'}
+                            >
+                              <Sparkles size={12} />
+                              <span>Rewrite for Impact</span>
+                            </button>
+                            <button
+                              onClick={() => updateSummary(resumeData.summary.slice(0, 240) + '...')}
+                              style={{
+                                padding: '6px 12px',
+                                borderRadius: '8px',
+                                backgroundColor: '#F8FAFC',
+                                color: '#475569',
+                                border: '1px solid #E2E8F0',
+                                fontSize: '11.5px',
+                                fontWeight: 600,
+                                cursor: 'pointer'
+                              }}
+                            >
+                              Make Concise
+                            </button>
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 3. Skills & Interests Form */}
+                      {section.id === 'skills' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          {Object.entries(resumeData.skills).map(([cat, list]) => (
+                            <div key={cat}>
+                              <span style={{ fontSize: '11px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                                {cat === 'languages' ? 'Languages & Core' : (cat === 'frameworks' ? 'Frameworks & Frontend' : (cat === 'architecture' ? 'Architecture' : 'Cloud & DevOps'))}:
+                              </span>
+                              <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
+                                {list.map((s, sIdx) => (
+                                  <span 
+                                    key={sIdx}
+                                    style={{
+                                      display: 'inline-flex',
+                                      alignItems: 'center',
+                                      gap: '5px',
+                                      padding: '4px 10px',
+                                      borderRadius: '999px',
+                                      backgroundColor: '#F1F5F9',
+                                      border: '1px solid #E2E8F0',
+                                      fontSize: '11.5px',
+                                      fontWeight: 600,
+                                      color: '#1E293B'
+                                    }}
+                                  >
+                                    <span>{s}</span>
+                                    <button
+                                      onClick={() => handleRemoveSkill(cat, s)}
+                                      style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#94A3B8', display: 'flex', alignItems: 'center' }}
+                                      onMouseEnter={(e) => e.currentTarget.style.color = '#EF4444'}
+                                      onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
+                                    >
+                                      <X size={12} />
+                                    </button>
+                                  </span>
+                                ))}
+                              </div>
+                            </div>
+                          ))}
+
+                          <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
+                            <select
+                              value={selectedSkillCategory}
+                              onChange={(e) => setSelectedSkillCategory(e.target.value)}
+                              style={{ padding: '8px 10px', borderRadius: '8px', border: '1.5px solid #E2E8F0', fontSize: '12px', outline: 'none', backgroundColor: '#F8FAFC' }}
+                            >
+                              <option value="frameworks">Frameworks</option>
+                              <option value="languages">Languages</option>
+                              <option value="architecture">Architecture</option>
+                              <option value="cloudAndTools">Cloud & DevOps</option>
+                            </select>
+                            <input
+                              type="text"
+                              placeholder="Type skill & press Enter..."
+                              value={newSkillInput}
+                              onChange={(e) => setNewSkillInput(e.target.value)}
+                              onKeyDown={handleAddSkill}
+                              style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1.5px solid #E2E8F0', fontSize: '12.5px', outline: 'none' }}
+                            />
+                          </div>
+                        </div>
+                      )}
+
+                      {/* 4. Work Experience Form */}
+                      {section.id === 'experience' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
+                          {resumeData.experience.map((exp, expIdx) => (
+                            <div 
+                              key={exp.id}
+                              style={{
+                                padding: '16px',
+                                borderRadius: '12px',
+                                border: '1px solid #E2E8F0',
+                                backgroundColor: '#F8FAFC',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '12px'
+                              }}
+                            >
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', flexWrap: 'wrap' }}>
+                                <div style={{ flex: 1, minWidth: '160px' }}>
+                                  <input
+                                    type="text"
+                                    value={exp.title}
+                                    onChange={(e) => {
+                                      const updated = [...resumeData.experience];
+                                      updated[expIdx] = { ...updated[expIdx], title: e.target.value };
+                                      setResumeData(prev => ({ ...prev, experience: updated }));
+                                    }}
+                                    style={{ 
+                                      fontSize: '13.5px', 
+                                      fontWeight: 800, 
+                                      color: '#090C15', 
+                                      border: '1px solid transparent', 
+                                      backgroundColor: 'transparent',
+                                      borderRadius: '6px',
+                                      padding: '2px 4px',
+                                      width: '100%',
+                                      boxSizing: 'border-box',
+                                      outline: 'none'
+                                    }}
+                                    onFocus={(e) => e.target.style.border = '1px solid #CBD5E1'}
+                                    onBlur={(e) => e.target.style.border = '1px solid transparent'}
+                                  />
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px', flexWrap: 'wrap' }}>
+                                    <input
+                                      type="text"
+                                      value={exp.company}
+                                      onChange={(e) => {
+                                        const updated = [...resumeData.experience];
+                                        updated[expIdx] = { ...updated[expIdx], company: e.target.value };
+                                        setResumeData(prev => ({ ...prev, experience: updated }));
+                                      }}
+                                      style={{ 
+                                        fontSize: '12px', 
+                                        fontWeight: 700, 
+                                        color: '#1A53CF', 
+                                        border: '1px solid transparent', 
+                                        backgroundColor: 'transparent',
+                                        borderRadius: '6px',
+                                        padding: '1px 4px',
+                                        width: '130px',
+                                        outline: 'none'
+                                      }}
+                                      onFocus={(e) => e.target.style.border = '1px solid #CBD5E1'}
+                                      onBlur={(e) => e.target.style.border = '1px solid transparent'}
+                                    />
+                                    <span style={{ fontSize: '11px', color: '#94A3B8' }}>•</span>
+                                    <input
+                                      type="text"
+                                      value={exp.location}
+                                      onChange={(e) => {
+                                        const updated = [...resumeData.experience];
+                                        updated[expIdx] = { ...updated[expIdx], location: e.target.value };
+                                        setResumeData(prev => ({ ...prev, experience: updated }));
+                                      }}
+                                      style={{ 
+                                        fontSize: '11.5px', 
+                                        color: '#64748B', 
+                                        border: '1px solid transparent', 
+                                        backgroundColor: 'transparent',
+                                        borderRadius: '6px',
+                                        padding: '1px 4px',
+                                        width: '110px',
+                                        outline: 'none'
+                                      }}
+                                      onFocus={(e) => e.target.style.border = '1px solid #CBD5E1'}
+                                      onBlur={(e) => e.target.style.border = '1px solid transparent'}
+                                    />
+                                  </div>
+                                </div>
+
+                                <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                                  <div style={{ display: 'flex', gap: '4px', alignItems: 'center' }}>
+                                    <input
+                                      type="text"
+                                      value={exp.startDate}
+                                      onChange={(e) => {
+                                        const updated = [...resumeData.experience];
+                                        updated[expIdx] = { ...updated[expIdx], startDate: e.target.value };
+                                        setResumeData(prev => ({ ...prev, experience: updated }));
+                                      }}
+                                      style={{ width: '54px', fontSize: '11px', padding: '2px 4px', borderRadius: '4px', border: '1px solid #CBD5E1', textAlign: 'center' }}
+                                    />
+                                    <span style={{ fontSize: '10px', color: '#94A3B8' }}>-</span>
+                                    <input
+                                      type="text"
+                                      value={exp.endDate}
+                                      onChange={(e) => {
+                                        const updated = [...resumeData.experience];
+                                        updated[expIdx] = { ...updated[expIdx], endDate: e.target.value };
+                                        setResumeData(prev => ({ ...prev, experience: updated }));
+                                      }}
+                                      style={{ width: '54px', fontSize: '11px', padding: '2px 4px', borderRadius: '4px', border: '1px solid #CBD5E1', textAlign: 'center' }}
+                                    />
+                                  </div>
+                                  {resumeData.experience.length > 1 && (
+                                    <button
+                                      onClick={() => removeExperienceRole(expIdx)}
+                                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: '4px', borderRadius: '6px', display: 'flex', alignItems: 'center' }}
+                                      onMouseEnter={(e) => { e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.backgroundColor = '#FEE2E2'; }}
+                                      onMouseLeave={(e) => { e.currentTarget.style.color = '#94A3B8'; e.currentTarget.style.backgroundColor = 'transparent'; }}
+                                      title="Delete position"
+                                    >
+                                      <Trash2 size={14} />
+                                    </button>
+                                  )}
+                                </div>
+                              </div>
+
+                              {/* Bullets */}
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                                <span style={{ fontSize: '10.5px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                                  Quantified Achievement Bullets:
+                                </span>
+                                {exp.bullets.map((b, bIdx) => (
+                                  <div key={bIdx} style={{ display: 'flex', gap: '8px', alignItems: 'flex-start' }}>
+                                    <div style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#1A53CF', marginTop: '14px', flexShrink: 0 }} />
+                                    <div style={{ flex: 1, display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                                      <textarea
+                                        value={b}
+                                        onChange={(e) => updateExperienceBullet(expIdx, bIdx, e.target.value)}
+                                        rows={2}
+                                        style={{
+                                          width: '100%',
+                                          padding: '10px 12px',
+                                          borderRadius: '9px',
+                                          border: '1.5px solid #E2E8F0',
+                                          backgroundColor: '#FFFFFF',
+                                          fontSize: '12.5px',
+                                          lineHeight: 1.5,
+                                          color: '#090C15',
+                                          outline: 'none',
+                                          resize: 'vertical',
+                                          boxSizing: 'border-box'
+                                        }}
+                                        onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; }}
+                                        onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; }}
+                                      />
+                                      <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+                                        <button
+                                          onClick={() => enhanceBulletXYZ(expIdx, bIdx)}
+                                          title="Enhance with Google XYZ formula"
+                                          style={{
+                                            display: 'inline-flex',
+                                            alignItems: 'center',
+                                            gap: '5px',
+                                            padding: '4px 10px',
+                                            borderRadius: '7px',
+                                            backgroundColor: '#EFF6FF',
+                                            color: '#1A53CF',
+                                            border: '1px solid #BFDBFE',
+                                            fontSize: '11px',
+                                            fontWeight: 700,
+                                            cursor: 'pointer'
+                                          }}
+                                        >
+                                          <Sparkles size={11} />
+                                          <span>Google XYZ Formula</span>
+                                        </button>
+                                        {exp.bullets.length > 1 && (
+                                          <button
+                                            onClick={() => {
+                                              const newBullets = exp.bullets.filter((_, i) => i !== bIdx);
+                                              const updated = [...resumeData.experience];
+                                              updated[expIdx] = { ...updated[expIdx], bullets: newBullets };
+                                              setResumeData(prev => ({ ...prev, experience: updated }));
+                                            }}
+                                            title="Remove bullet"
+                                            style={{
+                                              background: 'none',
+                                              border: 'none',
+                                              color: '#94A3B8',
+                                              cursor: 'pointer',
+                                              padding: '4px',
+                                              borderRadius: '6px',
+                                              display: 'flex',
+                                              alignItems: 'center'
+                                            }}
+                                            onMouseEnter={(e) => { e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.backgroundColor = '#FEE2E2'; }}
+                                            onMouseLeave={(e) => { e.currentTarget.style.color = '#94A3B8'; e.currentTarget.style.backgroundColor = 'transparent'; }}
+                                          >
+                                            <Trash2 size={13} />
+                                          </button>
+                                        )}
+                                      </div>
+                                    </div>
+                                  </div>
+                                ))}
+
                                 <button
-                                  onClick={() => enhanceBulletXYZ(expIdx, bIdx)}
-                                  title="Enhance with Google XYZ formula"
+                                  onClick={() => {
+                                    const updated = [...resumeData.experience];
+                                    updated[expIdx] = {
+                                      ...updated[expIdx],
+                                      bullets: [...updated[expIdx].bullets, '']
+                                    };
+                                    setResumeData(prev => ({ ...prev, experience: updated }));
+                                  }}
                                   style={{
                                     display: 'inline-flex',
                                     alignItems: 'center',
-                                    gap: '5px',
-                                    padding: '4px 10px',
-                                    borderRadius: '7px',
-                                    backgroundColor: '#EFF6FF',
+                                    gap: '6px',
+                                    padding: '6px 12px',
+                                    borderRadius: '8px',
+                                    border: '1px dashed #CBD5E1',
+                                    backgroundColor: '#FFFFFF',
                                     color: '#1A53CF',
-                                    border: '1px solid #BFDBFE',
-                                    fontSize: '11px',
+                                    fontSize: '11.5px',
                                     fontWeight: 700,
-                                    cursor: 'pointer'
+                                    cursor: 'pointer',
+                                    width: 'fit-content'
                                   }}
                                 >
-                                  <Sparkles size={11} />
-                                  <span>Google XYZ Formula</span>
+                                  <Plus size={13} />
+                                  <span>Add bullet</span>
                                 </button>
-                                {exp.bullets.length > 1 && (
-                                  <button
-                                    onClick={() => {
-                                      const newBullets = exp.bullets.filter((_, i) => i !== bIdx);
-                                      const updated = [...resumeData.experience];
-                                      updated[expIdx] = { ...updated[expIdx], bullets: newBullets };
-                                      setResumeData(prev => ({ ...prev, experience: updated }));
-                                    }}
-                                    title="Remove bullet"
-                                    style={{
-                                      background: 'none',
-                                      border: 'none',
-                                      color: '#94A3B8',
-                                      cursor: 'pointer',
-                                      padding: '4px',
-                                      borderRadius: '6px',
-                                      display: 'flex',
-                                      alignItems: 'center'
-                                    }}
-                                    onMouseEnter={(e) => { e.currentTarget.style.color = '#EF4444'; e.currentTarget.style.backgroundColor = '#FEE2E2'; }}
-                                    onMouseLeave={(e) => { e.currentTarget.style.color = '#94A3B8'; e.currentTarget.style.backgroundColor = 'transparent'; }}
-                                  >
-                                    <Trash2 size={13} />
-                                  </button>
-                                )}
                               </div>
                             </div>
-                          </div>
-                        ))}
+                          ))}
 
-                        {/* Add Bullet Button */}
-                        <button
-                          onClick={() => {
-                            const updated = [...resumeData.experience];
-                            updated[expIdx] = {
-                              ...updated[expIdx],
-                              bullets: [...updated[expIdx].bullets, '']
-                            };
-                            setResumeData(prev => ({ ...prev, experience: updated }));
-                          }}
-                          style={{
-                            display: 'inline-flex',
-                            alignItems: 'center',
-                            gap: '6px',
-                            padding: '6px 12px',
-                            borderRadius: '8px',
-                            border: '1px dashed #CBD5E1',
-                            backgroundColor: '#FFFFFF',
-                            color: '#1A53CF',
-                            fontSize: '11.5px',
-                            fontWeight: 700,
-                            cursor: 'pointer',
-                            width: 'fit-content'
-                          }}
-                          onMouseEnter={(e) => {
-                            e.currentTarget.style.borderColor = '#1A53CF';
-                            e.currentTarget.style.backgroundColor = '#EFF6FF';
-                          }}
-                          onMouseLeave={(e) => {
-                            e.currentTarget.style.borderColor = '#CBD5E1';
-                            e.currentTarget.style.backgroundColor = '#FFFFFF';
-                          }}
-                        >
-                          <Plus size={13} />
-                          <span>Add bullet</span>
-                        </button>
-                      </div>
+                          <button
+                            onClick={addExperienceRole}
+                            style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'center',
+                              gap: '8px',
+                              padding: '11px 16px',
+                              borderRadius: '10px',
+                              backgroundColor: '#EFF6FF',
+                              color: '#1A53CF',
+                              border: '1.5px dashed #93C5FD',
+                              fontSize: '13px',
+                              fontWeight: 700,
+                              cursor: 'pointer'
+                            }}
+                          >
+                            <Plus size={15} />
+                            <span>Add Work Experience Role</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* 5. Education Form */}
+                      {section.id === 'education' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          {resumeData.education.map((edu, eduIdx) => (
+                            <div key={edu.id} style={{ padding: '14px', borderRadius: '10px', backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <input
+                                  type="text"
+                                  value={edu.institution}
+                                  placeholder="Institution Name"
+                                  onChange={(e) => updateEducation(eduIdx, 'institution', e.target.value)}
+                                  style={{ fontSize: '13px', fontWeight: 800, color: '#090C15', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', flex: 1, backgroundColor: '#FFFFFF' }}
+                                />
+                                <button
+                                  onClick={() => removeEducation(eduIdx)}
+                                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: '4px', marginLeft: '8px' }}
+                                  onMouseEnter={(e) => e.currentTarget.style.color = '#EF4444'}
+                                  onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '8px' }}>
+                                <input
+                                  type="text"
+                                  value={edu.degree}
+                                  placeholder="Degree / Major"
+                                  onChange={(e) => updateEducation(eduIdx, 'degree', e.target.value)}
+                                  style={{ fontSize: '12px', color: '#475569', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                                <input
+                                  type="text"
+                                  value={edu.graduationDate}
+                                  placeholder="Graduation Year"
+                                  onChange={(e) => updateEducation(eduIdx, 'graduationDate', e.target.value)}
+                                  style={{ fontSize: '12px', color: '#64748B', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                              </div>
+                              <input
+                                type="text"
+                                value={edu.honors || ''}
+                                placeholder="Honors / GPA / Activities"
+                                onChange={(e) => updateEducation(eduIdx, 'honors', e.target.value)}
+                                style={{ fontSize: '12px', color: '#059669', fontWeight: 600, border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                              />
+                            </div>
+                          ))}
+                          <button
+                            onClick={addEducation}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 12px', borderRadius: '8px', border: '1px dashed #CBD5E1', backgroundColor: '#FFFFFF', color: '#1A53CF', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+                          >
+                            <Plus size={14} />
+                            <span>Add Education Entry</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* 6. Projects Form */}
+                      {section.id === 'projects' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          {(resumeData.projects || []).map((proj, pIdx) => (
+                            <div key={proj.id} style={{ padding: '14px', borderRadius: '10px', backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <input
+                                  type="text"
+                                  value={proj.title}
+                                  placeholder="Project Title"
+                                  onChange={(e) => updateProject(pIdx, 'title', e.target.value)}
+                                  style={{ fontSize: '13px', fontWeight: 800, color: '#090C15', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', flex: 1, backgroundColor: '#FFFFFF' }}
+                                />
+                                <button
+                                  onClick={() => removeProject(pIdx)}
+                                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: '4px', marginLeft: '8px' }}
+                                  onMouseEnter={(e) => e.currentTarget.style.color = '#EF4444'}
+                                  onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '8px' }}>
+                                <input
+                                  type="text"
+                                  value={proj.subtitle || ''}
+                                  placeholder="Role / Tag"
+                                  onChange={(e) => updateProject(pIdx, 'subtitle', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                                <input
+                                  type="text"
+                                  value={proj.link || ''}
+                                  placeholder="URL / Repo"
+                                  onChange={(e) => updateProject(pIdx, 'link', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                                <input
+                                  type="text"
+                                  value={proj.date || ''}
+                                  placeholder="Date / Year"
+                                  onChange={(e) => updateProject(pIdx, 'date', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                              </div>
+                              <textarea
+                                value={proj.description || ''}
+                                placeholder="Describe key achievements, architecture, and metrics..."
+                                rows={2}
+                                onChange={(e) => updateProject(pIdx, 'description', e.target.value)}
+                                style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '8px', backgroundColor: '#FFFFFF', resize: 'vertical' }}
+                              />
+                            </div>
+                          ))}
+                          <button
+                            onClick={addProject}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 12px', borderRadius: '8px', border: '1px dashed #CBD5E1', backgroundColor: '#FFFFFF', color: '#1A53CF', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+                          >
+                            <Plus size={14} />
+                            <span>Add Project</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* 7. Certifications Form */}
+                      {section.id === 'certifications' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          {(resumeData.certifications || []).map((cert, cIdx) => (
+                            <div key={cert.id} style={{ padding: '14px', borderRadius: '10px', backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <input
+                                  type="text"
+                                  value={cert.name}
+                                  placeholder="Certification Name"
+                                  onChange={(e) => updateCertification(cIdx, 'name', e.target.value)}
+                                  style={{ fontSize: '13px', fontWeight: 800, color: '#090C15', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', flex: 1, backgroundColor: '#FFFFFF' }}
+                                />
+                                <button
+                                  onClick={() => removeCertification(cIdx)}
+                                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: '4px', marginLeft: '8px' }}
+                                  onMouseEnter={(e) => e.currentTarget.style.color = '#EF4444'}
+                                  onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '8px' }}>
+                                <input
+                                  type="text"
+                                  value={cert.issuer}
+                                  placeholder="Issuer"
+                                  onChange={(e) => updateCertification(cIdx, 'issuer', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                                <input
+                                  type="text"
+                                  value={cert.date}
+                                  placeholder="Year / Date"
+                                  onChange={(e) => updateCertification(cIdx, 'date', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                                <input
+                                  type="text"
+                                  value={cert.credentialId || ''}
+                                  placeholder="ID / Link"
+                                  onChange={(e) => updateCertification(cIdx, 'credentialId', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                          <button
+                            onClick={addCertification}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 12px', borderRadius: '8px', border: '1px dashed #CBD5E1', backgroundColor: '#FFFFFF', color: '#1A53CF', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+                          >
+                            <Plus size={14} />
+                            <span>Add Certification</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* 8. Awards & Achievements Form */}
+                      {section.id === 'awards' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          {(resumeData.awards || []).map((award, aIdx) => (
+                            <div key={award.id} style={{ padding: '14px', borderRadius: '10px', backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <input
+                                  type="text"
+                                  value={award.title}
+                                  placeholder="Award Title"
+                                  onChange={(e) => updateAward(aIdx, 'title', e.target.value)}
+                                  style={{ fontSize: '13px', fontWeight: 800, color: '#090C15', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', flex: 1, backgroundColor: '#FFFFFF' }}
+                                />
+                                <button
+                                  onClick={() => removeAward(aIdx)}
+                                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: '4px', marginLeft: '8px' }}
+                                  onMouseEnter={(e) => e.currentTarget.style.color = '#EF4444'}
+                                  onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: '8px' }}>
+                                <input
+                                  type="text"
+                                  value={award.issuer}
+                                  placeholder="Conferring Body / Issuer"
+                                  onChange={(e) => updateAward(aIdx, 'issuer', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                                <input
+                                  type="text"
+                                  value={award.date}
+                                  placeholder="Year / Date"
+                                  onChange={(e) => updateAward(aIdx, 'date', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                              </div>
+                              <textarea
+                                value={award.description || ''}
+                                placeholder="Description of achievement..."
+                                rows={2}
+                                onChange={(e) => updateAward(aIdx, 'description', e.target.value)}
+                                style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '8px', backgroundColor: '#FFFFFF', resize: 'vertical' }}
+                              />
+                            </div>
+                          ))}
+                          <button
+                            onClick={addAward}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 12px', borderRadius: '8px', border: '1px dashed #CBD5E1', backgroundColor: '#FFFFFF', color: '#1A53CF', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+                          >
+                            <Plus size={14} />
+                            <span>Add Award</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* 9. Publications Form */}
+                      {section.id === 'publications' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          {(resumeData.publications || []).map((pub, pIdx) => (
+                            <div key={pub.id} style={{ padding: '14px', borderRadius: '10px', backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <input
+                                  type="text"
+                                  value={pub.title}
+                                  placeholder="Publication Title"
+                                  onChange={(e) => updatePublication(pIdx, 'title', e.target.value)}
+                                  style={{ fontSize: '13px', fontWeight: 800, color: '#090C15', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', flex: 1, backgroundColor: '#FFFFFF' }}
+                                />
+                                <button
+                                  onClick={() => removePublication(pIdx)}
+                                  style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: '4px', marginLeft: '8px' }}
+                                  onMouseEnter={(e) => e.currentTarget.style.color = '#EF4444'}
+                                  onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
+                                >
+                                  <Trash2 size={14} />
+                                </button>
+                              </div>
+                              <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr 1fr', gap: '8px' }}>
+                                <input
+                                  type="text"
+                                  value={pub.publisher}
+                                  placeholder="Journal / Publisher"
+                                  onChange={(e) => updatePublication(pIdx, 'publisher', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                                <input
+                                  type="text"
+                                  value={pub.date}
+                                  placeholder="Year / Date"
+                                  onChange={(e) => updatePublication(pIdx, 'date', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                                <input
+                                  type="text"
+                                  value={pub.link || ''}
+                                  placeholder="DOI / Link"
+                                  onChange={(e) => updatePublication(pIdx, 'link', e.target.value)}
+                                  style={{ fontSize: '12px', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                                />
+                              </div>
+                            </div>
+                          ))}
+                          <button
+                            onClick={addPublication}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 12px', borderRadius: '8px', border: '1px dashed #CBD5E1', backgroundColor: '#FFFFFF', color: '#1A53CF', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+                          >
+                            <Plus size={14} />
+                            <span>Add Publication</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* 10. Languages Form */}
+                      {section.id === 'languages' && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                          {(resumeData.languages || []).map((lang, lIdx) => (
+                            <div key={lang.id} style={{ display: 'grid', gridTemplateColumns: '1fr 1fr auto', gap: '8px', alignItems: 'center', backgroundColor: '#F8FAFC', padding: '8px 12px', borderRadius: '8px', border: '1px solid #E2E8F0' }}>
+                              <input
+                                type="text"
+                                value={lang.language}
+                                placeholder="Language"
+                                onChange={(e) => updateLanguage(lIdx, 'language', e.target.value)}
+                                style={{ fontSize: '12.5px', fontWeight: 700, color: '#090C15', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                              />
+                              <input
+                                type="text"
+                                value={lang.proficiency}
+                                placeholder="Proficiency (e.g. Native, Fluent)"
+                                onChange={(e) => updateLanguage(lIdx, 'proficiency', e.target.value)}
+                                style={{ fontSize: '12px', color: '#475569', border: '1px solid #E2E8F0', borderRadius: '6px', padding: '6px 8px', backgroundColor: '#FFFFFF' }}
+                              />
+                              <button
+                                onClick={() => removeLanguage(lIdx)}
+                                style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: '4px' }}
+                                onMouseEnter={(e) => e.currentTarget.style.color = '#EF4444'}
+                                onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
+                              >
+                                <Trash2 size={14} />
+                              </button>
+                            </div>
+                          ))}
+                          <button
+                            onClick={addLanguage}
+                            style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '6px', padding: '8px 12px', borderRadius: '8px', border: '1px dashed #CBD5E1', backgroundColor: '#FFFFFF', color: '#1A53CF', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
+                          >
+                            <Plus size={14} />
+                            <span>Add Language</span>
+                          </button>
+                        </div>
+                      )}
+
+                      {/* Custom Section Form */}
+                      {!['details', 'summary', 'skills', 'experience', 'education', 'projects', 'certifications', 'awards', 'publications', 'languages'].includes(section.id) && (
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                          <label style={{ fontSize: '11px', fontWeight: 700, color: '#64748B' }}>
+                            Section Content (Markdown or plain text):
+                          </label>
+                          <textarea
+                            value={resumeData.customSections?.find(c => c.id === section.id)?.content || ''}
+                            onChange={(e) => updateCustomSectionContent(section.id, e.target.value)}
+                            rows={4}
+                            placeholder="Enter section details, achievements, or items..."
+                            style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              borderRadius: '8px',
+                              border: '1.5px solid #E2E8F0',
+                              backgroundColor: '#F8FAFC',
+                              fontSize: '12.5px',
+                              lineHeight: 1.5,
+                              color: '#090C15',
+                              outline: 'none',
+                              resize: 'vertical',
+                              boxSizing: 'border-box'
+                            }}
+                          />
+                        </div>
+                      )}
                     </div>
-                  ))}
-
-                  {/* Add Position Button */}
-                  <button
-                    onClick={addExperienceRole}
-                    style={{
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      gap: '8px',
-                      padding: '11px 16px',
-                      borderRadius: '10px',
-                      backgroundColor: '#EFF6FF',
-                      color: '#1A53CF',
-                      border: '1.5px dashed #93C5FD',
-                      fontSize: '13px',
-                      fontWeight: 700,
-                      cursor: 'pointer',
-                      transition: 'all 0.18s ease'
-                    }}
-                    onMouseEnter={(e) => {
-                      e.currentTarget.style.backgroundColor = '#DBEAFE';
-                      e.currentTarget.style.borderColor = '#1A53CF';
-                    }}
-                    onMouseLeave={(e) => {
-                      e.currentTarget.style.backgroundColor = '#EFF6FF';
-                      e.currentTarget.style.borderColor = '#93C5FD';
-                    }}
-                  >
-                    <Plus size={15} />
-                    <span>Add Work Experience Role</span>
-                  </button>
+                  )}
                 </div>
-              )}
-            </div>
+              );
+            })}
 
-            {/* Section 4: Skills & Competencies (Initially Collapsed) */}
-            <div 
-              style={{ 
-                flexShrink: 0,
-                borderRadius: '14px', 
-                border: '1px solid #E2E8F0', 
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 2px 8px rgba(15, 23, 42, 0.03)',
-                overflow: 'hidden'
-              }}
-            >
-              <button 
-                onClick={() => toggleSection('skills')}
-                style={{ 
-                  width: '100%', 
-                  padding: '14px 18px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between',
-                  border: 'none',
-                  backgroundColor: '#FFFFFF',
+            {/* Option to Add Section below all sections */}
+            <div style={{ position: 'relative', marginTop: '4px', marginBottom: '24px' }}>
+              <button
+                type="button"
+                onClick={() => setShowAddSectionMenu(prev => !prev)}
+                style={{
+                  width: '100%',
+                  padding: '12px 16px',
+                  borderRadius: '12px',
+                  backgroundColor: '#EFF6FF',
+                  color: '#1A53CF',
+                  border: '1.5px dashed #93C5FD',
+                  fontSize: '13px',
+                  fontWeight: 700,
                   cursor: 'pointer',
-                  borderBottom: openSections.skills ? '1px solid #F1F5F9' : 'none'
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '8px',
+                  transition: 'all 0.15s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.backgroundColor = '#DBEAFE';
+                  e.currentTarget.style.borderColor = '#1A53CF';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.backgroundColor = '#EFF6FF';
+                  e.currentTarget.style.borderColor = '#93C5FD';
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '8px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <Sliders size={15} color="#1A53CF" />
-                  </div>
-                  <span style={{ fontSize: '13.5px', fontWeight: 800, color: '#090C15' }}>Skills & Competencies</span>
-                </div>
-                {openSections.skills ? <ChevronUp size={16} color="#64748B" /> : <ChevronDown size={16} color="#64748B" />}
+                <Plus size={16} strokeWidth={2.5} />
+                <span>Add Section</span>
               </button>
 
-              {openSections.skills && (
-                <div style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: '12px', backgroundColor: '#FFFFFF' }}>
-                  {Object.entries(resumeData.skills).map(([cat, list]) => (
-                    <div key={cat}>
-                      <span style={{ fontSize: '11px', fontWeight: 800, color: '#475569', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
-                        {cat === 'languages' ? 'Languages & Core' : (cat === 'frameworks' ? 'Frameworks & Frontend' : (cat === 'architecture' ? 'Architecture' : 'Cloud & DevOps'))}:
+              {/* Add Section Menu Dropdown */}
+              {showAddSectionMenu && (
+                <div
+                  style={{
+                    position: 'absolute',
+                    top: 'calc(100% + 8px)',
+                    left: 0,
+                    right: 0,
+                    zIndex: 50,
+                    backgroundColor: '#FFFFFF',
+                    borderRadius: '14px',
+                    border: '1px solid #E2E8F0',
+                    boxShadow: '0 12px 32px rgba(15, 23, 42, 0.14)',
+                    padding: '16px',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    gap: '14px'
+                  }}
+                >
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#090C15', textTransform: 'uppercase', letterSpacing: '0.04em' }}>
+                      Add Section to Resume
+                    </span>
+                    <button
+                      onClick={() => setShowAddSectionMenu(false)}
+                      style={{ background: 'none', border: 'none', cursor: 'pointer', color: '#94A3B8', padding: '2px' }}
+                    >
+                      <X size={16} />
+                    </button>
+                  </div>
+
+                  {/* Available Standard Sections that are currently not in activeSections */}
+                  {DEFAULT_SECTIONS.filter(ds => !activeSections.some(as => as.id === ds.id)).length > 0 && (
+                    <div>
+                      <span style={{ fontSize: '11px', fontWeight: 700, color: '#64748B', display: 'block', marginBottom: '8px' }}>
+                        Restore Standard Sections:
                       </span>
-                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '6px', marginTop: '6px' }}>
-                        {list.map((s, sIdx) => (
-                          <span 
-                            key={sIdx}
+                      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '8px' }}>
+                        {DEFAULT_SECTIONS.filter(ds => !activeSections.some(as => as.id === ds.id)).map(s => (
+                          <button
+                            key={s.id}
+                            onClick={() => handleAddDefaultSection(s.id)}
                             style={{
                               display: 'inline-flex',
                               alignItems: 'center',
-                              gap: '5px',
-                              padding: '4px 10px',
-                              borderRadius: '999px',
-                              backgroundColor: '#F1F5F9',
-                              border: '1px solid #E2E8F0',
-                              fontSize: '11.5px',
-                              fontWeight: 600,
-                              color: '#1E293B'
+                              gap: '6px',
+                              padding: '6px 12px',
+                              borderRadius: '8px',
+                              border: '1px solid #CBD5E1',
+                              backgroundColor: '#F8FAFC',
+                              fontSize: '12px',
+                              fontWeight: 700,
+                              color: '#090C15',
+                              cursor: 'pointer'
                             }}
+                            onMouseEnter={(e) => { e.currentTarget.style.borderColor = '#1A53CF'; e.currentTarget.style.backgroundColor = '#EFF6FF'; }}
+                            onMouseLeave={(e) => { e.currentTarget.style.borderColor = '#CBD5E1'; e.currentTarget.style.backgroundColor = '#F8FAFC'; }}
                           >
-                            <span>{s}</span>
-                            <button
-                              onClick={() => handleRemoveSkill(cat, s)}
-                              style={{ background: 'none', border: 'none', cursor: 'pointer', padding: 0, color: '#94A3B8', display: 'flex', alignItems: 'center' }}
-                              onMouseEnter={(e) => e.currentTarget.style.color = '#EF4444'}
-                              onMouseLeave={(e) => e.currentTarget.style.color = '#94A3B8'}
-                            >
-                              <X size={12} />
-                            </button>
-                          </span>
+                            <Plus size={13} color="#1A53CF" />
+                            <span>{s.title}</span>
+                          </button>
                         ))}
                       </div>
                     </div>
-                  ))}
+                  )}
 
-                  {/* Add Skill Input */}
-                  <div style={{ display: 'flex', gap: '8px', marginTop: '6px' }}>
-                    <select
-                      value={selectedSkillCategory}
-                      onChange={(e) => setSelectedSkillCategory(e.target.value)}
-                      style={{ padding: '8px 10px', borderRadius: '8px', border: '1.5px solid #E2E8F0', fontSize: '12px', outline: 'none', backgroundColor: '#F8FAFC' }}
-                    >
-                      <option value="frameworks">Frameworks</option>
-                      <option value="languages">Languages</option>
-                      <option value="architecture">Architecture</option>
-                      <option value="cloudAndTools">Cloud & DevOps</option>
-                    </select>
-                    <input
-                      type="text"
-                      placeholder="Type skill & press Enter..."
-                      value={newSkillInput}
-                      onChange={(e) => setNewSkillInput(e.target.value)}
-                      onKeyDown={handleAddSkill}
-                      style={{ flex: 1, padding: '8px 12px', borderRadius: '8px', border: '1.5px solid #E2E8F0', fontSize: '12.5px', outline: 'none' }}
-                    />
-                  </div>
-                </div>
-              )}
-            </div>
-
-            {/* Section 5: Education & Credentials (Initially Collapsed) */}
-            <div 
-              style={{ 
-                flexShrink: 0,
-                borderRadius: '14px', 
-                border: '1px solid #E2E8F0', 
-                backgroundColor: '#FFFFFF',
-                boxShadow: '0 2px 8px rgba(15, 23, 42, 0.03)',
-                overflow: 'hidden',
-                marginBottom: '20px'
-              }}
-            >
-              <button 
-                onClick={() => toggleSection('education')}
-                style={{ 
-                  width: '100%', 
-                  padding: '14px 18px', 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between',
-                  border: 'none',
-                  backgroundColor: '#FFFFFF',
-                  cursor: 'pointer',
-                  borderBottom: openSections.education ? '1px solid #F1F5F9' : 'none'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div style={{ width: '28px', height: '28px', borderRadius: '8px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <GraduationCap size={15} color="#1A53CF" />
-                  </div>
-                  <span style={{ fontSize: '13.5px', fontWeight: 800, color: '#090C15' }}>Education & Credentials</span>
-                </div>
-                {openSections.education ? <ChevronUp size={16} color="#64748B" /> : <ChevronDown size={16} color="#64748B" />}
-              </button>
-
-              {openSections.education && (
-                <div style={{ padding: '16px 18px', display: 'flex', flexDirection: 'column', gap: '10px', backgroundColor: '#FFFFFF' }}>
-                  {resumeData.education.map((edu) => (
-                    <div key={edu.id} style={{ padding: '12px 14px', borderRadius: '10px', backgroundColor: '#F8FAFC', border: '1px solid #E2E8F0' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                        <span style={{ fontSize: '13px', fontWeight: 800, color: '#090C15' }}>{edu.institution}</span>
-                        <span style={{ fontSize: '11px', color: '#94A3B8' }}>{edu.graduationDate}</span>
-                      </div>
-                      <p style={{ fontSize: '12px', color: '#475569', margin: '3px 0 0 0' }}>{edu.degree}</p>
-                      <p style={{ fontSize: '11.5px', color: '#059669', margin: '3px 0 0 0', fontWeight: 700 }}>{edu.honors}</p>
+                  {/* Create Custom Section */}
+                  <div style={{ borderTop: '1px solid #F1F5F9', paddingTop: '12px' }}>
+                    <span style={{ fontSize: '11px', fontWeight: 700, color: '#64748B', display: 'block', marginBottom: '8px' }}>
+                      Add Custom Section:
+                    </span>
+                    <div style={{ display: 'flex', gap: '8px' }}>
+                      <input
+                        type="text"
+                        placeholder="e.g. Volunteering, Patents, References..."
+                        value={customSectionTitle}
+                        onChange={(e) => setCustomSectionTitle(e.target.value)}
+                        onKeyDown={(e) => { if (e.key === 'Enter') handleAddCustomSection(); }}
+                        style={{
+                          flex: 1,
+                          padding: '8px 12px',
+                          borderRadius: '8px',
+                          border: '1.5px solid #E2E8F0',
+                          fontSize: '12.5px',
+                          outline: 'none',
+                          backgroundColor: '#F8FAFC'
+                        }}
+                        onFocus={(e) => { e.target.style.borderColor = '#1A53CF'; e.target.style.backgroundColor = '#FFFFFF'; }}
+                        onBlur={(e) => { e.target.style.borderColor = '#E2E8F0'; e.target.style.backgroundColor = '#F8FAFC'; }}
+                      />
+                      <button
+                        onClick={handleAddCustomSection}
+                        style={{
+                          padding: '8px 14px',
+                          borderRadius: '8px',
+                          backgroundColor: '#1A53CF',
+                          color: '#FFFFFF',
+                          border: 'none',
+                          fontSize: '12px',
+                          fontWeight: 700,
+                          cursor: 'pointer',
+                          flexShrink: 0
+                        }}
+                      >
+                        Add
+                      </button>
                     </div>
-                  ))}
+                  </div>
                 </div>
               )}
             </div>
@@ -1911,129 +2886,197 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
               }} 
             />
 
-            {/* Section: Professional Summary */}
-            <div style={{ marginBottom: '16px' }}>
-              <h3 
-                style={{ 
-                  fontSize: '12px', 
-                  fontWeight: 800, 
-                  textTransform: 'uppercase', 
-                  letterSpacing: '0.08em', 
-                  color: resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'nordicminimal' ? '#334155' : '#171717')),
-                  borderBottom: '1px solid #E2E8F0',
-                  paddingBottom: '3px',
-                  marginBottom: '6px'
-                }}
-              >
-                Professional Summary
-              </h3>
-              <p style={{ fontSize: '11px', lineHeight: 1.5, color: '#334155', margin: 0, textAlign: 'justify' }}>
-                {resumeData.summary}
-              </p>
-            </div>
+            {/* Dynamically Rendered Sections (In activeSections order, excluding hiddenSections and personal details which is pinned in header) */}
+            {activeSections.filter(sec => sec.id !== 'details' && !hiddenSections[sec.id]).map(sec => {
+              const sectionId = sec.id;
+              const sectionTitle = sec.title;
+              const accentColor = resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'londonbureau' ? '#1E40AF' : (resumeData.template === 'nordicminimal' ? '#334155' : '#171717')));
 
-            {/* Section: Work Experience */}
-            <div style={{ marginBottom: '16px' }}>
-              <h3 
-                style={{ 
-                  fontSize: '12px', 
-                  fontWeight: 800, 
-                  textTransform: 'uppercase', 
-                  letterSpacing: '0.08em', 
-                  color: resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'nordicminimal' ? '#334155' : '#171717')),
-                  borderBottom: '1px solid #E2E8F0',
-                  paddingBottom: '3px',
-                  marginBottom: '10px'
-                }}
-              >
-                Work Experience
-              </h3>
+              return (
+                <div key={sec.id} style={{ marginBottom: '16px' }}>
+                  {/* Dynamic Section Heading */}
+                  <h3 
+                    style={{ 
+                      fontSize: '12px', 
+                      fontWeight: 800, 
+                      textTransform: 'uppercase', 
+                      letterSpacing: '0.08em', 
+                      color: accentColor,
+                      borderBottom: '1px solid #E2E8F0',
+                      paddingBottom: '3px',
+                      marginBottom: '8px'
+                    }}
+                  >
+                    {sectionTitle}
+                  </h3>
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                {resumeData.experience.map(exp => (
-                  <div key={exp.id}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '2px' }}>
-                      <div>
-                        <strong style={{ fontSize: '12.5px', color: '#111827', fontWeight: 800 }}>{exp.company}</strong>
-                        <span style={{ fontSize: '11.5px', color: '#475569', fontStyle: 'italic' }}> — {exp.title}</span>
-                      </div>
-                      <span style={{ fontSize: '11px', color: '#475569', fontWeight: 600 }}>
-                        {exp.startDate} – {exp.endDate} | {exp.location}
-                      </span>
-                    </div>
+                  {/* Dynamic Section Content based on sectionId */}
+                  {sectionId === 'summary' && (
+                    <p style={{ fontSize: '11px', lineHeight: 1.5, color: '#334155', margin: 0, textAlign: 'justify' }}>
+                      {resumeData.summary}
+                    </p>
+                  )}
 
-                    <ul style={{ margin: '4px 0 0 16px', padding: 0, fontSize: '11px', lineHeight: 1.45, color: '#334155' }}>
-                      {exp.bullets.map((b, i) => (
-                        <li key={i} style={{ marginBottom: '3px' }}>
-                          {b}
-                        </li>
+                  {sectionId === 'experience' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+                      {resumeData.experience.map(exp => (
+                        <div key={exp.id}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '2px' }}>
+                            <div>
+                              <strong style={{ fontSize: '12.5px', color: '#111827', fontWeight: 800 }}>{exp.company}</strong>
+                              <span style={{ fontSize: '11.5px', color: '#475569', fontStyle: 'italic' }}> — {exp.title}</span>
+                            </div>
+                            <span style={{ fontSize: '11px', color: '#475569', fontWeight: 600 }}>
+                              {exp.startDate} – {exp.endDate} | {exp.location}
+                            </span>
+                          </div>
+                          <ul style={{ margin: '4px 0 0 16px', padding: 0, fontSize: '11px', lineHeight: 1.45, color: '#334155' }}>
+                            {exp.bullets.map((b, i) => (
+                              <li key={i} style={{ marginBottom: '3px' }}>
+                                {b}
+                              </li>
+                            ))}
+                          </ul>
+                        </div>
                       ))}
-                    </ul>
-                  </div>
-                ))}
-              </div>
-            </div>
+                    </div>
+                  )}
 
-            {/* Section: Technical Skills */}
-            <div style={{ marginBottom: '16px' }}>
-              <h3 
-                style={{ 
-                  fontSize: '12px', 
-                  fontWeight: 800, 
-                  textTransform: 'uppercase', 
-                  letterSpacing: '0.08em', 
-                  color: resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'nordicminimal' ? '#334155' : '#171717')),
-                  borderBottom: '1px solid #E2E8F0',
-                  paddingBottom: '3px',
-                  marginBottom: '8px'
-                }}
-              >
-                Technical Skills & Architecture
-              </h3>
+                  {sectionId === 'skills' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: '#334155', lineHeight: 1.5 }}>
+                      {resumeData.skills?.languages?.length > 0 && (
+                        <div>
+                          <strong style={{ color: '#111827' }}>Languages & Core: </strong>
+                          <span>{resumeData.skills.languages.join(', ')}</span>
+                        </div>
+                      )}
+                      {resumeData.skills?.frameworks?.length > 0 && (
+                        <div>
+                          <strong style={{ color: '#111827' }}>Frameworks & Frontend: </strong>
+                          <span>{resumeData.skills.frameworks.join(', ')}</span>
+                        </div>
+                      )}
+                      {(resumeData.skills?.architecture?.length > 0 || resumeData.skills?.cloudAndTools?.length > 0) && (
+                        <div>
+                          <strong style={{ color: '#111827' }}>Architecture & Cloud: </strong>
+                          <span>
+                            {[
+                              (resumeData.skills?.architecture || []).join(', '),
+                              (resumeData.skills?.cloudAndTools || []).join(', ')
+                            ].filter(Boolean).join(' · ')}
+                          </span>
+                        </div>
+                      )}
+                    </div>
+                  )}
 
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: '#334155', lineHeight: 1.5 }}>
-                <div>
-                  <strong style={{ color: '#111827' }}>Languages & Core: </strong>
-                  <span>{resumeData.skills.languages.join(', ')}</span>
-                </div>
-                <div>
-                  <strong style={{ color: '#111827' }}>Frameworks & Frontend: </strong>
-                  <span>{resumeData.skills.frameworks.join(', ')}</span>
-                </div>
-                <div>
-                  <strong style={{ color: '#111827' }}>Architecture & Cloud: </strong>
-                  <span>{resumeData.skills.architecture.join(', ')} · {resumeData.skills.cloudAndTools.join(', ')}</span>
-                </div>
-              </div>
-            </div>
+                  {sectionId === 'education' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      {resumeData.education.map(edu => (
+                        <div key={edu.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11.5px' }}>
+                          <div>
+                            <strong style={{ color: '#111827' }}>{edu.institution}</strong>
+                            <span style={{ color: '#475569' }}> — {edu.degree} {edu.honors ? `(${edu.honors})` : ''}</span>
+                          </div>
+                          <span style={{ fontSize: '11px', color: '#64748B' }}>{edu.graduationDate}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-            {/* Section: Education */}
-            <div>
-              <h3 
-                style={{ 
-                  fontSize: '12px', 
-                  fontWeight: 800, 
-                  textTransform: 'uppercase', 
-                  letterSpacing: '0.08em', 
-                  color: resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'nordicminimal' ? '#334155' : '#171717')),
-                  borderBottom: '1px solid #E2E8F0',
-                  paddingBottom: '3px',
-                  marginBottom: '8px'
-                }}
-              >
-                Education
-              </h3>
+                  {sectionId === 'projects' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                      {(resumeData.projects || []).map(proj => (
+                        <div key={proj.id}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
+                            <div>
+                              <strong style={{ fontSize: '12px', color: '#111827' }}>{proj.title}</strong>
+                              {proj.subtitle && <span style={{ fontSize: '11px', color: '#475569', fontStyle: 'italic' }}> — {proj.subtitle}</span>}
+                              {proj.link && <span style={{ fontSize: '10.5px', color: '#1A53CF', marginLeft: '6px' }}>({proj.link})</span>}
+                            </div>
+                            {proj.date && <span style={{ fontSize: '11px', color: '#64748B' }}>{proj.date}</span>}
+                          </div>
+                          {proj.description && (
+                            <p style={{ margin: '3px 0 0 0', fontSize: '11px', lineHeight: 1.45, color: '#334155' }}>
+                              {proj.description}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
 
-              {resumeData.education.map(edu => (
-                <div key={edu.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11.5px' }}>
-                  <div>
-                    <strong style={{ color: '#111827' }}>{edu.institution}</strong>
-                    <span style={{ color: '#475569' }}> — {edu.degree} ({edu.honors})</span>
-                  </div>
-                  <span style={{ fontSize: '11px', color: '#64748B' }}>{edu.graduationDate}</span>
+                  {sectionId === 'certifications' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      {(resumeData.certifications || []).map(cert => (
+                        <div key={cert.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
+                          <div>
+                            <strong style={{ color: '#111827' }}>{cert.name}</strong>
+                            <span style={{ color: '#475569' }}> — {cert.issuer}</span>
+                            {cert.credentialId && <span style={{ color: '#94A3B8', fontSize: '10px', marginLeft: '6px' }}>ID: {cert.credentialId}</span>}
+                          </div>
+                          <span style={{ color: '#64748B', fontSize: '11px' }}>{cert.date}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {sectionId === 'awards' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
+                      {(resumeData.awards || []).map(award => (
+                        <div key={award.id}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
+                            <div>
+                              <strong style={{ color: '#111827' }}>{award.title}</strong>
+                              <span style={{ color: '#475569' }}> — {award.issuer}</span>
+                            </div>
+                            <span style={{ color: '#64748B', fontSize: '11px' }}>{award.date}</span>
+                          </div>
+                          {award.description && (
+                            <p style={{ margin: '2px 0 0 0', fontSize: '10.5px', lineHeight: 1.4, color: '#334155' }}>
+                              {award.description}
+                            </p>
+                          )}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {sectionId === 'publications' && (
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                      {(resumeData.publications || []).map(pub => (
+                        <div key={pub.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
+                          <div>
+                            <strong style={{ color: '#111827' }}>"{pub.title}"</strong>
+                            <span style={{ color: '#475569' }}> — {pub.publisher}</span>
+                            {pub.link && <span style={{ color: '#1A53CF', fontSize: '10px', marginLeft: '6px' }}>({pub.link})</span>}
+                          </div>
+                          <span style={{ color: '#64748B', fontSize: '11px' }}>{pub.date}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {sectionId === 'languages' && (
+                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', fontSize: '11px', color: '#334155' }}>
+                      {(resumeData.languages || []).map(lang => (
+                        <div key={lang.id} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                          <strong style={{ color: '#111827' }}>{lang.language}:</strong>
+                          <span>{lang.proficiency}</span>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Custom Sections */}
+                  {!['summary', 'experience', 'skills', 'education', 'projects', 'certifications', 'awards', 'publications', 'languages'].includes(sectionId) && (
+                    <p style={{ fontSize: '11px', lineHeight: 1.5, color: '#334155', margin: 0, whiteSpace: 'pre-wrap' }}>
+                      {resumeData.customSections?.find(c => c.id === sectionId)?.content || 'Custom section details...'}
+                    </p>
+                  )}
                 </div>
-              ))}
-            </div>
+              );
+            })}
 
           </div>
           </div>
