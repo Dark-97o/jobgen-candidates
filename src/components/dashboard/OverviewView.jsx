@@ -827,7 +827,7 @@ export default function OverviewView({ onNavigate }) {
 
               {/* 3. Small: Progressively Smaller Circular Card with LinkedIn Button */}
               <a
-                href="https://linkedin.com"
+                href="https://www.linkedin.com/company/jobgenai/"
                 target="_blank"
                 rel="noreferrer"
                 title="LinkedIn Profile"

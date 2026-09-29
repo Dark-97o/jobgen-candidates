@@ -1,10 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   Mail, 
   Download, 
   CheckCircle2, 
   Check, 
   ArrowLeft, 
+  ArrowRight,
+  FileText,
   Edit3, 
   RefreshCw, 
   Building2, 
@@ -375,6 +377,62 @@ export default function CoverLetterView({ onBackToDocuments }) {
   const [dragOverIndex, setDragOverIndex] = useState(null);
   const [showAddSectionMenu, setShowAddSectionMenu] = useState(false);
   const [customSectionTitle, setCustomSectionTitle] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Dynamic Page Splitting for Physical A4 Sheet (1123px Fixed Height)
+  const visibleLetterSections = useMemo(() => {
+    return activeSections.filter(sec => !hiddenSections[sec.id]);
+  }, [activeSections, hiddenSections]);
+
+  const coverPages = useMemo(() => {
+    // Estimate section heights in cover letter
+    const getWeight = (id) => {
+      switch (id) {
+        case 'recipient': return 100;
+        case 'opening': return Math.max(90, Math.ceil((letterData.openingParagraph?.length || 100) / 3.8));
+        case 'body': return Math.max(120, Math.ceil((letterData.bodyParagraph?.length || 150) / 3.8));
+        case 'highlights': return Math.max(100, (letterData.highlightBullets?.length || 2) * 55);
+        case 'closing': return Math.max(80, Math.ceil((letterData.closingParagraph?.length || 80) / 3.8));
+        case 'signoff': return 120;
+        default: return 120;
+      }
+    };
+
+    // Usable height inside 1123px A4 sheet:
+    // Page 1 budget: ~800px (after 96px padding + 140px header + continuation footer)
+    // Page 2 budget: ~920px (after 96px padding + 50px continuation header)
+    const PAGE_1_LIMIT = 800;
+    const PAGE_N_LIMIT = 920;
+
+    const pages = [[]];
+    let currentLimit = PAGE_1_LIMIT;
+    let currentHeight = 0;
+
+    for (const sec of visibleLetterSections) {
+      const w = getWeight(sec.id);
+      if (pages.length === 1 && currentHeight + w > currentLimit && pages[0].length > 0) {
+        pages.push([sec]);
+        currentLimit = PAGE_N_LIMIT;
+        currentHeight = w;
+      } else if (pages.length > 1 && currentHeight + w > currentLimit && pages[pages.length - 1].length > 0) {
+        pages.push([sec]);
+        currentHeight = w;
+      } else {
+        pages[pages.length - 1].push(sec);
+        currentHeight += w;
+      }
+    }
+
+    return pages;
+  }, [visibleLetterSections, letterData]);
+
+  const totalPages = Math.max(1, coverPages.length);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages, currentPage]);
 
   const carouselRef = useRef(null);
   const leftEditorRef = useRef(null);
@@ -600,7 +658,25 @@ export default function CoverLetterView({ onBackToDocuments }) {
   };
 
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)', overflow: 'hidden', backgroundColor: '#F8FAFC' }}>
+    <div 
+      style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        height: '1320px', 
+        minHeight: '1320px',
+        maxHeight: '1320px',
+        overflow: 'hidden', 
+        backgroundColor: '#FFFFFF',
+        borderRadius: '24px',
+        border: '1.5px solid #E2E8F0',
+        boxShadow: '0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 4px 14px rgba(15, 23, 42, 0.04)',
+        boxSizing: 'border-box',
+        position: 'relative',
+        width: '100%',
+        maxWidth: '1440px',
+        margin: '0 auto'
+      }}
+    >
       
       {/* Toast Notification */}
       {toastMessage && (
@@ -635,6 +711,8 @@ export default function CoverLetterView({ onBackToDocuments }) {
           height: '62px', 
           backgroundColor: '#FFFFFF', 
           borderBottom: '1px solid #E2E8F0', 
+          borderTopLeftRadius: '24px',
+          borderTopRightRadius: '24px',
           padding: '0 24px', 
           display: 'flex', 
           alignItems: 'center', 
@@ -840,6 +918,7 @@ export default function CoverLetterView({ onBackToDocuments }) {
             flexDirection: 'column', 
             backgroundColor: '#FFFFFF', 
             borderRight: '1px solid #E2E8F0',
+            borderBottomLeftRadius: '24px',
             overflow: 'hidden'
           }}
         >
@@ -1613,7 +1692,8 @@ export default function CoverLetterView({ onBackToDocuments }) {
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center', 
-            padding: '32px 24px',
+            padding: '24px 24px 48px 24px',
+            borderBottomRightRadius: '24px',
             position: 'relative'
           }}
         >
@@ -1661,154 +1741,398 @@ export default function CoverLetterView({ onBackToDocuments }) {
               Fit
             </button>
             <span style={{ color: '#CBD5E1' }}>|</span>
-            <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
-              Page 1 of 1
-            </span>
-          </div>
+            
+            {/* Page Navigation Controls */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <button 
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                title="Previous Page"
+                style={{ 
+                  border: 'none', 
+                  background: 'none', 
+                  cursor: currentPage === 1 ? 'not-allowed' : 'pointer', 
+                  opacity: currentPage === 1 ? 0.35 : 1,
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  padding: '2px 4px', 
+                  color: '#334155' 
+                }}
+              >
+                <ChevronLeft size={14} />
+              </button>
+              
+              <span style={{ fontSize: '11px', color: '#090C15', fontWeight: 700, minWidth: '68px', textAlign: 'center' }}>
+                Page {currentPage} of {totalPages}
+              </span>
 
-          {/* Letterhead Paper Canvas */}
-          <div 
-            style={{
-              width: '794px',
-              minHeight: '1123px',
-              position: 'relative',
-              zIndex: 10,
-              backgroundColor: '#FFFFFF',
-              boxShadow: '0 18px 50px rgba(15, 23, 42, 0.12), 0 2px 10px rgba(0, 0, 0, 0.04)',
-              borderRadius: '2px',
-              padding: letterData.template === 'sidebar' ? '0px' : '64px 72px',
-              boxSizing: 'border-box',
-              transform: `scale(${zoomLevel / 100})`,
-              transformOrigin: 'top center',
-              fontFamily: letterData.template === 'modern' || letterData.template === 'balanced' || letterData.template === 'sidebar' ? 'Inter, "Segoe UI", Arial, sans-serif' : '"Noto Serif", Georgia, serif',
-              color: '#111827',
-              transition: 'transform 0.15s ease',
-              display: letterData.template === 'sidebar' ? 'flex' : 'block'
-            }}
-          >
-            {/* Sidebar Template Layout */}
-            {letterData.template === 'sidebar' ? (
+              <button 
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                title="Next Page"
+                style={{ 
+                  border: 'none', 
+                  background: 'none', 
+                  cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', 
+                  opacity: currentPage === totalPages ? 0.35 : 1,
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  padding: '2px 4px', 
+                  color: '#334155' 
+                }}
+              >
+                <ChevronRight size={14} />
+              </button>
+            </div>
+
+            {/* Option to go to next page if there is more content */}
+            {totalPages > 1 && currentPage < totalPages && (
               <>
-                {/* Left Identity Column */}
-                <div style={{ width: '240px', backgroundColor: '#F8FAFC', borderRight: '1px solid #E2E8F0', padding: '56px 28px', boxSizing: 'border-box' }}>
-                  <div style={{ width: '46px', height: '46px', borderRadius: '12px', backgroundColor: '#0F172A', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 900, marginBottom: '20px' }}>
-                    AW
-                  </div>
-                  <h1 style={{ fontSize: '20px', fontWeight: 900, color: '#0F172A', margin: '0 0 6px 0', lineHeight: 1.2 }}>
-                    {letterData.candidateName}
-                  </h1>
-                  <p style={{ fontSize: '11.5px', color: '#64748B', fontWeight: 600, margin: '0 0 24px 0' }}>
-                    {letterData.candidateTitle}
-                  </p>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '11px', color: '#475569' }}>
-                    <div>
-                      <span style={{ display: 'block', fontWeight: 800, color: '#090C15', textTransform: 'uppercase', fontSize: '10px' }}>Location</span>
-                      <span>{letterData.location}</span>
-                    </div>
-                    <div>
-                      <span style={{ display: 'block', fontWeight: 800, color: '#090C15', textTransform: 'uppercase', fontSize: '10px' }}>Email</span>
-                      <span style={{ color: '#1A53CF', wordBreak: 'break-all' }}>{letterData.email}</span>
-                    </div>
-                    <div>
-                      <span style={{ display: 'block', fontWeight: 800, color: '#090C15', textTransform: 'uppercase', fontSize: '10px' }}>Phone</span>
-                      <span>{letterData.phone}</span>
-                    </div>
-                    <div>
-                      <span style={{ display: 'block', fontWeight: 800, color: '#090C15', textTransform: 'uppercase', fontSize: '10px' }}>LinkedIn</span>
-                      <span style={{ wordBreak: 'break-all' }}>{letterData.linkedin}</span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Body Column */}
-                <div style={{ flex: 1, padding: '56px 48px', boxSizing: 'border-box' }}>
-                  {activeSections
-                    .filter(sec => !hiddenSections[sec.id])
-                    .map(sec => renderCanvasSection(sec.id))}
-                </div>
-              </>
-            ) : (
-              /* Standard Letterhead Templates (Classic, Modern, Executive, Monogram) */
-              <>
-                {/* Letterhead Header according to template */}
-                <div style={{ marginBottom: '24px' }}>
-                  {letterData.template === 'initials' && (
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
-                      <div style={{ width: '42px', height: '42px', borderRadius: '50%', border: '2px solid #047857', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, color: '#047857', fontSize: '15px' }}>
-                        AW
-                      </div>
-                      <div>
-                        <h1 style={{ fontSize: '24px', fontWeight: 900, color: '#047857', margin: 0 }}>
-                          {letterData.candidateName}
-                        </h1>
-                        <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#64748B' }}>
-                          {letterData.candidateTitle}
-                        </p>
-                      </div>
-                    </div>
-                  )}
-
-                  {letterData.template === 'balanced' && (
-                    <div style={{ padding: '16px 20px', backgroundColor: '#0F172A', color: '#FFFFFF', borderRadius: '8px', marginBottom: '18px' }}>
-                      <h1 style={{ fontSize: '24px', fontWeight: 900, letterSpacing: '-0.02em', margin: '0 0 4px 0', color: '#FFFFFF' }}>
-                        {letterData.candidateName}
-                      </h1>
-                      <div style={{ display: 'flex', gap: '8px 14px', flexWrap: 'wrap', fontSize: '11px', color: '#94A3B8' }}>
-                        <span>{letterData.location}</span>
-                        <span>•</span>
-                        <span>{letterData.phone}</span>
-                        <span>•</span>
-                        <span style={{ color: '#60A5FA' }}>{letterData.email}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {letterData.template !== 'balanced' && letterData.template !== 'initials' && (
-                    <div>
-                      <h1 
-                        style={{ 
-                          fontSize: '26px', 
-                          fontWeight: 900, 
-                          letterSpacing: '-0.02em', 
-                          color: letterData.template === 'modern' ? '#1A53CF' : '#0F172A',
-                          margin: '0 0 6px 0' 
-                        }}
-                      >
-                        {letterData.candidateName}
-                      </h1>
-                      
-                      <div style={{ display: 'flex', gap: '8px 14px', flexWrap: 'wrap', fontSize: '11.5px', color: '#475569', fontWeight: 500 }}>
-                        <span>{letterData.location}</span>
-                        <span>•</span>
-                        <span>{letterData.phone}</span>
-                        <span>•</span>
-                        <span style={{ color: '#1A53CF', fontWeight: 600 }}>{letterData.email}</span>
-                        <span>•</span>
-                        <span>{letterData.linkedin}</span>
-                      </div>
-                    </div>
-                  )}
-
-                  {/* Horizontal Divider Keyline */}
-                  <div 
-                    style={{ 
-                      height: letterData.template === 'modern' ? '2.5px' : '1.5px', 
-                      backgroundColor: letterData.template === 'modern' ? '#1A53CF' : letterData.template === 'initials' ? '#A7F3D0' : '#D1D5DB', 
-                      marginTop: '14px' 
-                    }} 
-                  />
-                </div>
-
-                {/* Dynamic Content Sections in exact user-ordered & unhidden sequence */}
-                <div style={{ display: 'flex', flexDirection: 'column' }}>
-                  {activeSections
-                    .filter(sec => !hiddenSections[sec.id])
-                    .map(sec => renderCanvasSection(sec.id))}
-                </div>
+                <span style={{ color: '#CBD5E1' }}>|</span>
+                <button
+                  onClick={() => setCurrentPage(prev => prev + 1)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    backgroundColor: '#1A53CF',
+                    color: '#FFFFFF',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 6px rgba(26, 83, 207, 0.28)',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1541A6'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1A53CF'}
+                >
+                  <span>Next Page</span>
+                  <ArrowRight size={12} />
+                </button>
               </>
             )}
+          </div>
 
+          {/* Quick Page Indicator Pills if Multi-page */}
+          {totalPages > 1 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+              {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  style={{
+                    padding: '4px 12px',
+                    borderRadius: '8px',
+                    border: currentPage === pageNum ? '1.5px solid #1A53CF' : '1px solid #CBD5E1',
+                    backgroundColor: currentPage === pageNum ? '#EFF6FF' : '#FFFFFF',
+                    color: currentPage === pageNum ? '#1A53CF' : '#64748B',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: currentPage === pageNum ? '0 2px 8px rgba(26, 83, 207, 0.15)' : 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <FileText size={12} />
+                  <span>Page {pageNum}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Scaled paper bounding box wrapper with fixed physical A4 aspect bounds */}
+          <div 
+            style={{
+              width: `${794 * (zoomLevel / 100)}px`,
+              height: `${1123 * (zoomLevel / 100)}px`,
+              minHeight: `${1123 * (zoomLevel / 100)}px`,
+              maxHeight: `${1123 * (zoomLevel / 100)}px`,
+              position: 'relative',
+              zIndex: 10,
+              flexShrink: 0,
+              margin: '0 auto',
+              transition: 'width 0.15s ease, height 0.15s ease'
+            }}
+          >
+            {/* Authentic Physical A4 Letterhead Paper (Fixed 794x1123px) */}
+            <div 
+              style={{
+                width: '794px',
+                height: '1123px',
+                minHeight: '1123px',
+                maxHeight: '1123px',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 18px 50px rgba(15, 23, 42, 0.12), 0 2px 10px rgba(0, 0, 0, 0.04)',
+                borderRadius: '4px',
+                padding: letterData.template === 'sidebar' ? '0px' : '48px 60px',
+                boxSizing: 'border-box',
+                transform: `scale(${zoomLevel / 100})`,
+                transformOrigin: 'top left',
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: letterData.template === 'sidebar' ? 'row' : 'column',
+                fontFamily: letterData.template === 'modern' || letterData.template === 'balanced' || letterData.template === 'sidebar' ? 'Inter, "Segoe UI", Arial, sans-serif' : '"Noto Serif", Georgia, serif',
+                color: '#111827',
+                transition: 'transform 0.15s ease'
+              }}
+            >
+              {currentPage === 1 ? (
+                <>
+                  {/* Sidebar Template Layout for Page 1 */}
+                  {letterData.template === 'sidebar' ? (
+                    <>
+                      {/* Left Identity Column */}
+                      <div style={{ width: '240px', backgroundColor: '#F8FAFC', borderRight: '1px solid #E2E8F0', padding: '52px 28px', boxSizing: 'border-box' }}>
+                        <div style={{ width: '46px', height: '46px', borderRadius: '12px', backgroundColor: '#0F172A', color: '#FFFFFF', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: '18px', fontWeight: 900, marginBottom: '20px' }}>
+                          AW
+                        </div>
+                        <h1 style={{ fontSize: '20px', fontWeight: 900, color: '#0F172A', margin: '0 0 6px 0', lineHeight: 1.2 }}>
+                          {letterData.candidateName}
+                        </h1>
+                        <p style={{ fontSize: '11.5px', color: '#64748B', fontWeight: 600, margin: '0 0 24px 0' }}>
+                          {letterData.candidateTitle}
+                        </p>
+
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', fontSize: '11px', color: '#475569' }}>
+                          <div>
+                            <span style={{ display: 'block', fontWeight: 800, color: '#090C15', textTransform: 'uppercase', fontSize: '10px' }}>Location</span>
+                            <span>{letterData.location}</span>
+                          </div>
+                          <div>
+                            <span style={{ display: 'block', fontWeight: 800, color: '#090C15', textTransform: 'uppercase', fontSize: '10px' }}>Email</span>
+                            <span style={{ color: '#1A53CF', wordBreak: 'break-all' }}>{letterData.email}</span>
+                          </div>
+                          <div>
+                            <span style={{ display: 'block', fontWeight: 800, color: '#090C15', textTransform: 'uppercase', fontSize: '10px' }}>Phone</span>
+                            <span>{letterData.phone}</span>
+                          </div>
+                          <div>
+                            <span style={{ display: 'block', fontWeight: 800, color: '#090C15', textTransform: 'uppercase', fontSize: '10px' }}>LinkedIn</span>
+                            <span style={{ wordBreak: 'break-all' }}>{letterData.linkedin}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Right Body Column */}
+                      <div style={{ flex: 1, padding: '52px 44px', boxSizing: 'border-box', display: 'flex', flexDirection: 'column' }}>
+                        <div style={{ flex: 1, minHeight: 0 }}>
+                          {(coverPages[0] || []).map(sec => renderCanvasSection(sec.id))}
+                        </div>
+
+                        {/* Option to go to next page if there is more content */}
+                        {totalPages > 1 && (
+                          <div 
+                            onClick={() => setCurrentPage(2)}
+                            style={{
+                              marginTop: 'auto',
+                              paddingTop: '8px',
+                              borderTop: '1px dashed #CBD5E1',
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              cursor: 'pointer',
+                              fontSize: '11px',
+                              color: '#1A53CF',
+                              fontWeight: 700,
+                              userSelect: 'none'
+                            }}
+                          >
+                            <span style={{ color: '#64748B', fontWeight: 500, fontStyle: 'italic' }}>
+                              Page 1 of {totalPages} · Continued on Page 2
+                            </span>
+                            <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                              Go to Next Page <ArrowRight size={13} />
+                            </span>
+                          </div>
+                        )}
+                      </div>
+                    </>
+                  ) : (
+                    /* Standard Letterhead Templates (Classic, Modern, Executive, Balanced) */
+                    <>
+                      {/* Letterhead Header according to template */}
+                      <div style={{ marginBottom: '20px' }}>
+                        {letterData.template === 'initials' && (
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '14px', marginBottom: '14px' }}>
+                            <div style={{ width: '42px', height: '42px', borderRadius: '50%', border: '2px solid #047857', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 900, color: '#047857', fontSize: '15px' }}>
+                              AW
+                            </div>
+                            <div>
+                              <h1 style={{ fontSize: '24px', fontWeight: 900, color: '#047857', margin: 0 }}>
+                                {letterData.candidateName}
+                              </h1>
+                              <p style={{ margin: '2px 0 0 0', fontSize: '12px', color: '#64748B' }}>
+                                {letterData.candidateTitle}
+                              </p>
+                            </div>
+                          </div>
+                        )}
+
+                        {letterData.template === 'balanced' && (
+                          <div style={{ padding: '16px 20px', backgroundColor: '#0F172A', color: '#FFFFFF', borderRadius: '8px', marginBottom: '16px' }}>
+                            <h1 style={{ fontSize: '24px', fontWeight: 900, letterSpacing: '-0.02em', margin: '0 0 4px 0', color: '#FFFFFF' }}>
+                              {letterData.candidateName}
+                            </h1>
+                            <div style={{ display: 'flex', gap: '8px 14px', flexWrap: 'wrap', fontSize: '11px', color: '#94A3B8' }}>
+                              <span>{letterData.location}</span>
+                              <span>•</span>
+                              <span>{letterData.phone}</span>
+                              <span>•</span>
+                              <span style={{ color: '#60A5FA' }}>{letterData.email}</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {letterData.template !== 'balanced' && letterData.template !== 'initials' && (
+                          <div>
+                            <h1 
+                              style={{ 
+                                fontSize: '26px', 
+                                fontWeight: 900, 
+                                letterSpacing: '-0.02em', 
+                                color: letterData.template === 'modern' ? '#1A53CF' : '#0F172A',
+                                margin: '0 0 6px 0' 
+                              }}
+                            >
+                              {letterData.candidateName}
+                            </h1>
+                            
+                            <div style={{ display: 'flex', gap: '8px 14px', flexWrap: 'wrap', fontSize: '11.5px', color: '#475569', fontWeight: 500 }}>
+                              <span>{letterData.location}</span>
+                              <span>•</span>
+                              <span>{letterData.phone}</span>
+                              <span>•</span>
+                              <span style={{ color: '#1A53CF', fontWeight: 600 }}>{letterData.email}</span>
+                              <span>•</span>
+                              <span>{letterData.linkedin}</span>
+                            </div>
+                          </div>
+                        )}
+
+                        {/* Horizontal Divider Keyline */}
+                        <div 
+                          style={{ 
+                            height: letterData.template === 'modern' ? '2.5px' : '1.5px', 
+                            backgroundColor: letterData.template === 'modern' ? '#1A53CF' : letterData.template === 'initials' ? '#A7F3D0' : '#D1D5DB', 
+                            marginTop: '12px' 
+                          }} 
+                        />
+                      </div>
+
+                      {/* Dynamic Content Sections in exact user-ordered & unhidden sequence */}
+                      <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+                        {(coverPages[0] || []).map(sec => renderCanvasSection(sec.id))}
+                      </div>
+
+                      {/* Option to go to next page if there is more content */}
+                      {totalPages > 1 && (
+                        <div 
+                          onClick={() => setCurrentPage(2)}
+                          style={{
+                            marginTop: 'auto',
+                            paddingTop: '8px',
+                            borderTop: '1px dashed #CBD5E1',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'space-between',
+                            cursor: 'pointer',
+                            fontSize: '11px',
+                            color: '#1A53CF',
+                            fontWeight: 700,
+                            userSelect: 'none'
+                          }}
+                        >
+                          <span style={{ color: '#64748B', fontWeight: 500, fontStyle: 'italic' }}>
+                            Page 1 of {totalPages} · Continued on Page 2
+                          </span>
+                          <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                            Go to Next Page <ArrowRight size={13} />
+                          </span>
+                        </div>
+                      )}
+                    </>
+                  )}
+                </>
+              ) : (
+                /* Page 2+ for Cover Letter */
+                <div style={{ width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                  {/* Continuation Header */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1.5px solid #111827', marginBottom: '16px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <h2 style={{ fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#111827', margin: 0 }}>
+                        {letterData.candidateName}
+                      </h2>
+                      <span style={{ fontSize: '11px', color: '#64748B' }}>— Cover Letter (Page {currentPage} of {totalPages})</span>
+                    </div>
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        background: 'none',
+                        border: 'none',
+                        color: '#1A53CF',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        padding: '2px 6px'
+                      }}
+                    >
+                      <ArrowLeft size={12} />
+                      <span>Previous Page</span>
+                    </button>
+                  </div>
+
+                  {/* Sections for Page 2+ */}
+                  <div style={{ flex: 1, minHeight: 0, display: 'flex', flexDirection: 'column' }}>
+                    {(coverPages[currentPage - 1] || []).map(sec => renderCanvasSection(sec.id))}
+                  </div>
+
+                  {/* Bottom Footer for Page 2+ */}
+                  <div 
+                    style={{
+                      marginTop: 'auto',
+                      paddingTop: '8px',
+                      borderTop: '1px solid #F1F5F9',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      fontSize: '10.5px',
+                      color: '#94A3B8'
+                    }}
+                  >
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        background: 'none',
+                        border: 'none',
+                        color: '#1A53CF',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <ArrowLeft size={12} />
+                      <span>Back to Page 1</span>
+                    </button>
+                    <span>Page {currentPage} of {totalPages}</span>
+                  </div>
+                </div>
+              )}
+            </div>
           </div>
         </div>
 

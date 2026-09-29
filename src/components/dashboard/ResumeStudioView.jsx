@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, useMemo } from 'react';
 import { 
   FileText, 
   Download, 
@@ -34,6 +34,8 @@ import {
   Phone, 
   User,
   BookOpen,
+  ArrowLeft,
+  ArrowRight,
   X
 } from 'lucide-react';
 import AddJobModal from './AddJobModal';
@@ -532,6 +534,64 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
   const [autoFitZoom, setAutoFitZoom] = useState(85);
   const [newSkillInput, setNewSkillInput] = useState('');
   const [selectedSkillCategory, setSelectedSkillCategory] = useState('frameworks');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Dynamic Page Splitting for Physical A4 Sheets (1123px Fixed Height)
+  const visibleResumeSections = useMemo(() => {
+    return activeSections.filter(sec => sec.id !== 'details' && !hiddenSections[sec.id]);
+  }, [activeSections, hiddenSections]);
+
+  const resumePages = useMemo(() => {
+    const getWeight = (id) => {
+      switch (id) {
+        case 'summary': return 85;
+        case 'skills': return 110;
+        case 'experience': return Math.max(120, (resumeData.experience?.length || 1) * 140);
+        case 'education': return Math.max(90, (resumeData.education?.length || 1) * 60);
+        case 'projects': return Math.max(100, (resumeData.projects?.length || 1) * 85);
+        case 'certifications': return Math.max(70, (resumeData.certifications?.length || 1) * 45);
+        case 'awards': return Math.max(70, (resumeData.awards?.length || 1) * 45);
+        case 'publications': return Math.max(60, (resumeData.publications?.length || 1) * 40);
+        case 'languages': return 65;
+        default: return 90;
+      }
+    };
+
+    // Usable height inside 1123px A4 sheet:
+    // Page 1 budget: ~820px (after padding + header + continuation banner)
+    // Page 2+ budget: ~920px (after padding + continuation header + footer)
+    const PAGE_1_LIMIT = 820;
+    const PAGE_N_LIMIT = 920;
+
+    const pages = [[]];
+    let currentLimit = PAGE_1_LIMIT;
+    let currentHeight = 0;
+
+    for (const sec of visibleResumeSections) {
+      const w = getWeight(sec.id);
+      if (pages.length === 1 && currentHeight + w > currentLimit && pages[0].length > 0) {
+        pages.push([sec]);
+        currentLimit = PAGE_N_LIMIT;
+        currentHeight = w;
+      } else if (pages.length > 1 && currentHeight + w > currentLimit && pages[pages.length - 1].length > 0) {
+        pages.push([sec]);
+        currentHeight = w;
+      } else {
+        pages[pages.length - 1].push(sec);
+        currentHeight += w;
+      }
+    }
+
+    return pages;
+  }, [visibleResumeSections, resumeData]);
+
+  const totalPages = Math.max(1, resumePages.length);
+
+  useEffect(() => {
+    if (currentPage > totalPages) {
+      setCurrentPage(totalPages);
+    }
+  }, [totalPages, currentPage]);
 
   const carouselRef = useRef(null);
   const rightCanvasRef = useRef(null);
@@ -1052,8 +1112,221 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
     showToast(`Added ${newJob.company} — ${newJob.title}!`);
   };
 
+  const renderResumeSection = (sec) => {
+    const sectionId = sec.id;
+    const sectionTitle = sec.title;
+    const accentColor = resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'londonbureau' ? '#1E40AF' : (resumeData.template === 'nordicminimal' ? '#334155' : '#171717')));
+
+    return (
+      <div key={sec.id} style={{ marginBottom: '14px' }}>
+        {/* Dynamic Section Heading */}
+        <h3 
+          style={{ 
+            fontSize: '12px', 
+            fontWeight: 800, 
+            textTransform: 'uppercase', 
+            letterSpacing: '0.08em', 
+            color: accentColor,
+            borderBottom: '1px solid #E2E8F0',
+            paddingBottom: '3px',
+            marginBottom: '7px'
+          }}
+        >
+          {sectionTitle}
+        </h3>
+
+        {/* Dynamic Section Content based on sectionId */}
+        {sectionId === 'summary' && (
+          <p style={{ fontSize: '11px', lineHeight: 1.5, color: '#334155', margin: 0, textAlign: 'justify' }}>
+            {resumeData.summary}
+          </p>
+        )}
+
+        {sectionId === 'experience' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+            {resumeData.experience.map(exp => (
+              <div key={exp.id}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '2px' }}>
+                  <div>
+                    <strong style={{ fontSize: '12px', color: '#111827', fontWeight: 800 }}>{exp.company}</strong>
+                    <span style={{ fontSize: '11.5px', color: '#475569', fontStyle: 'italic' }}> — {exp.title}</span>
+                  </div>
+                  <span style={{ fontSize: '10.5px', color: '#475569', fontWeight: 600 }}>
+                    {exp.startDate} – {exp.endDate} | {exp.location}
+                  </span>
+                </div>
+                <ul style={{ margin: '3px 0 0 16px', padding: 0, fontSize: '10.5px', lineHeight: 1.4, color: '#334155' }}>
+                  {exp.bullets.map((b, i) => (
+                    <li key={i} style={{ marginBottom: '2px' }}>
+                      {b}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {sectionId === 'skills' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '10.5px', color: '#334155', lineHeight: 1.45 }}>
+            {resumeData.skills?.languages?.length > 0 && (
+              <div>
+                <strong style={{ color: '#111827' }}>Languages & Core: </strong>
+                <span>{resumeData.skills.languages.join(', ')}</span>
+              </div>
+            )}
+            {resumeData.skills?.frameworks?.length > 0 && (
+              <div>
+                <strong style={{ color: '#111827' }}>Frameworks & Libraries: </strong>
+                <span>{resumeData.skills.frameworks.join(', ')}</span>
+              </div>
+            )}
+            {resumeData.skills?.tools?.length > 0 && (
+              <div>
+                <strong style={{ color: '#111827' }}>Cloud & Architecture: </strong>
+                <span>{resumeData.skills.tools.join(', ')}</span>
+              </div>
+            )}
+            {resumeData.skills?.practices?.length > 0 && (
+              <div>
+                <strong style={{ color: '#111827' }}>Leadership & Engineering: </strong>
+                <span>{resumeData.skills.practices.join(', ')}</span>
+              </div>
+            )}
+          </div>
+        )}
+
+        {sectionId === 'education' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {resumeData.education.map(edu => (
+              <div key={edu.id}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
+                  <div>
+                    <strong style={{ color: '#111827' }}>{edu.institution}</strong>
+                    <span style={{ color: '#475569' }}> — {edu.degree}</span>
+                  </div>
+                  <span style={{ color: '#64748B', fontSize: '10.5px' }}>{edu.startDate} – {edu.endDate}</span>
+                </div>
+                {edu.highlights && (
+                  <p style={{ margin: '2px 0 0 0', fontSize: '10.5px', color: '#475569' }}>
+                    {edu.highlights}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {sectionId === 'projects' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            {(resumeData.projects || []).map(proj => (
+              <div key={proj.id}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
+                  <div>
+                    <strong style={{ color: '#111827' }}>{proj.title}</strong>
+                    <span style={{ color: '#1A53CF', fontSize: '10px', marginLeft: '6px' }}>({proj.link})</span>
+                  </div>
+                  <span style={{ color: '#64748B', fontSize: '10.5px' }}>{proj.technologies}</span>
+                </div>
+                <p style={{ margin: '2px 0 0 0', fontSize: '10.5px', lineHeight: 1.4, color: '#334155' }}>
+                  {proj.description}
+                </p>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {sectionId === 'certifications' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+            {(resumeData.certifications || []).map(cert => (
+              <div key={cert.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
+                <div>
+                  <strong style={{ color: '#111827' }}>{cert.name}</strong>
+                  <span style={{ color: '#475569' }}> — {cert.issuer}</span>
+                </div>
+                <span style={{ color: '#64748B', fontSize: '10.5px' }}>{cert.date}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {sectionId === 'awards' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+            {(resumeData.awards || []).map(award => (
+              <div key={award.id}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
+                  <div>
+                    <strong style={{ color: '#111827' }}>{award.title}</strong>
+                    <span style={{ color: '#475569' }}> — {award.issuer}</span>
+                  </div>
+                  <span style={{ color: '#64748B', fontSize: '10.5px' }}>{award.date}</span>
+                </div>
+                {award.description && (
+                  <p style={{ margin: '2px 0 0 0', fontSize: '10.5px', lineHeight: 1.4, color: '#334155' }}>
+                    {award.description}
+                  </p>
+                )}
+              </div>
+            ))}
+          </div>
+        )}
+
+        {sectionId === 'publications' && (
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+            {(resumeData.publications || []).map(pub => (
+              <div key={pub.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
+                <div>
+                  <strong style={{ color: '#111827' }}>"{pub.title}"</strong>
+                  <span style={{ color: '#475569' }}> — {pub.publisher}</span>
+                  {pub.link && <span style={{ color: '#1A53CF', fontSize: '10px', marginLeft: '6px' }}>({pub.link})</span>}
+                </div>
+                <span style={{ color: '#64748B', fontSize: '10.5px' }}>{pub.date}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {sectionId === 'languages' && (
+          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '12px', fontSize: '10.5px', color: '#334155' }}>
+            {(resumeData.languages || []).map(lang => (
+              <div key={lang.id} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                <strong style={{ color: '#111827' }}>{lang.language}:</strong>
+                <span>{lang.proficiency}</span>
+              </div>
+            ))}
+          </div>
+        )}
+
+        {/* Custom Sections */}
+        {!['summary', 'experience', 'skills', 'education', 'projects', 'certifications', 'awards', 'publications', 'languages'].includes(sectionId) && (
+          <p style={{ fontSize: '11px', lineHeight: 1.5, color: '#334155', margin: 0, whiteSpace: 'pre-wrap' }}>
+            {resumeData.customSections?.find(c => c.id === sectionId)?.content || 'Custom section details...'}
+          </p>
+        )}
+      </div>
+    );
+  };
+
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: 'calc(100vh - 64px)', overflow: 'hidden', backgroundColor: '#F8FAFC' }}>
+    <div 
+      style={{ 
+        display: 'flex', 
+        flexDirection: 'column', 
+        height: '1320px', 
+        minHeight: '1320px',
+        maxHeight: '1320px',
+        overflow: 'hidden', 
+        backgroundColor: '#FFFFFF',
+        borderRadius: '24px',
+        border: '1.5px solid #E2E8F0',
+        boxShadow: '0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 4px 14px rgba(15, 23, 42, 0.04)',
+        boxSizing: 'border-box',
+        position: 'relative',
+        width: '100%',
+        maxWidth: '1440px',
+        margin: '0 auto'
+      }}
+    >
       
       {/* Toast Notification */}
       {toastMessage && (
@@ -1088,6 +1361,8 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
           height: '62px', 
           backgroundColor: '#FFFFFF', 
           borderBottom: '1px solid #E2E8F0', 
+          borderTopLeftRadius: '24px',
+          borderTopRightRadius: '24px',
           padding: '0 28px', 
           display: 'flex', 
           alignItems: 'center', 
@@ -1280,6 +1555,7 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
             flexDirection: 'column', 
             backgroundColor: '#FFFFFF', 
             borderRight: '1px solid #E2E8F0',
+            borderBottomLeftRadius: '24px',
             overflow: 'hidden'
           }}
         >
@@ -2756,7 +3032,8 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center', 
-            padding: '24px 20px 80px 20px',
+            padding: '24px 20px 48px 20px',
+            borderBottomRightRadius: '24px',
             position: 'relative'
           }}
           data-lenis-prevent="true"
@@ -2806,284 +3083,302 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
               Fit
             </button>
             <span style={{ color: '#CBD5E1' }}>|</span>
-            <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>
-              Page 1 of 1
-            </span>
+            
+            {/* Page Navigation Controls */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+              <button 
+                onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                disabled={currentPage === 1}
+                title="Previous Page"
+                style={{ 
+                  border: 'none', 
+                  background: 'none', 
+                  cursor: currentPage === 1 ? 'not-allowed' : 'pointer', 
+                  opacity: currentPage === 1 ? 0.35 : 1,
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  padding: '2px 4px', 
+                  color: '#334155' 
+                }}
+              >
+                <ChevronLeft size={14} />
+              </button>
+              
+              <span style={{ fontSize: '11px', color: '#090C15', fontWeight: 700, minWidth: '68px', textAlign: 'center' }}>
+                Page {currentPage} of {totalPages}
+              </span>
+
+              <button 
+                onClick={() => setCurrentPage(prev => Math.min(totalPages, prev + 1))}
+                disabled={currentPage === totalPages}
+                title="Next Page"
+                style={{ 
+                  border: 'none', 
+                  background: 'none', 
+                  cursor: currentPage === totalPages ? 'not-allowed' : 'pointer', 
+                  opacity: currentPage === totalPages ? 0.35 : 1,
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  padding: '2px 4px', 
+                  color: '#334155' 
+                }}
+              >
+                <ChevronRight size={14} />
+              </button>
+            </div>
+
+            {/* Option to go to next page if there is more content */}
+            {totalPages > 1 && currentPage < totalPages && (
+              <>
+                <span style={{ color: '#CBD5E1' }}>|</span>
+                <button
+                  onClick={() => setCurrentPage(prev => prev + 1)}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '4px',
+                    padding: '3px 10px',
+                    borderRadius: '999px',
+                    backgroundColor: '#1A53CF',
+                    color: '#FFFFFF',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    border: 'none',
+                    cursor: 'pointer',
+                    boxShadow: '0 2px 6px rgba(26, 83, 207, 0.28)',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#1541A6'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#1A53CF'}
+                >
+                  <span>Next Page</span>
+                  <ArrowRight size={12} />
+                </button>
+              </>
+            )}
           </div>
 
-          {/* Scaled paper bounding box wrapper so parent canvas measures exact visual bounds */}
+          {/* Quick Page Indicator Pills if Multi-page */}
+          {totalPages > 1 && (
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '16px' }}>
+              {Array.from({ length: totalPages }, (_, idx) => idx + 1).map((pageNum) => (
+                <button
+                  key={pageNum}
+                  onClick={() => setCurrentPage(pageNum)}
+                  style={{
+                    padding: '4px 12px',
+                    borderRadius: '8px',
+                    border: currentPage === pageNum ? '1.5px solid #1A53CF' : '1px solid #CBD5E1',
+                    backgroundColor: currentPage === pageNum ? '#EFF6FF' : '#FFFFFF',
+                    color: currentPage === pageNum ? '#1A53CF' : '#64748B',
+                    fontSize: '11px',
+                    fontWeight: 700,
+                    cursor: 'pointer',
+                    boxShadow: currentPage === pageNum ? '0 2px 8px rgba(26, 83, 207, 0.15)' : 'none',
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '5px',
+                    transition: 'all 0.15s ease'
+                  }}
+                >
+                  <FileText size={12} />
+                  <span>Page {pageNum}</span>
+                </button>
+              ))}
+            </div>
+          )}
+
+          {/* Scaled paper bounding box wrapper with fixed physical A4 aspect bounds */}
           <div 
             style={{
               width: `${794 * (zoomLevel / 100)}px`,
+              height: `${1123 * (zoomLevel / 100)}px`,
               minHeight: `${1123 * (zoomLevel / 100)}px`,
+              maxHeight: `${1123 * (zoomLevel / 100)}px`,
               position: 'relative',
               zIndex: 10,
               flexShrink: 0,
               margin: '0 auto',
-              transition: 'width 0.15s ease, min-height 0.15s ease'
+              transition: 'width 0.15s ease, height 0.15s ease'
             }}
           >
-            {/* Authentic Physical A4 Paper Page Container */}
+            {/* Authentic Physical A4 Paper Page Container (Fixed 794x1123px) */}
             <div 
               style={{
                 width: '794px',
+                height: '1123px',
                 minHeight: '1123px',
+                maxHeight: '1123px',
                 backgroundColor: '#FFFFFF',
                 boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06), 0 20px 40px -15px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05)',
                 borderRadius: '4px',
-                padding: resumeData.spacing === 'compact' ? '44px 50px' : (resumeData.spacing === 'relaxed' ? '68px 68px' : '56px 60px'),
+                padding: resumeData.spacing === 'compact' ? '40px 48px' : (resumeData.spacing === 'relaxed' ? '56px 60px' : '46px 52px'),
                 boxSizing: 'border-box',
                 transform: `scale(${zoomLevel / 100})`,
                 transformOrigin: 'top left',
                 position: 'absolute',
                 top: 0,
                 left: 0,
+                overflow: 'hidden',
+                display: 'flex',
+                flexDirection: 'column',
                 fontFamily: resumeData.template === 'architectsportfolio' || resumeData.template === 'operationsprecision' || resumeData.template === 'nordicminimal' ? 'Inter, "Segoe UI", Arial, sans-serif' : '"Noto Serif", Georgia, serif',
                 color: '#171717',
                 transition: 'transform 0.15s ease'
               }}
             >
-            {/* Header: Candidate Identity */}
-            <div style={{ textAlign: resumeData.template === 'nordicminimal' ? 'left' : 'center', marginBottom: '16px' }}>
-              <h1 
-                style={{ 
-                  fontSize: '24px', 
-                  fontWeight: 900, 
-                  letterSpacing: resumeData.template === 'nordicminimal' ? '-0.02em' : '0.04em', 
-                  textTransform: resumeData.template === 'nordicminimal' ? 'none' : 'uppercase', 
-                  color: resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'londonbureau' ? '#1E40AF' : '#111827')),
-                  margin: '0 0 6px 0' 
-                }}
-              >
-                {resumeData.personalDetails.fullName}
-              </h1>
+              {currentPage === 1 ? (
+                <>
+                  {/* Header: Candidate Identity */}
+                  <div style={{ textAlign: resumeData.template === 'nordicminimal' ? 'left' : 'center', marginBottom: '14px' }}>
+                    <h1 
+                      style={{ 
+                        fontSize: '24px', 
+                        fontWeight: 900, 
+                        letterSpacing: resumeData.template === 'nordicminimal' ? '-0.02em' : '0.04em', 
+                        textTransform: resumeData.template === 'nordicminimal' ? 'none' : 'uppercase', 
+                        color: resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'londonbureau' ? '#1E40AF' : '#111827')),
+                        margin: '0 0 6px 0' 
+                      }}
+                    >
+                      {resumeData.personalDetails.fullName}
+                    </h1>
 
-              {/* Contact Line */}
-              <div 
-                style={{ 
-                  display: 'flex', 
-                  flexWrap: 'wrap', 
-                  justifyContent: resumeData.template === 'nordicminimal' ? 'flex-start' : 'center', 
-                  gap: '6px 12px', 
-                  fontSize: '11px', 
-                  color: '#475569', 
-                  fontWeight: 500 
-                }}
-              >
-                <span>{resumeData.personalDetails.location}</span>
-                <span>•</span>
-                <span>{resumeData.personalDetails.phone}</span>
-                <span>•</span>
-                <span style={{ color: '#1A53CF', fontWeight: 600 }}>{resumeData.personalDetails.email}</span>
-                <span>•</span>
-                <span>{resumeData.personalDetails.linkedin}</span>
-                <span>•</span>
-                <span>{resumeData.personalDetails.github}</span>
-              </div>
-            </div>
+                    {/* Contact Line */}
+                    <div 
+                      style={{ 
+                        display: 'flex', 
+                        flexWrap: 'wrap', 
+                        justifyContent: resumeData.template === 'nordicminimal' ? 'flex-start' : 'center', 
+                        gap: '6px 12px', 
+                        fontSize: '11px', 
+                        color: '#475569', 
+                        fontWeight: 500 
+                      }}
+                    >
+                      <span>{resumeData.personalDetails.location}</span>
+                      <span>•</span>
+                      <span>{resumeData.personalDetails.phone}</span>
+                      <span>•</span>
+                      <span style={{ color: '#1A53CF', fontWeight: 600 }}>{resumeData.personalDetails.email}</span>
+                      <span>•</span>
+                      <span>{resumeData.personalDetails.linkedin}</span>
+                      <span>•</span>
+                      <span>{resumeData.personalDetails.github}</span>
+                    </div>
+                  </div>
 
-            {/* Horizontal Keyline Rule */}
-            <div 
-              style={{ 
-                height: '1.5px', 
-                backgroundColor: resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'nordicminimal' ? '#CBD5E1' : '#171717')), 
-                marginBottom: '14px' 
-              }} 
-            />
-
-            {/* Dynamically Rendered Sections (In activeSections order, excluding hiddenSections and personal details which is pinned in header) */}
-            {activeSections.filter(sec => sec.id !== 'details' && !hiddenSections[sec.id]).map(sec => {
-              const sectionId = sec.id;
-              const sectionTitle = sec.title;
-              const accentColor = resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'londonbureau' ? '#1E40AF' : (resumeData.template === 'nordicminimal' ? '#334155' : '#171717')));
-
-              return (
-                <div key={sec.id} style={{ marginBottom: '16px' }}>
-                  {/* Dynamic Section Heading */}
-                  <h3 
+                  {/* Horizontal Keyline Rule */}
+                  <div 
                     style={{ 
-                      fontSize: '12px', 
-                      fontWeight: 800, 
-                      textTransform: 'uppercase', 
-                      letterSpacing: '0.08em', 
-                      color: accentColor,
-                      borderBottom: '1px solid #E2E8F0',
-                      paddingBottom: '3px',
-                      marginBottom: '8px'
+                      height: '1.5px', 
+                      backgroundColor: resumeData.template === 'consultantpolished' ? '#1E3A8A' : (resumeData.template === 'operationsprecision' ? '#0D9488' : (resumeData.template === 'nordicminimal' ? '#CBD5E1' : '#171717')), 
+                      marginBottom: '14px' 
+                    }} 
+                  />
+
+                  {/* Sections for Page 1 */}
+                  <div style={{ flex: 1, minHeight: 0 }}>
+                    {(resumePages[0] || []).map(sec => renderResumeSection(sec))}
+                  </div>
+
+                  {/* Option to go to next page if there is more content */}
+                  {totalPages > 1 && (
+                    <div 
+                      onClick={() => setCurrentPage(2)}
+                      style={{
+                        marginTop: 'auto',
+                        paddingTop: '8px',
+                        borderTop: '1px dashed #CBD5E1',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'space-between',
+                        cursor: 'pointer',
+                        fontSize: '11px',
+                        color: '#1A53CF',
+                        fontWeight: 700,
+                        userSelect: 'none'
+                      }}
+                    >
+                      <span style={{ color: '#64748B', fontWeight: 500, fontStyle: 'italic' }}>
+                        Page 1 of {totalPages} · Continued on Page 2
+                      </span>
+                      <span style={{ display: 'inline-flex', alignItems: 'center', gap: '4px' }}>
+                        Go to Next Page <ArrowRight size={13} />
+                      </span>
+                    </div>
+                  )}
+                </>
+              ) : (
+                <>
+                  {/* Continuation Header for Page 2+ */}
+                  <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '8px', borderBottom: '1.5px solid #171717', marginBottom: '14px' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                      <h2 style={{ fontSize: '13px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#111827', margin: 0 }}>
+                        {resumeData.personalDetails.fullName}
+                      </h2>
+                      <span style={{ fontSize: '11px', color: '#64748B' }}>— Resume (Page {currentPage} of {totalPages})</span>
+                    </div>
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        background: 'none',
+                        border: 'none',
+                        color: '#1A53CF',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        cursor: 'pointer',
+                        padding: '2px 6px'
+                      }}
+                    >
+                      <ArrowLeft size={12} />
+                      <span>Previous Page</span>
+                    </button>
+                  </div>
+
+                  {/* Sections for Page 2+ */}
+                  <div style={{ flex: 1, minHeight: 0 }}>
+                    {(resumePages[currentPage - 1] || []).map(sec => renderResumeSection(sec))}
+                  </div>
+
+                  {/* Bottom Footer for Page 2+ */}
+                  <div 
+                    style={{
+                      marginTop: 'auto',
+                      paddingTop: '8px',
+                      borderTop: '1px solid #F1F5F9',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      fontSize: '10.5px',
+                      color: '#94A3B8'
                     }}
                   >
-                    {sectionTitle}
-                  </h3>
-
-                  {/* Dynamic Section Content based on sectionId */}
-                  {sectionId === 'summary' && (
-                    <p style={{ fontSize: '11px', lineHeight: 1.5, color: '#334155', margin: 0, textAlign: 'justify' }}>
-                      {resumeData.summary}
-                    </p>
-                  )}
-
-                  {sectionId === 'experience' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-                      {resumeData.experience.map(exp => (
-                        <div key={exp.id}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', marginBottom: '2px' }}>
-                            <div>
-                              <strong style={{ fontSize: '12.5px', color: '#111827', fontWeight: 800 }}>{exp.company}</strong>
-                              <span style={{ fontSize: '11.5px', color: '#475569', fontStyle: 'italic' }}> — {exp.title}</span>
-                            </div>
-                            <span style={{ fontSize: '11px', color: '#475569', fontWeight: 600 }}>
-                              {exp.startDate} – {exp.endDate} | {exp.location}
-                            </span>
-                          </div>
-                          <ul style={{ margin: '4px 0 0 16px', padding: 0, fontSize: '11px', lineHeight: 1.45, color: '#334155' }}>
-                            {exp.bullets.map((b, i) => (
-                              <li key={i} style={{ marginBottom: '3px' }}>
-                                {b}
-                              </li>
-                            ))}
-                          </ul>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {sectionId === 'skills' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', fontSize: '11px', color: '#334155', lineHeight: 1.5 }}>
-                      {resumeData.skills?.languages?.length > 0 && (
-                        <div>
-                          <strong style={{ color: '#111827' }}>Languages & Core: </strong>
-                          <span>{resumeData.skills.languages.join(', ')}</span>
-                        </div>
-                      )}
-                      {resumeData.skills?.frameworks?.length > 0 && (
-                        <div>
-                          <strong style={{ color: '#111827' }}>Frameworks & Frontend: </strong>
-                          <span>{resumeData.skills.frameworks.join(', ')}</span>
-                        </div>
-                      )}
-                      {(resumeData.skills?.architecture?.length > 0 || resumeData.skills?.cloudAndTools?.length > 0) && (
-                        <div>
-                          <strong style={{ color: '#111827' }}>Architecture & Cloud: </strong>
-                          <span>
-                            {[
-                              (resumeData.skills?.architecture || []).join(', '),
-                              (resumeData.skills?.cloudAndTools || []).join(', ')
-                            ].filter(Boolean).join(' · ')}
-                          </span>
-                        </div>
-                      )}
-                    </div>
-                  )}
-
-                  {sectionId === 'education' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      {resumeData.education.map(edu => (
-                        <div key={edu.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11.5px' }}>
-                          <div>
-                            <strong style={{ color: '#111827' }}>{edu.institution}</strong>
-                            <span style={{ color: '#475569' }}> — {edu.degree} {edu.honors ? `(${edu.honors})` : ''}</span>
-                          </div>
-                          <span style={{ fontSize: '11px', color: '#64748B' }}>{edu.graduationDate}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {sectionId === 'projects' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                      {(resumeData.projects || []).map(proj => (
-                        <div key={proj.id}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline' }}>
-                            <div>
-                              <strong style={{ fontSize: '12px', color: '#111827' }}>{proj.title}</strong>
-                              {proj.subtitle && <span style={{ fontSize: '11px', color: '#475569', fontStyle: 'italic' }}> — {proj.subtitle}</span>}
-                              {proj.link && <span style={{ fontSize: '10.5px', color: '#1A53CF', marginLeft: '6px' }}>({proj.link})</span>}
-                            </div>
-                            {proj.date && <span style={{ fontSize: '11px', color: '#64748B' }}>{proj.date}</span>}
-                          </div>
-                          {proj.description && (
-                            <p style={{ margin: '3px 0 0 0', fontSize: '11px', lineHeight: 1.45, color: '#334155' }}>
-                              {proj.description}
-                            </p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {sectionId === 'certifications' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                      {(resumeData.certifications || []).map(cert => (
-                        <div key={cert.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
-                          <div>
-                            <strong style={{ color: '#111827' }}>{cert.name}</strong>
-                            <span style={{ color: '#475569' }}> — {cert.issuer}</span>
-                            {cert.credentialId && <span style={{ color: '#94A3B8', fontSize: '10px', marginLeft: '6px' }}>ID: {cert.credentialId}</span>}
-                          </div>
-                          <span style={{ color: '#64748B', fontSize: '11px' }}>{cert.date}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {sectionId === 'awards' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '6px' }}>
-                      {(resumeData.awards || []).map(award => (
-                        <div key={award.id}>
-                          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
-                            <div>
-                              <strong style={{ color: '#111827' }}>{award.title}</strong>
-                              <span style={{ color: '#475569' }}> — {award.issuer}</span>
-                            </div>
-                            <span style={{ color: '#64748B', fontSize: '11px' }}>{award.date}</span>
-                          </div>
-                          {award.description && (
-                            <p style={{ margin: '2px 0 0 0', fontSize: '10.5px', lineHeight: 1.4, color: '#334155' }}>
-                              {award.description}
-                            </p>
-                          )}
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {sectionId === 'publications' && (
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                      {(resumeData.publications || []).map(pub => (
-                        <div key={pub.id} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', fontSize: '11px' }}>
-                          <div>
-                            <strong style={{ color: '#111827' }}>"{pub.title}"</strong>
-                            <span style={{ color: '#475569' }}> — {pub.publisher}</span>
-                            {pub.link && <span style={{ color: '#1A53CF', fontSize: '10px', marginLeft: '6px' }}>({pub.link})</span>}
-                          </div>
-                          <span style={{ color: '#64748B', fontSize: '11px' }}>{pub.date}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {sectionId === 'languages' && (
-                    <div style={{ display: 'flex', flexWrap: 'wrap', gap: '14px', fontSize: '11px', color: '#334155' }}>
-                      {(resumeData.languages || []).map(lang => (
-                        <div key={lang.id} style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                          <strong style={{ color: '#111827' }}>{lang.language}:</strong>
-                          <span>{lang.proficiency}</span>
-                        </div>
-                      ))}
-                    </div>
-                  )}
-
-                  {/* Custom Sections */}
-                  {!['summary', 'experience', 'skills', 'education', 'projects', 'certifications', 'awards', 'publications', 'languages'].includes(sectionId) && (
-                    <p style={{ fontSize: '11px', lineHeight: 1.5, color: '#334155', margin: 0, whiteSpace: 'pre-wrap' }}>
-                      {resumeData.customSections?.find(c => c.id === sectionId)?.content || 'Custom section details...'}
-                    </p>
-                  )}
-                </div>
-              );
-            })}
-
-          </div>
+                    <button
+                      onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                      style={{
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '4px',
+                        background: 'none',
+                        border: 'none',
+                        color: '#1A53CF',
+                        fontSize: '11px',
+                        fontWeight: 700,
+                        cursor: 'pointer'
+                      }}
+                    >
+                      <ArrowLeft size={12} />
+                      <span>Back to Page 1</span>
+                    </button>
+                    <span>Page {currentPage} of {totalPages}</span>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 

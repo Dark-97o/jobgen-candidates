@@ -124,7 +124,7 @@ export default function Footer() {
 
           {/* LinkedIn */}
           <a
-            href="https://linkedin.com"
+            href="https://www.linkedin.com/company/jobgenai/"
             target="_blank"
             rel="noopener noreferrer"
             aria-label="LinkedIn"
@@ -260,23 +260,7 @@ export default function Footer() {
           <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#94A3B8'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Privacy Policy</span>
           <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#94A3B8'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Terms of Service</span>
           <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#94A3B8'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Security</span>
-          <div 
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: 'rgba(16, 185, 129, 0.12)',
-              border: '1px solid rgba(16, 185, 129, 0.28)',
-              padding: '3px 10px',
-              borderRadius: '999px',
-              fontSize: '11px',
-              fontWeight: 700,
-              color: '#10B981',
-            }}
-          >
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', boxShadow: '0 0 8px #10B981' }} />
-            All Systems Operational
-          </div>
+
         </div>
       </div>
     </footer>

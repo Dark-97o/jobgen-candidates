@@ -923,12 +923,18 @@ export default function InterviewPrepView() {
                 display: 'flex', 
                 flexDirection: 'column', 
                 height: '100%', 
-                minHeight: 0,
-                overflowY: 'auto',
-                paddingRight: '6px'
+                minHeight: 0
               }}
             >
-              <div>
+              <div
+                style={{
+                  flex: 1,
+                  minHeight: 0,
+                  overflowY: 'auto',
+                  paddingRight: '6px',
+                  paddingBottom: '16px'
+                }}
+              >
                 {/* Top Stage Header Inside Folder */}
                 <div 
                   style={{ 
@@ -1181,6 +1187,8 @@ export default function InterviewPrepView() {
               {/* Folder Action Footer */}
               <div 
                 style={{ 
+                  flexShrink: 0,
+                  marginTop: 'auto',
                   display: 'flex', 
                   alignItems: 'center', 
                   justifyContent: 'space-between',
@@ -1251,7 +1259,7 @@ export default function InterviewPrepView() {
                       }}
                     >
                       <Check size={16} strokeWidth={2.8} />
-                      <span>{isDone ? 'Marked as DONE ✓' : 'Mark as DONE'}</span>
+                      <span>{isDone ? 'Done ✓' : 'Done'}</span>
                     </button>
                   ) : (
                     <button
@@ -1280,7 +1288,7 @@ export default function InterviewPrepView() {
                         e.currentTarget.style.boxShadow = '0 4px 14px rgba(26, 83, 207, 0.35)';
                       }}
                     >
-                      <span>Next Stage: {STAGES[STAGES.findIndex(s => s.id === activeStage) + 1]?.name}</span>
+                      <span>{STAGES[STAGES.findIndex(s => s.id === activeStage) + 1]?.name}</span>
                       <ArrowRight size={14} />
                     </button>
                   )}
