@@ -893,9 +893,9 @@ export default function InterviewPrepView() {
               position: 'relative',
               zIndex: 15,
               overflow: 'hidden',
-              height: '665px',
-              minHeight: '665px',
-              maxHeight: '665px',
+              height: '680px',
+              minHeight: '680px',
+              maxHeight: '680px',
               boxSizing: 'border-box',
               display: 'flex',
               flexDirection: 'column'
@@ -1295,9 +1295,9 @@ export default function InterviewPrepView() {
         <div 
           style={{ 
             width: '280px', 
-            height: '710px',
-            minHeight: '710px',
-            maxHeight: '710px',
+            height: '725px',
+            minHeight: '725px',
+            maxHeight: '725px',
             flexShrink: 0, 
             display: 'flex', 
             flexDirection: 'column',
@@ -1308,9 +1308,9 @@ export default function InterviewPrepView() {
           <div 
             style={{ 
               width: '100%', 
-              height: '710px', 
-              minHeight: '710px', 
-              maxHeight: '710px',
+              height: '725px', 
+              minHeight: '725px', 
+              maxHeight: '725px',
               position: 'relative',
               clipPath: 'polygon(0 42px, 100% 0, 100% calc(100% - 42px), 0 100%)',
               overflow: 'hidden',
