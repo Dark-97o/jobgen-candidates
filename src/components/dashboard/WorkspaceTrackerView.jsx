@@ -1117,31 +1117,31 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
           top: '-20px',
           bottom: '-10px',
           right: '134px',
-          width: '220px',
+          width: '160px',
           display: 'flex',
           justifyContent: 'space-between',
           pointerEvents: 'none',
           zIndex: 0,
         }}
       >
-        {/* Thick Blue Line 1 (90px - 3x thicker, not rounded at top) */}
+        {/* Blue Line 1 (63px - 70% of previous thickness, not rounded at top) */}
         <div 
           style={{
-            width: '90px',
+            width: '63px',
             height: '100%',
             borderRadius: '0 0 999px 999px',
             background: 'linear-gradient(to bottom, #1A53CF 0%, #2563EB 60%, rgba(37, 99, 235, 0.75) 75%, rgba(37, 99, 235, 0.25) 88%, transparent 98%)',
-            boxShadow: '0 0 32px rgba(37, 99, 235, 0.45)'
+            boxShadow: '0 0 28px rgba(37, 99, 235, 0.42)'
           }}
         />
-        {/* Thick Blue Line 2 (90px - 3x thicker, not rounded at top) */}
+        {/* Blue Line 2 (63px - 70% of previous thickness, not rounded at top) */}
         <div 
           style={{
-            width: '90px',
+            width: '63px',
             height: '100%',
             borderRadius: '0 0 999px 999px',
             background: 'linear-gradient(to bottom, #2563EB 0%, #3B82F6 60%, rgba(59, 130, 246, 0.75) 75%, rgba(59, 130, 246, 0.25) 88%, transparent 98%)',
-            boxShadow: '0 0 32px rgba(59, 130, 246, 0.45)'
+            boxShadow: '0 0 28px rgba(59, 130, 246, 0.42)'
           }}
         />
       </div>
