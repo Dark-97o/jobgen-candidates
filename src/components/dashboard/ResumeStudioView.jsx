@@ -382,7 +382,7 @@ const INITIAL_RESUME_DATA = {
   ]
 };
 
-export default function ResumeStudioView({ onBackToDocuments }) {
+export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
   const [resumeData, setResumeData] = useState(() => {
     try {
       const saved = sessionStorage.getItem('jobgen_active_resume');
@@ -395,11 +395,39 @@ export default function ResumeStudioView({ onBackToDocuments }) {
   const [isEditingTitle, setIsEditingTitle] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
   const [toastMessage, setToastMessage] = useState(null);
-  const [zoomLevel, setZoomLevel] = useState(100);
+  const [zoomLevel, setZoomLevel] = useState(85);
+  const [autoFitZoom, setAutoFitZoom] = useState(85);
   const [newSkillInput, setNewSkillInput] = useState('');
   const [selectedSkillCategory, setSelectedSkillCategory] = useState('frameworks');
 
   const carouselRef = useRef(null);
+  const rightCanvasRef = useRef(null);
+  const leftEditorRef = useRef(null);
+
+  // Auto-fit A4 paper to screen width on mount and window resize
+  useEffect(() => {
+    const calculateFit = () => {
+      if (rightCanvasRef.current) {
+        const containerWidth = rightCanvasRef.current.clientWidth;
+        // Available width accounting for 40px padding (20px left + 20px right)
+        const available = containerWidth - 40;
+        if (available > 0) {
+          // Fit A4 794px width with comfortable breathing room (divide by 814px)
+          const fit = Math.max(50, Math.min(100, Math.floor((available / 814) * 100)));
+          setAutoFitZoom(fit);
+          setZoomLevel(prev => (prev === 85 || prev === autoFitZoom ? fit : prev));
+        }
+      }
+    };
+
+    calculateFit();
+    const timer = setTimeout(calculateFit, 80);
+    window.addEventListener('resize', calculateFit);
+    return () => {
+      clearTimeout(timer);
+      window.removeEventListener('resize', calculateFit);
+    };
+  }, []);
 
   // Saved Jobs for Dropdown
   const [savedJobsList, setSavedJobsList] = useState(() => {
@@ -705,34 +733,66 @@ export default function ResumeStudioView({ onBackToDocuments }) {
           
           {/* Circular Card showing ATS */}
           <div
-            title="ATS Readiness Score: 96%"
+            onClick={onOpenAtsScan}
+            title="ATS Match Score: 96% · Click to view keyword alignment"
             style={{
-              width: '42px',
-              height: '42px',
-              borderRadius: '50%',
-              backgroundColor: '#FFFFFF',
-              border: '2px solid #10B981',
-              boxShadow: '0 2px 10px rgba(16, 185, 129, 0.22), inset 0 1px 2px rgba(255, 255, 255, 0.9)',
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
+              position: 'relative',
+              width: '46px',
+              height: '46px',
               cursor: 'pointer',
               flexShrink: 0,
-              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-              position: 'relative'
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              borderRadius: '50%',
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 2px 10px rgba(16, 185, 129, 0.18)',
+              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
             }}
             onMouseEnter={(e) => {
               e.currentTarget.style.transform = 'scale(1.08)';
-              e.currentTarget.style.boxShadow = '0 6px 18px rgba(16, 185, 129, 0.38)';
+              e.currentTarget.style.boxShadow = '0 4px 18px rgba(16, 185, 129, 0.36)';
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.transform = 'scale(1)';
-              e.currentTarget.style.boxShadow = '0 2px 10px rgba(16, 185, 129, 0.22)';
+              e.currentTarget.style.boxShadow = '0 2px 10px rgba(16, 185, 129, 0.18)';
             }}
           >
-            <span style={{ fontSize: '11px', fontWeight: 900, color: '#059669', lineHeight: 1 }}>96%</span>
-            <span style={{ fontSize: '7.5px', fontWeight: 800, color: '#047857', letterSpacing: '0.04em', lineHeight: 1, marginTop: '1px' }}>ATS</span>
+            {/* Circular SVG Progress Ring */}
+            <svg
+              width="46"
+              height="46"
+              viewBox="0 0 46 46"
+              style={{ position: 'absolute', top: 0, left: 0, transform: 'rotate(-90deg)' }}
+            >
+              {/* Background Ring */}
+              <circle
+                cx="23"
+                cy="23"
+                r="19"
+                fill="none"
+                stroke="#E2E8F0"
+                strokeWidth="2.8"
+              />
+              {/* Emerald Progress Ring (96% of 119.38 circumference = 114.6) */}
+              <circle
+                cx="23"
+                cy="23"
+                r="19"
+                fill="none"
+                stroke="#10B981"
+                strokeWidth="2.8"
+                strokeDasharray="119.38"
+                strokeDashoffset="4.78"
+                strokeLinecap="round"
+              />
+            </svg>
+
+            {/* Inner Content */}
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', zIndex: 1, pointerEvents: 'none' }}>
+              <span style={{ fontSize: '11px', fontWeight: 900, color: '#047857', lineHeight: 1 }}>96%</span>
+              <span style={{ fontSize: '7.5px', fontWeight: 800, color: '#059669', letterSpacing: '0.04em', lineHeight: 1, marginTop: '1.5px' }}>ATS</span>
+            </div>
           </div>
 
           {/* Export PDF Button */}
@@ -771,10 +831,12 @@ export default function ResumeStudioView({ onBackToDocuments }) {
       {/* Main Split Body: Left Editor Workspace + Right A4 Paper Canvas */}
       <div style={{ display: 'flex', flex: 1, minHeight: 0, overflow: 'hidden' }}>
         
-        {/* Left Column: Fixed Width 640px */}
+        {/* Left Column: Responsive Width clamp(360px, 30vw, 420px) */}
         <div 
           style={{ 
-            width: '640px', 
+            width: 'clamp(360px, 30vw, 420px)', 
+            minWidth: '340px',
+            maxWidth: '440px',
             flexShrink: 0, 
             display: 'flex', 
             flexDirection: 'column', 
@@ -849,14 +911,17 @@ export default function ResumeStudioView({ onBackToDocuments }) {
               </div>
             </div>
 
-            {/* Carousel Horizontal Scroll Track */}
+            {/* Carousel Horizontal Scroll Track with Top Padding to Prevent Clipping */}
             <div
               ref={carouselRef}
               style={{
                 display: 'flex',
                 gap: '12px',
                 overflowX: 'auto',
-                paddingBottom: '4px',
+                paddingTop: '10px',
+                paddingBottom: '12px',
+                paddingLeft: '4px',
+                paddingRight: '4px',
                 scrollSnapType: 'x mandatory',
                 scrollbarWidth: 'none',
                 msOverflowStyle: 'none'
@@ -941,6 +1006,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
               MODERN EDITING SECTIONS (ALL COLLAPSED INITIALLY, NO OVERLAP)
               ========================================================================= */}
           <div 
+            ref={leftEditorRef}
             style={{ 
               flex: 1, 
               minHeight: 0, 
@@ -952,6 +1018,18 @@ export default function ResumeStudioView({ onBackToDocuments }) {
               backgroundColor: '#FFFFFF'
             }}
             data-lenis-prevent="true"
+            onWheel={(e) => {
+              const el = e.currentTarget;
+              const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 4;
+              const isAtTop = el.scrollTop <= 0;
+              if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
+                if (window.lenis) {
+                  window.lenis.scrollTo(window.scrollY + e.deltaY * 1.2, { duration: 0.5 });
+                } else {
+                  window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
+                }
+              }
+            }}
           >
             {/* SAVED JOBS DROPDOWN SELECTOR WITH "+ ADD JOB" BUTTON BESIDE IT */}
             <div 
@@ -1292,8 +1370,8 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                         gap: '12px'
                       }}
                     >
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start' }}>
-                        <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', gap: '8px', flexWrap: 'wrap' }}>
+                        <div style={{ flex: 1, minWidth: '160px' }}>
                           <input
                             type="text"
                             value={exp.title}
@@ -1303,20 +1381,21 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                               setResumeData(prev => ({ ...prev, experience: updated }));
                             }}
                             style={{ 
-                              fontSize: '14px', 
+                              fontSize: '13.5px', 
                               fontWeight: 800, 
                               color: '#090C15', 
                               border: '1px solid transparent', 
                               backgroundColor: 'transparent',
                               borderRadius: '6px',
                               padding: '2px 4px',
-                              width: '280px',
+                              width: '100%',
+                              boxSizing: 'border-box',
                               outline: 'none'
                             }}
                             onFocus={(e) => e.target.style.border = '1px solid #CBD5E1'}
                             onBlur={(e) => e.target.style.border = '1px solid transparent'}
                           />
-                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px' }}>
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px', marginTop: '2px', flexWrap: 'wrap' }}>
                             <input
                               type="text"
                               value={exp.company}
@@ -1326,14 +1405,14 @@ export default function ResumeStudioView({ onBackToDocuments }) {
                                 setResumeData(prev => ({ ...prev, experience: updated }));
                               }}
                               style={{ 
-                                fontSize: '12.5px', 
+                                fontSize: '12px', 
                                 fontWeight: 700, 
                                 color: '#1A53CF', 
                                 border: '1px solid transparent', 
                                 backgroundColor: 'transparent',
                                 borderRadius: '6px',
                                 padding: '1px 4px',
-                                width: '140px',
+                                width: '130px',
                                 outline: 'none'
                               }}
                               onFocus={(e) => e.target.style.border = '1px solid #CBD5E1'}
@@ -1681,14 +1760,29 @@ export default function ResumeStudioView({ onBackToDocuments }) {
             RIGHT COLUMN: PHYSICAL A4 PAPER CONTAINER WITH GENEROUS CANVAS SPACE
             ========================================================================= */}
         <div 
+          ref={rightCanvasRef}
+          onWheel={(e) => {
+            const el = e.currentTarget;
+            const isAtBottom = el.scrollHeight - el.scrollTop - el.clientHeight <= 6;
+            const isAtTop = el.scrollTop <= 0;
+            if ((isAtBottom && e.deltaY > 0) || (isAtTop && e.deltaY < 0)) {
+              if (window.lenis) {
+                window.lenis.scrollTo(window.scrollY + e.deltaY * 1.2, { duration: 0.5 });
+              } else {
+                window.scrollBy({ top: e.deltaY, left: 0, behavior: 'auto' });
+              }
+            }
+          }}
           style={{ 
             flex: 1, 
+            minWidth: 0,
             backgroundColor: '#E5E9F0', 
             overflowY: 'auto', 
+            overflowX: 'auto',
             display: 'flex', 
             flexDirection: 'column', 
             alignItems: 'center', 
-            padding: '36px 48px 80px 48px',
+            padding: '24px 20px 80px 20px',
             position: 'relative'
           }}
           data-lenis-prevent="true"
@@ -1712,7 +1806,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
             }}
           >
             <button 
-              onClick={() => setZoomLevel(prev => Math.max(70, prev - 10))}
+              onClick={() => setZoomLevel(prev => Math.max(50, prev - 10))}
               style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '14px', fontWeight: 800, color: '#475569', padding: '0 4px' }}
             >
               -
@@ -1728,7 +1822,8 @@ export default function ResumeStudioView({ onBackToDocuments }) {
             </button>
             <span style={{ color: '#CBD5E1' }}>|</span>
             <button 
-              onClick={() => setZoomLevel(100)}
+              onClick={() => setZoomLevel(autoFitZoom)}
+              title="Fit to screen width"
               style={{ border: 'none', background: 'none', cursor: 'pointer', fontSize: '11px', fontWeight: 700, color: '#1A53CF' }}
             >
               Fit
@@ -1739,24 +1834,37 @@ export default function ResumeStudioView({ onBackToDocuments }) {
             </span>
           </div>
 
-          {/* Authentic Physical A4 Paper Page Container */}
+          {/* Scaled paper bounding box wrapper so parent canvas measures exact visual bounds */}
           <div 
             style={{
-              width: '794px',
-              minHeight: '1123px',
-              backgroundColor: '#FFFFFF',
-              boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06), 0 20px 40px -15px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05)',
-              borderRadius: '4px',
-              padding: resumeData.spacing === 'compact' ? '44px 50px' : (resumeData.spacing === 'relaxed' ? '68px 68px' : '56px 60px'),
-              boxSizing: 'border-box',
-              transform: `scale(${zoomLevel / 100})`,
-              transformOrigin: 'top center',
-              fontFamily: resumeData.template === 'architectsportfolio' || resumeData.template === 'operationsprecision' || resumeData.template === 'nordicminimal' ? 'Inter, "Segoe UI", Arial, sans-serif' : '"Noto Serif", Georgia, serif',
-              color: '#171717',
-              transition: 'transform 0.15s ease',
-              margin: '0 auto'
+              width: `${794 * (zoomLevel / 100)}px`,
+              minHeight: `${1123 * (zoomLevel / 100)}px`,
+              position: 'relative',
+              flexShrink: 0,
+              margin: '0 auto',
+              transition: 'width 0.15s ease, min-height 0.15s ease'
             }}
           >
+            {/* Authentic Physical A4 Paper Page Container */}
+            <div 
+              style={{
+                width: '794px',
+                minHeight: '1123px',
+                backgroundColor: '#FFFFFF',
+                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.06), 0 20px 40px -15px rgba(15, 23, 42, 0.2), 0 0 0 1px rgba(0, 0, 0, 0.05)',
+                borderRadius: '4px',
+                padding: resumeData.spacing === 'compact' ? '44px 50px' : (resumeData.spacing === 'relaxed' ? '68px 68px' : '56px 60px'),
+                boxSizing: 'border-box',
+                transform: `scale(${zoomLevel / 100})`,
+                transformOrigin: 'top left',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                fontFamily: resumeData.template === 'architectsportfolio' || resumeData.template === 'operationsprecision' || resumeData.template === 'nordicminimal' ? 'Inter, "Segoe UI", Arial, sans-serif' : '"Noto Serif", Georgia, serif',
+                color: '#171717',
+                transition: 'transform 0.15s ease'
+              }}
+            >
             {/* Header: Candidate Identity */}
             <div style={{ textAlign: resumeData.template === 'nordicminimal' ? 'left' : 'center', marginBottom: '16px' }}>
               <h1 
@@ -1929,6 +2037,7 @@ export default function ResumeStudioView({ onBackToDocuments }) {
               ))}
             </div>
 
+          </div>
           </div>
         </div>
 

@@ -212,7 +212,10 @@ export default function App() {
             )}
 
             {currentTab === 'resume' && (
-              <ResumeStudioView onBackToDocuments={() => setCurrentTab('workspace')} />
+              <ResumeStudioView 
+                onBackToDocuments={() => setCurrentTab('workspace')} 
+                onOpenAtsScan={() => setAtsModalOpen(true)}
+              />
             )}
 
             {currentTab === 'coverletter' && (
