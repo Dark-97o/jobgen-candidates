@@ -725,87 +725,6 @@ export default function InterviewPrepView() {
       )}
 
       {/* =========================================================================
-          TOP BAR: ROLE PILL + SWITCH JOB
-          ========================================================================= */}
-      <div 
-        style={{ 
-          display: 'flex', 
-          alignItems: 'center', 
-          justifyContent: 'space-between', 
-          marginBottom: '16px', 
-          flexWrap: 'wrap', 
-          gap: '12px' 
-        }}
-      >
-        <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-          <div 
-            style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '8px', 
-              backgroundColor: '#FFFFFF', 
-              padding: '6px 14px', 
-              borderRadius: '999px', 
-              border: '1.5px solid #E2E8F0',
-              boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)'
-            }}
-          >
-            <span style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-            <span style={{ fontSize: '13px', fontWeight: 800, color: '#090C15' }}>
-              {currentJob.company}
-            </span>
-            <span style={{ color: '#94A3B8' }}>·</span>
-            <span style={{ fontSize: '12.5px', fontWeight: 600, color: '#475569' }}>
-              {currentJob.role}
-            </span>
-          </div>
-
-          <button
-            onClick={() => {
-              setSelectedJobId(currentJob.id);
-              setShowJobModal(true);
-            }}
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '7px',
-              padding: '6px 12px',
-              borderRadius: '999px',
-              backgroundColor: '#FFFFFF',
-              border: '1px solid #CBD5E1',
-              color: '#1A53CF',
-              fontSize: '11.5px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)',
-              transition: 'all 0.15s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = '#1A53CF';
-              e.currentTarget.style.backgroundColor = '#EFF6FF';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = '#CBD5E1';
-              e.currentTarget.style.backgroundColor = '#FFFFFF';
-            }}
-          >
-            <img src="/cofe.png" alt="" style={{ height: '16px', width: 'auto', objectFit: 'contain' }} />
-            <span>Switch Job</span>
-          </button>
-        </div>
-
-        {/* Global Progress Pill */}
-        <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '12px', color: '#64748B', fontWeight: 600 }}>
-          <span>Stage {STAGES.findIndex(s => s.id === activeStage) + 1} of 5</span>
-          <span>·</span>
-          <span style={{ color: '#059669', fontWeight: 700 }}>{activeStageData.score} Score</span>
-        </div>
-      </div>
-
-      {/* =========================================================================
-          THE FOLDER CONTAINER (Matching user image with 5 Tabs across the top)
-          ========================================================================= */}
-      {/* =========================================================================
           INTERVIEW PREP WORKSPACE: LEFT CONTAINER + RIGHT SLASHED VIDEO CARD
           ========================================================================= */}
       <div 
@@ -1280,10 +1199,11 @@ export default function InterviewPrepView() {
           </div>
         </div>
 
-        {/* RIGHT COLUMN: VERTICAL CARD WITH TOP & BOTTOM SLASHED + PLAYING VIDEO + EDITORIAL TEXT */}
+        {/* RIGHT COLUMN: VERTICAL CARD WITH FIXED HEIGHT + TOP & BOTTOM SLASHED + PLAYING VIDEO + SWITCH JOB BUTTON */}
         <div 
           style={{ 
             width: '280px', 
+            height: '660px',
             flexShrink: 0, 
             display: 'flex', 
             flexDirection: 'column',
@@ -1293,8 +1213,9 @@ export default function InterviewPrepView() {
           <div 
             style={{ 
               width: '100%', 
-              height: '100%', 
+              height: '660px', 
               minHeight: '660px',
+              maxHeight: '660px',
               position: 'relative',
               clipPath: 'polygon(0 42px, 100% 0, 100% calc(100% - 42px), 0 100%)',
               overflow: 'hidden',
@@ -1358,29 +1279,44 @@ export default function InterviewPrepView() {
                 boxSizing: 'border-box'
               }}
             >
-              {/* Top Badge */}
+              {/* Top Switch Job Button with Coffee Icon */}
               <div>
-                <div 
-                  style={{ 
-                    display: 'inline-flex', 
-                    alignItems: 'center', 
-                    gap: '6px', 
-                    backgroundColor: 'rgba(255, 255, 255, 0.14)', 
-                    backdropFilter: 'blur(10px)', 
-                    WebkitBackdropFilter: 'blur(10px)', 
-                    padding: '6px 14px', 
-                    borderRadius: '999px', 
-                    border: '1px solid rgba(255, 255, 255, 0.25)', 
-                    color: '#FFFFFF', 
-                    fontSize: '11px', 
-                    fontWeight: 800, 
-                    letterSpacing: '0.06em', 
-                    textTransform: 'uppercase' 
+                <button
+                  onClick={() => {
+                    setSelectedJobId(currentJob.id);
+                    setShowJobModal(true);
+                  }}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '8px 16px',
+                    borderRadius: '999px',
+                    backgroundColor: 'rgba(255, 255, 255, 0.16)',
+                    backdropFilter: 'blur(12px)',
+                    WebkitBackdropFilter: 'blur(12px)',
+                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                    color: '#FFFFFF',
+                    fontSize: '12px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(0, 0, 0, 0.25)',
+                    transition: 'all 0.18s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.28)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.16)';
+                    e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                    e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
-                  <Sparkles size={13} color="#38BDF8" />
-                  <span>AI Rehearsal</span>
-                </div>
+                  <img src="/cofe.png" alt="" style={{ height: '17px', width: 'auto', objectFit: 'contain' }} />
+                  <span>Switch Job</span>
+                </button>
               </div>
 
               {/* Bottom Editorial Typography: YOUR NEXT JOB IS CLOSER THAN YOU THINK */}
