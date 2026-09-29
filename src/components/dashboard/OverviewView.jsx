@@ -566,7 +566,7 @@ export default function OverviewView({ onNavigate }) {
                     width: 'auto', 
                     objectFit: 'contain',
                     verticalAlign: 'middle',
-                    marginLeft: '-17px',
+                    marginLeft: '-9px',
                     filter: 'drop-shadow(0 4px 14px rgba(0, 0, 0, 0.09))',
                     userSelect: 'none',
                     pointerEvents: 'none'
