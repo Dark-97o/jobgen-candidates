@@ -28,7 +28,8 @@ import {
   Briefcase,
   Trash2,
   Copy,
-  Mail
+  Mail,
+  Star
 } from 'lucide-react';
 
 // Initial Pipeline Data across the 4 stages
@@ -903,6 +904,24 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
     } catch (e) {}
     return TAILORED_COVER_LETTERS;
   });
+
+  // Track the designated Master Resume with persistent storage
+  const [masterResumeId, setMasterResumeId] = useState(() => {
+    try {
+      const saved = sessionStorage.getItem('jobgen_master_resume_id');
+      if (saved) return saved;
+    } catch (e) {}
+    return 'res-canva';
+  });
+
+  const handleSetMasterResume = (id) => {
+    setMasterResumeId(id);
+    try {
+      sessionStorage.setItem('jobgen_master_resume_id', id);
+    } catch (e) {}
+    const r = resumesList.find(res => res.id === id);
+    showToast(`Marked ${r?.company || 'resume'} as Master Resume! 👑`);
+  };
 
   const handleDeleteResume = (id) => {
     const doc = resumesList.find(r => r.id === id);
@@ -2480,46 +2499,94 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                     }}
                   >
                     {filteredResumes.map((res) => {
+                      const isMaster = (masterResumeId === res.id);
                       return (
                         <div 
                           key={res.id}
                           style={{
                             backgroundColor: 'rgba(255, 255, 255, 0.72)',
-                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)',
+                            background: isMaster 
+                              ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 250, 252, 0.82) 100%)'
+                              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)',
                             backdropFilter: 'blur(16px) saturate(180%)',
                             WebkitBackdropFilter: 'blur(16px) saturate(180%)',
                             borderRadius: '14px',
-                            border: '1.5px solid rgba(255, 255, 255, 0.88)',
+                            border: isMaster ? '1.5px solid #0F172A' : '1.5px solid rgba(255, 255, 255, 0.88)',
                             padding: '12px 14px',
                             height: '142px',
                             minHeight: '142px',
                             maxHeight: '142px',
                             boxSizing: 'border-box',
-                            boxShadow: '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)',
+                            boxShadow: isMaster 
+                              ? '0 12px 28px -4px rgba(15, 23, 42, 0.18), 0 4px 10px -2px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)'
+                              : '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)',
                             display: 'flex',
                             flexDirection: 'column',
                             justifyContent: 'space-between',
                             gap: '6px',
                             position: 'relative',
                             zIndex: 20,
+                            overflow: 'hidden',
                             transition: 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease'
                           }}
                           onMouseEnter={(e) => {
                             e.currentTarget.style.transform = 'translateY(-3px)';
-                            e.currentTarget.style.borderColor = 'rgba(191, 219, 254, 0.95)';
+                            e.currentTarget.style.borderColor = isMaster ? '#0F172A' : 'rgba(191, 219, 254, 0.95)';
                             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.76) 100%)';
-                            e.currentTarget.style.boxShadow = '0 16px 36px -4px rgba(37, 99, 235, 0.16), 0 6px 14px -2px rgba(15, 23, 42, 0.06), inset 0 1px 2px rgba(255, 255, 255, 1)';
+                            e.currentTarget.style.boxShadow = isMaster 
+                              ? '0 16px 36px -4px rgba(15, 23, 42, 0.25), 0 6px 14px -2px rgba(15, 23, 42, 0.1), inset 0 1px 2px rgba(255, 255, 255, 1)'
+                              : '0 16px 36px -4px rgba(37, 99, 235, 0.16), 0 6px 14px -2px rgba(15, 23, 42, 0.06), inset 0 1px 2px rgba(255, 255, 255, 1)';
                           }}
                           onMouseLeave={(e) => {
                             e.currentTarget.style.transform = 'translateY(0)';
-                            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.88)';
-                            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)';
-                            e.currentTarget.style.boxShadow = '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)';
+                            e.currentTarget.style.borderColor = isMaster ? '#0F172A' : 'rgba(255, 255, 255, 0.88)';
+                            e.currentTarget.style.background = isMaster 
+                              ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 250, 252, 0.82) 100%)'
+                              : 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)';
+                            e.currentTarget.style.boxShadow = isMaster 
+                              ? '0 12px 28px -4px rgba(15, 23, 42, 0.18), 0 4px 10px -2px rgba(15, 23, 42, 0.08), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)'
+                              : '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)';
                           }}
                         >
+                          {/* Corner Black Patch for Master Resume */}
+                          {isMaster && (
+                            <div 
+                              style={{
+                                position: 'absolute',
+                                top: 0,
+                                right: 0,
+                                backgroundColor: '#090C15',
+                                color: '#FFFFFF',
+                                fontSize: '9px',
+                                fontWeight: 900,
+                                letterSpacing: '0.08em',
+                                padding: '3.5px 9px 4px 9px',
+                                borderBottomLeftRadius: '8px',
+                                borderTopRightRadius: '13px',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.35)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '3.5px',
+                                zIndex: 25,
+                                pointerEvents: 'none'
+                              }}
+                            >
+                              <span style={{ color: '#F59E0B', fontSize: '9.5px', lineHeight: 1 }}>★</span>
+                              <span>MASTER</span>
+                            </div>
+                          )}
+
                           {/* Top: Logo & Company Name + ATS Badge & Red Dustbin */}
                           <div>
-                            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '4px' }}>
+                            <div 
+                              style={{ 
+                                display: 'flex', 
+                                alignItems: 'center', 
+                                justifyContent: 'space-between', 
+                                marginBottom: '4px',
+                                paddingRight: isMaster ? '76px' : '0px'
+                              }}
+                            >
                               <div style={{ display: 'flex', alignItems: 'center', gap: '7px', minWidth: 0, overflow: 'hidden' }}>
                                 <TrackerCompanyLogo company={res.company} size={20} />
                                 <span 
@@ -2624,7 +2691,8 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                               justifyContent: 'space-between', 
                               paddingTop: '6px', 
                               borderTop: '1px solid rgba(226, 232, 240, 0.7)',
-                              marginTop: 'auto'
+                              marginTop: 'auto',
+                              gap: '6px'
                             }}
                           >
                             <span 
@@ -2635,13 +2703,51 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                                 whiteSpace: 'nowrap',
                                 overflow: 'hidden',
                                 textOverflow: 'ellipsis',
-                                maxWidth: '130px'
+                                maxWidth: '100px',
+                                flexShrink: 1
                               }}
                             >
                               {res.keywords ? `${res.keywords.slice(0, 2).join(', ')}` : 'Tailored'}
                             </span>
 
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
+                              {/* Mark Master button - ONLY shown on non-master resumes */}
+                              {!isMaster && (
+                                <button
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    handleSetMasterResume(res.id);
+                                  }}
+                                  style={{
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '3px',
+                                    padding: '4px 7px',
+                                    borderRadius: '6px',
+                                    backgroundColor: '#090C15',
+                                    color: '#FFFFFF',
+                                    border: '1px solid #090C15',
+                                    fontSize: '10.5px',
+                                    fontWeight: 700,
+                                    cursor: 'pointer',
+                                    boxShadow: '0 1px 3px rgba(0, 0, 0, 0.12)',
+                                    transition: 'all 0.15s ease'
+                                  }}
+                                  onMouseEnter={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#1E293B';
+                                    e.currentTarget.style.borderColor = '#1E293B';
+                                  }}
+                                  onMouseLeave={(e) => {
+                                    e.currentTarget.style.backgroundColor = '#090C15';
+                                    e.currentTarget.style.borderColor = '#090C15';
+                                  }}
+                                  title="Mark this resume as Master Resume"
+                                >
+                                  <Star size={10} color="#F59E0B" fill="#F59E0B" />
+                                  <span>Mark Master</span>
+                                </button>
+                              )}
+
                               {onNavigateToResume && (
                                 <button
                                   onClick={() => onNavigateToResume()}
@@ -2649,12 +2755,12 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                                     display: 'inline-flex',
                                     alignItems: 'center',
                                     gap: '3px',
-                                    padding: '5px 8px',
+                                    padding: '4px 7px',
                                     borderRadius: '6px',
                                     backgroundColor: '#EFF6FF',
                                     color: '#1A53CF',
                                     border: '1px solid #BFDBFE',
-                                    fontSize: '11px',
+                                    fontSize: '10.5px',
                                     fontWeight: 700,
                                     cursor: 'pointer'
                                   }}
@@ -2670,19 +2776,19 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                                   display: 'inline-flex',
                                   alignItems: 'center',
                                   gap: '3px',
-                                  padding: '5px 10px',
+                                  padding: '4px 8px',
                                   borderRadius: '6px',
                                   backgroundColor: '#F1F5F9',
                                   color: '#090C15',
                                   border: '1px solid #E2E8F0',
-                                  fontSize: '11px',
+                                  fontSize: '10.5px',
                                   fontWeight: 700,
                                   cursor: 'pointer',
                                   transition: 'background 0.15s ease'
                                 }}
                                 title="Preview this tailored resume"
                               >
-                                <Eye size={12} />
+                                <Eye size={11} />
                                 <span>Preview</span>
                               </button>
 
@@ -2692,18 +2798,18 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                                   display: 'inline-flex',
                                   alignItems: 'center',
                                   gap: '3px',
-                                  padding: '5px 10px',
+                                  padding: '4px 8px',
                                   borderRadius: '6px',
                                   background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
                                   color: '#FFFFFF',
                                   border: 'none',
-                                  fontSize: '11px',
+                                  fontSize: '10.5px',
                                   fontWeight: 700,
                                   cursor: 'pointer',
                                   boxShadow: '0 2px 6px rgba(26, 83, 207, 0.25)'
                                 }}
                               >
-                                <Download size={12} />
+                                <Download size={11} />
                                 <span>PDF</span>
                               </button>
                             </div>
