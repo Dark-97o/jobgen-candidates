@@ -1110,36 +1110,69 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
   return (
     <div style={{ paddingBottom: '60px', paddingRight: '28px', maxWidth: '1440px', margin: '0 auto', position: 'relative' }}>
 
-      {/* Atmospheric Thin Lines Background just like in Home */}
+      {/* Thin Vertical Lines Background Near Top-Left Corner (Reference Image Match) */}
       <div
         style={{
           position: 'absolute',
-          top: '-20px',
-          left: '-40px',
-          right: '-20px',
-          height: '750px',
-          overflow: 'hidden',
+          top: '-15px',
+          left: '-25px',
+          width: '520px',
+          height: '420px',
           pointerEvents: 'none',
           zIndex: 0,
-          maskImage: 'radial-gradient(ellipse 85% 75% at 50% 35%, rgba(0,0,0,0.65) 30%, rgba(0,0,0,0.2) 65%, transparent 100%)',
-          WebkitMaskImage: 'radial-gradient(ellipse 85% 75% at 50% 35%, rgba(0,0,0,0.65) 30%, rgba(0,0,0,0.2) 65%, transparent 100%)',
+          backgroundImage: `
+            repeating-linear-gradient(
+              to right,
+              rgba(37, 99, 235, 0.42) 0px,
+              rgba(37, 99, 235, 0.42) 1.5px,
+              transparent 1.5px,
+              transparent 140px
+            ),
+            repeating-linear-gradient(
+              to right,
+              rgba(96, 165, 250, 0.32) 0px,
+              rgba(96, 165, 250, 0.32) 1px,
+              transparent 1px,
+              transparent 28px
+            ),
+            linear-gradient(135deg, rgba(224, 242, 254, 0.6) 0%, rgba(238, 242, 255, 0.3) 50%, transparent 100%)
+          `,
+          maskImage: 'radial-gradient(ellipse 90% 85% at 0% 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 55%, transparent 85%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 90% 85% at 0% 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 55%, transparent 85%)',
         }}
-      >
-        <video
-          src="/waves.mp4"
-          autoPlay
-          loop
-          muted
-          playsInline
-          style={{
-            width: '100%',
-            height: '100%',
-            objectFit: 'cover',
-            opacity: 0.45,
-            display: 'block',
-          }}
-        />
-      </div>
+      />
+
+      {/* Thin Vertical Lines Background Near Top-Right Corner (Reference Image Match) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-15px',
+          right: '-15px',
+          width: '560px',
+          height: '420px',
+          pointerEvents: 'none',
+          zIndex: 0,
+          backgroundImage: `
+            repeating-linear-gradient(
+              to right,
+              rgba(37, 99, 235, 0.42) 0px,
+              rgba(37, 99, 235, 0.42) 1.5px,
+              transparent 1.5px,
+              transparent 140px
+            ),
+            repeating-linear-gradient(
+              to right,
+              rgba(96, 165, 250, 0.32) 0px,
+              rgba(96, 165, 250, 0.32) 1px,
+              transparent 1px,
+              transparent 28px
+            ),
+            linear-gradient(225deg, rgba(224, 242, 254, 0.6) 0%, rgba(238, 242, 255, 0.3) 50%, transparent 100%)
+          `,
+          maskImage: 'radial-gradient(ellipse 90% 85% at 100% 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 55%, transparent 85%)',
+          WebkitMaskImage: 'radial-gradient(ellipse 90% 85% at 100% 0%, rgba(0,0,0,1) 20%, rgba(0,0,0,0.5) 55%, transparent 85%)',
+        }}
+      />
 
       {/* Floating Action Toast Notification */}
       {actionToast && (
