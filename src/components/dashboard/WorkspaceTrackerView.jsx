@@ -31,7 +31,6 @@ import {
   Mail,
   Star
 } from 'lucide-react';
-import GlowingGridBackground from './GlowingGridBackground';
 
 // Initial Pipeline Data across the 4 stages
 const INITIAL_PIPELINE = {
@@ -2250,9 +2249,6 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
             >
               {/* Canvas-Driven Dynamic Bluish Mist Simulation */}
               <MistCanvas />
-
-              {/* Animated Glowing Square Grid Background */}
-              <GlowingGridBackground gridSize={38} opacity={0.85} showAtmosphere={false} />
 
               {/* Layered Atmospheric Glowing Bluish Mist Clouds */}
               <div 
