@@ -2686,28 +2686,13 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                             style={{ 
                               display: 'flex', 
                               alignItems: 'center', 
-                              justifyContent: 'space-between', 
+                              justifyContent: 'flex-end', 
                               paddingTop: '6px', 
                               borderTop: '1px solid rgba(226, 232, 240, 0.7)',
                               marginTop: 'auto',
                               gap: '6px'
                             }}
                           >
-                            <span 
-                              style={{ 
-                                fontSize: '10.5px', 
-                                color: '#1A53CF', 
-                                fontWeight: 700,
-                                whiteSpace: 'nowrap',
-                                overflow: 'hidden',
-                                textOverflow: 'ellipsis',
-                                maxWidth: '100px',
-                                flexShrink: 1
-                              }}
-                            >
-                              {res.keywords ? `${res.keywords.slice(0, 2).join(', ')}` : 'Tailored'}
-                            </span>
-
                             <div style={{ display: 'flex', alignItems: 'center', gap: '4px', flexShrink: 0 }}>
                               {/* Mark Master button - ONLY shown on non-master resumes */}
                               {!isMaster && (
