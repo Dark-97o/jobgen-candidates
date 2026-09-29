@@ -14,19 +14,19 @@ import {
 const EMMA_PROMPTS = [
   {
     id: 'tailor',
-    label: '✨ Tailor resume for Canva Lead PM',
+    label: 'Tailor resume for Canva Lead PM',
     query: 'How should I tailor my experience bullet for Canva’s Senior PM role?',
     response: 'Canva prioritizes user-led product velocity and design system governance. Based on your verified master experience at FinTech Corp, I’ve refined your bullet:\n\n"Scaled enterprise API adoption by 180% across 40+ Tier-1 banking partners through iterative sprint restructuring and automated compliance testing."\n\nNotice this retains 100% of your authentic metrics while directly matching Canva’s must-have ATS keyword: "API adoption" and "sprint restructuring".'
   },
   {
     id: 'outreach',
-    label: '✉️ Draft recruiter outreach note for Atlassian',
+    label: 'Draft recruiter outreach note for Atlassian',
     query: 'Draft a short, compelling LinkedIn note to Craig Press (Head of Product at Atlassian).',
     response: 'Hi Craig — noticed Atlassian is expanding the Jira cloud architecture team. Over the last 4 years at FinTech Corp, I spearheaded micro-frontend scaling across 14 distributed pods, cutting production turnaround times by 3 weeks. Would love to share insights on how we solved component federation if you have 5 minutes next week. Best, Alexander'
   },
   {
     id: 'salary',
-    label: '💰 Salary benchmarks for Sydney Tech',
+    label: 'Salary benchmarks for Sydney Tech',
     query: 'What is the current base salary and equity range for Lead PM in Sydney?',
     response: 'For a Lead Product Manager in Sydney (Tier-1 Tech: Canva, Atlassian, Stripe):\n• Median Base: $195,000 – $225,000 AUD\n• Superannuation: 11.5% statutory\n• Annual Equity Grant: $35,000 – $60,000 AUD in RSUs\n• Total Target Comp: $240,000 – $290,000 AUD.'
   }

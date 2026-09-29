@@ -498,7 +498,7 @@ ${letterData.bullets && letterData.bullets.length > 0 ? `Key Strategic & Technic
 ${letterData.signOff}`;
 
     navigator.clipboard?.writeText(fullText);
-    showToast('Copied full cover letter to clipboard! ✨');
+    showToast('Copied full cover letter to clipboard.');
   };
 
   const handleSendChatMessage = (textToSend = userInput) => {
@@ -1073,7 +1073,7 @@ ${letterData.signOff}`;
                         key={tpl.id}
                         onClick={() => {
                           setLetterData(prev => ({ ...prev, template: tpl.id }));
-                          showToast(`Applied ${tpl.name} design! ✨`);
+                          showToast(`Applied ${tpl.name} design.`);
                         }}
                         style={{
                           width: '122px',
@@ -1810,7 +1810,7 @@ ${letterData.signOff}`;
                   style={{ width: '100%', padding: '10px', borderRadius: '8px', border: '1px solid #CBD5E1', fontSize: '12px', lineHeight: 1.55, outline: 'none' }}
                 />
                 <button
-                  onClick={() => showToast('Saved Master Voice sample! ✨')}
+                  onClick={() => showToast('Saved Master Voice sample.')}
                   style={{ marginTop: '8px', padding: '8px 14px', borderRadius: '8px', backgroundColor: '#090C15', color: '#FFFFFF', border: 'none', fontSize: '12px', fontWeight: 700, cursor: 'pointer' }}
                 >
                   Save Master Voice
@@ -2087,11 +2087,11 @@ ${letterData.signOff}`;
               <button
                 onClick={() => {
                   setShowGenerateModal(false);
-                  showToast(`Generated tailored cover letter for ${selectedCompany}! ✨`);
+                  showToast(`Generated tailored cover letter for ${selectedCompany}.`);
                 }}
                 style={{ flex: 2, padding: '11px', borderRadius: '10px', border: 'none', background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)', color: '#FFFFFF', fontSize: '13px', fontWeight: 800, cursor: 'pointer', boxShadow: '0 4px 14px rgba(26, 83, 207, 0.35)' }}
               >
-                Generate Draft ✨
+                Generate Draft
               </button>
             </div>
           </div>

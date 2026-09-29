@@ -148,13 +148,13 @@ export default function PipelineView({ onNavigateToJobSearch }) {
                   {/* Stage-specific alert tags */}
                   {card.nextEvent && (
                     <div style={{ background: '#FEF3C7', color: '#92400E', padding: '4px 8px', borderRadius: '6px', fontSize: '10px', fontWeight: 700, marginBottom: '8px' }}>
-                      🗓️ {card.nextEvent}
+                      {card.nextEvent}
                     </div>
                   )}
 
                   {card.expiry && (
                     <div style={{ background: '#DCFCE7', color: '#15803D', padding: '4px 8px', borderRadius: '6px', fontSize: '10.5px', fontWeight: 700, marginBottom: '8px' }}>
-                      🎉 Offer: {card.expiry}
+                      Offer: {card.expiry}
                     </div>
                   )}
 

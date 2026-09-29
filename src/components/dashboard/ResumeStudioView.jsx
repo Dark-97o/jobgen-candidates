@@ -667,7 +667,7 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
       enhanced = 'Accomplished ' + raw.charAt(0).toLowerCase() + raw.slice(1);
     }
     updateExperienceBullet(expIndex, bulletIndex, enhanced);
-    showToast('Applied Google XYZ formula enhancement ✨');
+    showToast('Applied Google XYZ formula enhancement.');
   };
 
   const handleApplyAISummary = () => {
@@ -1028,7 +1028,7 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
     });
     setDraggedIndex(null);
     setDragOverIndex(null);
-    showToast('Reordered resume sections! 📄');
+    showToast('Reordered resume sections.');
   };
 
   const handleDragEnd = () => {
@@ -1048,7 +1048,7 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
       }
     }));
     setShowAddJobModal(false);
-    showToast(`Added ${newJob.company} — ${newJob.title}! ✨`);
+    showToast(`Added ${newJob.company} — ${newJob.title}!`);
   };
 
   return (
@@ -1371,7 +1371,7 @@ export default function ResumeStudioView({ onBackToDocuments, onOpenAtsScan }) {
                     key={tpl.id}
                     onClick={() => {
                       setResumeData(prev => ({ ...prev, template: tpl.id }));
-                      showToast(`Applied ${tpl.name} design! ✨`);
+                      showToast(`Applied ${tpl.name} design.`);
                     }}
                     style={{
                       width: '122px',

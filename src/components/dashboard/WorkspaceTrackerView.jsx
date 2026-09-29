@@ -920,7 +920,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
       sessionStorage.setItem('jobgen_master_resume_id', id);
     } catch (e) {}
     const r = resumesList.find(res => res.id === id);
-    showToast(`Marked ${r?.company || 'resume'} as Master Resume! 👑`);
+    showToast(`Marked ${r?.company || 'resume'} as Master Resume.`);
   };
 
   const handleDeleteResume = (id) => {
@@ -1977,7 +1977,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                               transition: 'all 0.15s ease'
                             }}
                           >
-                            <span>To Offer 🎉</span>
+                            <span>To Offer</span>
                             <ArrowRight size={11} />
                           </button>
                         )}
@@ -2001,7 +2001,7 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                               transition: 'all 0.15s ease'
                             }}
                           >
-                            <span>Accept 🎉</span>
+                            <span>Accept</span>
                           </button>
                         )}
                       </div>
@@ -2566,12 +2566,10 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                                 boxShadow: '0 2px 8px rgba(0, 0, 0, 0.35)',
                                 display: 'flex',
                                 alignItems: 'center',
-                                gap: '3.5px',
                                 zIndex: 25,
                                 pointerEvents: 'none'
                               }}
                             >
-                              <span style={{ color: '#F59E0B', fontSize: '9.5px', lineHeight: 1 }}>★</span>
                               <span>MASTER</span>
                             </div>
                           )}
@@ -2743,7 +2741,6 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                                   }}
                                   title="Mark this resume as Master Resume"
                                 >
-                                  <Star size={10} color="#F59E0B" fill="#F59E0B" />
                                   <span>Mark Master</span>
                                 </button>
                               )}
@@ -3843,7 +3840,7 @@ function AddDocumentModal({ isOpen, onClose, onAddDocument }) {
                 boxShadow: '0 4px 14px rgba(26, 83, 207, 0.35)'
               }}
             >
-              Generate {docType === 'resume' ? 'Resume' : 'Cover Letter'} ✨
+              Generate {docType === 'resume' ? 'Resume' : 'Cover Letter'}
             </button>
           </div>
         </form>
