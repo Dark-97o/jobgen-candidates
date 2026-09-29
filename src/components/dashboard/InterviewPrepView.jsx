@@ -20,12 +20,20 @@ import {
 
 const STAGES = [
   { 
-    id: 'hr', 
-    name: 'HR Interview', 
-    icon: Users, 
+    id: 'screening', 
+    name: 'Screening Preparation', 
+    icon: PhoneCall, 
     color: '#1A53CF', 
     lightBg: '#EFF6FF', 
     border: '#BFDBFE' 
+  },
+  { 
+    id: 'hr', 
+    name: 'HR Interview', 
+    icon: Users, 
+    color: '#6366F1', 
+    lightBg: '#EEF2FF', 
+    border: '#C7D2FE' 
   },
   { 
     id: 'technical', 
@@ -34,6 +42,14 @@ const STAGES = [
     color: '#0284C7', 
     lightBg: '#E0F2FE', 
     border: '#BAE6FD' 
+  },
+  { 
+    id: 'hiring_manager', 
+    name: 'Hiring Manager Interview', 
+    icon: Briefcase, 
+    color: '#D97706', 
+    lightBg: '#FEF3C7', 
+    border: '#FDE68A' 
   },
   { 
     id: 'final', 
@@ -464,7 +480,7 @@ export default function InterviewPrepView() {
   const [dropdownOpen, setDropdownOpen] = useState(false);
 
   // Active round stage tab: Screening, HR, Technical, Hiring Manager, Final
-  const [activeStage, setActiveStage] = useState('hr');
+  const [activeStage, setActiveStage] = useState('screening');
 
   const videoRef = useRef(null);
 
@@ -482,7 +498,7 @@ export default function InterviewPrepView() {
   }, []);
 
   const currentJob = confirmedJob || SAVED_JOBS[0];
-  const activeStageData = currentJob.stages?.[activeStage] || currentJob.stages?.hr;
+  const activeStageData = currentJob.stages?.[activeStage] || currentJob.stages?.screening;
 
   const handleConfirmJob = () => {
     const job = SAVED_JOBS.find(j => j.id === selectedJobId) || SAVED_JOBS[0];
@@ -792,7 +808,7 @@ export default function InterviewPrepView() {
                   onClick={() => setActiveStage(stage.id)}
                   style={{
                     flex: 1,
-                    minWidth: '100px',
+                    minWidth: '70px',
                     height: '46px',
                     backgroundColor: isActive ? '#1A53CF' : '#FFFFFF',
                     color: isActive ? '#FFFFFF' : '#090C15',
@@ -806,14 +822,15 @@ export default function InterviewPrepView() {
                     display: 'flex',
                     alignItems: 'center',
                     justifyContent: 'center',
-                    gap: '8px',
-                    padding: '0 12px',
-                    fontSize: '13px',
+                    gap: '6px',
+                    padding: '0 8px',
+                    fontSize: '12px',
                     fontWeight: 800,
                     fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
                     boxShadow: isActive ? '0 4px 14px rgba(26, 83, 207, 0.28)' : '0 1px 3px rgba(15, 23, 42, 0.04)',
                     zIndex: isActive ? 20 : 10,
-                    transition: 'background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease'
+                    transition: 'background-color 0.15s ease, color 0.15s ease, border-color 0.15s ease',
+                    whiteSpace: 'nowrap'
                   }}
                   onMouseEnter={(e) => {
                     if (!isActive) {
@@ -829,9 +846,9 @@ export default function InterviewPrepView() {
                   {/* Icon badge */}
                   <div 
                     style={{ 
-                      width: '26px', 
-                      height: '26px', 
-                      borderRadius: '7px', 
+                      width: '24px', 
+                      height: '24px', 
+                      borderRadius: '6px', 
                       backgroundColor: isActive ? 'rgba(255, 255, 255, 0.22)' : '#F1F5F9',
                       display: 'flex', 
                       alignItems: 'center', 
@@ -840,7 +857,7 @@ export default function InterviewPrepView() {
                     }}
                   >
                     <Icon 
-                      size={14} 
+                      size={13} 
                       color={isActive ? '#FFFFFF' : '#090C15'} 
                       strokeWidth={2.4} 
                     />
@@ -851,10 +868,10 @@ export default function InterviewPrepView() {
                   {/* Arrow sign > when selected */}
                   {isActive && (
                     <ChevronRight 
-                      size={16} 
+                      size={14} 
                       color="#FFFFFF" 
                       strokeWidth={3} 
-                      style={{ flexShrink: 0, marginLeft: '2px' }} 
+                      style={{ flexShrink: 0, marginLeft: '1px' }} 
                     />
                   )}
                 </button>
@@ -862,15 +879,11 @@ export default function InterviewPrepView() {
             })}
           </div>
 
-          {/* Interview Container Body with ipbg Background (Flat top, NO rounded edges at top, fixed minHeight) */}
+          {/* Interview Container Body with Translucent ipbg Background (Flat top, NO rounded edges at top, fixed minHeight) */}
           <div 
             style={{ 
               flex: 1,
               backgroundColor: '#FFFFFF',
-              backgroundImage: 'url(/ipbg.png)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'right center',
-              backgroundRepeat: 'no-repeat',
               borderRadius: '0 0 20px 20px',
               borderTopRightRadius: '0px',
               borderTopLeftRadius: '0px',
@@ -886,6 +899,20 @@ export default function InterviewPrepView() {
               justifyContent: 'space-between'
             }}
           >
+            {/* Slightly Transparent Paper-Cut Waves Background Image */}
+            <div 
+              style={{
+                position: 'absolute',
+                inset: 0,
+                backgroundImage: 'url(/ipbg.png)',
+                backgroundSize: 'cover',
+                backgroundPosition: 'right center',
+                backgroundRepeat: 'no-repeat',
+                opacity: 0.55,
+                pointerEvents: 'none',
+                zIndex: 1
+              }}
+            />
 
             <div style={{ position: 'relative', zIndex: 5, display: 'flex', flexDirection: 'column', height: '100%', justifyContent: 'space-between' }}>
               <div>
@@ -901,26 +928,6 @@ export default function InterviewPrepView() {
                   }}
                 >
                   <div>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
-                      <span 
-                        style={{ 
-                          fontSize: '11px', 
-                          fontWeight: 800, 
-                          textTransform: 'uppercase', 
-                          letterSpacing: '0.08em', 
-                          backgroundColor: activeStageConfig.lightBg,
-                          border: `1px solid ${activeStageConfig.border}`,
-                          padding: '3px 12px',
-                          borderRadius: '999px',
-                          color: activeStageConfig.color
-                        }}
-                      >
-                        {activeStageConfig.name} Round
-                      </span>
-                      <span style={{ fontSize: '13px', color: '#64748B', fontWeight: 600 }}>
-                        {activeStageData.roundName}
-                      </span>
-                    </div>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
                       {currentJob.logo && (
                         <div 
