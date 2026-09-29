@@ -11,15 +11,53 @@ import {
   ArrowLeft,
   Award,
   CheckCircle2,
-  HelpCircle
+  HelpCircle,
+  PhoneCall,
+  Users,
+  Code2
 } from 'lucide-react';
 
 const STAGES = [
-  { id: 'screening', name: 'Screening', defaultColor: '#3B6D96' },
-  { id: 'hr', name: 'HR', defaultColor: '#C6D2DC' },
-  { id: 'technical', name: 'Technical', defaultColor: '#9FA5A9' },
-  { id: 'hiring_manager', name: 'Hiring Manager', defaultColor: '#DCE0E2' },
-  { id: 'final', name: 'Final', defaultColor: '#6C7174' }
+  { 
+    id: 'screening', 
+    name: 'Screening', 
+    icon: PhoneCall, 
+    color: '#1A53CF', 
+    lightBg: '#EFF6FF', 
+    border: '#BFDBFE' 
+  },
+  { 
+    id: 'hr', 
+    name: 'HR', 
+    icon: Users, 
+    color: '#6366F1', 
+    lightBg: '#EEF2FF', 
+    border: '#C7D2FE' 
+  },
+  { 
+    id: 'technical', 
+    name: 'Technical', 
+    icon: Code2, 
+    color: '#0284C7', 
+    lightBg: '#E0F2FE', 
+    border: '#BAE6FD' 
+  },
+  { 
+    id: 'hiring_manager', 
+    name: 'Hiring Manager', 
+    icon: Briefcase, 
+    color: '#D97706', 
+    lightBg: '#FEF3C7', 
+    border: '#FDE68A' 
+  },
+  { 
+    id: 'final', 
+    name: 'Final', 
+    icon: Award, 
+    color: '#16A34A', 
+    lightBg: '#DCFCE7', 
+    border: '#BBF7D0' 
+  }
 ];
 
 const SAVED_JOBS = [
@@ -464,15 +502,7 @@ export default function InterviewPrepView() {
     }
   };
 
-  // Color palette matching the user's reference image
-  const FOLDER_COLOR = '#3B6D96'; // Deep Slate Blue folder body
-  const INACTIVE_COLORS = {
-    screening: '#3B6D96',
-    hr: '#C6D2DC',
-    technical: '#9FA5A9',
-    hiring_manager: '#DCE0E2',
-    final: '#6C7174'
-  };
+  const activeStageConfig = STAGES.find(s => s.id === activeStage) || STAGES[0];
 
   return (
     <div style={{ paddingBottom: '60px', position: 'relative' }}>
@@ -782,24 +812,22 @@ export default function InterviewPrepView() {
           position: 'relative'
         }}
       >
-        {/* Top 5 Folder Tabs Row (Screening , HR , Technical , Hiring Manager , Final) */}
+        {/* Top 5 Folder Tabs Row with Icons (Screening , HR , Technical , Hiring Manager , Final) */}
         <div 
           style={{ 
             display: 'flex', 
             alignItems: 'flex-end', 
-            gap: '0px', 
+            gap: '4px', 
             position: 'relative', 
             zIndex: 10,
-            marginBottom: '-1px'
+            marginBottom: '-1.5px',
+            paddingLeft: '6px',
+            paddingRight: '6px'
           }}
         >
           {STAGES.map((stage, idx) => {
+            const Icon = stage.icon;
             const isActive = (activeStage === stage.id);
-            // Default background matching user reference image
-            let tabBg = FOLDER_COLOR;
-            if (!isActive) {
-              tabBg = INACTIVE_COLORS[stage.id] || '#A0A6AA';
-            }
 
             return (
               <button
@@ -807,42 +835,86 @@ export default function InterviewPrepView() {
                 onClick={() => setActiveStage(stage.id)}
                 style={{
                   flex: 1,
-                  minWidth: '100px',
+                  minWidth: '110px',
                   height: isActive ? '54px' : '46px',
-                  backgroundColor: tabBg,
-                  borderTopLeftRadius: '22px',
-                  borderTopRightRadius: '22px',
+                  backgroundColor: isActive ? '#FFFFFF' : '#F8FAFC',
+                  borderTopLeftRadius: isActive ? '16px' : '12px',
+                  borderTopRightRadius: isActive ? '16px' : '12px',
                   borderBottomLeftRadius: '0px',
                   borderBottomRightRadius: '0px',
-                  border: 'none',
+                  border: '1.5px solid #E2E8F0',
+                  borderBottom: isActive ? '2.5px solid #FFFFFF' : '1.5px solid #E2E8F0',
+                  borderTop: isActive ? `3px solid #1A53CF` : '1.5px solid #E2E8F0',
                   cursor: 'pointer',
                   position: 'relative',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  padding: '0 12px',
-                  color: isActive ? '#FFFFFF' : '#1E293B',
-                  fontSize: isActive ? '14px' : '12.5px',
-                  fontWeight: isActive ? 900 : 700,
+                  gap: '8px',
+                  padding: '0 14px',
+                  color: isActive ? '#090C15' : '#64748B',
+                  fontSize: isActive ? '13.5px' : '12.5px',
+                  fontWeight: isActive ? 800 : 700,
                   letterSpacing: '-0.01em',
                   fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
                   boxShadow: isActive 
-                    ? '0 -6px 18px rgba(15, 23, 42, 0.12)' 
-                    : 'inset 0 -2px 6px rgba(0, 0, 0, 0.08)',
-                  zIndex: isActive ? 20 : (10 - idx),
-                  transition: 'height 0.18s cubic-bezier(0.16, 1, 0.3, 1), background-color 0.18s ease'
+                    ? '0 -4px 14px rgba(15, 23, 42, 0.05)' 
+                    : 'none',
+                  zIndex: isActive ? 25 : (10 - idx),
+                  transition: 'all 0.18s cubic-bezier(0.16, 1, 0.3, 1)'
+                }}
+                onMouseEnter={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = '#EFF6FF';
+                    e.currentTarget.style.color = '#1A53CF';
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  if (!isActive) {
+                    e.currentTarget.style.backgroundColor = '#F8FAFC';
+                    e.currentTarget.style.color = '#64748B';
+                  }
                 }}
               >
+                {/* Tab Icon */}
+                <div 
+                  style={{ 
+                    width: isActive ? '30px' : '26px', 
+                    height: isActive ? '30px' : '26px', 
+                    borderRadius: isActive ? '8px' : '7px', 
+                    background: isActive 
+                      ? 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)' 
+                      : '#F1F5F9',
+                    border: isActive 
+                      ? '1px solid rgba(26, 83, 207, 0.3)' 
+                      : '1px solid #E2E8F0',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    flexShrink: 0,
+                    boxShadow: isActive ? '0 2px 8px rgba(26, 83, 207, 0.25)' : 'none',
+                    transition: 'all 0.18s ease'
+                  }}
+                >
+                  <Icon 
+                    size={isActive ? 15 : 13} 
+                    color={isActive ? '#FFFFFF' : '#64748B'} 
+                    strokeWidth={isActive ? 2.4 : 2} 
+                  />
+                </div>
+
                 <span>{stage.name}</span>
+
                 {isActive && (
                   <span 
                     style={{ 
                       width: '6px', 
                       height: '6px', 
                       borderRadius: '50%', 
-                      backgroundColor: '#34D399', 
-                      marginLeft: '6px',
-                      boxShadow: '0 0 8px #34D399'
+                      backgroundColor: '#10B981', 
+                      marginLeft: '2px',
+                      boxShadow: '0 0 8px #10B981',
+                      flexShrink: 0
                     }} 
                   />
                 )}
@@ -851,300 +923,341 @@ export default function InterviewPrepView() {
           })}
         </div>
 
-        {/* Large Folder Body Container (Same FOLDER_COLOR as the active tab) */}
+        {/* Large Folder Body Container (Following Workspace Container Colors) */}
         <div 
           style={{ 
-            backgroundColor: FOLDER_COLOR,
+            backgroundColor: '#FFFFFF',
             borderRadius: '0 0 24px 24px',
             borderTopRightRadius: activeStage === 'final' ? '0px' : '20px',
             borderTopLeftRadius: activeStage === 'screening' ? '0px' : '20px',
-            padding: '36px 36px 40px 36px',
-            boxShadow: '0 24px 60px -10px rgba(15, 23, 42, 0.22), 0 8px 20px rgba(15, 23, 42, 0.08)',
+            border: '1.5px solid #E2E8F0',
+            padding: '36px 38px 36px 38px',
+            boxShadow: '0 20px 50px -10px rgba(15, 23, 42, 0.08), 0 4px 14px rgba(15, 23, 42, 0.04)',
             position: 'relative',
             zIndex: 15,
-            color: '#FFFFFF'
+            overflow: 'hidden'
           }}
         >
-          {/* Top Stage Header Inside Folder */}
+          {/* Atmospheric Glowing Bluish Mist Clouds inside container (matching workspace) */}
           <div 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between', 
-              marginBottom: '24px',
-              flexWrap: 'wrap',
-              gap: '14px'
+            style={{
+              position: 'absolute',
+              inset: 0,
+              background: 'radial-gradient(ellipse 65% 50% at 20% 25%, rgba(191, 219, 254, 0.45) 0%, transparent 70%), radial-gradient(ellipse 70% 60% at 85% 75%, rgba(186, 230, 253, 0.4) 0%, transparent 70%)',
+              filter: 'blur(36px)',
+              pointerEvents: 'none',
+              zIndex: 1
             }}
-          >
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                <span 
-                  style={{ 
-                    fontSize: '11px', 
-                    fontWeight: 800, 
-                    textTransform: 'uppercase', 
-                    letterSpacing: '0.08em', 
-                    backgroundColor: 'rgba(255, 255, 255, 0.18)',
-                    padding: '3px 10px',
-                    borderRadius: '999px',
-                    color: '#E0F2FE'
-                  }}
-                >
-                  {STAGES.find(s => s.id === activeStage)?.name} Round
-                </span>
-                <span style={{ fontSize: '13px', color: 'rgba(255, 255, 255, 0.75)', fontWeight: 600 }}>
-                  {activeStageData.roundName}
-                </span>
-              </div>
-              <h2 
-                style={{ 
-                  fontSize: '26px', 
-                  fontWeight: 900, 
-                  color: '#FFFFFF', 
-                  margin: 0,
-                  letterSpacing: '-0.025em',
-                  fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif'
-                }}
-              >
-                {currentJob.company} — {currentJob.role}
-              </h2>
-            </div>
+          />
 
-            {/* Interviewer Persona Card */}
+          <div style={{ position: 'relative', zIndex: 5 }}>
+            {/* Top Stage Header Inside Folder */}
             <div 
               style={{ 
                 display: 'flex', 
                 alignItems: 'center', 
-                gap: '10px', 
-                backgroundColor: 'rgba(255, 255, 255, 0.12)', 
-                backdropFilter: 'blur(10px)',
-                padding: '8px 16px', 
-                borderRadius: '16px',
-                border: '1px solid rgba(255, 255, 255, 0.2)'
+                justifyContent: 'space-between', 
+                marginBottom: '24px',
+                flexWrap: 'wrap',
+                gap: '14px'
               }}
             >
+              <div>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+                  <span 
+                    style={{ 
+                      fontSize: '11px', 
+                      fontWeight: 800, 
+                      textTransform: 'uppercase', 
+                      letterSpacing: '0.08em', 
+                      backgroundColor: activeStageConfig.lightBg,
+                      border: `1px solid ${activeStageConfig.border}`,
+                      padding: '3px 12px',
+                      borderRadius: '999px',
+                      color: activeStageConfig.color
+                    }}
+                  >
+                    {activeStageConfig.name} Round
+                  </span>
+                  <span style={{ fontSize: '13px', color: '#64748B', fontWeight: 600 }}>
+                    {activeStageData.roundName}
+                  </span>
+                </div>
+                <h2 
+                  style={{ 
+                    fontSize: '26px', 
+                    fontWeight: 900, 
+                    color: '#090C15', 
+                    margin: 0,
+                    letterSpacing: '-0.025em',
+                    fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif'
+                  }}
+                >
+                  {currentJob.company} — {currentJob.role}
+                </h2>
+              </div>
+
+              {/* Interviewer Persona Card */}
               <div 
                 style={{ 
-                  width: '38px', 
-                  height: '38px', 
-                  borderRadius: '50%', 
-                  backgroundColor: '#FFFFFF', 
-                  color: FOLDER_COLOR,
                   display: 'flex', 
                   alignItems: 'center', 
-                  justifyContent: 'center',
-                  fontWeight: 900,
-                  fontSize: '14px'
+                  gap: '10px', 
+                  backgroundColor: '#FFFFFF', 
+                  padding: '8px 16px', 
+                  borderRadius: '16px',
+                  border: '1.5px solid #E2E8F0',
+                  boxShadow: '0 4px 12px rgba(15, 23, 42, 0.04)'
                 }}
               >
-                <Bot size={20} color={FOLDER_COLOR} />
+                <div 
+                  style={{ 
+                    width: '38px', 
+                    height: '38px', 
+                    borderRadius: '50%', 
+                    background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)', 
+                    color: '#FFFFFF',
+                    display: 'flex', 
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    fontWeight: 900,
+                    fontSize: '14px',
+                    boxShadow: '0 3px 10px rgba(26, 83, 207, 0.25)'
+                  }}
+                >
+                  <Bot size={20} color="#FFFFFF" />
+                </div>
+                <div>
+                  <span style={{ fontSize: '12.5px', fontWeight: 800, color: '#090C15', display: 'block' }}>
+                    {activeStageData.interviewerName}
+                  </span>
+                  <span style={{ fontSize: '11px', color: '#64748B' }}>
+                    {activeStageData.interviewerRole}
+                  </span>
+                </div>
               </div>
-              <div>
-                <span style={{ fontSize: '12.5px', fontWeight: 800, color: '#FFFFFF', display: 'block' }}>
-                  {activeStageData.interviewerName}
+            </div>
+
+            {/* Core Interview Question Card */}
+            <div 
+              style={{ 
+                backgroundColor: '#FFFFFF', 
+                borderRadius: '18px', 
+                padding: '24px 28px', 
+                boxShadow: '0 8px 24px rgba(15, 23, 42, 0.04)', 
+                color: '#090C15',
+                marginBottom: '24px',
+                border: '1.5px solid #E2E8F0',
+                borderLeft: '5px solid #1A53CF'
+              }}
+            >
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
+                <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#1A53CF' }}>
+                  Primary Behavioral & Scenario Question
                 </span>
-                <span style={{ fontSize: '11px', color: 'rgba(255, 255, 255, 0.8)' }}>
-                  {activeStageData.interviewerRole}
-                </span>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#059669', fontWeight: 700, backgroundColor: '#ECFDF5', border: '1px solid #A7F3D0', padding: '3px 9px', borderRadius: '6px' }}>
+                  <CheckCircle2 size={13} color="#059669" />
+                  <span>AI Confidence: {activeStageData.score}</span>
+                </div>
+              </div>
+
+              <h3 
+                style={{ 
+                  fontSize: '18px', 
+                  fontWeight: 800, 
+                  color: '#090C15', 
+                  margin: '0 0 12px 0',
+                  lineHeight: 1.45,
+                  fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif'
+                }}
+              >
+                "{activeStageData.question}"
+              </h3>
+
+              <div 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  color: '#475569', 
+                  fontSize: '12px',
+                  backgroundColor: '#F8FAFC',
+                  border: '1px solid #E2E8F0',
+                  borderRadius: '10px',
+                  padding: '10px 14px'
+                }}
+              >
+                <Sparkles size={15} color="#1A53CF" style={{ flexShrink: 0 }} />
+                <span><strong style={{ color: '#090C15' }}>Emma AI Tip:</strong> {activeStageData.coachTip}</span>
               </div>
             </div>
-          </div>
 
-          {/* Core Interview Question Card */}
-          <div 
-            style={{ 
-              backgroundColor: '#FFFFFF', 
-              borderRadius: '18px', 
-              padding: '24px 28px', 
-              boxShadow: '0 12px 32px rgba(15, 23, 42, 0.12)', 
-              color: '#090C15',
-              marginBottom: '24px',
-              borderLeft: '5px solid #2563EB'
-            }}
-          >
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: '8px' }}>
-              <span style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.06em', color: '#1A53CF' }}>
-                Primary Behavioral & Scenario Question
-              </span>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#059669', fontWeight: 700, backgroundColor: '#ECFDF5', padding: '2px 8px', borderRadius: '6px' }}>
-                <CheckCircle2 size={13} color="#059669" />
-                <span>AI Confidence: {activeStageData.score}</span>
-              </div>
-            </div>
-
-            <h3 
-              style={{ 
-                fontSize: '18px', 
-                fontWeight: 800, 
-                color: '#090C15', 
-                margin: '0 0 10px 0',
-                lineHeight: 1.45,
-                fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif'
-              }}
-            >
-              "{activeStageData.question}"
-            </h3>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#64748B', fontSize: '12px' }}>
-              <Sparkles size={14} color="#1A53CF" />
-              <span><strong>Emma AI Tip:</strong> {activeStageData.coachTip}</span>
-            </div>
-          </div>
-
-          {/* STAR Method Structured Response Cards */}
-          <div 
-            style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', 
-              gap: '14px',
-              marginBottom: '26px'
-            }}
-          >
-            {/* Situation */}
+            {/* STAR Method Structured Response Cards */}
             <div 
               style={{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                borderRadius: '14px', 
-                padding: '16px 18px',
-                color: '#090C15',
-                borderLeft: '4px solid #1A53CF',
-                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)'
+                display: 'grid', 
+                gridTemplateColumns: 'repeat(2, minmax(0, 1fr))', 
+                gap: '14px',
+                marginBottom: '26px'
               }}
             >
-              <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#1A53CF', marginBottom: '4px' }}>
-                S — Situation
+              {/* Situation */}
+              <div 
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                  borderRadius: '14px', 
+                  padding: '16px 18px',
+                  color: '#090C15',
+                  border: '1.5px solid #E2E8F0',
+                  borderLeft: '4px solid #1A53CF',
+                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.03)'
+                }}
+              >
+                <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#1A53CF', marginBottom: '4px' }}>
+                  S — Situation
+                </div>
+                <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.55 }}>
+                  {activeStageData.situation}
+                </p>
               </div>
-              <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.5 }}>
-                {activeStageData.situation}
-              </p>
+
+              {/* Task */}
+              <div 
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                  borderRadius: '14px', 
+                  padding: '16px 18px',
+                  color: '#090C15',
+                  border: '1.5px solid #E2E8F0',
+                  borderLeft: '4px solid #10B981',
+                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.03)'
+                }}
+              >
+                <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#10B981', marginBottom: '4px' }}>
+                  T — Task
+                </div>
+                <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.55 }}>
+                  {activeStageData.task}
+                </p>
+              </div>
+
+              {/* Action */}
+              <div 
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                  borderRadius: '14px', 
+                  padding: '16px 18px',
+                  color: '#090C15',
+                  border: '1.5px solid #E2E8F0',
+                  borderLeft: '4px solid #F59E0B',
+                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.03)'
+                }}
+              >
+                <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#D97706', marginBottom: '4px' }}>
+                  A — Action (High-Leverage Execution)
+                </div>
+                <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.55 }}>
+                  {activeStageData.action}
+                </p>
+              </div>
+
+              {/* Result */}
+              <div 
+                style={{ 
+                  backgroundColor: 'rgba(255, 255, 255, 0.95)', 
+                  borderRadius: '14px', 
+                  padding: '16px 18px',
+                  color: '#090C15',
+                  border: '1.5px solid #E2E8F0',
+                  borderLeft: '4px solid #8B5CF6',
+                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.03)'
+                }}
+              >
+                <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#8B5CF6', marginBottom: '4px' }}>
+                  R — Result (Quantified Impact)
+                </div>
+                <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.55 }}>
+                  {activeStageData.result}
+                </p>
+              </div>
             </div>
 
-            {/* Task */}
+            {/* Folder Action Footer */}
             <div 
               style={{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                borderRadius: '14px', 
-                padding: '16px 18px',
-                color: '#090C15',
-                borderLeft: '4px solid #10B981',
-                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)'
+                display: 'flex', 
+                alignItems: 'center', 
+                justifyContent: 'space-between',
+                paddingTop: '20px',
+                borderTop: '1.5px solid #E2E8F0',
+                flexWrap: 'wrap',
+                gap: '12px'
               }}
             >
-              <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#10B981', marginBottom: '4px' }}>
-                T — Task
-              </div>
-              <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.5 }}>
-                {activeStageData.task}
-              </p>
-            </div>
-
-            {/* Action */}
-            <div 
-              style={{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                borderRadius: '14px', 
-                padding: '16px 18px',
-                color: '#090C15',
-                borderLeft: '4px solid #F59E0B',
-                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)'
-              }}
-            >
-              <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#F59E0B', marginBottom: '4px' }}>
-                A — Action (High-Leverage Execution)
-              </div>
-              <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.5 }}>
-                {activeStageData.action}
-              </p>
-            </div>
-
-            {/* Result */}
-            <div 
-              style={{ 
-                backgroundColor: 'rgba(255, 255, 255, 0.95)', 
-                borderRadius: '14px', 
-                padding: '16px 18px',
-                color: '#090C15',
-                borderLeft: '4px solid #8B5CF6',
-                boxShadow: '0 4px 14px rgba(0, 0, 0, 0.04)'
-              }}
-            >
-              <div style={{ fontSize: '11px', fontWeight: 800, textTransform: 'uppercase', color: '#8B5CF6', marginBottom: '4px' }}>
-                R — Result (Quantified Impact)
-              </div>
-              <p style={{ fontSize: '12.5px', color: '#334155', margin: 0, lineHeight: 1.5 }}>
-                {activeStageData.result}
-              </p>
-            </div>
-          </div>
-
-          {/* Folder Action Footer */}
-          <div 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'space-between',
-              paddingTop: '18px',
-              borderTop: '1px solid rgba(255, 255, 255, 0.18)',
-              flexWrap: 'wrap',
-              gap: '12px'
-            }}
-          >
-            <button
-              onClick={handlePrevStage}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '10px 18px',
-                borderRadius: '12px',
-                backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                color: '#FFFFFF',
-                border: '1px solid rgba(255, 255, 255, 0.25)',
-                fontSize: '12.5px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.25)'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'}
-            >
-              <ArrowLeft size={15} />
-              <span>Previous Stage</span>
-            </button>
-
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               <button
-                onClick={handleNextStage}
+                onClick={handlePrevStage}
                 style={{
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '8px',
-                  padding: '10px 22px',
+                  padding: '10px 18px',
                   borderRadius: '12px',
                   backgroundColor: '#FFFFFF',
-                  color: FOLDER_COLOR,
-                  border: 'none',
-                  fontSize: '13px',
-                  fontWeight: 800,
+                  color: '#334155',
+                  border: '1.5px solid #CBD5E1',
+                  fontSize: '12.5px',
+                  fontWeight: 700,
                   cursor: 'pointer',
-                  boxShadow: '0 4px 14px rgba(0, 0, 0, 0.12)',
+                  boxShadow: '0 2px 6px rgba(15, 23, 42, 0.04)',
                   transition: 'all 0.15s ease'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.18)';
+                  e.currentTarget.style.backgroundColor = '#F8FAFC';
+                  e.currentTarget.style.borderColor = '#94A3B8';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 0, 0, 0.12)';
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.borderColor = '#CBD5E1';
                 }}
               >
-                <span>Next Stage: {STAGES[(STAGES.findIndex(s => s.id === activeStage) + 1) % STAGES.length].name}</span>
-                <ArrowRight size={15} />
+                <ArrowLeft size={15} />
+                <span>Previous Stage</span>
               </button>
-            </div>
-          </div>
 
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <button
+                  onClick={handleNextStage}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    padding: '10px 22px',
+                    borderRadius: '12px',
+                    background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+                    color: '#FFFFFF',
+                    border: 'none',
+                    fontSize: '13px',
+                    fontWeight: 800,
+                    cursor: 'pointer',
+                    boxShadow: '0 4px 14px rgba(26, 83, 207, 0.35)',
+                    transition: 'all 0.15s ease'
+                  }}
+                  onMouseEnter={(e) => {
+                    e.currentTarget.style.transform = 'translateY(-1px)';
+                    e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 83, 207, 0.45)';
+                  }}
+                  onMouseLeave={(e) => {
+                    e.currentTarget.style.transform = 'translateY(0)';
+                    e.currentTarget.style.boxShadow = '0 4px 14px rgba(26, 83, 207, 0.35)';
+                  }}
+                >
+                  <span>Next Stage: {STAGES[(STAGES.findIndex(s => s.id === activeStage) + 1) % STAGES.length].name}</span>
+                  <ArrowRight size={15} />
+                </button>
+              </div>
+            </div>
+
+          </div>
         </div>
       </div>
 
