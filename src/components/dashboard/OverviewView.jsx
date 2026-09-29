@@ -534,7 +534,7 @@ export default function OverviewView({ onNavigate }) {
           >
             {/* Left Column: Big Greeting + Animated Name & Two Rounded Rectangle Buttons (Shifted up 15px) */}
             <div style={{ display: 'flex', flexDirection: 'column', gap: '4px', paddingTop: '6px', transform: 'translateY(-15px)' }}>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '14px', lineHeight: 1 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '14px', lineHeight: 1 }}>
                 <span style={{
                   fontSize: 'clamp(28px, 3.4vw, 48px)',
                   fontWeight: 800,
@@ -558,6 +558,18 @@ export default function OverviewView({ onNavigate }) {
                 >
                   Subhranil Baul
                 </span>
+                <img 
+                  src="/cofe.png" 
+                  alt="Coffee" 
+                  style={{ 
+                    height: 'clamp(32px, 3.8vw, 48px)', 
+                    width: 'auto', 
+                    objectFit: 'contain',
+                    verticalAlign: 'middle',
+                    marginLeft: '-4px',
+                    filter: 'drop-shadow(0 2px 8px rgba(0, 0, 0, 0.08))'
+                  }} 
+                />
               </div>
 
               {/* Motivational Tagline: Tight spacing directly below greeting, enlarged text */}

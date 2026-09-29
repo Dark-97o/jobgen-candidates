@@ -2011,6 +2011,24 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
               </div>
             )}
 
+            {/* Small Coffee Icon at bottom right corner */}
+            <img 
+              src="/cofe.png" 
+              alt="Coffee" 
+              style={{
+                position: 'absolute',
+                bottom: '10px',
+                right: '26px',
+                height: '24px',
+                width: 'auto',
+                objectFit: 'contain',
+                pointerEvents: 'none',
+                zIndex: 25,
+                opacity: 0.85,
+                filter: 'drop-shadow(0 2px 5px rgba(0, 0, 0, 0.12))'
+              }}
+            />
+
             </div>
 
           </div>
@@ -3126,6 +3144,24 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                   </div>
                 )
               )}
+
+            {/* Small Coffee Icon at bottom right corner */}
+            <img 
+              src="/cofe.png" 
+              alt="Coffee" 
+              style={{
+                position: 'absolute',
+                bottom: '10px',
+                right: '26px',
+                height: '24px',
+                width: 'auto',
+                objectFit: 'contain',
+                pointerEvents: 'none',
+                zIndex: 25,
+                opacity: 0.85,
+                filter: 'drop-shadow(0 2px 5px rgba(0, 0, 0, 0.12))'
+              }}
+            />
 
             </div>
           </div>

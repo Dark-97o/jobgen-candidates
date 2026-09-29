@@ -13,17 +13,29 @@ export default function Footer() {
         zIndex: 2,
       }}
     >
-      {/* Giant Condensed "JOBGEN.AI" with Minimal Letter Spacing & Atmospheric Transparency */}
+      {/* Giant Condensed "JOBGEN.AI" leftmost with Coffee Icon & Atmospheric Transparency */}
       <div 
         style={{
           display: 'flex',
-          alignItems: 'flex-end',
-          justifyContent: 'flex-end',
+          alignItems: 'center',
+          justifyContent: 'flex-start',
+          gap: 'clamp(12px, 2.5vw, 36px)',
           userSelect: 'none',
           pointerEvents: 'none',
           overflow: 'hidden',
         }}
       >
+        <img 
+          src="/cofe.png" 
+          alt="Coffee" 
+          style={{ 
+            height: 'clamp(55px, 9vw, 150px)', 
+            width: 'auto', 
+            objectFit: 'contain',
+            opacity: 0.9,
+            filter: 'drop-shadow(0 4px 16px rgba(37, 99, 235, 0.2))'
+          }} 
+        />
         <span
           style={{
             fontSize: 'clamp(85px, 14.5vw, 230px)',
@@ -255,28 +267,11 @@ export default function Footer() {
           </a>
         </div>
 
-        {/* Policy Links & Operational Badge */}
+        {/* Policy Links */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
           <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#94A3B8'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Privacy Policy</span>
           <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#94A3B8'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Terms of Service</span>
           <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#94A3B8'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Security</span>
-          <div 
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              backgroundColor: 'rgba(16, 185, 129, 0.12)',
-              border: '1px solid rgba(16, 185, 129, 0.28)',
-              padding: '3px 10px',
-              borderRadius: '999px',
-              fontSize: '11px',
-              fontWeight: 700,
-              color: '#10B981',
-            }}
-          >
-            <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981', boxShadow: '0 0 8px #10B981' }} />
-            All Systems Operational
-          </div>
         </div>
       </div>
     </footer>
