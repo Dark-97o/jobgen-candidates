@@ -506,7 +506,7 @@ export default function InterviewPrepView() {
   const activeStageConfig = STAGES.find(s => s.id === activeStage) || STAGES[0];
 
   return (
-    <div style={{ paddingBottom: '60px', position: 'relative' }}>
+    <div style={{ paddingTop: '28px', paddingBottom: '60px', position: 'relative' }}>
       
       {/* =========================================================================
           POP-UP MODAL WITH COFFEE IMAGE: SELECT SAVED JOB BEFORE SHOWING PAGE
@@ -1225,7 +1225,7 @@ export default function InterviewPrepView() {
           >
             {/* Background Playing Video */}
             <video
-              src="/waves.mp4"
+              src="/vidmg.mp4"
               autoPlay
               loop
               muted
@@ -1279,7 +1279,7 @@ export default function InterviewPrepView() {
                 boxSizing: 'border-box'
               }}
             >
-              {/* Top Switch Job Button with Coffee Icon */}
+              {/* Top Switch Job Button */}
               <div>
                 <button
                   onClick={() => {
@@ -1289,8 +1289,8 @@ export default function InterviewPrepView() {
                   style={{
                     display: 'inline-flex',
                     alignItems: 'center',
-                    gap: '8px',
-                    padding: '8px 16px',
+                    justifyContent: 'center',
+                    padding: '8px 18px',
                     borderRadius: '999px',
                     backgroundColor: 'rgba(255, 255, 255, 0.16)',
                     backdropFilter: 'blur(12px)',
@@ -1314,26 +1314,12 @@ export default function InterviewPrepView() {
                     e.currentTarget.style.transform = 'translateY(0)';
                   }}
                 >
-                  <img src="/cofe.png" alt="" style={{ height: '17px', width: 'auto', objectFit: 'contain' }} />
                   <span>Switch Job</span>
                 </button>
               </div>
 
               {/* Bottom Editorial Typography: YOUR NEXT JOB IS CLOSER THAN YOU THINK */}
               <div>
-                <span 
-                  style={{ 
-                    display: 'block', 
-                    fontSize: '10.5px', 
-                    fontWeight: 800, 
-                    color: '#38BDF8', 
-                    letterSpacing: '0.12em', 
-                    textTransform: 'uppercase', 
-                    marginBottom: '10px' 
-                  }}
-                >
-                  Career Momentum
-                </span>
                 <h2 
                   style={{ 
                     fontSize: '24px', 
