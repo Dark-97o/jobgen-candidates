@@ -1697,6 +1697,8 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                   maxHeight: '385px',
                   overflowY: 'auto',
                   overscrollBehavior: 'auto',
+                  paddingTop: '8px',
+                  paddingLeft: '4px',
                   paddingRight: '6px',
                   paddingBottom: '36px'
                 }}
@@ -1724,16 +1726,14 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                         gap: '6px',
                         position: 'relative',
                         zIndex: 20,
-                        transition: 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease'
+                        transition: 'box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease'
                       }}
                       onMouseEnter={(e) => {
-                        e.currentTarget.style.transform = 'translateY(-3px)';
                         e.currentTarget.style.borderColor = 'rgba(191, 219, 254, 0.95)';
-                        e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.76) 100%)';
+                        e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.80) 100%)';
                         e.currentTarget.style.boxShadow = '0 16px 36px -4px rgba(37, 99, 235, 0.16), 0 6px 14px -2px rgba(15, 23, 42, 0.06), inset 0 1px 2px rgba(255, 255, 255, 1)';
                       }}
                       onMouseLeave={(e) => {
-                        e.currentTarget.style.transform = 'translateY(0)';
                         e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.88)';
                         e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)';
                         e.currentTarget.style.boxShadow = '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)';
@@ -2494,6 +2494,8 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                       maxHeight: '385px',
                       overflowY: 'auto',
                       overscrollBehavior: 'auto',
+                      paddingTop: '8px',
+                      paddingLeft: '4px',
                       paddingRight: '6px',
                       paddingBottom: '36px'
                     }}
@@ -2527,10 +2529,9 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                             position: 'relative',
                             zIndex: 20,
                             overflow: 'hidden',
-                            transition: 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease'
+                            transition: 'box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-3px)';
                             e.currentTarget.style.borderColor = isMaster ? '#0F172A' : 'rgba(191, 219, 254, 0.95)';
                             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.76) 100%)';
                             e.currentTarget.style.boxShadow = isMaster 
@@ -2538,7 +2539,6 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                               : '0 16px 36px -4px rgba(37, 99, 235, 0.16), 0 6px 14px -2px rgba(15, 23, 42, 0.06), inset 0 1px 2px rgba(255, 255, 255, 1)';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
                             e.currentTarget.style.borderColor = isMaster ? '#0F172A' : 'rgba(255, 255, 255, 0.88)';
                             e.currentTarget.style.background = isMaster 
                               ? 'linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(248, 250, 252, 0.82) 100%)'
@@ -2883,6 +2883,8 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                       maxHeight: '385px',
                       overflowY: 'auto',
                       overscrollBehavior: 'auto',
+                      paddingTop: '8px',
+                      paddingLeft: '4px',
                       paddingRight: '6px',
                       paddingBottom: '36px'
                     }}
@@ -2910,16 +2912,14 @@ export default function WorkspaceTrackerView({ onNavigateToJobSearch, onNavigate
                             gap: '6px',
                             position: 'relative',
                             zIndex: 20,
-                            transition: 'transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease'
+                            transition: 'box-shadow 0.22s ease, border-color 0.22s ease, background 0.22s ease'
                           }}
                           onMouseEnter={(e) => {
-                            e.currentTarget.style.transform = 'translateY(-3px)';
                             e.currentTarget.style.borderColor = 'rgba(191, 219, 254, 0.95)';
-                            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.92) 0%, rgba(255, 255, 255, 0.76) 100%)';
+                            e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.94) 0%, rgba(255, 255, 255, 0.80) 100%)';
                             e.currentTarget.style.boxShadow = '0 16px 36px -4px rgba(37, 99, 235, 0.16), 0 6px 14px -2px rgba(15, 23, 42, 0.06), inset 0 1px 2px rgba(255, 255, 255, 1)';
                           }}
                           onMouseLeave={(e) => {
-                            e.currentTarget.style.transform = 'translateY(0)';
                             e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.88)';
                             e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.62) 100%)';
                             e.currentTarget.style.boxShadow = '0 10px 25px -4px rgba(15, 23, 42, 0.08), 0 4px 10px -2px rgba(15, 23, 42, 0.04), inset 0 1px 1.5px rgba(255, 255, 255, 0.95)';
