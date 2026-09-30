@@ -721,30 +721,8 @@ export default function CoverLetterView({ onBackToDocuments }) {
           zIndex: 40
         }}
       >
-        {/* Left: Back & Title */}
+        {/* Left: Title & Metadata */}
         <div style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
-          <button 
-            onClick={onBackToDocuments || (() => window.history.back())}
-            title="Back to Documents"
-            style={{ 
-              width: '36px', 
-              height: '36px', 
-              borderRadius: '9px', 
-              border: '1px solid #E2E8F0', 
-              backgroundColor: '#F8FAFC', 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center',
-              cursor: 'pointer',
-              color: '#475569',
-              transition: 'all 0.15s ease'
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#EFF6FF'}
-            onMouseLeave={(e) => e.currentTarget.style.backgroundColor = '#F8FAFC'}
-          >
-            <ArrowLeft size={16} />
-          </button>
-
           <div>
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
               {isEditingTitle ? (

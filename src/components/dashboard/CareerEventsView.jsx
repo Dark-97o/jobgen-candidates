@@ -122,6 +122,16 @@ export default function CareerEventsView() {
   const [activeCategory, setActiveCategory] = useState('all');
   const [copyToast, setCopyToast] = useState('');
   const videoRef = React.useRef(null);
+  const introTimerRef = React.useRef(null);
+  const fadeTimerRef = React.useRef(null);
+
+  // Clean up timers on unmount
+  useEffect(() => {
+    return () => {
+      if (introTimerRef.current) clearTimeout(introTimerRef.current);
+      if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
+    };
+  }, []);
 
   // Guarantee muted audio and autoplay compliance
   useEffect(() => {
@@ -142,21 +152,33 @@ export default function CareerEventsView() {
   }, [showIntro]);
 
   const handleVideoEnded = () => {
-    setIntroFading(true);
     try {
       sessionStorage.setItem('jobgen_career_intro_played', 'true');
     } catch (e) {}
-    setTimeout(() => {
-      setShowIntro(false);
-    }, 450);
+    // Stay on the last frame of the video for 1 second before fading out
+    introTimerRef.current = setTimeout(() => {
+      setIntroFading(true);
+      fadeTimerRef.current = setTimeout(() => {
+        setShowIntro(false);
+      }, 450);
+    }, 1000);
+  };
+
+  const handleVideoError = () => {
+    try {
+      sessionStorage.setItem('jobgen_career_intro_played', 'true');
+    } catch (e) {}
+    setShowIntro(false);
   };
 
   const handleSkipIntro = () => {
+    if (introTimerRef.current) clearTimeout(introTimerRef.current);
+    if (fadeTimerRef.current) clearTimeout(fadeTimerRef.current);
     setIntroFading(true);
     try {
       sessionStorage.setItem('jobgen_career_intro_played', 'true');
     } catch (e) {}
-    setTimeout(() => {
+    fadeTimerRef.current = setTimeout(() => {
       setShowIntro(false);
     }, 300);
   };
@@ -256,7 +278,7 @@ export default function CareerEventsView() {
             muted
             playsInline
             onEnded={handleVideoEnded}
-            onError={handleVideoEnded}
+            onError={handleVideoError}
             style={{
               width: '100%',
               height: '100%',

@@ -792,7 +792,8 @@ export default function CareerPlanView() {
             borderTopRightRadius: '24px',
             borderBottomRightRadius: '24px',
             borderBottomLeftRadius: '24px',
-            backgroundColor: '#FFFFFF',
+            backgroundColor: '#F8FAFD',
+            background: 'linear-gradient(180deg, #FFFFFF 0%, #F8FAFD 25%, #F0F6FE 70%, #EBF4FF 100%)',
             border: '1px solid #E2E8F0',
             boxShadow: '0 6px 24px rgba(15, 23, 42, 0.05)',
             overflow: 'hidden',
@@ -1021,19 +1022,88 @@ export default function CareerPlanView() {
             </div>
           </div>
 
-          {/* Tasks Grid without description */}
-          <div 
+          {/* Tasks Grid Section with Slight Blue Mist Background behind Task Cards */}
+          <div
             style={{
-              padding: '24px 28px 36px 28px',
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
-              gap: '16px',
-              backgroundColor: 'transparent',
               position: 'relative',
-              zIndex: 2,
-              minHeight: '380px'
+              width: '100%',
+              flex: 1,
+              overflow: 'hidden'
             }}
           >
+            {/* Ambient Blue Mist Layer directly behind task cards */}
+            <div 
+              style={{
+                position: 'absolute',
+                inset: 0,
+                pointerEvents: 'none',
+                zIndex: 0,
+                overflow: 'hidden',
+                background: `
+                  radial-gradient(ellipse 80% 55% at 50% 30%, rgba(219, 234, 254, 0.55) 0%, rgba(239, 246, 255, 0.25) 50%, transparent 75%),
+                  radial-gradient(circle 500px at 15% 80%, rgba(191, 219, 254, 0.45) 0%, transparent 70%),
+                  radial-gradient(circle 550px at 85% 70%, rgba(186, 230, 253, 0.42) 0%, transparent 70%)
+                `
+              }}
+            >
+              {/* Floating misty blue orbs directly behind task cards */}
+              <div 
+                style={{
+                  position: 'absolute',
+                  top: '5%',
+                  left: '10%',
+                  width: '560px',
+                  height: '420px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(147, 197, 253, 0.4) 0%, rgba(191, 219, 254, 0.2) 50%, transparent 75%)',
+                  filter: 'blur(60px)',
+                  animation: 'mistDriftOne 14s ease-in-out infinite',
+                  willChange: 'transform, opacity'
+                }}
+              />
+              <div 
+                style={{
+                  position: 'absolute',
+                  bottom: '10%',
+                  right: '8%',
+                  width: '600px',
+                  height: '460px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(96, 165, 250, 0.32) 0%, rgba(186, 230, 253, 0.2) 50%, transparent 75%)',
+                  filter: 'blur(70px)',
+                  animation: 'mistDriftTwo 16s ease-in-out infinite',
+                  willChange: 'transform, opacity'
+                }}
+              />
+              <div 
+                style={{
+                  position: 'absolute',
+                  top: '40%',
+                  left: '35%',
+                  width: '480px',
+                  height: '380px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(56, 189, 248, 0.28) 0%, rgba(219, 234, 254, 0.16) 50%, transparent 75%)',
+                  filter: 'blur(65px)',
+                  animation: 'mistDriftThree 18s ease-in-out infinite',
+                  willChange: 'transform, opacity'
+                }}
+              />
+            </div>
+
+            {/* Tasks Grid without description */}
+            <div 
+              style={{
+                padding: '24px 28px 36px 28px',
+                display: 'grid',
+                gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+                gap: '16px',
+                backgroundColor: 'transparent',
+                position: 'relative',
+                zIndex: 2,
+                minHeight: '380px'
+              }}
+            >
             {filteredTasks.map(task => {
               const isDone = task.status === 'done';
               const isInProgress = task.status === 'in_progress';
@@ -1193,6 +1263,7 @@ export default function CareerPlanView() {
               );
             })}
           </div>
+        </div>
 
           {/* Bottom Corner Graphic Accent from public/bgimg.png (reduced by 25%) */}
           <img 
