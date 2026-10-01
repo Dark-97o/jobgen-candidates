@@ -6,7 +6,7 @@ export default defineConfig({
   plugins: [react()],
   server: {
     watch: {
-      ignored: ['**/.agents/**', '**/.git/**', '**/.agent/**', '**/*.mp4']
+      ignored: ['**/.agents/**', '**/.git/**', '**/.agent/**']
     }
   }
 })

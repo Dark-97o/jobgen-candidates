@@ -911,7 +911,8 @@ export default function OverviewView({ onNavigate }) {
               }}
             >
               <video
-                src="/waves.mp4"
+                key="/jobs.mp4"
+                src="/jobs.mp4"
                 autoPlay
                 loop
                 muted
@@ -923,7 +924,9 @@ export default function OverviewView({ onNavigate }) {
                   opacity: 0.98,
                   display: 'block',
                 }}
-              />
+              >
+                <source src="/jobs.mp4" type="video/mp4" />
+              </video>
             </div>
 
             {/* The White Space: Precisely Locked to the 16:9 White Monitor Screen inside waves.mp4 */}

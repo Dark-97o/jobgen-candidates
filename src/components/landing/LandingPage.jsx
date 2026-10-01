@@ -33,6 +33,9 @@ import {
   Laptop
 } from 'lucide-react';
 import InteractiveFluidGradient from './InteractiveFluidGradient';
+import RuggedScreen3D from './RuggedScreen3D';
+import HandwrittenSubtitle from './HandwrittenSubtitle';
+import RevealingTitle from './RevealingTitle';
 
 // ==========================================
 // STATIC DATA & CONTENT FROM CANDIDATES.JOBGEN.AI
@@ -216,7 +219,7 @@ const FAQS = [
 // =========================================================================
 // FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REAL RESUME
 // =========================================================================
-function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick }) {
+function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick, onPricingClick }) {
   const resumeContainerRef = useRef(null);
   const glintRef = useRef(null);
 
@@ -227,7 +230,9 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick }) {
     targetX: 3,
     targetY: -4,
     transX: 0,
-    transY: 0
+    transY: 0,
+    currentScale: 1,
+    targetScale: 1
   });
 
   useEffect(() => {
@@ -236,11 +241,12 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick }) {
       const r = rotRef.current;
       r.currentX += (r.targetX - r.currentX) * 0.085;
       r.currentY += (r.targetY - r.currentY) * 0.085;
+      r.currentScale += (r.targetScale - r.currentScale) * 0.095;
 
       const lev = Math.sin(Date.now() * 0.0018) * 8;
 
       if (resumeContainerRef.current) {
-        resumeContainerRef.current.style.transform = `perspective(1100px) rotateX(${r.currentX}deg) rotateY(${r.currentY}deg) translate3d(${r.transX}px, ${r.transY + lev}px, 45px)`;
+        resumeContainerRef.current.style.transform = `perspective(1100px) rotateX(${r.currentX}deg) rotateY(${r.currentY}deg) translate3d(${r.transX}px, ${r.transY + lev}px, 45px) scale(${r.currentScale})`;
       }
 
       if (glintRef.current) {
@@ -278,11 +284,22 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick }) {
     rotRef.current.transY = normY * 14;
   };
 
+  const handleScreenPointerEnter = () => {
+    // Grow slightly when pointer touches the 3D screen
+    rotRef.current.targetScale = 1.055;
+  };
+
+  const handleScreenPointerLeave = () => {
+    // Return smoothly to normal scale
+    rotRef.current.targetScale = 1.0;
+  };
+
   const handlePointerLeave = () => {
     rotRef.current.targetX = 3;
     rotRef.current.targetY = -4;
     rotRef.current.transX = 0;
     rotRef.current.transY = 0;
+    rotRef.current.targetScale = 1.0;
   };
 
   return (
@@ -306,52 +323,87 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick }) {
       {/* 1. INTERACTIVE FLUID GRADIENT WEBGL BACKGROUND (CODEGRID SHADER) */}
       <InteractiveFluidGradient />
 
-      {/* 1b. TOP HEADER ON HERO SECTION: WHITE LOGO (LEFT CORNER) & WHITE SIGN IN BUTTON (RIGHT CORNER) */}
+      {/* 1b. TOP HEADER ON HERO SECTION: BUTTON GROUP (PRODUCTIVITY, PRICING, SIGN IN) */}
       <div
         style={{
           position: 'absolute',
-          top: 'clamp(12px, 1.8vh, 18px)',
-          left: 0,
-          right: 0,
-          padding: '0 clamp(16px, 2.2vw, 26px)',
+          top: 'clamp(26px, 3.8vh, 42px)',
+          right: 'clamp(28px, 4.5vw, 68px)',
           display: 'flex',
           alignItems: 'center',
-          justifyContent: 'space-between',
-          zIndex: 20,
+          gap: 'clamp(8px, 1.1vw, 14px)',
+          zIndex: 25,
           pointerEvents: 'auto',
           boxSizing: 'border-box'
         }}
       >
-        {/* Top-Left: Pure White Logo (smaller, shifted into corner) */}
-        <div 
-          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
-          style={{ 
-            display: 'flex', 
-            alignItems: 'center', 
+        {/* Productivity Button */}
+        <button
+          onClick={onProductivityClick}
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.12)',
+            color: '#FFFFFF',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            borderRadius: '9999px',
+            padding: '8px 20px',
+            fontSize: '13.5px',
+            fontWeight: 700,
             cursor: 'pointer',
-            userSelect: 'none'
+            boxShadow: '0 4px 14px rgba(0, 18, 70, 0.2)',
+            transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.3)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.2)';
           }}
         >
-          <img 
-            src="/Whitelogo.webp" 
-            alt="JobGen" 
-            style={{ 
-              width: 'clamp(36px, 4vw, 46px)', 
-              height: 'clamp(36px, 4vw, 46px)', 
-              objectFit: 'contain',
-              filter: 'drop-shadow(0 3px 10px rgba(0, 18, 70, 0.4))',
-              transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-            onError={(e) => {
-              e.currentTarget.src = '/jobgen-logo.png';
-              e.currentTarget.style.filter = 'brightness(0) invert(1)';
-            }}
-            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.08)'}
-            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
-          />
-        </div>
+          Productivity
+        </button>
 
-        {/* Top-Right: White Button Sign In (shifted up and into corner) */}
+        {/* Pricing Button */}
+        <button
+          onClick={onPricingClick}
+          style={{
+            backgroundColor: 'rgba(255, 255, 255, 0.12)',
+            color: '#FFFFFF',
+            border: '1px solid rgba(255, 255, 255, 0.3)',
+            backdropFilter: 'blur(12px)',
+            WebkitBackdropFilter: 'blur(12px)',
+            borderRadius: '9999px',
+            padding: '8px 20px',
+            fontSize: '13.5px',
+            fontWeight: 700,
+            cursor: 'pointer',
+            boxShadow: '0 4px 14px rgba(0, 18, 70, 0.2)',
+            transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.3)';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+            e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.2)';
+          }}
+        >
+          Pricing
+        </button>
+
+        {/* Sign In Button (Prominent White Pill) */}
         <button
           onClick={onSignIn}
           style={{
@@ -359,21 +411,21 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick }) {
             color: '#1A53CF',
             border: 'none',
             borderRadius: '9999px',
-            padding: '8px 22px',
-            fontSize: '13px',
+            padding: '8px 24px',
+            fontSize: '13.5px',
             fontWeight: 800,
             cursor: 'pointer',
-            boxShadow: '0 4px 14px rgba(0, 18, 70, 0.25)',
+            boxShadow: '0 4px 16px rgba(0, 18, 70, 0.25)',
             transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
           }}
           onMouseEnter={(e) => {
             e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.35)';
+            e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 18, 70, 0.35)';
             e.currentTarget.style.backgroundColor = '#F8FAFC';
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.25)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 18, 70, 0.25)';
             e.currentTarget.style.backgroundColor = '#FFFFFF';
           }}
         >
@@ -381,30 +433,31 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick }) {
         </button>
       </div>
 
-      {/* 2. HEADLINE: "JobGen.IO" WITH SUBTITLE "Land your dream job" */}
+      {/* 2. HEADLINE: "JobGen.IO" WITH LOGO IN FRONT & SUBTITLE "Land your next dream job" (LOWERED & LIVE REVEAL) */}
       <div
         style={{
           position: 'absolute',
-          top: 'clamp(68px, calc(10vh + 10px), 120px)',
+          top: 'clamp(68px, calc(9.5vh + 12px), 116px)',
           left: '50%',
           transform: 'translateX(-50%)',
           width: '100%',
-          maxWidth: '1280px',
+          maxWidth: '1340px',
           padding: '0 24px',
-          textAlign: 'center',
+          display: 'flex',
+          justifyContent: 'center',
           zIndex: 2,
           pointerEvents: 'none',
           boxSizing: 'border-box'
         }}
       >
-        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'stretch', position: 'relative' }}>
           <h1
             style={{
               fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
-              fontSize: 'clamp(56px, 9.6vw, 142px)',
+              fontSize: 'clamp(58px, 10.5vw, 168px)',
               fontWeight: 900,
               letterSpacing: '-0.04em',
-              lineHeight: 0.98,
+              lineHeight: 0.96,
               color: '#FFFFFF',
               WebkitTextStroke: '1.2px #FFFFFF',
               margin: '0 auto',
@@ -412,211 +465,57 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick }) {
               display: 'inline-flex',
               alignItems: 'center',
               justifyContent: 'center',
+              gap: 'clamp(8px, 1.25vw, 20px)',
               userSelect: 'none'
             }}
           >
-            JobGen.IO
+            <img 
+              src="/Whitelogo.webp" 
+              alt="JobGen Logo" 
+              style={{ 
+                width: 'clamp(75px, 13.1vw, 202px)', 
+                height: 'clamp(75px, 13.1vw, 202px)', 
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 14px 32px rgba(0, 18, 70, 0.65))',
+                flexShrink: 0
+              }}
+              onError={(e) => {
+                e.currentTarget.src = '/jobgen-logo.png';
+                e.currentTarget.style.filter = 'brightness(0) invert(1)';
+              }}
+            />
+            <RevealingTitle text="JobGen.IO" delay={200} />
           </h1>
-          <p
+          <HandwrittenSubtitle
+            text="Land your next dream job"
+            delay={720}
             style={{
-              margin: 'clamp(10px, 1.4vh, 16px) 0 0 0',
-              fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
-              fontSize: 'clamp(15px, 1.7vw, 24px)',
-              fontWeight: 600,
-              letterSpacing: '0.04em',
-              color: 'rgba(255, 255, 255, 0.9)',
-              textShadow: '0 4px 16px rgba(0, 18, 70, 0.45)',
-              userSelect: 'none'
+              margin: 'clamp(-12px, -1.8vh, -4px) 0 0 0',
+              alignSelf: 'flex-end'
             }}
-          >
-            Land your dream job
-          </p>
+          />
         </div>
       </div>
 
-      {/* 3. 3D FLOATING & POINTER-LOOKING COMPACT RESUME PREVIEW */}
+      {/* 3. 3D FLOATING & POINTER-LOOKING RUGGED TACTICAL SCREEN (PLAYING VIDEO) */}
       <div
         style={{
           position: 'relative',
           zIndex: 10,
-          marginTop: 'clamp(130px, 20vh, 195px)',
+          marginTop: 'clamp(200px, 28vh, 276px)',
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          pointerEvents: 'none'
+          pointerEvents: 'auto'
         }}
       >
-        <div
-          ref={resumeContainerRef}
-          style={{
-            position: 'relative',
-            width: 'clamp(252px, 24vw, 310px)',
-            height: 'clamp(348px, 34vw, 430px)',
-            transformStyle: 'preserve-3d',
-            willChange: 'transform'
-          }}
-        >
-          {/* Paper Sheet 3 (Deepest back layer for realistic paper stack depth) */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              borderRadius: '14px',
-              backgroundColor: '#E2E8F0',
-              transform: 'translate3d(-5px, 8px, -20px) rotate(-1.5deg)',
-              boxShadow: '0 25px 50px rgba(1, 10, 45, 0.32)',
-              border: '1px solid rgba(255, 255, 255, 0.5)'
-            }}
-          />
-
-          {/* Paper Sheet 2 (Middle layer) */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              borderRadius: '14px',
-              backgroundColor: '#F8FAFC',
-              transform: 'translate3d(5px, 5px, -10px) rotate(1.2deg)',
-              boxShadow: '0 20px 35px rgba(1, 10, 45, 0.25)',
-              border: '1px solid rgba(255, 255, 255, 0.7)'
-            }}
-          />
-
-          {/* Main Front Resume Sheet (Compact abstract preview labeled RESUME) */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              borderRadius: '14px',
-              backgroundColor: '#FFFFFF',
-              boxShadow: '0 32px 70px -10px rgba(1, 10, 45, 0.55), 0 16px 28px -8px rgba(1, 10, 45, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.95)',
-              border: '1px solid rgba(226, 232, 240, 0.9)',
-              padding: '20px 22px',
-              boxSizing: 'border-box',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              overflow: 'hidden',
-              textAlign: 'left'
-            }}
-          >
-            {/* Specular Glint Shine Overlay */}
-            <div
-              ref={glintRef}
-              style={{
-                position: 'absolute',
-                inset: 0,
-                pointerEvents: 'none',
-                zIndex: 5,
-                borderRadius: '14px',
-                mixBlendMode: 'screen',
-                background: 'linear-gradient(115deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.04) 100%)'
-              }}
-            />
-
-            {/* Document Header with "RESUME" Title */}
-            <div>
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '13px', borderBottom: '1px solid #F1F5F9' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                  <div
-                    style={{
-                      width: '30px',
-                      height: '30px',
-                      borderRadius: '8px',
-                      background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
-                      color: '#FFFFFF',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      boxShadow: '0 2px 6px rgba(26, 83, 207, 0.35)'
-                    }}
-                  >
-                    <FileText size={15} strokeWidth={2.4} />
-                  </div>
-                  <span
-                    style={{
-                      fontFamily: '"Plus Jakarta Sans", sans-serif',
-                      fontSize: '15px',
-                      fontWeight: 900,
-                      letterSpacing: '0.14em',
-                      color: '#090C15',
-                      textTransform: 'uppercase'
-                    }}
-                  >
-                    RESUME
-                  </span>
-                </div>
-
-                {/* ATS green status dot */}
-                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: '#ECFDF5', padding: '3px 8px', borderRadius: '9999px', border: '1px solid #A7F3D0' }}>
-                  <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#10B981', boxShadow: '0 0 6px #10B981' }} />
-                  <span style={{ fontSize: '9.5px', fontWeight: 800, color: '#047857', letterSpacing: '0.04em' }}>ATS 98%</span>
-                </div>
-              </div>
-
-              {/* Abstract preview skeleton content (no text, just clean visual document layout) */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', marginTop: '13px' }}>
-                {/* Section 1: Abstract summary skeleton */}
-                <div>
-                  <div style={{ width: '38px', height: '5px', borderRadius: '2.5px', backgroundColor: '#94A3B8', marginBottom: '6px' }} />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
-                    <div style={{ width: '100%', height: '4.5px', borderRadius: '2px', backgroundColor: '#E2E8F0' }} />
-                    <div style={{ width: '88%', height: '4.5px', borderRadius: '2px', backgroundColor: '#E2E8F0' }} />
-                    <div style={{ width: '64%', height: '4.5px', borderRadius: '2px', backgroundColor: '#E2E8F0' }} />
-                  </div>
-                </div>
-
-                {/* Section 2: Abstract experience skeleton blocks */}
-                <div>
-                  <div style={{ width: '48px', height: '5px', borderRadius: '2.5px', backgroundColor: '#1A53CF', opacity: 0.75, marginBottom: '6px' }} />
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6.5px' }}>
-                    <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3.5px' }}>
-                        <div style={{ width: '48%', height: '5px', borderRadius: '2px', backgroundColor: '#64748B' }} />
-                        <div style={{ width: '22%', height: '5px', borderRadius: '2px', backgroundColor: '#CBD5E1' }} />
-                      </div>
-                      <div style={{ width: '92%', height: '4px', borderRadius: '2px', backgroundColor: '#E2E8F0', marginBottom: '3px' }} />
-                      <div style={{ width: '74%', height: '4px', borderRadius: '2px', backgroundColor: '#E2E8F0' }} />
-                    </div>
-
-                    <div>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3.5px' }}>
-                        <div style={{ width: '42%', height: '5px', borderRadius: '2px', backgroundColor: '#64748B' }} />
-                        <div style={{ width: '20%', height: '5px', borderRadius: '2px', backgroundColor: '#CBD5E1' }} />
-                      </div>
-                      <div style={{ width: '86%', height: '4px', borderRadius: '2px', backgroundColor: '#E2E8F0' }} />
-                    </div>
-                  </div>
-                </div>
-
-                {/* Section 3: Abstract skills skeleton chips */}
-                <div>
-                  <div style={{ width: '42px', height: '5px', borderRadius: '2.5px', backgroundColor: '#94A3B8', marginBottom: '6px' }} />
-                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
-                    {[38, 48, 30, 44, 34].map((w, idx) => (
-                      <div
-                        key={idx}
-                        style={{
-                          width: `${w}px`,
-                          height: '13px',
-                          borderRadius: '3px',
-                          backgroundColor: '#EFF6FF',
-                          border: '1px solid #DBEAFE'
-                        }}
-                      />
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Seal skeleton */}
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px dashed #E2E8F0' }}>
-              <div style={{ width: '50px', height: '4px', borderRadius: '2px', backgroundColor: '#CBD5E1' }} />
-              <div style={{ width: '38px', height: '4px', borderRadius: '2px', backgroundColor: '#93C5FD' }} />
-            </div>
-          </div>
-        </div>
+        <RuggedScreen3D
+          containerRef={resumeContainerRef}
+          glintRef={glintRef}
+          videoSrc="/jobs.mp4"
+          onPointerEnter={handleScreenPointerEnter}
+          onPointerLeave={handleScreenPointerLeave}
+        />
       </div>
 
       {/* 4. 5X5 GRID OF SLOWLY GLOWING WHITE DOTS IN BOTTOM CORNER */}
@@ -1183,6 +1082,8 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         onSignIn={onSignIn} 
         onLaunchApp={onLaunchApp} 
         onScanClick={() => scrollToSection('ats-scanner')} 
+        onProductivityClick={() => scrollToSection('productivity')}
+        onPricingClick={() => scrollToSection('pricing')}
       />
 
       {/* =========================================================================

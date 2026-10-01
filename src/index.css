@@ -528,3 +528,170 @@ html, body {
     transform: perspective(1200px) rotateX(6deg) rotateY(-2deg) translate3d(0, -14px, 45px);
   }
 }
+
+/* ==========================================================================
+   HERO 3D TACTICAL SCREEN HOVER GLOW & PULSATION
+   ========================================================================== */
+@keyframes tacticalScreenGlowOnce {
+  0% {
+    opacity: 0;
+    transform: scale(0.97);
+    filter: drop-shadow(0 0 0px rgba(56, 189, 248, 0));
+  }
+  25% {
+    opacity: 1;
+    transform: scale(1.02);
+    filter: drop-shadow(0 0 35px rgba(56, 189, 248, 0.95)) drop-shadow(0 0 75px rgba(29, 99, 237, 0.75));
+  }
+  60% {
+    opacity: 0.85;
+    transform: scale(1.005);
+  }
+  100% {
+    opacity: 0.35;
+    transform: scale(1.0);
+    filter: drop-shadow(0 0 16px rgba(56, 189, 248, 0.4));
+  }
+}
+
+@keyframes tacticalScreenHoverPulse {
+  0% {
+    transform: scale(0.985);
+    opacity: 0.65;
+    filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.75)) drop-shadow(0 0 55px rgba(37, 99, 235, 0.5));
+  }
+  50% {
+    transform: scale(1.035);
+    opacity: 1;
+    filter: drop-shadow(0 0 50px rgba(56, 189, 248, 0.98)) drop-shadow(0 0 100px rgba(59, 130, 246, 0.85)) drop-shadow(0 0 145px rgba(99, 102, 241, 0.5));
+  }
+  100% {
+    transform: scale(0.985);
+    opacity: 0.65;
+    filter: drop-shadow(0 0 25px rgba(56, 189, 248, 0.75)) drop-shadow(0 0 55px rgba(37, 99, 235, 0.5));
+  }
+}
+
+/* ==========================================================================
+   3D SCREEN WHITE GLOW SURFACE DISTORTION (ONE-SHOT ANIMATIONS)
+   ========================================================================== */
+@keyframes tacticalWhitePulseOnce {
+  0% {
+    opacity: 0;
+    transform: scale(0.97);
+    filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+  }
+  25% {
+    opacity: 0.95;
+    transform: scale(1.025);
+    filter: drop-shadow(0 0 45px rgba(255, 255, 255, 0.95)) drop-shadow(0 0 90px rgba(255, 255, 255, 0.7));
+  }
+  65% {
+    opacity: 0.4;
+    transform: scale(1.005);
+    filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.4));
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.0);
+    filter: none;
+  }
+}
+
+@keyframes whiteSurfaceDistortOnce {
+  0% {
+    opacity: 0;
+    transform: scale(0.97) translate(-1%, -1%);
+    filter: drop-shadow(0 0 0px rgba(255, 255, 255, 0));
+  }
+  25% {
+    opacity: 0.95;
+    transform: scale(1.04) translate(1%, 2%);
+    filter: drop-shadow(0 0 50px rgba(255, 255, 255, 1)) drop-shadow(0 0 90px rgba(255, 255, 255, 0.8));
+  }
+  55% {
+    opacity: 0.55;
+    transform: scale(1.015) translate(0%, 0%);
+    filter: drop-shadow(0 0 25px rgba(255, 255, 255, 0.6));
+  }
+  85% {
+    opacity: 0.18;
+    transform: scale(1.003);
+    filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
+  }
+  100% {
+    opacity: 0;
+    transform: scale(1.0);
+    filter: none;
+  }
+}
+
+@keyframes whiteWaveSweepOnce {
+  0% {
+    transform: translateY(-40%) scaleY(0.85);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  60% {
+    transform: translateY(20%) scaleY(1.1);
+    opacity: 0.65;
+  }
+  100% {
+    transform: translateY(60%) scaleY(1.0);
+    opacity: 0;
+  }
+}
+
+@keyframes videoSurfaceDistortOnce {
+  0% {
+    filter: none;
+    transform: scale(1.0);
+  }
+  22% {
+    filter: url(#screen-surface-distortion) brightness(1.32) contrast(1.12);
+    transform: scale(1.025);
+  }
+  50% {
+    filter: url(#screen-surface-distortion) brightness(1.18) contrast(1.06);
+    transform: scale(1.012);
+  }
+  78% {
+    filter: brightness(1.06);
+    transform: scale(1.003);
+  }
+  100% {
+    filter: none;
+    transform: scale(1.0);
+  }
+}
+
+/* ==========================================================================
+   TYPEWRITER CURSOR BLINK ANIMATION
+   ========================================================================== */
+@keyframes blinkCursor {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0;
+  }
+}
+
+/* ==========================================================================
+   HANDWRITING PEN INK PULSE ANIMATION
+   ========================================================================== */
+@keyframes inkPulse {
+  0% {
+    transform: scale(0.85);
+    box-shadow: 0 0 6px #38BDF8, 0 0 12px rgba(56, 189, 248, 0.6);
+  }
+  100% {
+    transform: scale(1.25);
+    box-shadow: 0 0 12px #38BDF8, 0 0 24px rgba(56, 189, 248, 0.9);
+  }
+}
+
+
+

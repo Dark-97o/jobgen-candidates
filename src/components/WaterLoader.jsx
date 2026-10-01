@@ -12,12 +12,12 @@ const PRELOAD_IMAGES = [
   '/cloud2.png',
   '/city-skyline.jpg',
   '/clouds.jpg',
-  '/signimg.png',
+  '/signimg.jpg',
 ];
 
 const PRELOAD_VIDEOS = [
+  '/jobs.mp4',
   '/herow.mp4',
-  '/waves.mp4',
 ];
 
 export default function WaterLoader({ onComplete }) {

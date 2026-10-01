@@ -172,13 +172,7 @@ export default function LoginView({ onLogin, onBackToLanding }) {
             flex: none !important;
           }
           .login-cand-img {
-            mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%) !important;
-            -webkit-mask-image: linear-gradient(to bottom, rgba(0, 0, 0, 1) 50%, rgba(0, 0, 0, 0) 100%) !important;
-          }
-          .login-fade-overlay {
-            left: 0 !important;
-            top: 30% !important;
-            background: linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.4) 45%, rgba(255, 255, 255, 0.9) 85%, #FFFFFF 100%) !important;
+            object-fit: cover !important;
           }
           .form-right-pane {
             padding: 24px 20px !important;
@@ -225,31 +219,18 @@ export default function LoginView({ onLogin, onBackToLanding }) {
           }}
         >
           <img 
-            src="/signimg.png" 
-            alt="JobGen Candidate" 
+            src="/signimg.jpg" 
+            alt="JobGen Sign In" 
             className="login-cand-img"
+            onError={(e) => {
+              e.currentTarget.src = '/signimg.png';
+            }}
             style={{
               width: '100%',
               height: '100%',
               objectFit: 'cover',
               objectPosition: 'center 15%',
-              display: 'block',
-              maskImage: 'linear-gradient(to right, rgba(0, 0, 0, 1) 38%, rgba(0, 0, 0, 0) 100%)',
-              WebkitMaskImage: 'linear-gradient(to right, rgba(0, 0, 0, 1) 38%, rgba(0, 0, 0, 0) 100%)',
-            }}
-          />
-
-          {/* Smooth Dissolve Overlay towards the Right */}
-          <div 
-            className="login-fade-overlay"
-            style={{
-              position: 'absolute',
-              top: 0,
-              bottom: 0,
-              right: 0,
-              left: '25%',
-              background: 'linear-gradient(to right, transparent 0%, rgba(255, 255, 255, 0.3) 35%, rgba(255, 255, 255, 0.85) 75%, #FFFFFF 100%)',
-              pointerEvents: 'none'
+              display: 'block'
             }}
           />
         </div>
