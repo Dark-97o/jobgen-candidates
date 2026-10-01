@@ -221,6 +221,7 @@ const FAQS = [
 // =========================================================================
 function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick, onPricingClick }) {
   const resumeContainerRef = useRef(null);
+  const titleWrapperRef = useRef(null);
   const glintRef = useRef(null);
 
   // 3D Resume look-towards-pointer tracking
@@ -233,6 +234,18 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
     transY: 0,
     currentScale: 1,
     targetScale: 1
+  });
+
+  // 3D Title, Logo & Texts look-towards-pointer tracking
+  const titleRotRef = useRef({
+    currentX: 0,
+    currentY: 0,
+    targetX: 0,
+    targetY: 0,
+    transX: 0,
+    transY: 0,
+    targetTransX: 0,
+    targetTransY: 0
   });
 
   useEffect(() => {
@@ -252,6 +265,19 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
       if (glintRef.current) {
         const angle = 115 + r.currentY * 2.0;
         glintRef.current.style.background = `linear-gradient(${angle}deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 52%, rgba(0, 0, 0, 0.04) 100%)`;
+      }
+
+      // Title & Logo 3D pointer look-towards tracking
+      const tr = titleRotRef.current;
+      tr.currentX += (tr.targetX - tr.currentX) * 0.085;
+      tr.currentY += (tr.targetY - tr.currentY) * 0.085;
+      tr.transX += (tr.targetTransX - tr.transX) * 0.085;
+      tr.transY += (tr.targetTransY - tr.transY) * 0.085;
+
+      const titleLev = Math.sin(Date.now() * 0.0016 + 1.2) * 5;
+
+      if (titleWrapperRef.current) {
+        titleWrapperRef.current.style.transform = `perspective(1000px) rotateX(${tr.currentX.toFixed(2)}deg) rotateY(${tr.currentY.toFixed(2)}deg) translate3d(${tr.transX.toFixed(2)}px, ${(tr.transY + titleLev).toFixed(2)}px, 20px)`;
       }
 
       animId = requestAnimationFrame(animate);
@@ -277,11 +303,17 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
     const normX = Math.max(-1, Math.min(1, dx / maxDistX));
     const normY = Math.max(-1, Math.min(1, dy / maxDistY));
 
-    // Turn face to look directly towards the pointer
+    // Turn 3D Screen to look directly towards the pointer
     rotRef.current.targetY = normX * 28;
     rotRef.current.targetX = -normY * 24;
     rotRef.current.transX = normX * 18;
     rotRef.current.transY = normY * 14;
+
+    // Turn Logo & Texts to also follow and gaze towards the pointer
+    titleRotRef.current.targetY = normX * 22;
+    titleRotRef.current.targetX = -normY * 18;
+    titleRotRef.current.targetTransX = normX * 16;
+    titleRotRef.current.targetTransY = normY * 12;
   };
 
   const handleScreenPointerEnter = () => {
@@ -300,6 +332,11 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
     rotRef.current.transX = 0;
     rotRef.current.transY = 0;
     rotRef.current.targetScale = 1.0;
+
+    titleRotRef.current.targetX = 0;
+    titleRotRef.current.targetY = 0;
+    titleRotRef.current.targetTransX = 0;
+    titleRotRef.current.targetTransY = 0;
   };
 
   return (
@@ -450,7 +487,17 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           boxSizing: 'border-box'
         }}
       >
-        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'stretch', position: 'relative' }}>
+        <div 
+          ref={titleWrapperRef}
+          style={{ 
+            display: 'inline-flex', 
+            flexDirection: 'column', 
+            alignItems: 'stretch', 
+            position: 'relative',
+            transformStyle: 'preserve-3d',
+            willChange: 'transform'
+          }}
+        >
           <h1
             style={{
               fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
@@ -466,7 +513,8 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
               alignItems: 'center',
               justifyContent: 'center',
               gap: 'clamp(8px, 1.25vw, 20px)',
-              userSelect: 'none'
+              userSelect: 'none',
+              transformStyle: 'preserve-3d'
             }}
           >
             <img 
@@ -477,21 +525,27 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
                 height: 'clamp(75px, 13.1vw, 202px)', 
                 objectFit: 'contain',
                 filter: 'drop-shadow(0 14px 32px rgba(0, 18, 70, 0.65))',
-                flexShrink: 0
+                flexShrink: 0,
+                transform: 'translateZ(26px)',
+                willChange: 'transform'
               }}
               onError={(e) => {
                 e.currentTarget.src = '/jobgen-logo.png';
                 e.currentTarget.style.filter = 'brightness(0) invert(1)';
               }}
             />
-            <RevealingTitle text="JobGen.IO" delay={200} />
+            <span style={{ transform: 'translateZ(18px)', display: 'inline-flex', alignItems: 'center' }}>
+              <RevealingTitle text="JobGen.IO" delay={200} />
+            </span>
           </h1>
           <HandwrittenSubtitle
             text="Land your next dream job"
             delay={720}
             style={{
               margin: 'clamp(-12px, -1.8vh, -4px) 0 0 0',
-              alignSelf: 'flex-end'
+              alignSelf: 'flex-end',
+              transform: 'translateZ(12px)',
+              willChange: 'transform'
             }}
           />
         </div>
