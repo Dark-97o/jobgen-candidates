@@ -911,8 +911,8 @@ export default function OverviewView({ onNavigate }) {
               }}
             >
               <video
-                key="/jobs.mp4"
-                src="/jobs.mp4"
+                key="/waves.mp4"
+                src="/waves.mp4"
                 autoPlay
                 loop
                 muted
@@ -925,7 +925,7 @@ export default function OverviewView({ onNavigate }) {
                   display: 'block',
                 }}
               >
-                <source src="/jobs.mp4" type="video/mp4" />
+                <source src="/waves.mp4" type="video/mp4" />
               </video>
             </div>
 
