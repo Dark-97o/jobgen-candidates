@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { 
   Sparkles, 
-  ArrowUpRight, 
   ArrowRight, 
+  ArrowUpRight, 
   Check, 
   CheckCircle2, 
   Shield, 
@@ -21,27 +21,32 @@ import {
   Briefcase, 
   Clock, 
   Lock, 
-  X, 
-  RotateCcw,
   SlidersHorizontal,
   MapPin,
-  Flame,
-  Award
+  Award,
+  Terminal,
+  Command,
+  Cpu,
+  Layers,
+  ChevronRight,
+  ExternalLink,
+  Laptop
 } from 'lucide-react';
+import InteractiveFluidGradient from './InteractiveFluidGradient';
 
 // ==========================================
 // STATIC DATA & CONTENT FROM CANDIDATES.JOBGEN.AI
 // ==========================================
 
 const TRUST_LOGOS = [
-  { name: 'Atlassian', src: '/logos/atlassian.webp', scale: 1.15 },
-  { name: 'Canva', src: '/logos/canva.webp', scale: 1.12 },
-  { name: 'ANZ Bank', src: '/logos/anz.webp', scale: 1.0 },
-  { name: 'Afterpay', src: '/logos/afterpay.webp', scale: 0.95 },
-  { name: 'Deloitte', src: '/logos/deloitte.webp', scale: 0.82 },
-  { name: 'Microsoft', src: '/logos/microsoft.webp', scale: 0.88 },
-  { name: 'Amazon', src: '/logos/amazon.webp', scale: 0.95 },
-  { name: 'Visa', src: '/logos/visa.webp', scale: 0.92 }
+  { name: 'Atlassian', src: '/logos/atlassian.webp' },
+  { name: 'Canva', src: '/logos/canva.webp' },
+  { name: 'ANZ Bank', src: '/logos/anz.webp' },
+  { name: 'Afterpay', src: '/logos/afterpay.webp' },
+  { name: 'Deloitte', src: '/logos/deloitte.webp' },
+  { name: 'Microsoft', src: '/logos/microsoft.webp' },
+  { name: 'Amazon', src: '/logos/amazon.webp' },
+  { name: 'Visa', src: '/logos/visa.webp' }
 ];
 
 const FEATURES_DATA = [
@@ -49,10 +54,11 @@ const FEATURES_DATA = [
     id: 'resume-builder',
     title: 'AI Resume Studio & Tailor',
     tag: 'ATS Optimization',
-    navLabel: 'Resume Builder',
+    navLabel: 'Resume Studio',
+    subtitle: 'Zero hallucinations. Grounded in your real career evidence.',
     description: 'Create an ATS-proof master resume, connect target job descriptions, and tailor each section with precision evidence you control.',
     image: '/features/feature-resume-builder-BYG5dBEM.webp',
-    imageAlt: 'JobGen Resume Builder showing tailored suggestions and live preview',
+    stats: '94% ATS Match Rate',
     bulletPoints: [
       'Grounded in your real work history — no AI hallucinations',
       'One-click keyword alignment tailored to employer ATS algorithms',
@@ -63,10 +69,11 @@ const FEATURES_DATA = [
     id: 'job-tracker',
     title: 'Autonomous Opportunity Tracker',
     tag: 'Application Pipeline',
-    navLabel: 'Job Tracker',
+    navLabel: 'Kanban Tracker',
+    subtitle: 'Track every application, interview round, and offer in real-time.',
     description: 'Never lose track of an opportunity. Manage applications across Bookmarked, Applied, Screening, Interviewing, and Offer stages in one real-time workspace.',
     image: '/features/feature-job-tracker-z3Bsjg1I.webp',
-    imageAlt: 'JobGen Kanban Board and Application Tracking Pipeline',
+    stats: '4.2x Faster Search',
     bulletPoints: [
       'Live status Kanban with drag-and-drop interview milestones',
       'Salary benchmarking & equity tier transparency',
@@ -74,27 +81,14 @@ const FEATURES_DATA = [
     ]
   },
   {
-    id: 'chrome-extension',
-    title: '1-Click Chrome Extension',
-    tag: 'Instant Capture',
-    navLabel: 'Chrome Extension',
-    description: 'Save job openings instantly from LinkedIn, Seek, and Indeed directly into your JobGen candidate dashboard with auto-parsed salary and requirements.',
-    image: '/features/feature-chrome-extension-yfyi6583.webp',
-    imageAlt: 'JobGen Chrome Extension bookmarking jobs from LinkedIn and Seek',
-    bulletPoints: [
-      'Auto-extract company data, hiring manager details, and job descriptions',
-      'Instant match score preview while browsing job boards',
-      'Pre-fills complex multi-step application forms in seconds'
-    ]
-  },
-  {
     id: 'interview-prep',
     title: 'Virtual Interview Prep Lab',
     tag: 'Copilot Coaching',
-    navLabel: 'Interview Prep',
-    description: 'Walk into every interview with unfair preparation. Emma generates custom role-specific questions across HR, technical, hiring manager, and executive stages.',
+    navLabel: 'Interview Lab',
+    subtitle: 'Walk into high-stakes loops with unfair preparation.',
+    description: 'Emma generates custom role-specific questions across HR, technical, hiring manager, and executive stages with instant STAR scoring.',
     image: '/features/feature-interview-prep-lhiGrxOf.webp',
-    imageAlt: 'JobGen Interview Prep Coach with question breakdown',
+    stats: '10 Tailored Qs / Round',
     bulletPoints: [
       '10 tailored questions per round matching actual company rubrics',
       'STAR-framework model answers based on your background',
@@ -103,18 +97,42 @@ const FEATURES_DATA = [
   },
   {
     id: 'career-pathway',
-    title: '12-Week Career Pathway',
-    tag: 'Strategic Growth',
-    navLabel: 'Career Plan',
+    title: '12-Week Strategic Roadmap',
+    tag: 'Career Strategy',
+    navLabel: 'Career Roadmap',
+    subtitle: 'Structured weekly milestones, reach-outs, and negotiation scripts.',
     description: 'A personalized autonomous career roadmap guiding your weekly goals, networking reach-outs, compensation targets, and offer negotiation strategy.',
     image: '/features/feature-career-pathway-CVhyt92q.webp',
-    imageAlt: 'JobGen 12-week Career Roadmap',
+    stats: '+$24K Avg Offer Bump',
     bulletPoints: [
       'Targeted company reach-out email templates that get replies',
       'Compensation negotiation scripts that unlocked 20%+ higher offers',
       'Weekly milestones to maintain aggressive job-search momentum'
     ]
+  },
+  {
+    id: 'chrome-extension',
+    title: '1-Click Chrome Extension',
+    tag: 'Instant Capture',
+    navLabel: 'Chrome Extension',
+    subtitle: 'Capture openings from LinkedIn, Seek, and Indeed in 1 second.',
+    description: 'Save job openings instantly from LinkedIn, Seek, and Indeed directly into your JobGen candidate dashboard with auto-parsed salary and requirements.',
+    image: '/features/feature-chrome-extension-yfyi6583.webp',
+    stats: '1-Click Parsing',
+    bulletPoints: [
+      'Auto-extract company data, hiring manager details, and job descriptions',
+      'Instant match score preview while browsing job boards',
+      'Pre-fills complex multi-step application forms in seconds'
+    ]
   }
+];
+
+const REPLACEMENTS_DATA = [
+  { name: 'LinkedIn Premium', cost: '$39.99 / mo', flaw: 'Passive inMails with low response rate' },
+  { name: 'Jobscan ATS', cost: '$49.95 / mo', flaw: 'Clunky rigid keyword counters with zero tailoring' },
+  { name: 'Teal HQ', cost: '$29.00 / mo', flaw: 'Basic spreadsheet clone without live interview AI' },
+  { name: 'Interviewing.io', cost: '$250.00 / session', flaw: 'Exorbitant pricing for single-use mock rounds' },
+  { name: 'Notion / Huntr Trackers', cost: '$15.00 / mo', flaw: 'Manual data entry for every applied role' }
 ];
 
 const TESTIMONIALS = [
@@ -151,57 +169,575 @@ const TESTIMONIALS = [
     verified: true
   },
   {
-    quote: "JobGen.AI turned my rejection streak around. The keyword matching showed me exactly what was missing from every resume I had sent.",
-    name: "Daniel W.",
-    role: "Growth Manager → landed at REA Group",
-    initials: "DW",
-    accent: "#0891B2",
+    quote: "The 12-week roadmap kept me focused when I felt overwhelmed. Negotiated an extra $24,000 on my base salary using the scripts.",
+    name: "David L.",
+    role: "DevOps Engineer → landed at Microsoft",
+    initials: "DL",
+    accent: "#0284C7",
     verified: true
   },
   {
-    quote: "The cover letter generator saves me at least an hour per application. Every letter feels genuinely tailored, not templated.",
-    name: "Aisha N.",
-    role: "Business Consultant → landed at Deloitte",
-    initials: "AN",
-    accent: "#BE185D",
+    quote: "Best career tool investment I've made. The Chrome extension auto-extracting job requirements into my tracker saved countless hours.",
+    name: "Priya S.",
+    role: "Marketing Manager → landed at Deloitte",
+    initials: "PS",
+    accent: "#D97706",
     verified: true
   }
 ];
 
-const FAQ_ITEMS = [
+const FAQS = [
   {
-    q: "Is JobGen.AI free, and do I need a credit card?",
-    a: "Yes. You can start with JobGen.AI Free without a credit card. It includes your first resume score, your first 5 job match scores, one AI-tailored resume each month, job saving, and application tracking. Premium adds unlimited AI resumes, cover letters, matching, and interview preparation."
+    q: "How does JobGen.AI differ from generic ChatGPT or Claude?",
+    a: "Generic LLMs hallucinate skills and produce generic, robotic bullet points that trigger ATS rejection filters. JobGen.AI is purpose-built on real employer ATS rubrics, strict factual grounding from your actual work history, and verifiable metrics that pass both machine screens and senior hiring managers."
   },
   {
-    q: "Can I upload and edit my existing resume?",
-    a: "Yes. Upload your existing PDF or DOCX and JobGen.AI will extract its content into the resume studio. You can edit every section, create tailored versions for different jobs, and export the finished resume when you are ready."
+    q: "Will an AI tailored resume pass Applicant Tracking Systems (ATS)?",
+    a: "Yes, 100%. JobGen resumes use clean semantic ATS-compliant layouts with zero parsing bugs (no nested tables, text frames, or non-standard fonts that break ATS parsers like Workday, Greenhouse, or Lever). Every export matches recruiter-preferred standard formats."
   },
   {
-    q: "How do the ATS match score and resume tailoring work?",
-    a: "JobGen.AI compares your resume with the job description to identify relevant keywords, skills, and experience. It then shows where the match can be improved and helps you tailor the wording for that role while keeping your resume grounded in your real background."
+    q: "What is included in the Free tier?",
+    a: "You can start completely free without a credit card. It includes your first instant ATS resume score, your first 5 job match analyses, one AI-tailored master resume each month, Chrome extension job saving, and application pipeline tracking."
   },
   {
-    q: "Will the AI invent or change my experience?",
-    a: "No. JobGen.AI works strictly from the experience and evidence you provide rather than manufacturing qualifications, employers, or achievements. You remain in full control: review every suggestion, make your own edits, and choose what belongs in the final document."
+    q: "How does the Emma AI Interview Coach work?",
+    a: "Emma conducts simulated interviews calibrated to specific companies (e.g. Canva, Atlassian, Stripe). She asks role-specific behavioral, situational, and technical questions, listens to your answers, and grades you on the STAR framework (Situation, Task, Action, Result) with real-time actionable coaching."
   },
   {
-    q: "What does the Chrome extension do — and does JobGen.AI apply automatically?",
-    a: "The extension helps you save jobs while browsing LinkedIn, Seek, and Indeed, bring them into your tracker, and fill supported application fields faster. It assists with the application process, but you always review the information and control the final submission."
+    q: "How does the 1-Click Chrome Extension work?",
+    a: "The extension lets you save openings while browsing LinkedIn, Seek, and Indeed directly into your JobGen candidate dashboard with auto-extracted salary, recruiter info, and keywords, calculating your instant match score in real time."
   },
   {
     q: "How is my resume and personal data protected?",
-    a: "Your uploads are encrypted in transit and at rest. JobGen.AI does not sell your personal data or use your resume to train public AI models, and you can export or delete your information at any time."
+    a: "Your data is encrypted in transit (TLS 1.3) and at rest (AES-256). JobGen never sells your data, does not use your resume to train public AI models, and you maintain complete ownership to export or delete your information at any time."
   }
 ];
 
+// =========================================================================
+// FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REAL RESUME
+// =========================================================================
+function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick }) {
+  const resumeContainerRef = useRef(null);
+  const glintRef = useRef(null);
+
+  // 3D Resume look-towards-pointer tracking
+  const rotRef = useRef({
+    currentX: 3,
+    currentY: -4,
+    targetX: 3,
+    targetY: -4,
+    transX: 0,
+    transY: 0
+  });
+
+  useEffect(() => {
+    let animId;
+    const animate = () => {
+      const r = rotRef.current;
+      r.currentX += (r.targetX - r.currentX) * 0.085;
+      r.currentY += (r.targetY - r.currentY) * 0.085;
+
+      const lev = Math.sin(Date.now() * 0.0018) * 8;
+
+      if (resumeContainerRef.current) {
+        resumeContainerRef.current.style.transform = `perspective(1100px) rotateX(${r.currentX}deg) rotateY(${r.currentY}deg) translate3d(${r.transX}px, ${r.transY + lev}px, 45px)`;
+      }
+
+      if (glintRef.current) {
+        const angle = 115 + r.currentY * 2.0;
+        glintRef.current.style.background = `linear-gradient(${angle}deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 52%, rgba(0, 0, 0, 0.04) 100%)`;
+      }
+
+      animId = requestAnimationFrame(animate);
+    };
+
+    animId = requestAnimationFrame(animate);
+    return () => cancelAnimationFrame(animId);
+  }, []);
+
+  const handlePointerMove = (e) => {
+    const container = resumeContainerRef.current;
+    if (!container) return;
+    const rect = container.getBoundingClientRect();
+    const cx = rect.left + rect.width * 0.5;
+    const cy = rect.top + rect.height * 0.5;
+
+    const dx = e.clientX - cx;
+    const dy = e.clientY - cy;
+
+    const maxDistX = Math.max(300, window.innerWidth * 0.5);
+    const maxDistY = Math.max(250, window.innerHeight * 0.5);
+
+    const normX = Math.max(-1, Math.min(1, dx / maxDistX));
+    const normY = Math.max(-1, Math.min(1, dy / maxDistY));
+
+    // Turn face to look directly towards the pointer
+    rotRef.current.targetY = normX * 28;
+    rotRef.current.targetX = -normY * 24;
+    rotRef.current.transX = normX * 18;
+    rotRef.current.transY = normY * 14;
+  };
+
+  const handlePointerLeave = () => {
+    rotRef.current.targetX = 3;
+    rotRef.current.targetY = -4;
+    rotRef.current.transX = 0;
+    rotRef.current.transY = 0;
+  };
+
+  return (
+    <section
+      onPointerMove={handlePointerMove}
+      onPointerLeave={handlePointerLeave}
+      style={{
+        position: 'relative',
+        width: '100%',
+        minHeight: '100vh',
+        height: '100vh',
+        backgroundColor: '#1A53CF',
+        overflow: 'hidden',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
+        userSelect: 'none'
+      }}
+    >
+      {/* 1. INTERACTIVE FLUID GRADIENT WEBGL BACKGROUND (CODEGRID SHADER) */}
+      <InteractiveFluidGradient />
+
+      {/* 1b. TOP HEADER ON HERO SECTION: WHITE LOGO (LEFT CORNER) & WHITE SIGN IN BUTTON (RIGHT CORNER) */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 'clamp(12px, 1.8vh, 18px)',
+          left: 0,
+          right: 0,
+          padding: '0 clamp(16px, 2.2vw, 26px)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          zIndex: 20,
+          pointerEvents: 'auto',
+          boxSizing: 'border-box'
+        }}
+      >
+        {/* Top-Left: Pure White Logo (smaller, shifted into corner) */}
+        <div 
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          style={{ 
+            display: 'flex', 
+            alignItems: 'center', 
+            cursor: 'pointer',
+            userSelect: 'none'
+          }}
+        >
+          <img 
+            src="/Whitelogo.webp" 
+            alt="JobGen" 
+            style={{ 
+              width: 'clamp(36px, 4vw, 46px)', 
+              height: 'clamp(36px, 4vw, 46px)', 
+              objectFit: 'contain',
+              filter: 'drop-shadow(0 3px 10px rgba(0, 18, 70, 0.4))',
+              transition: 'transform 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+            onError={(e) => {
+              e.currentTarget.src = '/jobgen-logo.png';
+              e.currentTarget.style.filter = 'brightness(0) invert(1)';
+            }}
+            onMouseEnter={(e) => e.currentTarget.style.transform = 'scale(1.08)'}
+            onMouseLeave={(e) => e.currentTarget.style.transform = 'scale(1)'}
+          />
+        </div>
+
+        {/* Top-Right: White Button Sign In (shifted up and into corner) */}
+        <button
+          onClick={onSignIn}
+          style={{
+            backgroundColor: '#FFFFFF',
+            color: '#1A53CF',
+            border: 'none',
+            borderRadius: '9999px',
+            padding: '8px 22px',
+            fontSize: '13px',
+            fontWeight: 800,
+            cursor: 'pointer',
+            boxShadow: '0 4px 14px rgba(0, 18, 70, 0.25)',
+            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+          }}
+          onMouseEnter={(e) => {
+            e.currentTarget.style.transform = 'translateY(-2px)';
+            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.35)';
+            e.currentTarget.style.backgroundColor = '#F8FAFC';
+          }}
+          onMouseLeave={(e) => {
+            e.currentTarget.style.transform = 'translateY(0)';
+            e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.25)';
+            e.currentTarget.style.backgroundColor = '#FFFFFF';
+          }}
+        >
+          Sign In
+        </button>
+      </div>
+
+      {/* 2. HEADLINE: "JobGen.IO" WITH SUBTITLE "Land your dream job" */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 'clamp(68px, calc(10vh + 10px), 120px)',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          width: '100%',
+          maxWidth: '1280px',
+          padding: '0 24px',
+          textAlign: 'center',
+          zIndex: 2,
+          pointerEvents: 'none',
+          boxSizing: 'border-box'
+        }}
+      >
+        <div style={{ display: 'inline-flex', flexDirection: 'column', alignItems: 'center', position: 'relative' }}>
+          <h1
+            style={{
+              fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
+              fontSize: 'clamp(56px, 9.6vw, 142px)',
+              fontWeight: 900,
+              letterSpacing: '-0.04em',
+              lineHeight: 0.98,
+              color: '#FFFFFF',
+              WebkitTextStroke: '1.2px #FFFFFF',
+              margin: '0 auto',
+              textShadow: '0 16px 45px rgba(0, 18, 70, 0.55), 0 0 3px #FFFFFF',
+              display: 'inline-flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              userSelect: 'none'
+            }}
+          >
+            JobGen.IO
+          </h1>
+          <p
+            style={{
+              margin: 'clamp(10px, 1.4vh, 16px) 0 0 0',
+              fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
+              fontSize: 'clamp(15px, 1.7vw, 24px)',
+              fontWeight: 600,
+              letterSpacing: '0.04em',
+              color: 'rgba(255, 255, 255, 0.9)',
+              textShadow: '0 4px 16px rgba(0, 18, 70, 0.45)',
+              userSelect: 'none'
+            }}
+          >
+            Land your dream job
+          </p>
+        </div>
+      </div>
+
+      {/* 3. 3D FLOATING & POINTER-LOOKING COMPACT RESUME PREVIEW */}
+      <div
+        style={{
+          position: 'relative',
+          zIndex: 10,
+          marginTop: 'clamp(130px, 20vh, 195px)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          pointerEvents: 'none'
+        }}
+      >
+        <div
+          ref={resumeContainerRef}
+          style={{
+            position: 'relative',
+            width: 'clamp(252px, 24vw, 310px)',
+            height: 'clamp(348px, 34vw, 430px)',
+            transformStyle: 'preserve-3d',
+            willChange: 'transform'
+          }}
+        >
+          {/* Paper Sheet 3 (Deepest back layer for realistic paper stack depth) */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              borderRadius: '14px',
+              backgroundColor: '#E2E8F0',
+              transform: 'translate3d(-5px, 8px, -20px) rotate(-1.5deg)',
+              boxShadow: '0 25px 50px rgba(1, 10, 45, 0.32)',
+              border: '1px solid rgba(255, 255, 255, 0.5)'
+            }}
+          />
+
+          {/* Paper Sheet 2 (Middle layer) */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              borderRadius: '14px',
+              backgroundColor: '#F8FAFC',
+              transform: 'translate3d(5px, 5px, -10px) rotate(1.2deg)',
+              boxShadow: '0 20px 35px rgba(1, 10, 45, 0.25)',
+              border: '1px solid rgba(255, 255, 255, 0.7)'
+            }}
+          />
+
+          {/* Main Front Resume Sheet (Compact abstract preview labeled RESUME) */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              borderRadius: '14px',
+              backgroundColor: '#FFFFFF',
+              boxShadow: '0 32px 70px -10px rgba(1, 10, 45, 0.55), 0 16px 28px -8px rgba(1, 10, 45, 0.35), inset 0 0 0 1px rgba(255, 255, 255, 0.95)',
+              border: '1px solid rgba(226, 232, 240, 0.9)',
+              padding: '20px 22px',
+              boxSizing: 'border-box',
+              display: 'flex',
+              flexDirection: 'column',
+              justifyContent: 'space-between',
+              overflow: 'hidden',
+              textAlign: 'left'
+            }}
+          >
+            {/* Specular Glint Shine Overlay */}
+            <div
+              ref={glintRef}
+              style={{
+                position: 'absolute',
+                inset: 0,
+                pointerEvents: 'none',
+                zIndex: 5,
+                borderRadius: '14px',
+                mixBlendMode: 'screen',
+                background: 'linear-gradient(115deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 50%, rgba(0, 0, 0, 0.04) 100%)'
+              }}
+            />
+
+            {/* Document Header with "RESUME" Title */}
+            <div>
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingBottom: '13px', borderBottom: '1px solid #F1F5F9' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                  <div
+                    style={{
+                      width: '30px',
+                      height: '30px',
+                      borderRadius: '8px',
+                      background: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
+                      color: '#FFFFFF',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      boxShadow: '0 2px 6px rgba(26, 83, 207, 0.35)'
+                    }}
+                  >
+                    <FileText size={15} strokeWidth={2.4} />
+                  </div>
+                  <span
+                    style={{
+                      fontFamily: '"Plus Jakarta Sans", sans-serif',
+                      fontSize: '15px',
+                      fontWeight: 900,
+                      letterSpacing: '0.14em',
+                      color: '#090C15',
+                      textTransform: 'uppercase'
+                    }}
+                  >
+                    RESUME
+                  </span>
+                </div>
+
+                {/* ATS green status dot */}
+                <div style={{ display: 'flex', alignItems: 'center', gap: '5px', backgroundColor: '#ECFDF5', padding: '3px 8px', borderRadius: '9999px', border: '1px solid #A7F3D0' }}>
+                  <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#10B981', boxShadow: '0 0 6px #10B981' }} />
+                  <span style={{ fontSize: '9.5px', fontWeight: 800, color: '#047857', letterSpacing: '0.04em' }}>ATS 98%</span>
+                </div>
+              </div>
+
+              {/* Abstract preview skeleton content (no text, just clean visual document layout) */}
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', marginTop: '13px' }}>
+                {/* Section 1: Abstract summary skeleton */}
+                <div>
+                  <div style={{ width: '38px', height: '5px', borderRadius: '2.5px', backgroundColor: '#94A3B8', marginBottom: '6px' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                    <div style={{ width: '100%', height: '4.5px', borderRadius: '2px', backgroundColor: '#E2E8F0' }} />
+                    <div style={{ width: '88%', height: '4.5px', borderRadius: '2px', backgroundColor: '#E2E8F0' }} />
+                    <div style={{ width: '64%', height: '4.5px', borderRadius: '2px', backgroundColor: '#E2E8F0' }} />
+                  </div>
+                </div>
+
+                {/* Section 2: Abstract experience skeleton blocks */}
+                <div>
+                  <div style={{ width: '48px', height: '5px', borderRadius: '2.5px', backgroundColor: '#1A53CF', opacity: 0.75, marginBottom: '6px' }} />
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '6.5px' }}>
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3.5px' }}>
+                        <div style={{ width: '48%', height: '5px', borderRadius: '2px', backgroundColor: '#64748B' }} />
+                        <div style={{ width: '22%', height: '5px', borderRadius: '2px', backgroundColor: '#CBD5E1' }} />
+                      </div>
+                      <div style={{ width: '92%', height: '4px', borderRadius: '2px', backgroundColor: '#E2E8F0', marginBottom: '3px' }} />
+                      <div style={{ width: '74%', height: '4px', borderRadius: '2px', backgroundColor: '#E2E8F0' }} />
+                    </div>
+
+                    <div>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '3.5px' }}>
+                        <div style={{ width: '42%', height: '5px', borderRadius: '2px', backgroundColor: '#64748B' }} />
+                        <div style={{ width: '20%', height: '5px', borderRadius: '2px', backgroundColor: '#CBD5E1' }} />
+                      </div>
+                      <div style={{ width: '86%', height: '4px', borderRadius: '2px', backgroundColor: '#E2E8F0' }} />
+                    </div>
+                  </div>
+                </div>
+
+                {/* Section 3: Abstract skills skeleton chips */}
+                <div>
+                  <div style={{ width: '42px', height: '5px', borderRadius: '2.5px', backgroundColor: '#94A3B8', marginBottom: '6px' }} />
+                  <div style={{ display: 'flex', flexWrap: 'wrap', gap: '5px' }}>
+                    {[38, 48, 30, 44, 34].map((w, idx) => (
+                      <div
+                        key={idx}
+                        style={{
+                          width: `${w}px`,
+                          height: '13px',
+                          borderRadius: '3px',
+                          backgroundColor: '#EFF6FF',
+                          border: '1px solid #DBEAFE'
+                        }}
+                      />
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Seal skeleton */}
+            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', paddingTop: '10px', borderTop: '1px dashed #E2E8F0' }}>
+              <div style={{ width: '50px', height: '4px', borderRadius: '2px', backgroundColor: '#CBD5E1' }} />
+              <div style={{ width: '38px', height: '4px', borderRadius: '2px', backgroundColor: '#93C5FD' }} />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* 4. 5X5 GRID OF SLOWLY GLOWING WHITE DOTS IN BOTTOM CORNER */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: 'clamp(24px, 4.2vh, 42px)',
+          left: 'clamp(24px, 4.5vw, 56px)',
+          display: 'grid',
+          gridTemplateColumns: 'repeat(5, 6px)',
+          gridTemplateRows: 'repeat(5, 6px)',
+          gap: '10px',
+          zIndex: 10,
+          pointerEvents: 'none'
+        }}
+        aria-hidden="true"
+      >
+        {Array.from({ length: 25 }).map((_, i) => {
+          const row = Math.floor(i / 5);
+          const col = i % 5;
+          const delay = ((row + col) * 0.24).toFixed(2);
+          return (
+            <div
+              key={`dot-${i}`}
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                backgroundColor: '#FFFFFF',
+                animation: 'slowDotGlow 3.6s ease-in-out infinite',
+                animationDelay: `${delay}s`,
+                willChange: 'opacity, transform, box-shadow'
+              }}
+            />
+          );
+        })}
+      </div>
+
+      {/* 5. BOTTOM SCROLL CUE */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '18px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 10,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '4px',
+          color: 'rgba(255, 255, 255, 0.75)',
+          fontSize: '11px',
+          fontWeight: 700,
+          letterSpacing: '0.04em',
+          textTransform: 'uppercase',
+          pointerEvents: 'none'
+        }}
+      >
+        <span>Scroll to explore</span>
+        <ChevronDown size={14} style={{ animation: 'bounce 1.5s infinite' }} />
+      </div>
+    </section>
+  );
+}
+
 export default function LandingPage({ onSignIn, onLaunchApp }) {
+  // Intro Animation State (disabled by default so blue hero loads instantly)
+  const [showIntro, setShowIntro] = useState(false);
+  const [introPhase, setIntroPhase] = useState('enter'); // 'enter' | 'zoom' | 'reveal'
+
   const [activeFeatureTab, setActiveFeatureTab] = useState(0);
   const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'yearly'
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [uploadedResumeName, setUploadedResumeName] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
   const [scanResult, setScanResult] = useState(null);
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      // Navbar only visible after the full-height hero section is scrolled up
+      const heroThreshold = Math.max(300, window.innerHeight * 0.7);
+      setIsScrolled(window.scrollY > heroThreshold);
+    };
+    window.addEventListener('scroll', handleScroll, { passive: true });
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  useEffect(() => {
+    // Phase 1: Pure white logo sits on solid black background
+    const t1 = setTimeout(() => {
+      setIntroPhase('zoom'); // Triggers dramatic zoom-in while background stays solid black
+    }, 850);
+
+    // Phase 2: After zoom engulfs viewport, fade out black overlay to reveal white webpage
+    const t2 = setTimeout(() => {
+      setIntroPhase('reveal');
+    }, 1900);
+
+    // Phase 3: Unmount intro overlay
+    const t3 = setTimeout(() => {
+      setShowIntro(false);
+    }, 2450);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      clearTimeout(t3);
+    };
+  }, []);
+
+  // Keyboard shortcut (Escape, Space, Enter) or click to skip intro
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (showIntro && ['Escape', ' ', 'Enter'].includes(e.key)) {
+        setShowIntro(false);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [showIntro]);
 
   // Simulated ATS file upload & scan
   const handleFileUpload = (e) => {
@@ -214,100 +750,275 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
     setTimeout(() => {
       setIsScanning(false);
       setScanResult({
-        score: 88,
-        matchRole: 'Senior Full Stack / Cloud Architect',
-        missingKeywords: ['Distributed Tracing', 'Kubernetes Helm', 'Terraform CI/CD'],
-        topStrengths: ['Strong React 19 / TypeScript depth', 'Proven scalable microservices', 'Clear measurable business impact metrics']
+        score: 94,
+        matchRole: 'Senior Full Stack / Product Architect',
+        missingKeywords: ['Distributed Tracing', 'Kubernetes Helm', 'System Resiliency'],
+        topStrengths: ['Deep React 19 / TypeScript depth', 'Measurable enterprise revenue impact', 'Scalable distributed systems']
       });
-    }, 1800);
+    }, 1600);
+  };
+
+  const scrollToSection = (id) => {
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+    }
   };
 
   return (
     <div 
       style={{
         minHeight: '100vh',
-        backgroundColor: '#F8FAFD',
+        backgroundColor: '#FFFFFF',
         color: '#090C15',
-        fontFamily: "'Inter', system-ui, -apple-system, sans-serif",
-        backgroundImage: `
-          radial-gradient(at 0% 0%, rgba(224, 242, 254, 0.75) 0px, transparent 45%),
-          radial-gradient(at 100% 0%, rgba(238, 242, 255, 0.85) 0px, transparent 45%),
-          radial-gradient(at 50% 40%, rgba(240, 249, 255, 0.6) 0px, transparent 55%),
-          radial-gradient(at 100% 80%, rgba(224, 231, 255, 0.5) 0px, transparent 50%),
-          radial-gradient(at 0% 100%, rgba(236, 253, 245, 0.45) 0px, transparent 50%)
-        `,
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
         position: 'relative',
         overflowX: 'hidden'
       }}
     >
+      {/* =========================================================================
+          INTRO ANIMATION: SOLID BLACK BACKGROUND -> PURE WHITE LOGO -> ZOOM IN WITH LOADINGBG -> REVEAL WHITE WEBPAGE
+          ========================================================================= */}
+      {showIntro && (
+        <div
+          onClick={() => setShowIntro(false)}
+          title="Click to skip intro"
+          style={{
+            position: 'fixed',
+            inset: 0,
+            zIndex: 999999,
+            backgroundColor: '#000000',
+            opacity: introPhase === 'reveal' ? 0 : 1,
+            pointerEvents: introPhase === 'reveal' ? 'none' : 'auto',
+            transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            overflow: 'hidden'
+          }}
+        >
+          {/* Loading Background (loadingbg.png) replacing plain white bg during zoom */}
+          <div
+            style={{
+              position: 'absolute',
+              inset: 0,
+              backgroundImage: 'url(/loadingbg.png)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              opacity: introPhase === 'zoom' || introPhase === 'reveal' ? 1 : 0,
+              transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
+              zIndex: 1
+            }}
+          >
+            {/* Atmospheric overlay to blend smoothly */}
+            <div
+              style={{
+                position: 'absolute',
+                inset: 0,
+                background: 'linear-gradient(180deg, rgba(9, 12, 21, 0.6) 0%, rgba(9, 12, 21, 0.35) 50%, rgba(9, 12, 21, 0.75) 100%)',
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              position: 'relative',
+              zIndex: 2,
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              transform: introPhase === 'enter' 
+                ? 'scale(1)' 
+                : 'scale(70)',
+              transition: introPhase === 'zoom' || introPhase === 'reveal'
+                ? 'transform 1.2s cubic-bezier(0.7, 0, 0.25, 1)' 
+                : 'none',
+              willChange: 'transform'
+            }}
+          >
+            <img 
+              src="/Whitelogo.webp" 
+              alt="JobGen Logo" 
+              style={{
+                width: '130px',
+                height: '130px',
+                objectFit: 'contain',
+                filter: 'brightness(0) invert(1) drop-shadow(0 0 45px rgba(255, 255, 255, 0.95))',
+                userSelect: 'none'
+              }}
+            />
+          </div>
+        </div>
+      )}
+
+      {/* =========================================================================
+          GLOBAL STYLES & LIGHT AESTHETIC CLASSES
+          ========================================================================= */}
       <style>{`
-        /* Smooth Custom Styling & Refraction Effects */
-        .glass-panel {
-          background: rgba(255, 255, 255, 0.82);
-          backdrop-filter: blur(20px);
-          -webkit-backdrop-filter: blur(20px);
-          border: 1px solid rgba(226, 232, 240, 0.9);
-          box-shadow: 0 10px 35px -5px rgba(15, 23, 42, 0.05), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+        /* Luminous Light Canvas Background */
+        .white-huly-canvas {
+          background-color: #FFFFFF;
+          background-image: 
+            radial-gradient(at 0% 0%, rgba(224, 242, 254, 0.7) 0px, transparent 50%),
+            radial-gradient(at 100% 0%, rgba(238, 242, 255, 0.8) 0px, transparent 50%),
+            radial-gradient(at 50% 30%, rgba(240, 249, 255, 0.55) 0px, transparent 60%),
+            radial-gradient(at 100% 100%, rgba(224, 231, 255, 0.45) 0px, transparent 50%),
+            radial-gradient(at 0% 100%, rgba(236, 253, 245, 0.4) 0px, transparent 50%);
         }
 
-        .glass-panel-interactive {
-          transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.25s ease;
+        /* Clean 40px Grid Mesh */
+        .light-grid-mesh {
+          background-size: 40px 40px;
+          background-image: 
+            linear-gradient(to right, rgba(15, 23, 42, 0.035) 1px, transparent 1px),
+            linear-gradient(to bottom, rgba(15, 23, 42, 0.035) 1px, transparent 1px);
         }
-        .glass-panel-interactive:hover {
+
+        /* Headline Gradient: High-contrast Dark Slate to Royal Blue */
+        .white-hero-title {
+          background: linear-gradient(135deg, #090C15 25%, #1A53CF 80%, #2563EB 100%);
+          -webkit-background-clip: text;
+          -webkit-text-fill-color: transparent;
+        }
+
+        /* Primary Action Button */
+        .white-primary-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 12px 30px;
+          border-radius: 9999px;
+          font-size: 13.5px;
+          font-weight: 800;
+          color: #FFFFFF;
+          background: linear-gradient(135deg, #1A53CF 0%, #2563EB 100%);
+          border: none;
+          box-shadow: 0 8px 24px rgba(26, 83, 207, 0.32), 0 2px 6px rgba(26, 83, 207, 0.2);
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .white-primary-btn:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 14px 32px rgba(26, 83, 207, 0.42), 0 4px 10px rgba(26, 83, 207, 0.25);
+          filter: brightness(1.05);
+        }
+
+        /* Secondary Action Button */
+        .white-secondary-btn {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          padding: 12px 28px;
+          border-radius: 9999px;
+          font-size: 13.5px;
+          font-weight: 700;
+          color: #090C15;
+          background: #FFFFFF;
+          border: 1px solid #CBD5E1;
+          box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .white-secondary-btn:hover {
+          background: #F8FAFC;
+          border-color: #94A3B8;
+          color: #1A53CF;
+          transform: translateY(-1px);
+          box-shadow: 0 6px 16px rgba(15, 23, 42, 0.08);
+        }
+
+        /* Light Bento Card */
+        .white-bento-card {
+          background: #FFFFFF;
+          border: 1px solid #E2E8F0;
+          border-radius: 20px;
+          box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02);
+          transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+          position: relative;
+          overflow: hidden;
+        }
+        .white-bento-card:hover {
           transform: translateY(-3px);
-          border-color: rgba(37, 99, 235, 0.3);
-          box-shadow: 0 20px 45px -8px rgba(37, 99, 235, 0.12), 0 0 0 1px rgba(37, 99, 235, 0.2) inset;
+          border-color: #BFDBFE;
+          box-shadow: 0 20px 40px -10px rgba(26, 83, 207, 0.12), 0 2px 8px rgba(15, 23, 42, 0.04);
         }
 
-        @keyframes scanBeam {
-          0% { transform: translateY(-100%); }
-          100% { transform: translateY(400%); }
+        /* Marquee Scroll */
+        @keyframes whiteMarquee {
+          0% { transform: translateX(0%); }
+          100% { transform: translateX(-50%); }
+        }
+        .animate-white-marquee {
+          display: flex;
+          width: 200%;
+          animation: whiteMarquee 26s linear infinite;
+        }
+        .animate-white-marquee:hover {
+          animation-play-state: paused;
         }
 
-        @keyframes subtleFloat {
-          0%, 100% { transform: translateY(0); }
-          50% { transform: translateY(-8px); }
-        }
-
-        @keyframes liveDotGlow {
+        /* Pulsing Radar Dot */
+        @keyframes radarPulse {
           0%, 100% { transform: scale(1); opacity: 1; box-shadow: 0 0 6px #10B981; }
-          50% { transform: scale(1.2); opacity: 0.8; box-shadow: 0 0 14px #10B981; }
+          50% { transform: scale(1.3); opacity: 0.7; box-shadow: 0 0 14px #10B981; }
+        }
+        .radar-live {
+          animation: radarPulse 2s infinite ease-in-out;
         }
 
-        @keyframes gradientGlow {
-          0% { background-position: 0% 50%; }
-          50% { background-position: 100% 50%; }
-          100% { background-position: 0% 50%; }
+        /* Resume Scan Laser */
+        @keyframes laserSweep {
+          0% { top: 0%; opacity: 0.8; }
+          50% { opacity: 1; }
+          100% { top: 100%; opacity: 0.8; }
+        }
+        .laser-line {
+          position: absolute;
+          left: 0;
+          right: 0;
+          height: 2.5px;
+          background: linear-gradient(90deg, transparent, #1A53CF, #3B82F6, #1A53CF, transparent);
+          box-shadow: 0 0 14px #1A53CF;
+          animation: laserSweep 1.8s infinite ease-in-out;
         }
       `}</style>
 
       {/* =========================================================================
-          1. FLOATING LIQUID GLASS NAVBAR (Fixed, Responsive, Luminous)
+          1. FLOATING NAVBAR (ONLY VISIBLE AFTER HERO SECTION IS SCROLLED UP)
           ========================================================================= */}
       <header
         style={{
-          position: 'sticky',
+          position: 'fixed',
           top: '16px',
+          left: 0,
+          right: 0,
           zIndex: 1000,
           margin: '0 auto',
-          maxWidth: '1240px',
-          padding: '0 16px',
-          boxSizing: 'border-box'
+          maxWidth: '1220px',
+          padding: '0 20px',
+          boxSizing: 'border-box',
+          opacity: isScrolled ? 1 : 0,
+          transform: isScrolled ? 'translateY(0)' : 'translateY(-24px)',
+          pointerEvents: isScrolled ? 'auto' : 'none',
+          transition: 'all 0.35s cubic-bezier(0.16, 1, 0.3, 1)'
         }}
       >
         <div
-          className="glass-panel"
           style={{
-            borderRadius: '999px',
-            padding: '10px 20px',
+            borderRadius: '9999px',
+            padding: '10px 24px',
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: '16px',
-            boxShadow: '0 12px 36px -4px rgba(15, 23, 42, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.9) inset'
+            backgroundColor: 'rgba(15, 23, 42, 0.84)',
+            backdropFilter: 'blur(24px)',
+            WebkitBackdropFilter: 'blur(24px)',
+            border: '1px solid rgba(255, 255, 255, 0.18)',
+            boxShadow: '0 16px 36px -4px rgba(0, 0, 0, 0.35)'
           }}
         >
-          {/* Logo & Brand Identity */}
+          {/* Logo & Brand: Pure White Logo with text JobGen.AI */}
           <div 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             style={{ 
@@ -319,32 +1030,43 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             }}
           >
             <img 
-              src="/jobgen-logo.png" 
-              alt="JobGen Logo" 
-              style={{ width: '32px', height: '32px', objectFit: 'contain' }}
+              src="/Whitelogo.webp" 
+              alt="JobGen.AI" 
+              style={{ 
+                width: '28px', 
+                height: '28px', 
+                objectFit: 'contain',
+                filter: 'drop-shadow(0 2px 8px rgba(0, 18, 70, 0.3))'
+              }}
+              onError={(e) => {
+                e.currentTarget.src = '/jobgen-logo.png';
+                e.currentTarget.style.filter = 'brightness(0) invert(1)';
+              }}
             />
             <div style={{ display: 'flex', alignItems: 'baseline', gap: '3px' }}>
               <span 
                 style={{ 
-                  fontFamily: 'var(--font-title, sans-serif)',
-                  fontSize: '20px', 
+                  fontFamily: '"Plus Jakarta Sans", var(--font-title, sans-serif)',
+                  fontSize: '19px', 
                   fontWeight: 900, 
-                  letterSpacing: '-0.03em', 
-                  color: '#090C15' 
+                  color: '#FFFFFF',
+                  letterSpacing: '-0.03em',
+                  textShadow: '0 2px 10px rgba(0, 18, 70, 0.35)'
                 }}
               >
                 JobGen
               </span>
               <span 
                 style={{ 
-                  fontFamily: 'var(--font-mono, monospace)', 
-                  fontSize: '12px', 
-                  fontWeight: 800, 
-                  color: '#1A53CF',
-                  backgroundColor: '#EFF6FF',
-                  padding: '2px 5px',
+                  fontSize: '11px', 
+                  fontWeight: 900, 
+                  color: '#FFFFFF',
+                  backgroundColor: 'rgba(255, 255, 255, 0.18)',
+                  border: '1px solid rgba(255, 255, 255, 0.35)',
+                  padding: '1px 6px',
                   borderRadius: '5px',
-                  letterSpacing: '0.02em'
+                  letterSpacing: '0.04em',
+                  textShadow: '0 1px 4px rgba(0, 18, 70, 0.25)'
                 }}
               >
                 AI
@@ -352,435 +1074,453 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             </div>
           </div>
 
-          {/* Navigation Anchors (Desktop) */}
-          <nav 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              gap: '24px' 
-            }}
-            className="hidden md:flex"
-          >
+          {/* Desktop Nav Links */}
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '22px' }} className="nav-desktop">
             {[
-              { label: 'Features', href: '#features' },
-              { label: 'ATS Checker', href: '#ats-scanner' },
-              { label: 'Meet Emma', href: '#emma-copilot' },
-              { label: 'Stories', href: '#testimonials' },
-              { label: 'Pricing', href: '#pricing' },
-              { label: 'FAQ', href: '#faq' }
-            ].map((link) => (
-              <a
-                key={link.label}
-                href={link.href}
+              { label: 'Features', id: 'features' },
+              { label: 'Productivity', id: 'productivity' },
+              { label: 'Interview Lab', id: 'interview-copilot' },
+              { label: 'ATS Scanner', id: 'ats-scanner' },
+              { label: 'Pricing', id: 'pricing' },
+              { label: 'FAQ', id: 'faq' }
+            ].map(item => (
+              <button
+                key={item.id}
+                onClick={() => scrollToSection(item.id)}
                 style={{
-                  textDecoration: 'none',
-                  fontSize: '13.5px',
+                  background: 'none',
+                  border: 'none',
+                  fontSize: '13px',
                   fontWeight: 600,
-                  color: '#475569',
-                  transition: 'color 0.15s ease'
+                  color: 'rgba(255, 255, 255, 0.85)',
+                  cursor: 'pointer',
+                  padding: '4px 0',
+                  transition: 'all 0.15s ease',
+                  textShadow: '0 1px 6px rgba(0, 18, 70, 0.25)'
                 }}
-                onMouseEnter={(e) => e.currentTarget.style.color = '#1A53CF'}
-                onMouseLeave={(e) => e.currentTarget.style.color = '#475569'}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = 'rgba(255, 255, 255, 0.85)';
+                  e.currentTarget.style.transform = 'translateY(0)';
+                }}
               >
-                {link.label}
-              </a>
+                {item.label}
+              </button>
             ))}
           </nav>
 
-          {/* Action Button: Sign In */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
+          {/* Action CTAs */}
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
             <button
               onClick={onSignIn}
               style={{
+                background: 'rgba(255, 255, 255, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.35)',
+                borderRadius: '9999px',
+                padding: '7px 18px',
+                fontSize: '12.5px',
+                fontWeight: 700,
+                color: '#FFFFFF',
+                cursor: 'pointer',
+                transition: 'all 0.15s ease',
+                backdropFilter: 'blur(8px)',
+                WebkitBackdropFilter: 'blur(8px)'
+              }}
+              onMouseEnter={(e) => {
+                e.currentTarget.style.borderColor = '#FFFFFF';
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
+                e.currentTarget.style.transform = 'translateY(-1px)';
+              }}
+              onMouseLeave={(e) => {
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+                e.currentTarget.style.transform = 'translateY(0)';
+              }}
+            >
+              Sign In
+            </button>
+
+            <button
+              onClick={onLaunchApp}
+              style={{
                 display: 'inline-flex',
                 alignItems: 'center',
-                gap: '6px',
-                backgroundColor: '#1A53CF',
-                backgroundImage: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
-                color: '#FFFFFF',
-                fontSize: '13.5px',
-                fontWeight: 700,
-                padding: '9px 20px',
-                borderRadius: '999px',
-                border: '1px solid rgba(255, 255, 255, 0.2)',
-                boxShadow: '0 4px 14px rgba(26, 83, 207, 0.35)',
+                justifyContent: 'center',
+                padding: '8px 20px',
+                borderRadius: '9999px',
+                fontSize: '12px',
+                fontWeight: 800,
+                color: '#1A53CF',
+                backgroundColor: '#FFFFFF',
+                border: 'none',
+                boxShadow: '0 4px 16px rgba(0, 18, 70, 0.25)',
                 cursor: 'pointer',
-                transition: 'transform 0.18s ease, box-shadow 0.18s ease'
+                transition: 'all 0.15s ease'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(26, 83, 207, 0.45)';
+                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.35)';
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 14px rgba(26, 83, 207, 0.35)';
+                e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 18, 70, 0.25)';
               }}
             >
-              <span>Sign In</span>
+              <span>Launch App</span>
+              <ArrowRight size={13} style={{ marginLeft: '6px' }} />
             </button>
           </div>
         </div>
       </header>
 
       {/* =========================================================================
-          2. HERO SECTION: Cinematic, Asymmetric, Dashboard-Infused
+          2. FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REALISTIC RESUME
           ========================================================================= */}
-      <section
+      <FluidBlueHero 
+        onSignIn={onSignIn} 
+        onLaunchApp={onLaunchApp} 
+        onScanClick={() => scrollToSection('ats-scanner')} 
+      />
+
+      {/* =========================================================================
+          3. INTERACTIVE AUTONOMOUS WORKSPACE PREVIEW (WHITE THEME)
+          ========================================================================= */}
+      <section 
+        id="features"
+        className="white-huly-canvas light-grid-mesh"
         style={{
-          maxWidth: '1240px',
-          margin: '0 auto',
-          padding: '72px 24px 64px 24px',
-          boxSizing: 'border-box'
+          position: 'relative',
+          paddingTop: '80px',
+          paddingBottom: '90px',
+          textAlign: 'center',
+          overflow: 'hidden'
         }}
       >
-        <div 
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
-            gap: '48px', 
-            alignItems: 'center' 
-          }}
-        >
-          {/* Left Column: Clear Value Prop Copy & Fast Action */}
-          <div>
-            {/* Live Kicker Pill */}
-            <div 
+        <div style={{ maxWidth: '1160px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 10 }}>
+          
+          {/* Module Heading */}
+          <div style={{ display: 'inline-flex', marginBottom: '20px' }}>
+            <div
               style={{
                 display: 'inline-flex',
                 alignItems: 'center',
                 gap: '8px',
-                padding: '6px 14px',
-                borderRadius: '999px',
+                padding: '6px 18px',
+                borderRadius: '9999px',
                 backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                border: '1px solid rgba(226, 232, 240, 0.95)',
-                boxShadow: '0 2px 10px rgba(15, 23, 42, 0.04)',
-                marginBottom: '22px'
+                border: '1px solid #BFDBFE',
+                boxShadow: '0 4px 14px rgba(26, 83, 207, 0.08)'
               }}
             >
-              <span 
+              <span className="radar-live" style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+              <span style={{ fontSize: '12px', fontWeight: 800, letterSpacing: '0.04em', textTransform: 'uppercase', color: '#1A53CF' }}>
+                Interactive Candidate Suite
+              </span>
+              <span style={{ color: '#CBD5E1' }}>•</span>
+              <span style={{ fontSize: '11.5px', color: '#475569', fontWeight: 600 }}>Real Evidence Grounded</span>
+            </div>
+          </div>
+
+          <h2 
+            className="white-hero-title"
+            style={{
+              fontSize: 'clamp(34px, 4.8vw, 64px)',
+              fontWeight: 900,
+              letterSpacing: '-0.035em',
+              lineHeight: 1.05,
+              margin: '0 auto 16px auto',
+              maxWidth: '860px'
+            }}
+          >
+            Explore the Autonomous Candidate Workspace
+          </h2>
+
+          <p
+            style={{
+              fontSize: 'clamp(15px, 1.6vw, 18px)',
+              lineHeight: 1.55,
+              color: '#475569',
+              maxWidth: '660px',
+              margin: '0 auto 36px auto',
+              fontWeight: 500
+            }}
+          >
+            Switch between modules to preview how Emma AI tailors resumes, runs simulated mock interviews, benchmark offers, and tracks applications in real-time.
+          </p>
+
+          {/* Hero Interactive Window Preview with Huly-style Tabs on White */}
+          <div 
+            style={{
+              maxWidth: '1080px',
+              margin: '0 auto',
+              padding: '10px',
+              backgroundColor: '#FFFFFF',
+              borderRadius: '24px',
+              boxShadow: '0 30px 80px -20px rgba(15, 23, 42, 0.12), 0 0 0 1px #E2E8F0',
+              border: '1px solid #CBD5E1'
+            }}
+          >
+            {/* Window Header */}
+            <div 
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'space-between',
+                padding: '12px 18px',
+                borderBottom: '1px solid #F1F5F9',
+                backgroundColor: '#F8FAFC',
+                borderRadius: '16px 16px 0 0'
+              }}
+            >
+              {/* macOS Dots */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+                <div style={{ width: '11px', height: '11px', borderRadius: '50%', backgroundColor: '#EF4444' }} />
+                <div style={{ width: '11px', height: '11px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
+                <div style={{ width: '11px', height: '11px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+              </div>
+
+              {/* Command Bar Pill */}
+              <div 
                 style={{
-                  display: 'inline-block',
-                  width: '7px',
-                  height: '7px',
-                  borderRadius: '50%',
-                  backgroundColor: '#10B981',
-                  animation: 'liveDotGlow 2s infinite ease-in-out'
-                }}
-              />
-              <span 
-                style={{
-                  fontSize: '12px',
-                  fontWeight: 800,
-                  letterSpacing: '0.06em',
-                  color: '#1E293B',
-                  textTransform: 'uppercase'
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px',
+                  backgroundColor: '#FFFFFF',
+                  border: '1px solid #E2E8F0',
+                  borderRadius: '9999px',
+                  padding: '4px 14px',
+                  fontSize: '11.5px',
+                  color: '#475569',
+                  boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)'
                 }}
               >
-                AI Career Workspace • ATS Optimized
-              </span>
+                <Command size={12} color="#1A53CF" />
+                <span>JobGen Candidate OS &bull; 4 active interview loops</span>
+                <span style={{ backgroundColor: '#F1F5F9', padding: '1px 6px', borderRadius: '4px', fontSize: '10px', color: '#1E293B', fontWeight: 700 }}>⌘K</span>
+              </div>
+
+              {/* Status Badge */}
+              <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '11.5px', color: '#10B981', fontWeight: 700 }}>
+                <span className="radar-live" style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+                <span>Online</span>
+              </div>
             </div>
 
-            {/* Main Headline */}
-            <h1
+            {/* Interactive Module Switcher Tabs */}
+            <div 
               style={{
-                fontFamily: 'var(--font-title, sans-serif)',
-                fontSize: 'clamp(40px, 5.2vw, 68px)',
-                fontWeight: 900,
-                lineHeight: 1.05,
-                letterSpacing: '-0.04em',
-                color: '#090C15',
-                marginBottom: '22px'
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '10px 14px',
+                backgroundColor: '#F1F5F9',
+                borderBottom: '1px solid #E2E8F0',
+                overflowX: 'auto'
               }}
             >
-              Tired of applying blind? <br />
-              <span 
-                style={{
-                  background: 'linear-gradient(135deg, #1A53CF 0%, #06B6D4 100%)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  display: 'inline-block'
-                }}
-              >
-                Apply smarter.
-              </span>
-            </h1>
+              {FEATURES_DATA.map((feat, idx) => {
+                const isActive = activeFeatureTab === idx;
+                return (
+                  <button
+                    key={feat.id}
+                    onClick={() => setActiveFeatureTab(idx)}
+                    style={{
+                      padding: '8px 16px',
+                      borderRadius: '8px',
+                      fontSize: '12px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      border: isActive ? '1px solid #BFDBFE' : '1px solid transparent',
+                      backgroundColor: isActive ? '#FFFFFF' : 'transparent',
+                      color: isActive ? '#1A53CF' : '#64748B',
+                      boxShadow: isActive ? '0 2px 6px rgba(15, 23, 42, 0.05)' : 'none',
+                      transition: 'all 0.15s ease',
+                      whiteSpace: 'nowrap',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '6px'
+                    }}
+                  >
+                    <span>{feat.navLabel}</span>
+                    <span 
+                      style={{ 
+                        fontSize: '10px', 
+                        padding: '1px 6px', 
+                        borderRadius: '4px',
+                        backgroundColor: isActive ? '#EFF6FF' : '#E2E8F0',
+                        color: isActive ? '#1A53CF' : '#64748B'
+                      }}
+                    >
+                      {feat.stats}
+                    </span>
+                  </button>
+                );
+              })}
+            </div>
 
-            {/* Subtitle */}
-            <p
-              style={{
-                fontSize: 'clamp(16px, 1.4vw, 19px)',
-                lineHeight: 1.6,
-                color: '#475569',
-                maxWidth: '560px',
-                marginBottom: '32px'
-              }}
-            >
-              Tailor every resume to strict ATS algorithms, automatically track applications across LinkedIn & Seek, and ace interviews with Emma AI — all in one connected candidate workspace.
-            </p>
-
-            {/* CTAs */}
+            {/* Active Feature Display Surface on White */}
             <div 
               style={{ 
-                display: 'flex', 
-                alignItems: 'center', 
-                gap: '14px', 
-                flexWrap: 'wrap', 
-                marginBottom: '36px' 
+                position: 'relative', 
+                backgroundColor: '#FFFFFF', 
+                borderRadius: '0 0 16px 16px',
+                overflow: 'hidden'
               }}
             >
-              <a
-                href="#ats-scanner"
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  backgroundColor: '#1A53CF',
-                  backgroundImage: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
-                  color: '#FFFFFF',
-                  textDecoration: 'none',
-                  fontSize: '15px',
-                  fontWeight: 800,
-                  padding: '14px 26px',
-                  borderRadius: '14px',
-                  boxShadow: '0 8px 24px rgba(26, 83, 207, 0.35)',
-                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 12px 30px rgba(26, 83, 207, 0.45)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(26, 83, 207, 0.35)';
-                }}
-              >
-                <span>Free ATS Resume Score</span>
-                <ArrowRight size={17} strokeWidth={2.4} />
-              </a>
-
-              <button
-                onClick={onLaunchApp}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  backgroundColor: '#FFFFFF',
-                  color: '#090C15',
-                  border: '1.5px solid #CBD5E1',
-                  fontSize: '15px',
-                  fontWeight: 700,
-                  padding: '13px 22px',
-                  borderRadius: '14px',
-                  boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)',
-                  cursor: 'pointer',
-                  transition: 'all 0.2s ease'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.borderColor = '#1A53CF';
-                  e.currentTarget.style.transform = 'translateY(-1px)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = '#CBD5E1';
-                  e.currentTarget.style.transform = 'translateY(0)';
-                }}
-              >
-                <LayoutDashboard size={17} color="#1A53CF" />
-                <span>Explore Live Portal</span>
-              </button>
-            </div>
-
-            {/* Quick Micro-Proofs */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '24px', flexWrap: 'wrap' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <CheckCircle2 size={16} color="#10B981" strokeWidth={2.4} />
-                <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748B' }}>No credit card required</span>
-              </div>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                <Shield size={16} color="#2563EB" strokeWidth={2.4} />
-                <span style={{ fontSize: '13px', fontWeight: 600, color: '#64748B' }}>100% Private & Encrypted</span>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: Physical Floating Glass Stage with Live Dashboard Mockup */}
-          <div style={{ position: 'relative' }}>
-            {/* Ambient Refraction Blob */}
-            <div 
-              style={{
-                position: 'absolute',
-                top: '-15%',
-                right: '-10%',
-                width: '380px',
-                height: '380px',
-                borderRadius: '50%',
-                background: 'radial-gradient(circle, rgba(56, 189, 248, 0.25) 0%, rgba(37, 99, 235, 0.1) 50%, transparent 70%)',
-                filter: 'blur(50px)',
-                zIndex: 0,
-                pointerEvents: 'none'
-              }}
-            />
-
-            {/* Main Interactive Stage Glass Card */}
-            <div 
-              className="glass-panel"
-              style={{
-                borderRadius: '24px',
-                padding: '24px',
-                position: 'relative',
-                zIndex: 1,
-                boxShadow: '0 25px 70px -15px rgba(15, 23, 42, 0.18), 0 0 0 1px rgba(255, 255, 255, 0.9) inset'
-              }}
-            >
-              {/* Window Bar */}
               <div 
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  justifyContent: 'space-between', 
-                  marginBottom: '18px', 
-                  paddingBottom: '12px', 
-                  borderBottom: '1px solid rgba(226, 232, 240, 0.8)' 
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#EF4444' }} />
-                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
-                  <span style={{ width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                  <span style={{ fontSize: '11.5px', fontWeight: 700, color: '#64748B', marginLeft: '8px' }}>
-                    JobGen AI Engine v4.2 • Autonomous Mode
-                  </span>
-                </div>
-                <span 
-                  style={{ 
-                    fontSize: '11px', 
-                    fontWeight: 800, 
-                    color: '#10B981', 
-                    backgroundColor: '#ECFDF5', 
-                    padding: '3px 8px', 
-                    borderRadius: '6px' 
-                  }}
-                >
-                  LIVE SYNC ACTIVE
-                </span>
-              </div>
-
-              {/* Real Feature Preview: Resume Tailor & ATS Card */}
-              <div 
-                style={{ 
-                  borderRadius: '16px', 
-                  overflow: 'hidden', 
-                  border: '1px solid #E2E8F0',
-                  backgroundColor: '#FFFFFF',
-                  boxShadow: '0 4px 16px rgba(0, 0, 0, 0.04)',
-                  position: 'relative'
-                }}
-              >
-                <img 
-                  src="/features/feature-resume-builder-BYG5dBEM.webp" 
-                  alt="JobGen Resume Builder Preview" 
-                  style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'cover' }}
-                />
-              </div>
-
-              {/* Floating Pill Overlay 1: Real-time ATS Score Badge */}
-              <div
-                className="glass-panel"
                 style={{
-                  position: 'absolute',
-                  top: '-18px',
-                  left: '-18px',
-                  padding: '10px 16px',
-                  borderRadius: '14px',
-                  display: 'flex',
+                  display: 'grid',
+                  gridTemplateColumns: 'minmax(0, 1.2fr) minmax(0, 0.8fr)',
+                  gap: '28px',
+                  padding: '28px',
                   alignItems: 'center',
-                  gap: '12px',
-                  boxShadow: '0 12px 30px rgba(15, 23, 42, 0.12)',
-                  animation: 'subtleFloat 6s ease-in-out infinite'
+                  textAlign: 'left'
                 }}
+                className="hero-feature-grid"
               >
+                {/* Feature Image / Live Visual */}
                 <div 
-                  style={{ 
-                    width: '38px', 
-                    height: '38px', 
-                    borderRadius: '10px', 
-                    backgroundColor: '#ECFDF5', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    color: '#059669'
+                  style={{
+                    borderRadius: '14px',
+                    overflow: 'hidden',
+                    border: '1px solid #E2E8F0',
+                    boxShadow: '0 10px 25px rgba(15, 23, 42, 0.06)',
+                    backgroundColor: '#F8FAFC'
                   }}
                 >
-                  <Award size={20} strokeWidth={2.4} />
-                </div>
-                <div>
-                  <div style={{ fontSize: '11px', fontWeight: 700, color: '#64748B' }}>ATS Match Score</div>
-                  <div style={{ fontSize: '17px', fontWeight: 900, color: '#090C15', letterSpacing: '-0.02em' }}>
-                    94% • High Priority
-                  </div>
-                </div>
-              </div>
-
-              {/* Floating Pill Overlay 2: Emma Copilot Activity */}
-              <div
-                className="glass-panel"
-                style={{
-                  position: 'absolute',
-                  bottom: '-22px',
-                  right: '-16px',
-                  padding: '12px 18px',
-                  borderRadius: '16px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px',
-                  boxShadow: '0 16px 36px rgba(15, 23, 42, 0.14)',
-                  animation: 'subtleFloat 7s ease-in-out infinite 1s'
-                }}
-              >
-                <div style={{ position: 'relative' }}>
                   <img 
-                    src="/Emma.jpeg" 
-                    alt="Emma Copilot" 
-                    style={{ width: '38px', height: '38px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #2563EB' }}
+                    src={FEATURES_DATA[activeFeatureTab].image} 
+                    alt={FEATURES_DATA[activeFeatureTab].title}
+                    style={{
+                      width: '100%',
+                      height: 'auto',
+                      maxHeight: '440px',
+                      objectFit: 'cover',
+                      display: 'block'
+                    }}
                   />
-                  <span style={{ position: 'absolute', bottom: 0, right: 0, width: '10px', height: '10px', borderRadius: '50%', backgroundColor: '#10B981', border: '2px solid #FFFFFF' }} />
                 </div>
+
+                {/* Feature Description & Highlights */}
                 <div>
-                  <div style={{ fontSize: '11px', fontWeight: 800, color: '#1A53CF', letterSpacing: '0.04em' }}>EMMA COPILOT</div>
-                  <div style={{ fontSize: '13px', fontWeight: 700, color: '#090C15' }}>
-                    Tailored 6 bullet points for Canva
+                  <div 
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '6px',
+                      padding: '4px 10px',
+                      borderRadius: '6px',
+                      backgroundColor: '#EFF6FF',
+                      border: '1px solid #BFDBFE',
+                      color: '#1A53CF',
+                      fontSize: '11px',
+                      fontWeight: 800,
+                      textTransform: 'uppercase',
+                      marginBottom: '12px'
+                    }}
+                  >
+                    <Sparkles size={11} />
+                    <span>{FEATURES_DATA[activeFeatureTab].tag}</span>
                   </div>
+
+                  <h3 style={{ fontSize: '24px', fontWeight: 800, color: '#090C15', letterSpacing: '-0.02em', marginBottom: '8px' }}>
+                    {FEATURES_DATA[activeFeatureTab].title}
+                  </h3>
+
+                  <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.6, marginBottom: '20px' }}>
+                    {FEATURES_DATA[activeFeatureTab].description}
+                  </p>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginBottom: '24px' }}>
+                    {FEATURES_DATA[activeFeatureTab].bulletPoints.map((pt, i) => (
+                      <div key={i} style={{ display: 'flex', alignItems: 'flex-start', gap: '8px' }}>
+                        <div style={{ width: '16px', height: '16px', borderRadius: '50%', backgroundColor: '#ECFDF5', border: '1px solid #A7F3D0', display: 'flex', alignItems: 'center', justifyContent: 'center', flexShrink: 0, marginTop: '2px' }}>
+                          <Check size={10} color="#059669" strokeWidth={3} />
+                        </div>
+                        <span style={{ fontSize: '13px', color: '#1E293B', lineHeight: 1.4 }}>{pt}</span>
+                      </div>
+                    ))}
+                  </div>
+
+                  <button
+                    onClick={onLaunchApp}
+                    className="white-secondary-btn"
+                    style={{ fontSize: '12.5px', padding: '10px 22px' }}
+                  >
+                    <span>Open in Candidate Workspace</span>
+                    <ArrowRight size={13} style={{ marginLeft: '6px' }} />
+                  </button>
                 </div>
               </div>
             </div>
           </div>
+
+          {/* Everything you need ticker on White */}
+          <div style={{ marginTop: '54px', overflow: 'hidden' }}>
+            <p style={{ fontSize: '12.5px', color: '#64748B', fontWeight: 700, textTransform: 'uppercase', letterSpacing: '0.06em', marginBottom: '14px' }}>
+              Everything you need for autonomous career advancement:
+            </p>
+            <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', position: 'relative' }}>
+              <div className="animate-white-marquee">
+                {[
+                  'ATS Resume Studio',
+                  'Opportunity Kanban Pipeline',
+                  'Real-time AI Match Scoring',
+                  'STAR Interview Prep Copilot',
+                  '12-Week Strategic Career Plan',
+                  'Tailored Cover Letter Studio',
+                  '1-Click Chrome Extension',
+                  'Salary & Equity Benchmark'
+                ].concat([
+                  'ATS Resume Studio',
+                  'Opportunity Kanban Pipeline',
+                  'Real-time AI Match Scoring',
+                  'STAR Interview Prep Copilot',
+                  '12-Week Strategic Career Plan',
+                  'Tailored Cover Letter Studio',
+                  '1-Click Chrome Extension',
+                  'Salary & Equity Benchmark'
+                ]).map((item, idx) => (
+                  <span 
+                    key={idx} 
+                    style={{ 
+                      display: 'inline-flex', 
+                      alignItems: 'center', 
+                      gap: '8px', 
+                      marginRight: '36px', 
+                      fontSize: '13.5px', 
+                      fontWeight: 650, 
+                      color: '#334155' 
+                    }}
+                  >
+                    <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#1A53CF' }} />
+                    {item}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+
         </div>
       </section>
 
       {/* =========================================================================
-          3. TRUST & SOCIAL PROOF STRIP (Logos of Top Tech Employers)
+          3. SOCIAL PROOF / EMPLOYER LOGOS MARQUEE (WHITE BACKGROUND)
           ========================================================================= */}
       <section 
-        style={{
-          borderTop: '1px solid rgba(226, 232, 240, 0.8)',
-          borderBottom: '1px solid rgba(226, 232, 240, 0.8)',
-          backgroundColor: 'rgba(255, 255, 255, 0.65)',
-          backdropFilter: 'blur(12px)',
-          padding: '38px 24px',
-          boxSizing: 'border-box'
+        style={{ 
+          padding: '40px 0', 
+          borderTop: '1px solid #E2E8F0',
+          borderBottom: '1px solid #E2E8F0',
+          backgroundColor: '#F8FAFC'
         }}
       >
-        <div style={{ maxWidth: '1240px', margin: '0 auto', textAlign: 'center' }}>
-          <p 
-            style={{ 
-              fontSize: '12.5px', 
-              fontWeight: 800, 
-              letterSpacing: '0.12em', 
-              textTransform: 'uppercase', 
-              color: '#64748B', 
-              marginBottom: '24px' 
-            }}
-          >
-            Trusted by candidates hired at leading companies
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
+          <p style={{ fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B', marginBottom: '24px' }}>
+            JobGen candidates have landed dream roles at industry giants
           </p>
 
           <div 
@@ -788,927 +1528,878 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               display: 'flex', 
               alignItems: 'center', 
               justifyContent: 'center', 
-              flexWrap: 'wrap', 
-              gap: '40px 52px' 
+              gap: '40px', 
+              flexWrap: 'wrap'
             }}
           >
-            {TRUST_LOGOS.map((logo) => (
-              <img
-                key={logo.name}
-                src={logo.src}
-                alt={logo.name}
-                title={logo.name}
-                style={{
-                  height: `${Math.round(28 * logo.scale)}px`,
-                  width: 'auto',
-                  filter: 'grayscale(100%) contrast(85%)',
-                  opacity: 0.6,
-                  transition: 'filter 0.2s ease, opacity 0.2s ease, transform 0.2s ease'
+            {TRUST_LOGOS.map((company, idx) => (
+              <div 
+                key={idx} 
+                style={{ 
+                  display: 'flex', 
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  opacity: 0.8,
+                  transition: 'opacity 0.2s ease, transform 0.2s ease',
+                  cursor: 'default'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.filter = 'grayscale(0%)';
                   e.currentTarget.style.opacity = '1';
                   e.currentTarget.style.transform = 'scale(1.05)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.filter = 'grayscale(100%) contrast(85%)';
-                  e.currentTarget.style.opacity = '0.6';
+                  e.currentTarget.style.opacity = '0.8';
                   e.currentTarget.style.transform = 'scale(1)';
                 }}
-              />
+              >
+                <img 
+                  src={company.src} 
+                  alt={company.name} 
+                  style={{ height: '24px', objectFit: 'contain' }}
+                />
+                <span style={{ fontSize: '13px', fontWeight: 700, color: '#090C15' }}>{company.name}</span>
+              </div>
             ))}
-          </div>
-
-          {/* Chrome Web Store Rating Pill */}
-          <div 
-            style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              gap: '10px', 
-              marginTop: '28px',
-              padding: '6px 14px',
-              borderRadius: '999px',
-              backgroundColor: '#FFFFFF',
-              border: '1px solid #E2E8F0',
-              boxShadow: '0 2px 6px rgba(0, 0, 0, 0.03)'
-            }}
-          >
-            <div style={{ display: 'flex', gap: '2px' }}>
-              {[1, 2, 3, 4, 5].map((s) => (
-                <Star key={s} size={13} fill="#F59E0B" color="#F59E0B" />
-              ))}
-            </div>
-            <span style={{ fontSize: '12.5px', fontWeight: 700, color: '#090C15' }}>
-              4.9 / 5.0
-            </span>
-            <span style={{ fontSize: '12px', color: '#64748B' }}>
-              • Chrome Web Store Verified Candidate Rating
-            </span>
           </div>
         </div>
       </section>
 
       {/* =========================================================================
-          4. INTERACTIVE PRODUCT FEATURE SHOWCASE (Bento Grid / Multi-Pillar)
+          4. UNMATCHED PRODUCTIVITY — LIGHT ASYMMETRIC BENTO GRID
           ========================================================================= */}
       <section 
-        id="features"
+        id="productivity"
         style={{
-          maxWidth: '1240px',
-          margin: '0 auto',
-          padding: '88px 24px',
-          boxSizing: 'border-box'
+          padding: '100px 0',
+          position: 'relative',
+          backgroundColor: '#FFFFFF'
         }}
       >
-        <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 48px auto' }}>
-          <span 
-            style={{ 
-              fontSize: '12px', 
-              fontWeight: 800, 
-              letterSpacing: '0.14em', 
-              textTransform: 'uppercase', 
-              color: '#1A53CF' 
-            }}
-          >
-            Autonomous Candidate Suite
-          </span>
-          <h2
-            style={{
-              fontFamily: 'var(--font-title, sans-serif)',
-              fontSize: 'clamp(30px, 3.6vw, 46px)',
-              fontWeight: 900,
-              letterSpacing: '-0.035em',
-              color: '#090C15',
-              marginTop: '10px',
-              marginBottom: '14px'
-            }}
-          >
-            Your complete job search engine, <br />
-            <span style={{ color: '#1A53CF' }}>all in one place.</span>
-          </h2>
-          <p style={{ fontSize: '16px', color: '#64748B', lineHeight: 1.6 }}>
-            Say goodbye to 15 browser tabs and generic chat prompts. JobGen connects every step of your application journey into a coherent, high-velocity workflow.
-          </p>
-        </div>
-
-        {/* Feature Navigation Tabs */}
-        <div 
-          style={{ 
-            display: 'flex', 
-            justifyContent: 'center', 
-            gap: '8px', 
-            flexWrap: 'wrap', 
-            marginBottom: '32px' 
-          }}
-        >
-          {FEATURES_DATA.map((feat, idx) => {
-            const isActive = activeFeatureTab === idx;
-            return (
-              <button
-                key={feat.id}
-                onClick={() => setActiveFeatureTab(idx)}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '10px 18px',
-                  borderRadius: '12px',
-                  fontSize: '13.5px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  border: isActive ? '1.5px solid #1A53CF' : '1px solid rgba(226, 232, 240, 0.9)',
-                  backgroundColor: isActive ? '#FFFFFF' : 'rgba(255, 255, 255, 0.6)',
-                  color: isActive ? '#1A53CF' : '#64748B',
-                  boxShadow: isActive ? '0 4px 14px rgba(26, 83, 207, 0.12)' : 'none',
-                  transition: 'all 0.18s ease'
-                }}
-              >
-                <span>{feat.navLabel}</span>
-              </button>
-            );
-          })}
-        </div>
-
-        {/* Active Feature Showcase Stage */}
-        {(() => {
-          const current = FEATURES_DATA[activeFeatureTab];
-          return (
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          
+          {/* Section Header */}
+          <div style={{ maxWidth: '680px', marginBottom: '56px' }}>
             <div 
-              className="glass-panel"
               style={{
-                borderRadius: '24px',
-                padding: 'clamp(20px, 3.5vw, 44px)',
-                boxShadow: '0 20px 60px -10px rgba(15, 23, 42, 0.08)'
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 12px',
+                borderRadius: '9999px',
+                backgroundColor: '#EFF6FF',
+                border: '1px solid #BFDBFE',
+                color: '#1A53CF',
+                fontSize: '11px',
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                letterSpacing: '0.05em',
+                marginBottom: '16px'
               }}
             >
+              <Cpu size={12} />
+              <span>Unmatched Productivity</span>
+            </div>
+
+            <h2 
+              style={{
+                fontSize: 'clamp(32px, 4.5vw, 56px)',
+                fontWeight: 900,
+                letterSpacing: '-0.03em',
+                lineHeight: 1.05,
+                color: '#090C15',
+                marginBottom: '16px'
+              }}
+            >
+              Engineered for candidates who demand an unfair advantage.
+            </h2>
+
+            <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6 }}>
+              JobGen integrates resume engineering, opportunity tracking, behavioral coaching, and career strategy into one hyper-fluid workspace.
+            </p>
+          </div>
+
+          {/* Asymmetric Bento Grid on White */}
+          <div 
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(12, 1fr)',
+              gap: '20px'
+            }}
+          >
+            {/* Bento 1: Keyboard Shortcuts / Command Bar (Col 4) */}
+            <div 
+              className="white-bento-card" 
+              style={{ 
+                gridColumn: 'span 4', 
+                padding: '32px 28px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                minHeight: '360px'
+              }}
+            >
+              <div>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #BFDBFE' }}>
+                  <Command size={20} color="#1A53CF" />
+                </div>
+                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
+                  Keyboard shortcuts & command bar
+                </h3>
+                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5 }}>
+                  Work at high velocity with instant ⌘K search, stage flipping, and document switching.
+                </p>
+              </div>
+
+              {/* Simulated Command Palette UI */}
               <div 
-                style={{ 
-                  display: 'grid', 
-                  gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
-                  gap: '36px', 
-                  alignItems: 'center' 
+                style={{
+                  backgroundColor: '#F8FAFC',
+                  borderRadius: '12px',
+                  border: '1px solid #E2E8F0',
+                  padding: '12px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '8px'
                 }}
               >
-                {/* Details Column */}
-                <div>
-                  <span 
-                    style={{
-                      fontSize: '11px',
-                      fontWeight: 800,
-                      letterSpacing: '0.1em',
-                      textTransform: 'uppercase',
-                      color: '#2563EB',
-                      backgroundColor: '#EFF6FF',
-                      padding: '4px 10px',
-                      borderRadius: '6px'
-                    }}
-                  >
-                    {current.tag}
-                  </span>
-
-                  <h3
-                    style={{
-                      fontFamily: 'var(--font-title, sans-serif)',
-                      fontSize: 'clamp(24px, 2.4vw, 34px)',
-                      fontWeight: 900,
-                      letterSpacing: '-0.025em',
-                      color: '#090C15',
-                      margin: '14px 0'
-                    }}
-                  >
-                    {current.title}
-                  </h3>
-
-                  <p style={{ fontSize: '15.5px', color: '#475569', lineHeight: 1.6, marginBottom: '24px' }}>
-                    {current.description}
-                  </p>
-
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
-                    {current.bulletPoints.map((bp) => (
-                      <div key={bp} style={{ display: 'flex', alignItems: 'flex-start', gap: '10px' }}>
-                        <div 
-                          style={{ 
-                            width: '20px', 
-                            height: '20px', 
-                            borderRadius: '50%', 
-                            backgroundColor: '#ECFDF5', 
-                            display: 'flex', 
-                            alignItems: 'center', 
-                            justifyContent: 'center',
-                            flexShrink: 0,
-                            marginTop: '2px'
-                          }}
-                        >
-                          <Check size={13} color="#059669" strokeWidth={3} />
-                        </div>
-                        <span style={{ fontSize: '14px', fontWeight: 600, color: '#1E293B', lineHeight: 1.4 }}>
-                          {bp}
-                        </span>
-                      </div>
-                    ))}
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', color: '#1A53CF', padding: '6px 8px', borderRadius: '6px', backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                    <Search size={12} color="#1A53CF" />
+                    <span style={{ fontWeight: 700 }}>Search target roles...</span>
                   </div>
-
-                  <button
-                    onClick={onLaunchApp}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      backgroundColor: '#1A53CF',
-                      color: '#FFFFFF',
-                      fontSize: '14px',
-                      fontWeight: 800,
-                      padding: '11px 22px',
-                      borderRadius: '12px',
-                      border: 'none',
-                      cursor: 'pointer',
-                      boxShadow: '0 4px 14px rgba(26, 83, 207, 0.3)',
-                      transition: 'transform 0.15s ease'
-                    }}
-                    onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-                    onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-                  >
-                    <span>Try in Candidate Workspace</span>
-                    <ArrowRight size={15} strokeWidth={2.4} />
-                  </button>
+                  <span style={{ fontSize: '10px', padding: '2px 5px', borderRadius: '4px', backgroundColor: '#FFFFFF', border: '1px solid #CBD5E1', color: '#090C15' }}>⌘K</span>
                 </div>
-
-                {/* Visual Image Stage */}
-                <div 
-                  style={{ 
-                    borderRadius: '18px', 
-                    overflow: 'hidden', 
-                    border: '1.5px solid #E2E8F0',
-                    backgroundColor: '#FFFFFF',
-                    boxShadow: '0 12px 40px rgba(15, 23, 42, 0.08)'
-                  }}
-                >
-                  <img 
-                    src={current.image} 
-                    alt={current.imageAlt} 
-                    style={{ width: '100%', height: 'auto', display: 'block', objectFit: 'contain' }}
-                  />
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11.5px', color: '#475569', padding: '4px 8px' }}>
+                  <span>Tailor resume for Canva</span>
+                  <span style={{ fontSize: '10px', color: '#64748B' }}>⌘T</span>
+                </div>
+                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11.5px', color: '#475569', padding: '4px 8px' }}>
+                  <span>Start Mock Round with Emma</span>
+                  <span style={{ fontSize: '10px', color: '#64748B' }}>⌘E</span>
                 </div>
               </div>
             </div>
-          );
-        })()}
+
+            {/* Bento 2: Autonomous Kanban Pipeline (Col 8) */}
+            <div 
+              className="white-bento-card" 
+              style={{ 
+                gridColumn: 'span 8', 
+                padding: '32px 28px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                minHeight: '360px'
+              }}
+            >
+              <div>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #A7F3D0' }}>
+                  <LayoutDashboard size={20} color="#059669" />
+                </div>
+                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
+                  Autonomous Kanban Pipeline & Opportunity Tracking
+                </h3>
+                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5, maxWidth: '580px' }}>
+                  Track applications across Bookmarked, Applied, Screening, Interviewing, and Offer stages with salary benchmarking and automated follow-up alerts.
+                </p>
+              </div>
+
+              {/* Simulated Kanban Columns */}
+              <div 
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: 'repeat(3, 1fr)',
+                  gap: '12px',
+                  marginTop: '20px'
+                }}
+              >
+                {/* Column 1 */}
+                <div style={{ backgroundColor: '#F8FAFC', borderRadius: '10px', padding: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', fontWeight: 800, color: '#64748B' }}>
+                    <span>APPLIED (12)</span>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#1A53CF' }} />
+                  </div>
+                  <div style={{ backgroundColor: '#FFFFFF', borderRadius: '6px', padding: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15' }}>Canva &bull; Product Lead</div>
+                    <div style={{ fontSize: '10.5px', color: '#059669', marginTop: '2px', fontWeight: 700 }}>$195K &bull; 92% Match</div>
+                  </div>
+                </div>
+
+                {/* Column 2 */}
+                <div style={{ backgroundColor: '#F8FAFC', borderRadius: '10px', padding: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', fontWeight: 800, color: '#D97706' }}>
+                    <span>INTERVIEWING (4)</span>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
+                  </div>
+                  <div style={{ backgroundColor: '#FFFFFF', borderRadius: '6px', padding: '8px', border: '1px solid #FDE68A', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15' }}>Atlassian &bull; Staff Architect</div>
+                    <div style={{ fontSize: '10.5px', color: '#D97706', marginTop: '2px', fontWeight: 700 }}>Round 3: System Design</div>
+                  </div>
+                </div>
+
+                {/* Column 3 */}
+                <div style={{ backgroundColor: '#F8FAFC', borderRadius: '10px', padding: '12px', border: '1px solid #E2E8F0' }}>
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', fontWeight: 800, color: '#059669' }}>
+                    <span>OFFERS (2)</span>
+                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+                  </div>
+                  <div style={{ backgroundColor: '#ECFDF5', borderRadius: '6px', padding: '8px', border: '1px solid #A7F3D0' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#065F46' }}>Stripe &bull; Tech Lead</div>
+                    <div style={{ fontSize: '10.5px', color: '#059669', marginTop: '2px', fontWeight: 700 }}>$230K Base + Equity</div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Bento 3: Precision ATS Scoring (Col 8) */}
+            <div 
+              className="white-bento-card" 
+              style={{ 
+                gridColumn: 'span 8', 
+                padding: '32px 28px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                minHeight: '360px'
+              }}
+            >
+              <div>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#F3E8FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #E9D5FF' }}>
+                  <FileText size={20} color="#7C3AED" />
+                </div>
+                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
+                  ATS Scoring Engine & Precision Keyword Calibration
+                </h3>
+                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5, maxWidth: '580px' }}>
+                  Never guess what recruiters want. JobGen scans target job descriptions and aligns your experience to strict keyword rubrics.
+                </p>
+              </div>
+
+              {/* Simulated ATS Calibration Gauge */}
+              <div 
+                style={{
+                  backgroundColor: '#F8FAFC',
+                  borderRadius: '12px',
+                  padding: '16px 20px',
+                  border: '1px solid #E2E8F0',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '16px',
+                  marginTop: '20px'
+                }}
+              >
+                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
+                  <div style={{ width: '54px', height: '54px', borderRadius: '50%', backgroundColor: '#ECFDF5', border: '2px solid #10B981', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <span style={{ fontSize: '18px', fontWeight: 900, color: '#059669', lineHeight: 1 }}>94</span>
+                    <span style={{ fontSize: '8px', color: '#047857', fontWeight: 800 }}>ATS</span>
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#090C15' }}>Workday & Greenhouse Optimized</div>
+                    <div style={{ fontSize: '11.5px', color: '#64748B' }}>99.8% Semantic Parse Accuracy Verified</div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
+                  {['+ TypeScript 5.4', '+ System Architecture', '+ Micro-Frontends'].map((kw, idx) => (
+                    <span key={idx} style={{ fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
+                      {kw}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            </div>
+
+            {/* Bento 4: 12-Week Strategic Roadmap (Col 4) */}
+            <div 
+              className="white-bento-card" 
+              style={{ 
+                gridColumn: 'span 4', 
+                padding: '32px 28px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                minHeight: '360px'
+              }}
+            >
+              <div>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #FDE68A' }}>
+                  <Compass size={20} color="#D97706" />
+                </div>
+                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
+                  12-Week Strategic Roadmap
+                </h3>
+                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5 }}>
+                  Structured milestone time-blocking, recruiter reach-out templates, and compensation scripts.
+                </p>
+              </div>
+
+              {/* Simulated Roadmap Progress */}
+              <div 
+                style={{
+                  backgroundColor: '#F8FAFC',
+                  borderRadius: '12px',
+                  padding: '12px',
+                  border: '1px solid #E2E8F0'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: 800, marginBottom: '6px' }}>
+                  <span style={{ color: '#090C15' }}>Phase 4: Technical Deep-Dive</span>
+                  <span style={{ color: '#D97706' }}>8/10 Done</span>
+                </div>
+                <div style={{ width: '100%', height: '6px', borderRadius: '9999px', backgroundColor: '#E2E8F0', overflow: 'hidden' }}>
+                  <div style={{ width: '80%', height: '100%', backgroundColor: '#D97706', borderRadius: '9999px' }} />
+                </div>
+              </div>
+            </div>
+
+          </div>
+        </div>
       </section>
 
       {/* =========================================================================
-          5. INTERACTIVE LIVE ATS RESUME CHECKER ("How it Works")
+          5. "PREPARE WITH AI" INTERVIEW SIMULATOR (WHITE / LIGHT PALETTE)
+          ========================================================================= */}
+      <section 
+        id="interview-copilot"
+        style={{
+          padding: '100px 0',
+          borderTop: '1px solid #E2E8F0',
+          backgroundColor: '#F8FAFC',
+          position: 'relative'
+        }}
+      >
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          
+          <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 60px auto' }}>
+            <div 
+              style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '6px',
+                padding: '4px 12px',
+                borderRadius: '9999px',
+                backgroundColor: '#ECFDF5',
+                border: '1px solid #A7F3D0',
+                color: '#059669',
+                fontSize: '11px',
+                fontWeight: 800,
+                textTransform: 'uppercase',
+                marginBottom: '16px'
+              }}
+            >
+              <Video size={12} />
+              <span>Real-Time Voice & Behavioral Simulation</span>
+            </div>
+
+            <h2 
+              style={{
+                fontSize: 'clamp(32px, 4.5vw, 54px)',
+                fontWeight: 900,
+                letterSpacing: '-0.03em',
+                lineHeight: 1.05,
+                color: '#090C15',
+                marginBottom: '16px'
+              }}
+            >
+              Prepare with AI. Like in the real interview room.
+            </h2>
+
+            <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6 }}>
+              Step into high-stakes loops with custom role-specific questions across HR, technical, hiring manager, and executive stages.
+            </p>
+          </div>
+
+          {/* Video Call HUD Simulator on White */}
+          <div 
+            style={{
+              maxWidth: '980px',
+              margin: '0 auto',
+              padding: '24px',
+              backgroundColor: '#FFFFFF',
+              borderRadius: '24px',
+              border: '1px solid #E2E8F0',
+              boxShadow: '0 24px 60px -10px rgba(15, 23, 42, 0.08)'
+            }}
+          >
+            {/* Call Header */}
+            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '16px', borderBottom: '1px solid #F1F5F9' }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+                <span className="radar-live" style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#EF4444' }} />
+                <span style={{ fontSize: '13px', fontWeight: 800, color: '#090C15' }}>Emma AI &bull; Mock Round 3: System Design & Leadership</span>
+              </div>
+              <span style={{ fontSize: '11.5px', color: '#64748B', fontFamily: 'monospace', fontWeight: 700 }}>00:14:28 / 45:00</span>
+            </div>
+
+            {/* Video HUD Grid */}
+            <div 
+              style={{
+                display: 'grid',
+                gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)',
+                gap: '20px',
+                marginTop: '20px'
+              }}
+              className="interview-sim-grid"
+            >
+              {/* Left: Emma AI Coach Active Tile */}
+              <div 
+                style={{
+                  position: 'relative',
+                  borderRadius: '14px',
+                  backgroundColor: '#F8FAFC',
+                  border: '1px solid #E2E8F0',
+                  overflow: 'hidden',
+                  minHeight: '260px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between',
+                  padding: '20px'
+                }}
+              >
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                  <span style={{ fontSize: '11px', fontWeight: 800, backgroundColor: '#EFF6FF', color: '#1A53CF', padding: '3px 8px', borderRadius: '6px', border: '1px solid #BFDBFE' }}>
+                    EXECUTIVE INTERVIEWER
+                  </span>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
+                    <div style={{ width: '3px', height: '12px', backgroundColor: '#10B981', borderRadius: '2px' }} />
+                    <div style={{ width: '3px', height: '18px', backgroundColor: '#10B981', borderRadius: '2px' }} />
+                    <div style={{ width: '3px', height: '8px', backgroundColor: '#10B981', borderRadius: '2px' }} />
+                    <div style={{ width: '3px', height: '14px', backgroundColor: '#10B981', borderRadius: '2px' }} />
+                  </div>
+                </div>
+
+                <div>
+                  <p style={{ fontSize: '14px', color: '#090C15', fontStyle: 'italic', lineHeight: 1.5, marginBottom: '8px', fontWeight: 500 }}>
+                    "Tell me about a time you had to resolve a high-severity microservices latency spike while squads were pushing conflicting changes."
+                  </p>
+                  <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>Target Rubric: Canva / Atlassian Lead Level</span>
+                </div>
+              </div>
+
+              {/* Right: Live STAR Feedback & Scoring */}
+              <div 
+                style={{
+                  borderRadius: '14px',
+                  backgroundColor: '#F8FAFC',
+                  border: '1px solid #E2E8F0',
+                  padding: '20px',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: '12px', fontWeight: 800, color: '#1A53CF', textTransform: 'uppercase', marginBottom: '12px' }}>
+                    Real-Time STAR Evaluation
+                  </div>
+                  
+                  {[
+                    { label: 'Situation (Context clarity)', score: '95%', color: '#059669' },
+                    { label: 'Task (Ownership & scope)', score: '92%', color: '#059669' },
+                    { label: 'Action (Technical depth)', score: '98%', color: '#1A53CF' },
+                    { label: 'Result (Quantified metric)', score: '94%', color: '#059669' }
+                  ].map((s, idx) => (
+                    <div key={idx} style={{ marginBottom: '10px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', marginBottom: '3px' }}>
+                        <span style={{ color: '#475569', fontWeight: 600 }}>{s.label}</span>
+                        <span style={{ fontWeight: 800, color: s.color }}>{s.score}</span>
+                      </div>
+                      <div style={{ width: '100%', height: '5px', backgroundColor: '#E2E8F0', borderRadius: '9999px', overflow: 'hidden' }}>
+                        <div style={{ width: s.score, height: '100%', backgroundColor: s.color, borderRadius: '9999px' }} />
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                <div style={{ padding: '8px 12px', borderRadius: '8px', backgroundColor: '#ECFDF5', border: '1px solid #A7F3D0', fontSize: '11.5px', color: '#065F46', fontWeight: 600 }}>
+                  ✓ Coach Tip: Excellent job citing the 42% latency reduction upfront!
+                </div>
+              </div>
+            </div>
+
+            {/* Bottom Controls Bar */}
+            <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
+              <button 
+                onClick={onLaunchApp}
+                className="white-primary-btn"
+                style={{ padding: '10px 24px', fontSize: '12.5px' }}
+              >
+                <span>Launch Emma Interview Copilot</span>
+                <ArrowRight size={13} style={{ marginLeft: '6px' }} />
+              </button>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* =========================================================================
+          6. "REPLACES ALL YOUR SUBSCRIPTIONS" COMPARISON (WHITE TABLE)
+          ========================================================================= */}
+      <section 
+        style={{
+          padding: '100px 0',
+          backgroundColor: '#FFFFFF'
+        }}
+      >
+        <div style={{ maxWidth: '1080px', margin: '0 auto', padding: '0 24px' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+            <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 900, color: '#090C15', letterSpacing: '-0.03em', marginBottom: '14px' }}>
+              One platform. Replaces all fragmented subscriptions.
+            </h2>
+            <p style={{ fontSize: '16px', color: '#475569' }}>
+              Stop juggling 5 different apps and paying $380+ every month during your career search.
+            </p>
+          </div>
+
+          <div 
+            style={{
+              backgroundColor: '#FFFFFF',
+              borderRadius: '20px',
+              border: '1px solid #E2E8F0',
+              boxShadow: '0 8px 30px rgba(15, 23, 42, 0.05)',
+              overflow: 'hidden'
+            }}
+          >
+            <div style={{ display: 'grid', gridTemplateColumns: '1.2fr 1fr 1.6fr', padding: '16px 24px', borderBottom: '1px solid #E2E8F0', backgroundColor: '#F8FAFC', fontSize: '12px', fontWeight: 800, color: '#475569', textTransform: 'uppercase' }}>
+              <span>Old Fragmented Tool</span>
+              <span>Typical Cost</span>
+              <span>Why Candidates Switch to JobGen</span>
+            </div>
+
+            {REPLACEMENTS_DATA.map((tool, idx) => (
+              <div 
+                key={idx}
+                style={{
+                  display: 'grid',
+                  gridTemplateColumns: '1.2fr 1fr 1.6fr',
+                  padding: '16px 24px',
+                  borderBottom: idx === REPLACEMENTS_DATA.length - 1 ? 'none' : '1px solid #F1F5F9',
+                  alignItems: 'center',
+                  fontSize: '13px'
+                }}
+              >
+                <span style={{ fontWeight: 800, color: '#090C15' }}>{tool.name}</span>
+                <span style={{ color: '#DC2626', fontWeight: 700 }}>{tool.cost}</span>
+                <span style={{ color: '#475569' }}>{tool.flaw}</span>
+              </div>
+            ))}
+
+            {/* Total Highlight Bar */}
+            <div 
+              style={{
+                padding: '20px 24px',
+                backgroundColor: '#EFF6FF',
+                borderTop: '1px solid #BFDBFE',
+                display: 'flex',
+                justifyContent: 'space-between',
+                alignItems: 'center',
+                flexWrap: 'wrap',
+                gap: '12px'
+              }}
+            >
+              <div>
+                <span style={{ fontSize: '14px', fontWeight: 800, color: '#090C15' }}>Total Traditional Stack: </span>
+                <span style={{ fontSize: '15px', fontWeight: 800, color: '#DC2626', textDecoration: 'line-through' }}>$380+ / mo</span>
+              </div>
+              <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+                <span style={{ fontSize: '13px', color: '#475569', fontWeight: 600 }}>JobGen Autonomous Hub:</span>
+                <span style={{ fontSize: '15px', fontWeight: 900, color: '#065F46', backgroundColor: '#ECFDF5', padding: '3px 10px', borderRadius: '6px', border: '1px solid #A7F3D0' }}>
+                  $0 Free Forever or $19 Pro
+                </span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      {/* =========================================================================
+          7. INTERACTIVE ATS RESUME SCANNER (LIGHT THEME)
           ========================================================================= */}
       <section 
         id="ats-scanner"
         style={{
-          maxWidth: '1240px',
-          margin: '0 auto',
-          padding: '64px 24px',
-          boxSizing: 'border-box'
+          padding: '100px 0',
+          borderTop: '1px solid #E2E8F0',
+          backgroundColor: '#F8FAFC'
         }}
       >
-        <div 
-          className="glass-panel"
-          style={{
-            borderRadius: '28px',
-            padding: 'clamp(28px, 4vw, 56px)',
-            position: 'relative',
-            overflow: 'hidden',
-            boxShadow: '0 25px 65px -15px rgba(26, 83, 207, 0.12)'
-          }}
-        >
-          {/* Top Header */}
-          <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 40px auto' }}>
-            <span 
-              style={{ 
-                fontSize: '12px', 
-                fontWeight: 800, 
-                letterSpacing: '0.12em', 
-                textTransform: 'uppercase', 
-                color: '#10B981' 
-              }}
-            >
-              Instant Interactive Demo
-            </span>
-            <h2
-              style={{
-                fontFamily: 'var(--font-title, sans-serif)',
-                fontSize: 'clamp(28px, 3.2vw, 42px)',
-                fontWeight: 900,
-                letterSpacing: '-0.03em',
-                color: '#090C15',
-                margin: '10px 0 14px 0'
-              }}
-            >
-              Get your free <span style={{ color: '#1A53CF' }}>ATS resume score.</span>
+        <div style={{ maxWidth: '960px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
+          
+          <div 
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '4px 12px',
+              borderRadius: '9999px',
+              backgroundColor: '#EFF6FF',
+              border: '1px solid #BFDBFE',
+              color: '#1A53CF',
+              fontSize: '11px',
+              fontWeight: 800,
+              textTransform: 'uppercase',
+              marginBottom: '16px'
+            }}
+          >
+            <Upload size={12} />
+            <span>Interactive Diagnostic</span>
+          </div>
+
+          <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 900, color: '#090C15', letterSpacing: '-0.03em', marginBottom: '14px' }}>
+            Check your ATS resume score in 5 seconds.
+          </h2>
+
+          <p style={{ fontSize: '16px', color: '#475569', maxWidth: '600px', margin: '0 auto 40px auto' }}>
+            Upload your resume PDF or DOCX to see how modern Applicant Tracking Systems parse your experience.
+          </p>
+
+          <div 
+            className="white-bento-card"
+            style={{
+              padding: '36px',
+              position: 'relative'
+            }}
+          >
+            {isScanning && <div className="laser-line" />}
+
+            {!scanResult ? (
+              <label 
+                style={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  padding: '48px 24px',
+                  borderRadius: '14px',
+                  border: '2px dashed #93C5FD',
+                  backgroundColor: '#F8FAFD',
+                  cursor: 'pointer',
+                  transition: 'all 0.2s ease'
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = '#1A53CF';
+                  e.currentTarget.style.backgroundColor = '#EFF6FF';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = '#93C5FD';
+                  e.currentTarget.style.backgroundColor = '#F8FAFD';
+                }}
+              >
+                <input 
+                  type="file" 
+                  accept=".pdf,.doc,.docx"
+                  onChange={handleFileUpload}
+                  style={{ display: 'none' }}
+                />
+
+                <div style={{ width: '56px', height: '56px', borderRadius: '14px', backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '16px' }}>
+                  <Upload size={24} color="#1A53CF" />
+                </div>
+
+                <div style={{ fontSize: '16px', fontWeight: 800, color: '#090C15', marginBottom: '6px' }}>
+                  {uploadedResumeName || 'Drop your resume file here or click to browse'}
+                </div>
+
+                <div style={{ fontSize: '12.5px', color: '#64748B' }}>
+                  Supports PDF, DOCX (Max 15MB) &bull; Encrypted & Private
+                </div>
+              </label>
+            ) : (
+              <div style={{ textAlign: 'left' }}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', flexWrap: 'wrap', gap: '12px' }}>
+                  <div>
+                    <span style={{ fontSize: '12px', fontWeight: 800, color: '#1A53CF' }}>TARGET MATCH:</span>
+                    <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#090C15' }}>{scanResult.matchRole}</h3>
+                  </div>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                    <div style={{ width: '60px', height: '60px', borderRadius: '50%', backgroundColor: '#ECFDF5', border: '2px solid #10B981', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                      <span style={{ fontSize: '20px', fontWeight: 900, color: '#059669' }}>{scanResult.score}</span>
+                      <span style={{ fontSize: '9px', color: '#047857', fontWeight: 800 }}>ATS</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px', marginBottom: '24px' }}>
+                  <div style={{ backgroundColor: '#FEF2F2', borderRadius: '10px', padding: '14px', border: '1px solid #FECACA' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#DC2626', marginBottom: '8px' }}>
+                      MISSING KEYWORDS DETECTED:
+                    </div>
+                    {scanResult.missingKeywords.map((k, i) => (
+                      <div key={i} style={{ fontSize: '12.5px', color: '#991B1B', marginBottom: '4px', fontWeight: 600 }}>&bull; {k}</div>
+                    ))}
+                  </div>
+
+                  <div style={{ backgroundColor: '#ECFDF5', borderRadius: '10px', padding: '14px', border: '1px solid #A7F3D0' }}>
+                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#059669', marginBottom: '8px' }}>
+                      VERIFIED STRENGTHS:
+                    </div>
+                    {scanResult.topStrengths.map((s, i) => (
+                      <div key={i} style={{ fontSize: '12.5px', color: '#065F46', marginBottom: '4px', fontWeight: 600 }}>✓ {s}</div>
+                    ))}
+                  </div>
+                </div>
+
+                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '12px' }}>
+                  <button
+                    onClick={() => { setScanResult(null); setUploadedResumeName(null); }}
+                    style={{ background: 'none', border: 'none', color: '#64748B', fontSize: '12.5px', cursor: 'pointer', fontWeight: 600 }}
+                  >
+                    Scan Another File
+                  </button>
+
+                  <button
+                    onClick={onLaunchApp}
+                    className="white-primary-btn"
+                    style={{ padding: '8px 24px', fontSize: '12.5px' }}
+                  >
+                    <span>Auto-Fix In Resume Studio</span>
+                    <ArrowRight size={13} style={{ marginLeft: '6px' }} />
+                  </button>
+                </div>
+              </div>
+            )}
+          </div>
+
+        </div>
+      </section>
+
+      {/* =========================================================================
+          8. TESTIMONIALS (WALL OF VERIFIED OUTCOMES)
+          ========================================================================= */}
+      <section 
+        style={{
+          padding: '100px 0',
+          backgroundColor: '#FFFFFF'
+        }}
+      >
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '60px' }}>
+            <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 900, color: '#090C15', letterSpacing: '-0.03em', marginBottom: '14px' }}>
+              Backed by real candidate outcomes.
             </h2>
-            <p style={{ fontSize: '15.5px', color: '#64748B', lineHeight: 1.6 }}>
-              See how well your resume matches real employer job descriptions and uncover the exact gaps before you apply.
+            <p style={{ fontSize: '16px', color: '#475569' }}>
+              From initial resume screen to final compensation offer negotiation.
             </p>
           </div>
 
-          {/* 3 Step Pipeline Pills */}
           <div 
-            style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
-              gap: '16px', 
-              marginBottom: '36px' 
+            style={{
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fill, minmax(340px, 1fr))',
+              gap: '20px'
             }}
           >
-            {[
-              { step: '01', title: 'Upload Resume', desc: 'PDF, DOCX, or DOC formats' },
-              { step: '02', title: 'Select Target Role', desc: 'Paste job description or link' },
-              { step: '03', title: 'Instant Score & Fixes', desc: 'Keyword gaps & tailored bullets' }
-            ].map((s) => (
-              <div
-                key={s.step}
+            {TESTIMONIALS.map((t, idx) => (
+              <div 
+                key={idx} 
+                className="white-bento-card"
                 style={{
-                  backgroundColor: '#FFFFFF',
-                  border: '1px solid #E2E8F0',
-                  borderRadius: '14px',
-                  padding: '16px',
+                  padding: '28px',
                   display: 'flex',
-                  alignItems: 'center',
-                  gap: '12px'
+                  flexDirection: 'column',
+                  justifyContent: 'space-between'
                 }}
               >
-                <div 
-                  style={{ 
-                    fontFamily: 'var(--font-mono, monospace)', 
-                    fontSize: '15px', 
-                    fontWeight: 800, 
-                    color: '#1A53CF', 
-                    backgroundColor: '#EFF6FF', 
-                    width: '36px', 
-                    height: '36px', 
-                    borderRadius: '10px', 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}
-                >
-                  {s.step}
-                </div>
                 <div>
-                  <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#090C15' }}>{s.title}</div>
-                  <div style={{ fontSize: '12px', color: '#64748B' }}>{s.desc}</div>
+                  <div style={{ display: 'flex', gap: '3px', marginBottom: '14px' }}>
+                    {[...Array(5)].map((_, i) => (
+                      <Star key={i} size={14} fill="#F59E0B" color="#F59E0B" />
+                    ))}
+                  </div>
+                  <p style={{ fontSize: '14.5px', color: '#1E293B', lineHeight: 1.6, fontStyle: 'italic', marginBottom: '20px' }}>
+                    "{t.quote}"
+                  </p>
+                </div>
+
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <div 
+                    style={{
+                      width: '38px',
+                      height: '38px',
+                      borderRadius: '50%',
+                      backgroundColor: '#EFF6FF',
+                      border: `1.5px solid ${t.accent}`,
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      fontSize: '12px',
+                      fontWeight: 800,
+                      color: t.accent
+                    }}
+                  >
+                    {t.initials}
+                  </div>
+                  <div>
+                    <div style={{ fontSize: '13.5px', fontWeight: 800, color: '#090C15' }}>{t.name}</div>
+                    <div style={{ fontSize: '12px', color: '#64748B' }}>{t.role}</div>
+                  </div>
                 </div>
               </div>
             ))}
           </div>
 
-          {/* Dropzone Container */}
-          <div
-            style={{
-              border: '2px dashed #93C5FD',
-              backgroundColor: 'rgba(239, 246, 255, 0.6)',
-              borderRadius: '20px',
-              padding: '48px 24px',
-              textAlign: 'center',
-              position: 'relative',
-              overflow: 'hidden',
-              cursor: 'pointer',
-              transition: 'background 0.2s ease, border-color 0.2s ease'
-            }}
-          >
-            {isScanning && (
-              <div 
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  backgroundColor: 'rgba(255, 255, 255, 0.88)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  zIndex: 10
-                }}
-              >
-                <div 
-                  style={{
-                    width: '48px',
-                    height: '48px',
-                    borderRadius: '50%',
-                    border: '3px solid #E2E8F0',
-                    borderTopColor: '#1A53CF',
-                    animation: 'spin 0.8s linear infinite',
-                    marginBottom: '16px'
-                  }}
-                />
-                <style>{`@keyframes spin { 100% { transform: rotate(360deg); } }`}</style>
-                <div style={{ fontSize: '16px', fontWeight: 800, color: '#090C15' }}>
-                  Scanning {uploadedResumeName}...
-                </div>
-                <div style={{ fontSize: '13px', color: '#64748B', marginTop: '4px' }}>
-                  Evaluating ATS parsing tree, keyword densities, and quantifiable metrics
-                </div>
-              </div>
-            )}
-
-            <input 
-              type="file" 
-              accept=".pdf,.doc,.docx" 
-              onChange={handleFileUpload}
-              style={{ position: 'absolute', inset: 0, opacity: 0, cursor: 'pointer', zIndex: 5 }}
-            />
-
-            <div 
-              style={{ 
-                width: '54px', 
-                height: '54px', 
-                borderRadius: '16px', 
-                backgroundColor: '#FFFFFF', 
-                boxShadow: '0 4px 14px rgba(37, 99, 235, 0.15)',
-                display: 'flex', 
-                alignItems: 'center', 
-                justifyContent: 'center', 
-                margin: '0 auto 16px auto',
-                color: '#1A53CF'
-              }}
-            >
-              <Upload size={26} strokeWidth={2.2} />
-            </div>
-
-            <div style={{ fontSize: '17px', fontWeight: 800, color: '#090C15', marginBottom: '6px' }}>
-              {uploadedResumeName ? `Selected: ${uploadedResumeName}` : 'Drop your resume here or click to browse'}
-            </div>
-            <div style={{ fontSize: '13px', color: '#64748B', marginBottom: '14px' }}>
-              Supports PDF, DOCX, or DOC • Maximum file size 10 MB
-            </div>
-
-            <div style={{ display: 'inline-flex', alignItems: 'center', gap: '6px', fontSize: '12px', fontWeight: 600, color: '#2563EB' }}>
-              <Lock size={13} strokeWidth={2.4} />
-              <span>Private upload • Your resume is never shared with recruiters or employers</span>
-            </div>
-          </div>
-
-          {/* Real-time Scan Result Pop-up Demo */}
-          {scanResult && (
-            <div 
-              style={{
-                marginTop: '28px',
-                backgroundColor: '#FFFFFF',
-                borderRadius: '18px',
-                border: '1.5px solid #10B981',
-                padding: '24px',
-                boxShadow: '0 12px 36px rgba(16, 185, 129, 0.1)'
-              }}
-            >
-              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', flexWrap: 'wrap', gap: '14px', marginBottom: '18px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                  <div 
-                    style={{ 
-                      width: '48px', 
-                      height: '48px', 
-                      borderRadius: '12px', 
-                      backgroundColor: '#ECFDF5', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center', 
-                      fontSize: '18px', 
-                      fontWeight: 900, 
-                      color: '#059669' 
-                    }}
-                  >
-                    {scanResult.score}%
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '16px', fontWeight: 900, color: '#090C15' }}>
-                      ATS Match Score Calculated!
-                    </div>
-                    <div style={{ fontSize: '13px', color: '#64748B' }}>
-                      Evaluated for: <strong>{scanResult.matchRole}</strong>
-                    </div>
-                  </div>
-                </div>
-
-                <button
-                  onClick={onLaunchApp}
-                  style={{
-                    backgroundColor: '#10B981',
-                    color: '#FFFFFF',
-                    border: 'none',
-                    borderRadius: '10px',
-                    padding: '10px 18px',
-                    fontSize: '13.5px',
-                    fontWeight: 800,
-                    cursor: 'pointer',
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '6px'
-                  }}
-                >
-                  <span>Apply Auto-Fixes in Studio</span>
-                  <ArrowRight size={15} strokeWidth={2.4} />
-                </button>
-              </div>
-
-              {/* Gaps Found */}
-              <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px' }}>
-                <div style={{ backgroundColor: '#FEF2F2', border: '1px solid #FECACA', borderRadius: '12px', padding: '14px' }}>
-                  <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#B91C1C', marginBottom: '8px' }}>
-                    Missing High-Value Keywords:
-                  </div>
-                  <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                    {scanResult.missingKeywords.map((kw) => (
-                      <span key={kw} style={{ fontSize: '11.5px', fontWeight: 700, backgroundColor: '#FFFFFF', padding: '3px 8px', borderRadius: '6px', color: '#991B1B' }}>
-                        + {kw}
-                      </span>
-                    ))}
-                  </div>
-                </div>
-
-                <div style={{ backgroundColor: '#F0FDF4', border: '1px solid #BBF7D0', borderRadius: '12px', padding: '14px' }}>
-                  <div style={{ fontSize: '12.5px', fontWeight: 800, color: '#15803D', marginBottom: '8px' }}>
-                    Identified Strengths:
-                  </div>
-                  <div style={{ fontSize: '12px', color: '#166534', lineHeight: 1.5 }}>
-                    ✓ Strong quantifiable metric density <br />
-                    ✓ Clear career progression hierarchy
-                  </div>
-                </div>
-              </div>
-            </div>
-          )}
         </div>
       </section>
 
       {/* =========================================================================
-          6. MEET EMMA AI COPILOT (Deep Tech Luxury Section)
+          9. FAIR & TRANSPARENT PRICING
           ========================================================================= */}
-      <section
-        id="emma-copilot"
-        style={{
-          maxWidth: '1240px',
-          margin: '0 auto',
-          padding: '64px 24px',
-          boxSizing: 'border-box'
-        }}
-      >
-        <div
-          style={{
-            borderRadius: '28px',
-            backgroundColor: '#090C15',
-            color: '#FFFFFF',
-            padding: 'clamp(32px, 4.5vw, 64px)',
-            position: 'relative',
-            overflow: 'hidden',
-            boxShadow: '0 30px 80px -15px rgba(9, 12, 21, 0.4)'
-          }}
-        >
-          {/* Ambient Cosmic Violet & Cyan Flare */}
-          <div 
-            style={{
-              position: 'absolute',
-              top: '-30%',
-              right: '-10%',
-              width: '500px',
-              height: '500px',
-              borderRadius: '50%',
-              background: 'radial-gradient(circle, rgba(124, 58, 237, 0.28) 0%, rgba(37, 99, 235, 0.15) 45%, transparent 70%)',
-              filter: 'blur(70px)',
-              pointerEvents: 'none'
-            }}
-          />
-
-          <div 
-            style={{ 
-              display: 'grid', 
-              gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
-              gap: '44px', 
-              alignItems: 'center',
-              position: 'relative',
-              zIndex: 1
-            }}
-          >
-            {/* Left Column: Emma Intro */}
-            <div>
-              <div 
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  backgroundColor: 'rgba(124, 58, 237, 0.2)',
-                  border: '1px solid rgba(139, 92, 246, 0.4)',
-                  padding: '5px 12px',
-                  borderRadius: '999px',
-                  fontSize: '11px',
-                  fontWeight: 800,
-                  letterSpacing: '0.1em',
-                  textTransform: 'uppercase',
-                  color: '#C4B5FD',
-                  marginBottom: '20px'
-                }}
-              >
-                <Bot size={14} color="#A78BFA" />
-                <span>Candidate AI Copilot</span>
-              </div>
-
-              <h2
-                style={{
-                  fontFamily: 'var(--font-title, sans-serif)',
-                  fontSize: 'clamp(30px, 3.5vw, 44px)',
-                  fontWeight: 900,
-                  letterSpacing: '-0.03em',
-                  lineHeight: 1.15,
-                  marginBottom: '18px'
-                }}
-              >
-                Job-search coaching with your <br />
-                <span 
-                  style={{
-                    background: 'linear-gradient(135deg, #A78BFA 0%, #38BDF8 100%)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent'
-                  }}
-                >
-                  exact career context.
-                </span>
-              </h2>
-
-              <p style={{ fontSize: '15.5px', color: '#94A3B8', lineHeight: 1.65, marginBottom: '28px' }}>
-                Emma lives inside your workspace. She understands your authentic master experience, analyzes the exact job requirements you are targeting, and gives hyper-specific tactical feedback before you click submit.
-              </p>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '14px', marginBottom: '36px' }}>
-                {[
-                  'Reviews your resume with the target job in direct view',
-                  'Prioritizes the exact quantifiable metrics hiring managers look for',
-                  'Proposes wordings and interview answers that you review and approve'
-                ].map((item) => (
-                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <div 
-                      style={{ 
-                        width: '20px', 
-                        height: '20px', 
-                        borderRadius: '50%', 
-                        backgroundColor: 'rgba(139, 92, 246, 0.25)', 
-                        display: 'flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        flexShrink: 0
-                      }}
-                    >
-                      <Check size={12} color="#C4B5FD" strokeWidth={3} />
-                    </div>
-                    <span style={{ fontSize: '14px', color: '#E2E8F0', fontWeight: 600 }}>{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={onLaunchApp}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  backgroundColor: '#FFFFFF',
-                  color: '#090C15',
-                  fontSize: '14.5px',
-                  fontWeight: 800,
-                  padding: '13px 26px',
-                  borderRadius: '12px',
-                  border: 'none',
-                  cursor: 'pointer',
-                  transition: 'transform 0.15s ease'
-                }}
-                onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-                onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-              >
-                <span>Talk with Emma in Portal</span>
-                <ArrowRight size={16} strokeWidth={2.4} />
-              </button>
-            </div>
-
-            {/* Right Column: Live Chat Simulation Card */}
-            <div
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.05)',
-                border: '1px solid rgba(255, 255, 255, 0.12)',
-                borderRadius: '20px',
-                padding: '24px',
-                backdropFilter: 'blur(16px)',
-                boxShadow: '0 20px 50px rgba(0, 0, 0, 0.3)'
-              }}
-            >
-              {/* Header */}
-              <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px', paddingBottom: '14px', borderBottom: '1px solid rgba(255, 255, 255, 0.1)' }}>
-                <img 
-                  src="/Emma.jpeg" 
-                  alt="Emma AI" 
-                  style={{ width: '42px', height: '42px', borderRadius: '50%', objectFit: 'cover', border: '2px solid #8B5CF6' }}
-                />
-                <div>
-                  <div style={{ fontSize: '15px', fontWeight: 800, color: '#FFFFFF' }}>Emma AI Copilot</div>
-                  <div style={{ fontSize: '12px', color: '#10B981', display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                    Active • Tailoring for Canva Application
-                  </div>
-                </div>
-              </div>
-
-              {/* Chat Message 1: User Request */}
-              <div style={{ backgroundColor: 'rgba(255, 255, 255, 0.08)', borderRadius: '12px', padding: '12px 16px', marginBottom: '14px', maxWidth: '85%', marginLeft: 'auto' }}>
-                <div style={{ fontSize: '13px', color: '#F1F5F9', lineHeight: 1.4 }}>
-                  "How can I emphasize my API scaling experience for Canva's Principal Engineer posting?"
-                </div>
-              </div>
-
-              {/* Chat Message 2: Emma AI Response */}
-              <div style={{ backgroundColor: 'rgba(139, 92, 246, 0.15)', border: '1px solid rgba(139, 92, 246, 0.3)', borderRadius: '12px', padding: '14px 16px', maxWidth: '92%' }}>
-                <div style={{ fontSize: '12px', fontWeight: 800, color: '#C4B5FD', marginBottom: '6px' }}>
-                  EMMA SUGGESTION:
-                </div>
-                <div style={{ fontSize: '13px', color: '#E2E8F0', lineHeight: 1.5, marginBottom: '10px' }}>
-                  Canva prioritizes product velocity and developer ecosystem growth. Based on your verified master experience, I’ve refined your bullet:
-                </div>
-                <div style={{ backgroundColor: 'rgba(9, 12, 21, 0.7)', padding: '10px 12px', borderRadius: '8px', borderLeft: '3px solid #8B5CF6', fontSize: '12.5px', color: '#F8FAFC', lineHeight: 1.4, fontStyle: 'italic' }}>
-                  "Scaled enterprise API adoption by 180% across 40+ Tier-1 banking partners through automated SDK testing, directly matching Canva’s platform growth priority."
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* =========================================================================
-          7. SUCCESS STORIES & TESTIMONIALS (Elevated Candidate Reviews)
-          ========================================================================= */}
-      <section
-        id="testimonials"
-        style={{
-          maxWidth: '1240px',
-          margin: '0 auto',
-          padding: '88px 24px',
-          boxSizing: 'border-box'
-        }}
-      >
-        <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 48px auto' }}>
-          <span 
-            style={{ 
-              fontSize: '12px', 
-              fontWeight: 800, 
-              letterSpacing: '0.12em', 
-              textTransform: 'uppercase', 
-              color: '#1A53CF' 
-            }}
-          >
-            Verified Success Stories
-          </span>
-          <h2
-            style={{
-              fontFamily: 'var(--font-title, sans-serif)',
-              fontSize: 'clamp(28px, 3.4vw, 44px)',
-              fontWeight: 900,
-              letterSpacing: '-0.03em',
-              color: '#090C15',
-              margin: '10px 0 14px 0'
-            }}
-          >
-            From applications to <span style={{ color: '#1A53CF' }}>offers.</span>
-          </h2>
-          <p style={{ fontSize: '15.5px', color: '#64748B', lineHeight: 1.6 }}>
-            Hear from developers, product managers, and career switchers who accelerated their job search with JobGen.AI.
-          </p>
-        </div>
-
-        {/* Masonry Review Cards */}
-        <div 
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
-            gap: '24px' 
-          }}
-        >
-          {TESTIMONIALS.map((t) => (
-            <div
-              key={t.name}
-              className="glass-panel glass-panel-interactive"
-              style={{
-                borderRadius: '20px',
-                padding: '26px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between'
-              }}
-            >
-              <div>
-                {/* 5 Stars */}
-                <div style={{ display: 'flex', gap: '3px', marginBottom: '16px' }}>
-                  {[1, 2, 3, 4, 5].map((s) => (
-                    <Star key={s} size={15} fill="#F59E0B" color="#F59E0B" />
-                  ))}
-                </div>
-
-                {/* Quote */}
-                <p style={{ fontSize: '14.5px', color: '#334155', lineHeight: 1.6, fontStyle: 'italic', marginBottom: '22px' }}>
-                  "{t.quote}"
-                </p>
-              </div>
-
-              {/* Author Strip */}
-              <div 
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '12px', 
-                  paddingTop: '16px', 
-                  borderTop: '1px solid rgba(226, 232, 240, 0.8)' 
-                }}
-              >
-                <div 
-                  style={{ 
-                    width: '36px', 
-                    height: '36px', 
-                    borderRadius: '50%', 
-                    backgroundColor: t.accent, 
-                    color: '#FFFFFF', 
-                    fontSize: '12px', 
-                    fontWeight: 900, 
-                    display: 'flex', 
-                    alignItems: 'center', 
-                    justifyContent: 'center',
-                    flexShrink: 0
-                  }}
-                >
-                  {t.initials}
-                </div>
-                <div>
-                  <div style={{ fontSize: '14px', fontWeight: 800, color: '#090C15' }}>{t.name}</div>
-                  <div style={{ fontSize: '12px', color: '#64748B' }}>{t.role}</div>
-                </div>
-              </div>
-            </div>
-          ))}
-        </div>
-      </section>
-
-      {/* =========================================================================
-          8. TRANSPARENT PRICING SECTION
-          ========================================================================= */}
-      <section
+      <section 
         id="pricing"
         style={{
-          maxWidth: '1240px',
-          margin: '0 auto',
-          padding: '64px 24px',
-          boxSizing: 'border-box'
+          padding: '100px 0',
+          borderTop: '1px solid #E2E8F0',
+          backgroundColor: '#F8FAFC'
         }}
       >
-        <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 40px auto' }}>
-          <span 
-            style={{ 
-              fontSize: '12px', 
-              fontWeight: 800, 
-              letterSpacing: '0.12em', 
-              textTransform: 'uppercase', 
-              color: '#1A53CF' 
-            }}
-          >
-            Transparent Plans
-          </span>
-          <h2
+        <div style={{ maxWidth: '1140px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
+          
+          <div 
             style={{
-              fontFamily: 'var(--font-title, sans-serif)',
-              fontSize: 'clamp(28px, 3.4vw, 44px)',
-              fontWeight: 900,
-              letterSpacing: '-0.03em',
-              color: '#090C15',
-              margin: '10px 0 14px 0'
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '6px',
+              padding: '4px 12px',
+              borderRadius: '9999px',
+              backgroundColor: '#EFF6FF',
+              border: '1px solid #BFDBFE',
+              color: '#1A53CF',
+              fontSize: '11px',
+              fontWeight: 800,
+              textTransform: 'uppercase',
+              marginBottom: '16px'
             }}
           >
-            Start free. Upgrade for <span style={{ color: '#1A53CF' }}>the full engine.</span>
+            <Award size={12} />
+            <span>Fair & Transparent Pricing</span>
+          </div>
+
+          <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 900, color: '#090C15', letterSpacing: '-0.03em', marginBottom: '14px' }}>
+            Invest in your career. Not subscriptions.
           </h2>
-          <p style={{ fontSize: '15.5px', color: '#64748B', lineHeight: 1.6, marginBottom: '24px' }}>
-            No credit card needed to begin. Unlock unlimited AI resumes, cover letters, and interview coaching when you are ready.
+
+          <p style={{ fontSize: '16px', color: '#475569', marginBottom: '32px' }}>
+            Start completely free. Upgrade only when you want unlimited tailoring and AI interview prep.
           </p>
 
-          {/* Billing Cycle Toggle */}
-          <div 
-            style={{ 
-              display: 'inline-flex', 
-              alignItems: 'center', 
-              backgroundColor: '#FFFFFF', 
-              padding: '4px', 
-              borderRadius: '999px',
-              border: '1px solid #CBD5E1',
-              boxShadow: '0 2px 8px rgba(0, 0, 0, 0.04)'
-            }}
-          >
+          {/* Billing Toggle */}
+          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px', borderRadius: '9999px', backgroundColor: '#FFFFFF', border: '1px solid #CBD5E1', marginBottom: '50px', boxShadow: '0 2px 6px rgba(15, 23, 42, 0.04)' }}>
             <button
               onClick={() => setBillingCycle('monthly')}
               style={{
+                padding: '6px 16px',
+                borderRadius: '9999px',
                 border: 'none',
-                backgroundColor: billingCycle === 'monthly' ? '#1A53CF' : 'transparent',
-                color: billingCycle === 'monthly' ? '#FFFFFF' : '#475569',
-                fontSize: '13px',
+                fontSize: '12px',
                 fontWeight: 700,
-                padding: '8px 18px',
-                borderRadius: '999px',
                 cursor: 'pointer',
-                transition: 'all 0.15s ease'
+                backgroundColor: billingCycle === 'monthly' ? '#1A53CF' : 'transparent',
+                color: billingCycle === 'monthly' ? '#FFFFFF' : '#64748B'
               }}
             >
               Monthly
@@ -1716,428 +2407,300 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             <button
               onClick={() => setBillingCycle('yearly')}
               style={{
+                padding: '6px 16px',
+                borderRadius: '9999px',
                 border: 'none',
-                backgroundColor: billingCycle === 'yearly' ? '#1A53CF' : 'transparent',
-                color: billingCycle === 'yearly' ? '#FFFFFF' : '#475569',
-                fontSize: '13px',
+                fontSize: '12px',
                 fontWeight: 700,
-                padding: '8px 18px',
-                borderRadius: '999px',
                 cursor: 'pointer',
-                transition: 'all 0.15s ease'
+                backgroundColor: billingCycle === 'yearly' ? '#1A53CF' : 'transparent',
+                color: billingCycle === 'yearly' ? '#FFFFFF' : '#64748B',
+                display: 'flex',
+                alignItems: 'center',
+                gap: '6px'
               }}
             >
-              Yearly <span style={{ fontSize: '11px', color: billingCycle === 'yearly' ? '#BBF7D0' : '#10B981', fontWeight: 800 }}>(Save 40%)</span>
+              <span>Yearly</span>
+              <span style={{ fontSize: '10px', padding: '1px 5px', borderRadius: '4px', backgroundColor: '#10B981', color: '#FFFFFF', fontWeight: 800 }}>Save 40%</span>
             </button>
           </div>
-        </div>
 
-        {/* Pricing Cards Grid */}
-        <div 
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))', 
-            gap: '28px', 
-            maxWidth: '920px', 
-            margin: '0 auto' 
-          }}
-        >
-          {/* Card 1: Free Tier */}
+          {/* Pricing Cards Grid on White */}
           <div 
-            className="glass-panel"
             style={{
-              borderRadius: '24px',
-              padding: '36px 30px',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between'
+              display: 'grid',
+              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+              gap: '24px',
+              textAlign: 'left'
             }}
           >
-            <div>
-              <div style={{ fontSize: '14px', fontWeight: 800, color: '#64748B', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                JobGen.AI Free
-              </div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', margin: '14px 0 16px 0' }}>
-                <span style={{ fontSize: '42px', fontWeight: 900, color: '#090C15' }}>$0</span>
-                <span style={{ fontSize: '14px', color: '#64748B' }}>/ forever</span>
-              </div>
-              <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5, marginBottom: '24px' }}>
-                Perfect for organizing your active job hunt and scanning your initial resume.
-              </p>
+            {/* Tier 1: Free Forever */}
+            <div className="white-bento-card" style={{ padding: '36px 30px' }}>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#64748B', marginBottom: '8px' }}>Free Forever</div>
+              <div style={{ fontSize: '42px', fontWeight: 900, color: '#090C15', marginBottom: '4px' }}>$0</div>
+              <div style={{ fontSize: '12px', color: '#64748B', marginBottom: '24px' }}>No credit card required</div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
                 {[
-                  '1 Free ATS Resume Score scan',
-                  '5 Target role match evaluations',
-                  '1 Tailored resume per month',
-                  'Unlimited Job Tracker Kanban access',
-                  '1-Click Chrome Extension capture'
-                ].map((item) => (
-                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Check size={16} color="#059669" strokeWidth={2.4} />
-                    <span style={{ fontSize: '13.5px', color: '#334155' }}>{item}</span>
+                  '1 Master ATS Resume',
+                  '5 Target Job Match Scans',
+                  'Application Pipeline Kanban',
+                  'Chrome Extension Bookmarking',
+                  'Standard Email Support'
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                    <Check size={14} color="#059669" />
+                    <span>{item}</span>
                   </div>
                 ))}
               </div>
+
+              <button
+                onClick={onLaunchApp}
+                className="white-secondary-btn"
+                style={{ width: '100%' }}
+              >
+                Start Free
+              </button>
             </div>
 
-            <button
-              onClick={onLaunchApp}
-              style={{
-                width: '100%',
-                padding: '13px',
-                borderRadius: '12px',
-                backgroundColor: '#FFFFFF',
-                color: '#090C15',
-                border: '1.5px solid #CBD5E1',
-                fontSize: '14.5px',
-                fontWeight: 800,
-                cursor: 'pointer',
-                transition: 'border-color 0.15s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.borderColor = '#1A53CF'}
-              onMouseLeave={(e) => e.currentTarget.style.borderColor = '#CBD5E1'}
-            >
-              Get Started Free
-            </button>
-          </div>
-
-          {/* Card 2: Premium Tier (Highlighted) */}
-          <div 
-            className="glass-panel"
-            style={{
-              borderRadius: '24px',
-              padding: '36px 30px',
-              border: '2px solid #1A53CF',
-              boxShadow: '0 20px 50px -10px rgba(26, 83, 207, 0.25)',
-              display: 'flex',
-              flexDirection: 'column',
-              justifyContent: 'space-between',
-              position: 'relative'
-            }}
-          >
-            {/* Recommended Pill */}
+            {/* Tier 2: Candidate Pro (Highlighted) */}
             <div 
-              style={{
-                position: 'absolute',
-                top: '-12px',
-                right: '28px',
-                backgroundColor: '#1A53CF',
-                color: '#FFFFFF',
-                fontSize: '11px',
-                fontWeight: 900,
-                letterSpacing: '0.08em',
-                padding: '4px 12px',
-                borderRadius: '999px',
-                boxShadow: '0 4px 10px rgba(26, 83, 207, 0.4)'
+              className="white-bento-card" 
+              style={{ 
+                padding: '36px 30px', 
+                border: '2px solid #1A53CF',
+                boxShadow: '0 12px 36px rgba(26, 83, 207, 0.16)',
+                position: 'relative'
               }}
             >
-              RECOMMENDED
-            </div>
+              <div style={{ position: 'absolute', top: '16px', right: '16px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', padding: '3px 8px', borderRadius: '4px', backgroundColor: '#1A53CF', color: '#FFFFFF' }}>
+                Most Popular
+              </div>
 
-            <div>
-              <div style={{ fontSize: '14px', fontWeight: 800, color: '#1A53CF', textTransform: 'uppercase', letterSpacing: '0.08em' }}>
-                JobGen.AI Premium
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#1A53CF', marginBottom: '8px' }}>Candidate Pro</div>
+              <div style={{ fontSize: '42px', fontWeight: 900, color: '#090C15', marginBottom: '4px' }}>
+                {billingCycle === 'monthly' ? '$19' : '$12'}
+                <span style={{ fontSize: '14px', fontWeight: 500, color: '#64748B' }}> / mo</span>
               </div>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', margin: '14px 0 16px 0' }}>
-                <span style={{ fontSize: '42px', fontWeight: 900, color: '#090C15' }}>
-                  {billingCycle === 'monthly' ? '$19' : '$11'}
-                </span>
-                <span style={{ fontSize: '14px', color: '#64748B' }}>/ month</span>
-              </div>
-              <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5, marginBottom: '24px' }}>
-                The full autonomous engine for serious candidates demanding high interview hit-rates.
-              </p>
+              <div style={{ fontSize: '12px', color: '#64748B', marginBottom: '24px' }}>Billed {billingCycle}</div>
 
               <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
                 {[
-                  'Unlimited AI-tailored resumes & downloads',
-                  'Unlimited tailored cover letter generation',
-                  'Emma AI conversational copilot coaching',
-                  'Virtual Interview Lab (HR, Technical & Leadership)',
-                  '12-Week Strategic Career & Salary Roadmap',
-                  'Priority recruiter cold outreach templates'
-                ].map((item) => (
-                  <div key={item} style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                    <Check size={16} color="#1A53CF" strokeWidth={3} />
-                    <span style={{ fontSize: '13.5px', color: '#090C15', fontWeight: 600 }}>{item}</span>
+                  'Unlimited AI-Tailored Resumes',
+                  'Unlimited Cover Letter Generator',
+                  'Emma AI Voice & Behavioral Simulator',
+                  '12-Week Strategic Career Roadmap',
+                  'Salary Benchmarking & Equity Calculator',
+                  'Priority Real-Time ATS Feedback'
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#090C15', fontWeight: 600 }}>
+                    <Check size={14} color="#1A53CF" strokeWidth={3} />
+                    <span>{item}</span>
                   </div>
                 ))}
               </div>
+
+              <button
+                onClick={onLaunchApp}
+                className="white-primary-btn"
+                style={{ width: '100%' }}
+              >
+                Launch Pro Hub
+              </button>
             </div>
 
-            <button
-              onClick={onLaunchApp}
-              style={{
-                width: '100%',
-                padding: '13px',
-                borderRadius: '12px',
-                backgroundColor: '#1A53CF',
-                backgroundImage: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 100%)',
-                color: '#FFFFFF',
-                border: 'none',
-                fontSize: '14.5px',
-                fontWeight: 800,
-                cursor: 'pointer',
-                boxShadow: '0 6px 18px rgba(26, 83, 207, 0.35)',
-                transition: 'transform 0.15s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
-            >
-              Unlock Full Engine
-            </button>
+            {/* Tier 3: Executive Loop */}
+            <div className="white-bento-card" style={{ padding: '36px 30px' }}>
+              <div style={{ fontSize: '14px', fontWeight: 800, color: '#7C3AED', marginBottom: '8px' }}>Executive Loop</div>
+              <div style={{ fontSize: '42px', fontWeight: 900, color: '#090C15', marginBottom: '4px' }}>
+                {billingCycle === 'monthly' ? '$49' : '$29'}
+                <span style={{ fontSize: '14px', fontWeight: 500, color: '#64748B' }}> / mo</span>
+              </div>
+              <div style={{ fontSize: '12px', color: '#64748B', marginBottom: '24px' }}>For Staff, Lead & VP loops</div>
+
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
+                {[
+                  'Everything in Candidate Pro',
+                  '1-on-1 Human Executive Resume Audit',
+                  'Custom Compensation Negotiation Script',
+                  'Executive Headhunter Direct Intro',
+                  'Private Dedicated Coach Channel'
+                ].map((item, i) => (
+                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
+                    <Check size={14} color="#7C3AED" />
+                    <span>{item}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={onLaunchApp}
+                className="white-secondary-btn"
+                style={{ width: '100%' }}
+              >
+                Join Executive Loop
+              </button>
+            </div>
           </div>
+
         </div>
       </section>
 
       {/* =========================================================================
-          9. FREQUENTLY ASKED QUESTIONS (Accordion)
+          10. FAQ ACCORDION (WHITE / CLEAN)
           ========================================================================= */}
-      <section
+      <section 
         id="faq"
         style={{
-          maxWidth: '860px',
-          margin: '0 auto',
-          padding: '64px 24px',
-          boxSizing: 'border-box'
+          padding: '100px 0',
+          backgroundColor: '#FFFFFF'
         }}
       >
-        <div style={{ textAlign: 'center', marginBottom: '36px' }}>
-          <span 
-            style={{ 
-              fontSize: '12px', 
-              fontWeight: 800, 
-              letterSpacing: '0.12em', 
-              textTransform: 'uppercase', 
-              color: '#1A53CF' 
-            }}
-          >
-            Got Questions?
-          </span>
-          <h2
-            style={{
-              fontFamily: 'var(--font-title, sans-serif)',
-              fontSize: 'clamp(26px, 3vw, 38px)',
-              fontWeight: 900,
-              letterSpacing: '-0.03em',
-              color: '#090C15',
-              marginTop: '8px'
-            }}
-          >
-            Frequently Asked Questions
-          </h2>
-        </div>
+        <div style={{ maxWidth: '820px', margin: '0 auto', padding: '0 24px' }}>
+          
+          <div style={{ textAlign: 'center', marginBottom: '50px' }}>
+            <h2 style={{ fontSize: 'clamp(28px, 4vw, 48px)', fontWeight: 900, color: '#090C15', letterSpacing: '-0.03em', marginBottom: '14px' }}>
+              Frequently Asked Questions
+            </h2>
+            <p style={{ fontSize: '15px', color: '#475569' }}>
+              Everything you need to know about the product, privacy, and algorithms.
+            </p>
+          </div>
 
-        <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-          {FAQ_ITEMS.map((item, idx) => {
-            const isOpen = openFaqIndex === idx;
-            return (
-              <div
-                key={item.q}
-                className="glass-panel"
-                style={{
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  borderColor: isOpen ? 'rgba(37, 99, 235, 0.35)' : 'rgba(226, 232, 240, 0.85)',
-                  transition: 'border-color 0.2s ease'
-                }}
-              >
-                <button
-                  onClick={() => setOpenFaqIndex(isOpen ? -1 : idx)}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            {FAQS.map((faq, idx) => {
+              const isOpen = openFaqIndex === idx;
+              return (
+                <div 
+                  key={idx}
+                  className="white-bento-card"
                   style={{
-                    width: '100%',
-                    padding: '18px 22px',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'space-between',
-                    gap: '16px',
-                    backgroundColor: 'transparent',
-                    border: 'none',
-                    cursor: 'pointer',
-                    textAlign: 'left'
+                    padding: '20px 24px',
+                    cursor: 'pointer'
                   }}
+                  onClick={() => setOpenFaqIndex(isOpen ? null : idx)}
                 >
-                  <span style={{ fontSize: '15px', fontWeight: 800, color: isOpen ? '#1A53CF' : '#090C15' }}>
-                    {item.q}
-                  </span>
-                  <div 
-                    style={{ 
-                      width: '28px', 
-                      height: '28px', 
-                      borderRadius: '50%', 
-                      backgroundColor: isOpen ? '#EFF6FF' : '#F1F5F9', 
-                      display: 'flex', 
-                      alignItems: 'center', 
-                      justifyContent: 'center',
-                      flexShrink: 0,
-                      color: isOpen ? '#1A53CF' : '#64748B'
-                    }}
-                  >
-                    {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', gap: '16px' }}>
+                    <span style={{ fontSize: '15px', fontWeight: 700, color: isOpen ? '#1A53CF' : '#090C15' }}>
+                      {faq.q}
+                    </span>
+                    <span style={{ color: '#64748B' }}>
+                      {isOpen ? <ChevronUp size={16} /> : <ChevronDown size={16} />}
+                    </span>
                   </div>
-                </button>
 
-                {isOpen && (
-                  <div style={{ padding: '0 22px 20px 22px', fontSize: '14px', lineHeight: 1.65, color: '#475569' }}>
-                    {item.a}
-                  </div>
-                )}
-              </div>
-            );
-          })}
+                  {isOpen && (
+                    <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.6, marginTop: '12px', paddingTop: '12px', borderTop: '1px solid #F1F5F9' }}>
+                      {faq.a}
+                    </p>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+
         </div>
       </section>
 
       {/* =========================================================================
-          10. PRE-FOOTER CTA CARD (Direct Launch Into App)
+          11. FINAL MONUMENTAL CTA BANNER (CLEAN LIGHT THEME)
           ========================================================================= */}
       <section 
         style={{
-          maxWidth: '1240px',
-          margin: '0 auto',
-          padding: '48px 24px 80px 24px',
-          boxSizing: 'border-box'
+          padding: '120px 0',
+          position: 'relative',
+          overflow: 'hidden',
+          backgroundColor: '#F8FAFC',
+          borderTop: '1px solid #E2E8F0',
+          textAlign: 'center'
         }}
       >
-        <div
-          style={{
-            borderRadius: '28px',
-            backgroundColor: '#1A53CF',
-            backgroundImage: 'linear-gradient(135deg, #1A53CF 0%, #2563EB 50%, #06B6D4 100%)',
-            color: '#FFFFFF',
-            padding: 'clamp(40px, 5vw, 68px) 32px',
-            textAlign: 'center',
-            position: 'relative',
-            overflow: 'hidden',
-            boxShadow: '0 24px 60px -10px rgba(26, 83, 207, 0.4)'
-          }}
-        >
-          {/* Subtle Ambient Ring */}
-          <div 
+        <div style={{ maxWidth: '800px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 10 }}>
+          
+          <h2 
+            className="white-hero-title"
             style={{
-              position: 'absolute',
-              top: '-50%',
-              left: '50%',
-              transform: 'translateX(-50%)',
-              width: '700px',
-              height: '700px',
-              borderRadius: '50%',
-              border: '1px solid rgba(255, 255, 255, 0.15)',
-              pointerEvents: 'none'
-            }}
-          />
-
-          <h2
-            style={{
-              fontFamily: 'var(--font-title, sans-serif)',
-              fontSize: 'clamp(32px, 4.2vw, 54px)',
+              fontSize: 'clamp(36px, 5.5vw, 68px)',
               fontWeight: 900,
-              letterSpacing: '-0.035em',
-              lineHeight: 1.1,
-              marginBottom: '18px'
+              letterSpacing: '-0.03em',
+              lineHeight: 1.05,
+              marginBottom: '20px'
             }}
           >
-            Ready to take control of your career search?
+            Ready to accelerate your career?
           </h2>
-          <p style={{ fontSize: '17px', color: 'rgba(255, 255, 255, 0.85)', maxWidth: '580px', margin: '0 auto 36px auto', lineHeight: 1.6 }}>
-            Join thousands of ambitious candidates applying smarter, saving 10+ hours a week, and landing interviews faster.
+
+          <p style={{ fontSize: '18px', color: '#475569', maxWidth: '580px', margin: '0 auto 36px auto', lineHeight: 1.5 }}>
+            Join over 45,000 ambitious developers, designers, and product leaders who landed dream offers with JobGen.
           </p>
 
           <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '14px', flexWrap: 'wrap' }}>
-            <button
+            <button 
               onClick={onLaunchApp}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                backgroundColor: '#FFFFFF',
-                color: '#1A53CF',
-                fontSize: '15.5px',
-                fontWeight: 900,
-                padding: '14px 28px',
-                borderRadius: '14px',
-                border: 'none',
-                boxShadow: '0 8px 25px rgba(0, 0, 0, 0.2)',
-                cursor: 'pointer',
-                transition: 'transform 0.15s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.transform = 'translateY(-2px)'}
-              onMouseLeave={(e) => e.currentTarget.style.transform = 'translateY(0)'}
+              className="white-primary-btn"
+              style={{ padding: '14px 40px', fontSize: '14px' }}
             >
-              <span>Launch Candidate Workspace</span>
-              <ArrowRight size={17} strokeWidth={2.6} />
-            </button>
-
-            <button
-              onClick={onSignIn}
-              style={{
-                backgroundColor: 'rgba(255, 255, 255, 0.15)',
-                color: '#FFFFFF',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-                fontSize: '15px',
-                fontWeight: 700,
-                padding: '13px 24px',
-                borderRadius: '14px',
-                cursor: 'pointer',
-                backdropFilter: 'blur(8px)',
-                transition: 'background 0.15s ease'
-              }}
-              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.25)'}
-              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)'}
-            >
-              Sign In to Existing Account
+              <span>Launch JobGen AI</span>
+              <ArrowRight size={15} style={{ marginLeft: '8px' }} />
             </button>
           </div>
+
+          <p style={{ fontSize: '12px', color: '#64748B', marginTop: '16px' }}>
+            No credit card needed &bull; Instant access &bull; Free ATS check included
+          </p>
         </div>
       </section>
 
       {/* =========================================================================
-          11. FOOTER (Clean, Modern, Responsive)
+          12. MINIMALIST WHITE FOOTER
           ========================================================================= */}
-      <footer
+      <footer 
         style={{
-          borderTop: '1px solid rgba(226, 232, 240, 0.8)',
+          padding: '50px 0 36px 0',
           backgroundColor: '#FFFFFF',
-          padding: '48px 24px 36px 24px',
-          boxSizing: 'border-box'
+          borderTop: '1px solid #E2E8F0'
         }}
       >
-        <div 
-          style={{ 
-            maxWidth: '1240px', 
-            margin: '0 auto', 
-            display: 'flex', 
-            alignItems: 'center', 
-            justifyContent: 'space-between', 
-            flexWrap: 'wrap', 
-            gap: '24px' 
-          }}
-        >
-          {/* Logo & Copyright */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-            <img src="/jobgen-logo.png" alt="JobGen Logo" style={{ width: '28px', height: '28px', objectFit: 'contain' }} />
-            <span style={{ fontSize: '16px', fontWeight: 900, color: '#090C15' }}>JobGen.AI</span>
-            <span style={{ fontSize: '13px', color: '#94A3B8', marginLeft: '12px' }}>
-              © {new Date().getFullYear()} JobGen Candidates. All rights reserved.
-            </span>
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+          
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px', paddingBottom: '30px', borderBottom: '1px solid #F1F5F9' }}>
+            
+            {/* Left: Brand Identity */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <img 
+                src="/jobgen-logo.png" 
+                alt="JobGen" 
+                style={{ width: '24px', height: '24px', objectFit: 'contain' }}
+              />
+              <span style={{ fontSize: '16px', fontWeight: 900, color: '#090C15' }}>JobGen.AI</span>
+              <span style={{ fontSize: '12px', color: '#64748B' }}>&bull; Everything App for Candidates</span>
+            </div>
+
+            {/* Right: Operational Status */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#059669', fontWeight: 600 }}>
+              <span className="radar-live" style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+              <span>All Systems Operational &bull; 99.98% Parsing Uptime</span>
+            </div>
           </div>
 
-          {/* Quick Links */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '20px', fontSize: '13px', color: '#64748B' }}>
-            <a href="#features" style={{ color: 'inherit', textDecoration: 'none' }}>Features</a>
-            <a href="#ats-scanner" style={{ color: 'inherit', textDecoration: 'none' }}>ATS Score</a>
-            <a href="#pricing" style={{ color: 'inherit', textDecoration: 'none' }}>Pricing</a>
-            <a href="#faq" style={{ color: 'inherit', textDecoration: 'none' }}>FAQ</a>
-            <button 
-              onClick={onSignIn} 
-              style={{ background: 'none', border: 'none', color: '#1A53CF', fontWeight: 700, cursor: 'pointer', padding: 0 }}
-            >
-              Sign In
-            </button>
+          {/* Subfooter */}
+          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', paddingTop: '24px', fontSize: '12px', color: '#64748B' }}>
+            <div>
+              &copy; {new Date().getFullYear()} JobGen Connect Pty Ltd. All rights reserved.
+            </div>
+
+            <div style={{ display: 'flex', gap: '20px' }}>
+              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('features')}>Features</span>
+              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('pricing')}>Pricing</span>
+              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('faq')}>FAQ</span>
+              <span style={{ cursor: 'pointer' }} onClick={onSignIn}>Sign In</span>
+            </div>
           </div>
+
         </div>
       </footer>
+
     </div>
   );
 }

@@ -14,11 +14,9 @@ import WorkspaceTrackerView from './components/dashboard/WorkspaceTrackerView';
 import AtsScanModal from './components/dashboard/AtsScanModal';
 import Footer from './components/dashboard/Footer';
 import LoginView from './components/auth/LoginView';
-import WaterLoader from './components/WaterLoader';
 import LandingPage from './components/landing/LandingPage';
 
 export default function App() {
-  const [isLoadingInitial, setIsLoadingInitial] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem('jobgen_candidate_auth') === 'true';
   });
@@ -90,37 +88,25 @@ export default function App() {
     setAuthMode('landing');
   };
 
-  // 1. Initial State: 5-sec Water Loading Bar on top of everything, then Landing / Login shows
   if (!isAuthenticated) {
-    return (
-      <>
-        {isLoadingInitial && (
-          <WaterLoader onComplete={() => setIsLoadingInitial(false)} />
-        )}
-        {authMode === 'login' ? (
-          <LoginView 
-            onLogin={handleLoginSuccess} 
-            onBackToLanding={() => setAuthMode('landing')} 
-          />
-        ) : (
-          <LandingPage 
-            onSignIn={() => setAuthMode('login')} 
-            onLaunchApp={() => {
-              sessionStorage.setItem('jobgen_candidate_auth', 'true');
-              setIsAuthenticated(true);
-            }} 
-          />
-        )}
-      </>
+    return authMode === 'login' ? (
+      <LoginView 
+        onLogin={handleLoginSuccess} 
+        onBackToLanding={() => setAuthMode('landing')} 
+      />
+    ) : (
+      <LandingPage 
+        onSignIn={() => setAuthMode('login')} 
+        onLaunchApp={() => {
+          sessionStorage.setItem('jobgen_candidate_auth', 'true');
+          setIsAuthenticated(true);
+        }} 
+      />
     );
   }
 
   return (
-    <>
-      {isLoadingInitial && (
-        <WaterLoader onComplete={() => setIsLoadingInitial(false)} />
-      )}
-      <div style={{ minHeight: '100vh', backgroundColor: '#F8FAFC' }}>
+    <div style={{ minHeight: '100vh', backgroundColor: '#F8FAFC' }}>
       
       {/* Main Candidate Dashboard App */}
       <div 
@@ -247,7 +233,6 @@ export default function App() {
 
       </div>
     </div>
-    </>
   );
 }
 

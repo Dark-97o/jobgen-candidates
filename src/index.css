@@ -465,3 +465,66 @@ html, body {
   height: 0 !important;
 }
 
+/* ==========================================================================
+   SCRIBBLE HEADLINE & MARKER UTILITIES
+   ========================================================================== */
+@keyframes scribbleInkIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.6) translateY(6px) rotate(-4deg);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 1;
+    transform: scale(1.08) translateY(-1px) rotate(1deg);
+    filter: blur(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) translateY(0) rotate(0deg);
+    filter: blur(0);
+  }
+}
+
+@keyframes markerJitter {
+  0% {
+    transform: translate(0px, 0px) scale(0.9);
+    opacity: 0.85;
+  }
+  50% {
+    transform: translate(2px, -2px) scale(1.2);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-1.5px, 1px) scale(0.95);
+    opacity: 0.9;
+  }
+}
+
+/* ==========================================================================
+   HERO 5X5 DOT GRID SLOW GLOW EFFECT
+   ========================================================================== */
+@keyframes slowDotGlow {
+  0%, 100% {
+    opacity: 0.22;
+    transform: scale(0.9);
+    box-shadow: 0 0 2px rgba(255, 255, 255, 0.35);
+  }
+  50% {
+    opacity: 0.95;
+    transform: scale(1.22);
+    box-shadow: 0 0 9px rgba(255, 255, 255, 0.95), 0 0 18px rgba(255, 255, 255, 0.55);
+  }
+}
+
+/* ==========================================================================
+   HERO 3D RESUME GENTLE FLOATING LEVITATION (PURE CSS, NO POINTER TRACKING)
+   ========================================================================== */
+@keyframes gentleResumeFloat {
+  0%, 100% {
+    transform: perspective(1200px) rotateX(4deg) rotateY(-5deg) translate3d(0, 0px, 45px);
+  }
+  50% {
+    transform: perspective(1200px) rotateX(6deg) rotateY(-2deg) translate3d(0, -14px, 45px);
+  }
+}

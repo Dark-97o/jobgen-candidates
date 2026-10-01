@@ -7,11 +7,12 @@ const PRELOAD_IMAGES = [
   '/jobgen-logo.png',
   '/back.png',
   '/free.png',
-  '/clock-building.png',
+  '/clock.png',
   '/cloud1.png',
   '/cloud2.png',
   '/city-skyline.jpg',
   '/clouds.jpg',
+  '/signimg.png',
 ];
 
 const PRELOAD_VIDEOS = [
@@ -19,16 +20,13 @@ const PRELOAD_VIDEOS = [
   '/waves.mp4',
 ];
 
-const SPLINE_IFRAME_URL = 'https://my.spline.design/cutecomputerfollowcursor-kTcoNww7cfTrcF5RhfaBxgaq/';
-const SPLINE_SCENE_URL = 'https://my.spline.design/cutecomputerfollowcursor-kTcoNww7cfTrcF5RhfaBxgaq/scene.splinecode';
-
 export default function WaterLoader({ onComplete }) {
   const [displayProgress, setDisplayProgress] = useState(0);
   const [isExiting, setIsExiting] = useState(false);
 
   // Tracking real download progress
   const completedCountRef = useRef(0);
-  const totalAssetsCount = PRELOAD_IMAGES.length + PRELOAD_VIDEOS.length + 2; // +2 for Spline iframe and scene
+  const totalAssetsCount = PRELOAD_IMAGES.length + PRELOAD_VIDEOS.length;
   const targetProgressRef = useRef(5);
   const isDoneRef = useRef(false);
   const startTimeRef = useRef(Date.now());
@@ -75,15 +73,6 @@ export default function WaterLoader({ onComplete }) {
         handleOneAssetLoaded();
       }
     });
-
-    // C. Preload Spline Scene Binary
-    try {
-      fetch(SPLINE_SCENE_URL, { mode: 'no-cors', cache: 'force-cache' })
-        .then(handleOneAssetLoaded)
-        .catch(handleOneAssetLoaded);
-    } catch {
-      handleOneAssetLoaded();
-    }
 
     // Safety fallback: if any asset stalls on network, finish after 15 seconds
     const safetyTimer = setTimeout(() => {
@@ -206,27 +195,6 @@ export default function WaterLoader({ onComplete }) {
           WebkitBackdropFilter: 'blur(2px)',
           zIndex: 1,
           pointerEvents: 'none',
-        }}
-      />
-
-      {/* Hidden Spline Preload iframe: fully downloads and caches WebGL shaders and WASM */}
-      <iframe
-        src={SPLINE_IFRAME_URL}
-        title="Spline Asset Preloader"
-        style={{
-          position: 'absolute',
-          width: '1px',
-          height: '1px',
-          opacity: 0.001,
-          pointerEvents: 'none',
-          zIndex: -1,
-          border: 'none',
-        }}
-        onLoad={() => {
-          completedCountRef.current += 1;
-          const count = completedCountRef.current;
-          const realRatio = count / totalAssetsCount;
-          targetProgressRef.current = Math.min(95, Math.max(targetProgressRef.current, realRatio * 95));
         }}
       />
 

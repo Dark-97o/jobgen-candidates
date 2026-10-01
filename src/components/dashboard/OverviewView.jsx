@@ -2276,36 +2276,29 @@ export default function OverviewView({ onNavigate }) {
               e.currentTarget.style.transform = 'translateY(0px) scale(1)';
             }}
           >
-            {/* Background Tall Building Image (Isolated building with transparent background, warm yellow lights, faded from top) */}
+            {/* Clock Background Image */}
             <img
-              src="/clock-building.png"
-              alt="Tall Building"
+              src="/clock.png"
+              alt="Clock Background"
               style={{
                 position: 'absolute',
                 inset: 0,
                 width: '100%',
                 height: '100%',
-                objectFit: 'contain',
-                objectPosition: 'center 65%',
-                transform: 'scale(1.28)',
+                objectFit: 'cover',
+                transform: 'scale(1.05)',
                 zIndex: 0,
-                opacity: 0.92,
-                maskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 16%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 1) 85%)',
-                WebkitMaskImage: 'linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.2) 16%, rgba(0, 0, 0, 0.8) 45%, rgba(0, 0, 0, 1) 85%)',
+                opacity: 0.88,
                 pointerEvents: 'none',
               }}
             />
 
-            {/* Subtle atmospheric warm amber glow beneath the building */}
+            {/* Subtle atmospheric glow behind text */}
             <div
               style={{
                 position: 'absolute',
-                left: '15%',
-                right: '15%',
-                bottom: '3%',
-                height: '42%',
-                background: 'radial-gradient(ellipse at 50% 100%, rgba(245, 158, 11, 0.28) 0%, rgba(217, 119, 6, 0.12) 48%, transparent 75%)',
-                filter: 'blur(18px)',
+                inset: 0,
+                background: 'radial-gradient(circle at 50% 50%, rgba(56, 189, 248, 0.12) 0%, rgba(14, 165, 233, 0.04) 50%, transparent 80%)',
                 zIndex: 0,
                 pointerEvents: 'none',
               }}
