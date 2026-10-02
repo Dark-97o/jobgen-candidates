@@ -16,6 +16,15 @@ import Footer from './components/dashboard/Footer';
 import LoginView from './components/auth/LoginView';
 import LandingPage from './components/landing/LandingPage';
 import JobIntro from './components/JobIntro';
+import ShotPage from './components/landing/ShotPage';
+
+// Helper to detect /shot route (supports both pathname and hash)
+const isShotRoute = () => {
+  if (typeof window === 'undefined') return false;
+  const path = (window.location.pathname || '').toLowerCase();
+  const hash = (window.location.hash || '').toLowerCase();
+  return path === '/shot' || path === '/shot/' || hash === '#/shot' || hash === '#shot';
+};
 
 // Ensure jobintro.mp4 plays only once per session
 let globalHasSeenJobIntro = false;
@@ -30,6 +39,7 @@ const checkHasSeenJobIntro = () => {
 };
 
 export default function App() {
+  const [isShot, setIsShot] = useState(isShotRoute);
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem('jobgen_candidate_auth') === 'true';
   });
@@ -37,6 +47,19 @@ export default function App() {
   const [introDone, setIntroDone] = useState(checkHasSeenJobIntro);
   const [currentTab, setCurrentTab] = useState('overview');
   const [atsModalOpen, setAtsModalOpen] = useState(false);
+
+  // Listen to navigation events for /shot
+  useEffect(() => {
+    const handleRoute = () => {
+      setIsShot(isShotRoute());
+    };
+    window.addEventListener('popstate', handleRoute);
+    window.addEventListener('hashchange', handleRoute);
+    return () => {
+      window.removeEventListener('popstate', handleRoute);
+      window.removeEventListener('hashchange', handleRoute);
+    };
+  }, []);
 
   // Initialize Frictionless Physics-Based Smooth Scrolling (Lenis)
   useEffect(() => {
@@ -116,6 +139,11 @@ export default function App() {
       window.scrollTo(0, 0);
     }
   };
+
+  // Dedicated /shot recording page (hero animation only, nothing else)
+  if (isShot) {
+    return <ShotPage />;
+  }
 
   if (!isAuthenticated) {
     return authMode === 'login' ? (
