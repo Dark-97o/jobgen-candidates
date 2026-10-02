@@ -893,6 +893,31 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           box-shadow: 0 0 14px #1A53CF;
           animation: laserSweep 1.8s infinite ease-in-out;
         }
+
+        /* Floating Blue Mist & Cloud Animations */
+        @keyframes floatCloudLeft {
+          0% { transform: translate3d(-30px, -15px, 0) scale(1); opacity: 0.72; }
+          50% { transform: translate3d(30px, 20px, 0) scale(1.06); opacity: 0.9; }
+          100% { transform: translate3d(-30px, -15px, 0) scale(1); opacity: 0.72; }
+        }
+        @keyframes floatCloudRight {
+          0% { transform: translate3d(25px, 15px, 0) scale(1.04); opacity: 0.65; }
+          50% { transform: translate3d(-25px, -20px, 0) scale(0.97); opacity: 0.85; }
+          100% { transform: translate3d(25px, 15px, 0) scale(1.04); opacity: 0.65; }
+        }
+        @keyframes pulseMistGlow {
+          0%, 100% { opacity: 0.45; transform: scale(1); }
+          50% { opacity: 0.75; transform: scale(1.12); }
+        }
+
+        @media (max-width: 960px) {
+          .productivity-grid {
+            grid-template-columns: 1fr !important;
+          }
+          .productivity-card-rect, .productivity-card-square {
+            grid-column: span 12 !important;
+          }
+        }
       `}</style>
 
       {/* =========================================================================
@@ -1105,39 +1130,133 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       <section 
         id="productivity"
         style={{
-          padding: '100px 0',
+          padding: '110px 0 120px 0',
           position: 'relative',
-          backgroundColor: '#FFFFFF'
+          backgroundColor: '#F6FAFE',
+          overflow: 'hidden'
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+        {/* Floating Blue Mist Ambient Radial Glows */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: '-5%',
+            left: '-8%',
+            width: '650px',
+            height: '650px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, rgba(147, 197, 253, 0.1) 45%, transparent 70%)',
+            filter: 'blur(70px)',
+            pointerEvents: 'none',
+            animation: 'pulseMistGlow 12s ease-in-out infinite alternate',
+            zIndex: 0
+          }} 
+        />
+        <div 
+          style={{
+            position: 'absolute',
+            bottom: '-10%',
+            right: '-6%',
+            width: '750px',
+            height: '750px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, rgba(96, 165, 250, 0.1) 45%, transparent 70%)',
+            filter: 'blur(80px)',
+            pointerEvents: 'none',
+            animation: 'pulseMistGlow 15s ease-in-out infinite alternate-reverse',
+            zIndex: 0
+          }} 
+        />
+        <div 
+          style={{
+            position: 'absolute',
+            top: '35%',
+            left: '30%',
+            width: '600px',
+            height: '600px',
+            borderRadius: '50%',
+            background: 'radial-gradient(circle, rgba(147, 197, 253, 0.25) 0%, transparent 65%)',
+            filter: 'blur(85px)',
+            pointerEvents: 'none',
+            animation: 'pulseMistGlow 10s ease-in-out infinite alternate',
+            zIndex: 0
+          }} 
+        />
+
+        {/* Floating Blue Mist Cloud 1 (Top Left / Drifting) */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: '-50px',
+            left: '-100px',
+            width: '880px',
+            maxWidth: '60vw',
+            pointerEvents: 'none',
+            zIndex: 0,
+            opacity: 0.75,
+            animation: 'floatCloudLeft 18s ease-in-out infinite',
+            filter: 'drop-shadow(0 25px 45px rgba(59, 130, 246, 0.22)) hue-rotate(195deg) saturate(1.4)'
+          }}
+        >
+          <img 
+            src="/cloud-vfx-1.png" 
+            alt="Blue mist cloud" 
+            style={{ width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }} 
+          />
+        </div>
+
+        {/* Floating Blue Mist Cloud 2 (Bottom Right / Drifting) */}
+        <div 
+          style={{
+            position: 'absolute',
+            bottom: '-90px',
+            right: '-110px',
+            width: '960px',
+            maxWidth: '65vw',
+            pointerEvents: 'none',
+            zIndex: 0,
+            opacity: 0.7,
+            animation: 'floatCloudRight 22s ease-in-out infinite',
+            filter: 'drop-shadow(0 25px 50px rgba(37, 99, 235, 0.25)) hue-rotate(200deg) saturate(1.5)'
+          }}
+        >
+          <img 
+            src="/cloud-vfx-2.png" 
+            alt="Blue mist cloud" 
+            style={{ width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }} 
+          />
+        </div>
+
+        {/* Floating Blue Mist Cloud 3 (Mid-Left Accent) */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: '42%',
+            left: '-120px',
+            width: '620px',
+            maxWidth: '45vw',
+            pointerEvents: 'none',
+            zIndex: 0,
+            opacity: 0.5,
+            animation: 'floatCloudRight 25s ease-in-out infinite reverse',
+            filter: 'drop-shadow(0 15px 35px rgba(96, 165, 250, 0.25)) hue-rotate(190deg) saturate(1.3)'
+          }}
+        >
+          <img 
+            src="/cloud1.png" 
+            alt="Blue mist cloud" 
+            style={{ width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }} 
+          />
+        </div>
+
+        {/* Section Content */}
+        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
           
           {/* Section Header */}
-          <div style={{ maxWidth: '680px', marginBottom: '56px' }}>
-            <div 
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '4px 12px',
-                borderRadius: '9999px',
-                backgroundColor: '#EFF6FF',
-                border: '1px solid #BFDBFE',
-                color: '#1A53CF',
-                fontSize: '11px',
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                marginBottom: '16px'
-              }}
-            >
-              <Cpu size={12} />
-              <span>Unmatched Productivity</span>
-            </div>
-
+          <div style={{ maxWidth: '720px', marginBottom: '52px' }}>
             <h2 
               style={{
-                fontSize: 'clamp(32px, 4.5vw, 56px)',
+                fontSize: 'clamp(34px, 4.8vw, 56px)',
                 fontWeight: 900,
                 letterSpacing: '-0.03em',
                 lineHeight: 1.05,
@@ -1145,247 +1264,238 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 marginBottom: '16px'
               }}
             >
-              Engineered for candidates who demand an unfair advantage.
+              Unmatched Productivity
             </h2>
 
-            <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6 }}>
-              JobGen integrates resume engineering, opportunity tracking, behavioral coaching, and career strategy into one hyper-fluid workspace.
+            <p style={{ fontSize: '16.5px', color: '#475569', lineHeight: 1.6, maxWidth: '640px' }}>
+              JobGen integrates opportunity tracking, resume engineering, strategic roadmaps, and global role discovery into one hyper-fluid workspace.
             </p>
           </div>
 
-          {/* Asymmetric Bento Grid on White */}
+          {/* Asymmetric Bento Grid: 2 Rectangles & 2 Squares */}
           <div 
+            className="productivity-grid"
             style={{
               display: 'grid',
               gridTemplateColumns: 'repeat(12, 1fr)',
-              gap: '20px'
+              gap: '24px'
             }}
           >
-            {/* Bento 1: Keyboard Shortcuts / Command Bar (Col 4) */}
+            {/* ROW 1 — CARD 1: RECTANGLE (Col 8) — Kanban Pipeline (sc2.png) */}
             <div 
-              className="white-bento-card" 
-              style={{ 
-                gridColumn: 'span 4', 
-                padding: '32px 28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                minHeight: '360px'
-              }}
-            >
-              <div>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #BFDBFE' }}>
-                  <Command size={20} color="#1A53CF" />
-                </div>
-                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
-                  Keyboard shortcuts & command bar
-                </h3>
-                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5 }}>
-                  Work at high velocity with instant ⌘K search, stage flipping, and document switching.
-                </p>
-              </div>
-
-              {/* Simulated Command Palette UI */}
-              <div 
-                style={{
-                  backgroundColor: '#F8FAFC',
-                  borderRadius: '12px',
-                  border: '1px solid #E2E8F0',
-                  padding: '12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', color: '#1A53CF', padding: '6px 8px', borderRadius: '6px', backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Search size={12} color="#1A53CF" />
-                    <span style={{ fontWeight: 700 }}>Search target roles...</span>
-                  </div>
-                  <span style={{ fontSize: '10px', padding: '2px 5px', borderRadius: '4px', backgroundColor: '#FFFFFF', border: '1px solid #CBD5E1', color: '#090C15' }}>⌘K</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11.5px', color: '#475569', padding: '4px 8px' }}>
-                  <span>Tailor resume for Canva</span>
-                  <span style={{ fontSize: '10px', color: '#64748B' }}>⌘T</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11.5px', color: '#475569', padding: '4px 8px' }}>
-                  <span>Start Mock Round with Emma</span>
-                  <span style={{ fontSize: '10px', color: '#64748B' }}>⌘E</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Bento 2: Autonomous Kanban Pipeline (Col 8) */}
-            <div 
-              className="white-bento-card" 
+              className="white-bento-card productivity-card-rect" 
               style={{ 
                 gridColumn: 'span 8', 
-                padding: '32px 28px',
+                padding: '32px 30px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                minHeight: '360px'
+                background: 'rgba(255, 255, 255, 0.88)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(219, 234, 254, 0.85)',
+                borderRadius: '24px',
+                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.05), 0 2px 10px rgba(15, 23, 42, 0.03)'
               }}
             >
-              <div>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #A7F3D0' }}>
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', border: '1px solid #A7F3D0' }}>
                   <LayoutDashboard size={20} color="#059669" />
                 </div>
-                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
+                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#090C15', marginBottom: '8px', letterSpacing: '-0.01em' }}>
                   Autonomous Kanban Pipeline & Opportunity Tracking
                 </h3>
-                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5, maxWidth: '580px' }}>
+                <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5, maxWidth: '620px' }}>
                   Track applications across Bookmarked, Applied, Screening, Interviewing, and Offer stages with salary benchmarking and automated follow-up alerts.
                 </p>
               </div>
 
-              {/* Simulated Kanban Columns */}
+              {/* Card Screenshot Container (Rectangle) */}
               <div 
                 style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gap: '12px',
-                  marginTop: '20px'
-                }}
-              >
-                {/* Column 1 */}
-                <div style={{ backgroundColor: '#F8FAFC', borderRadius: '10px', padding: '12px', border: '1px solid #E2E8F0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', fontWeight: 800, color: '#64748B' }}>
-                    <span>APPLIED (12)</span>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#1A53CF' }} />
-                  </div>
-                  <div style={{ backgroundColor: '#FFFFFF', borderRadius: '6px', padding: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15' }}>Canva &bull; Product Lead</div>
-                    <div style={{ fontSize: '10.5px', color: '#059669', marginTop: '2px', fontWeight: 700 }}>$195K &bull; 92% Match</div>
-                  </div>
-                </div>
-
-                {/* Column 2 */}
-                <div style={{ backgroundColor: '#F8FAFC', borderRadius: '10px', padding: '12px', border: '1px solid #E2E8F0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', fontWeight: 800, color: '#D97706' }}>
-                    <span>INTERVIEWING (4)</span>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
-                  </div>
-                  <div style={{ backgroundColor: '#FFFFFF', borderRadius: '6px', padding: '8px', border: '1px solid #FDE68A', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15' }}>Atlassian &bull; Staff Architect</div>
-                    <div style={{ fontSize: '10.5px', color: '#D97706', marginTop: '2px', fontWeight: 700 }}>Round 3: System Design</div>
-                  </div>
-                </div>
-
-                {/* Column 3 */}
-                <div style={{ backgroundColor: '#F8FAFC', borderRadius: '10px', padding: '12px', border: '1px solid #E2E8F0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', fontWeight: 800, color: '#059669' }}>
-                    <span>OFFERS (2)</span>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                  </div>
-                  <div style={{ backgroundColor: '#ECFDF5', borderRadius: '6px', padding: '8px', border: '1px solid #A7F3D0' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#065F46' }}>Stripe &bull; Tech Lead</div>
-                    <div style={{ fontSize: '10.5px', color: '#059669', marginTop: '2px', fontWeight: 700 }}>$230K Base + Equity</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bento 3: Precision ATS Scoring (Col 8) */}
-            <div 
-              className="white-bento-card" 
-              style={{ 
-                gridColumn: 'span 8', 
-                padding: '32px 28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                minHeight: '360px'
-              }}
-            >
-              <div>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#F3E8FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #E9D5FF' }}>
-                  <FileText size={20} color="#7C3AED" />
-                </div>
-                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
-                  ATS Scoring Engine & Precision Keyword Calibration
-                </h3>
-                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5, maxWidth: '580px' }}>
-                  Never guess what recruiters want. JobGen scans target job descriptions and aligns your experience to strict keyword rubrics.
-                </p>
-              </div>
-
-              {/* Simulated ATS Calibration Gauge */}
-              <div 
-                style={{
-                  backgroundColor: '#F8FAFC',
-                  borderRadius: '12px',
-                  padding: '16px 20px',
+                  borderRadius: '16px',
+                  overflow: 'hidden',
                   border: '1px solid #E2E8F0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '16px',
-                  marginTop: '20px'
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '0 6px 20px -2px rgba(15, 23, 42, 0.06)'
                 }}
               >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div style={{ width: '54px', height: '54px', borderRadius: '50%', backgroundColor: '#ECFDF5', border: '2px solid #10B981', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: '18px', fontWeight: 900, color: '#059669', lineHeight: 1 }}>94</span>
-                    <span style={{ fontSize: '8px', color: '#047857', fontWeight: 800 }}>ATS</span>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#090C15' }}>Workday & Greenhouse Optimized</div>
-                    <div style={{ fontSize: '11.5px', color: '#64748B' }}>99.8% Semantic Parse Accuracy Verified</div>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                  {['+ TypeScript 5.4', '+ System Architecture', '+ Micro-Frontends'].map((kw, idx) => (
-                    <span key={idx} style={{ fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
-                      {kw}
-                    </span>
-                  ))}
-                </div>
+                <img 
+                  src="/sc2.png" 
+                  alt="Autonomous Kanban Pipeline" 
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'block',
+                    transition: 'transform 0.35s ease'
+                  }} 
+                />
               </div>
             </div>
 
-            {/* Bento 4: 12-Week Strategic Roadmap (Col 4) */}
+            {/* ROW 1 — CARD 2: SQUARE (Col 4) — Resume Studio (sc4.png) */}
             <div 
-              className="white-bento-card" 
+              className="white-bento-card productivity-card-square" 
               style={{ 
                 gridColumn: 'span 4', 
                 padding: '32px 28px',
                 display: 'flex',
                 flexDirection: 'column',
                 justifyContent: 'space-between',
-                minHeight: '360px'
+                background: 'rgba(255, 255, 255, 0.88)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(219, 234, 254, 0.85)',
+                borderRadius: '24px',
+                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.05), 0 2px 10px rgba(15, 23, 42, 0.03)'
               }}
             >
-              <div>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #FDE68A' }}>
-                  <Compass size={20} color="#D97706" />
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#F3E8FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', border: '1px solid #E9D5FF' }}>
+                  <FileText size={20} color="#7C3AED" />
                 </div>
-                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
-                  12-Week Strategic Roadmap
+                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#090C15', marginBottom: '8px', letterSpacing: '-0.01em' }}>
+                  Precision Resume Studio
                 </h3>
-                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5 }}>
-                  Structured milestone time-blocking, recruiter reach-out templates, and compensation scripts.
+                <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5 }}>
+                  Multi-format ATS-ready executive resumes, portfolios, and CV designs calibrated for maximum recruiter impact.
                 </p>
               </div>
 
-              {/* Simulated Roadmap Progress */}
+              {/* Card Screenshot Container (Square) */}
               <div 
                 style={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  border: '1px solid #E2E8F0',
                   backgroundColor: '#F8FAFC',
-                  borderRadius: '12px',
+                  boxShadow: '0 6px 20px -2px rgba(15, 23, 42, 0.06)',
                   padding: '12px',
-                  border: '1px solid #E2E8F0'
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}
               >
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: 800, marginBottom: '6px' }}>
-                  <span style={{ color: '#090C15' }}>Phase 4: Technical Deep-Dive</span>
-                  <span style={{ color: '#D97706' }}>8/10 Done</span>
+                <img 
+                  src="/sc4.png" 
+                  alt="Precision Resume Studio Templates" 
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxHeight: '300px',
+                    objectFit: 'contain',
+                    borderRadius: '10px',
+                    display: 'block',
+                    transition: 'transform 0.35s ease'
+                  }} 
+                />
+              </div>
+            </div>
+
+            {/* ROW 2 — CARD 3: SQUARE (Col 4) — 12-Week Strategic Roadmap (sc3.png) */}
+            <div 
+              className="white-bento-card productivity-card-square" 
+              style={{ 
+                gridColumn: 'span 4', 
+                padding: '32px 28px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                background: 'rgba(255, 255, 255, 0.88)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(219, 234, 254, 0.85)',
+                borderRadius: '24px',
+                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.05), 0 2px 10px rgba(15, 23, 42, 0.03)'
+              }}
+            >
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', border: '1px solid #FDE68A' }}>
+                  <Compass size={20} color="#D97706" />
                 </div>
-                <div style={{ width: '100%', height: '6px', borderRadius: '9999px', backgroundColor: '#E2E8F0', overflow: 'hidden' }}>
-                  <div style={{ width: '80%', height: '100%', backgroundColor: '#D97706', borderRadius: '9999px' }} />
+                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#090C15', marginBottom: '8px', letterSpacing: '-0.01em' }}>
+                  12-Week Strategic Roadmap
+                </h3>
+                <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5 }}>
+                  Milestone-driven sprints covering system architecture, leadership alignment, and targeted interview preparation.
+                </p>
+              </div>
+
+              {/* Card Screenshot Container (Square) */}
+              <div 
+                style={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  border: '1px solid #E2E8F0',
+                  backgroundColor: '#F8FAFC',
+                  boxShadow: '0 6px 20px -2px rgba(15, 23, 42, 0.06)',
+                  padding: '12px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                <img 
+                  src="/sc3.png" 
+                  alt="12-Week Strategic Roadmap" 
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    maxHeight: '300px',
+                    objectFit: 'contain',
+                    borderRadius: '10px',
+                    display: 'block',
+                    transition: 'transform 0.35s ease'
+                  }} 
+                />
+              </div>
+            </div>
+
+            {/* ROW 2 — CARD 4: RECTANGLE (Col 8) — Target Role & Location Radar (sc1.png) */}
+            <div 
+              className="white-bento-card productivity-card-rect" 
+              style={{ 
+                gridColumn: 'span 8', 
+                padding: '32px 30px',
+                display: 'flex',
+                flexDirection: 'column',
+                justifyContent: 'space-between',
+                background: 'rgba(255, 255, 255, 0.88)',
+                backdropFilter: 'blur(20px)',
+                border: '1px solid rgba(219, 234, 254, 0.85)',
+                borderRadius: '24px',
+                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.05), 0 2px 10px rgba(15, 23, 42, 0.03)'
+              }}
+            >
+              <div style={{ marginBottom: '20px' }}>
+                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', border: '1px solid #BFDBFE' }}>
+                  <MapPin size={20} color="#1A53CF" />
                 </div>
+                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#090C15', marginBottom: '8px', letterSpacing: '-0.01em' }}>
+                  Target Role & Global Location Radar
+                </h3>
+                <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5, maxWidth: '620px' }}>
+                  Pinpoint top tier tech hubs across Sydney, San Francisco, Melbourne, and Bangalore with verified hiring demand and median compensation insights.
+                </p>
+              </div>
+
+              {/* Card Screenshot Container (Rectangle) */}
+              <div 
+                style={{
+                  borderRadius: '16px',
+                  overflow: 'hidden',
+                  border: '1px solid #E2E8F0',
+                  backgroundColor: '#FFFFFF',
+                  boxShadow: '0 6px 20px -2px rgba(15, 23, 42, 0.06)'
+                }}
+              >
+                <img 
+                  src="/sc1.png" 
+                  alt="Target Role & Location Radar" 
+                  style={{
+                    width: '100%',
+                    height: 'auto',
+                    display: 'block',
+                    transition: 'transform 0.35s ease'
+                  }} 
+                />
               </div>
             </div>
 
