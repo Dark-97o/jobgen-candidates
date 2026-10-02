@@ -85,13 +85,10 @@ export default function RuggedScreen3D({
   const handlePointerEnter = (e) => {
     setIsHovered(true);
 
-    // Randomly choose between 'laptop' and 'mobile'
-    const candidateModes = ['laptop', 'mobile'];
-    let chosen = candidateModes[Math.floor(Math.random() * candidateModes.length)];
-    if (chosen === lastRandomModeRef.current) {
-      // Alternate for maximum variety on repeated hovers
-      chosen = chosen === 'laptop' ? 'mobile' : 'laptop';
-    }
+    // Randomly choose a different mode among 'screen', 'laptop', 'mobile' on every hover
+    const allModes = ['screen', 'laptop', 'mobile'];
+    const otherModes = allModes.filter((m) => m !== deviceMode);
+    const chosen = otherModes[Math.floor(Math.random() * otherModes.length)];
     lastRandomModeRef.current = chosen;
     setDeviceMode(chosen);
 
@@ -111,17 +108,7 @@ export default function RuggedScreen3D({
 
   const handlePointerLeave = (e) => {
     setIsHovered(false);
-    setIsDistorting(true);
-    setDistortKey((prev) => prev + 1);
-
-    // Revert smoothly to tactical screen on leave
-    setDeviceMode('screen');
-
-    if (distortTimerRef.current) clearTimeout(distortTimerRef.current);
-    distortTimerRef.current = setTimeout(() => {
-      setIsDistorting(false);
-    }, 750);
-
+    // Persist current morphed device form until next hover (do not revert)
     if (onPointerLeave) onPointerLeave(e);
   };
 
@@ -150,9 +137,11 @@ export default function RuggedScreen3D({
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       onClick={() => {
-        // Also allow clicking to cycle between all 3 modes
-        const cycle = { screen: 'laptop', laptop: 'mobile', mobile: 'screen' };
-        setDeviceMode((prev) => cycle[prev] || 'screen');
+        // Also allow clicking to trigger next random morph
+        const allModes = ['screen', 'laptop', 'mobile'];
+        const otherModes = allModes.filter((m) => m !== deviceMode);
+        const chosen = otherModes[Math.floor(Math.random() * otherModes.length)];
+        setDeviceMode(chosen);
         setIsDistorting(true);
         if (distortTimerRef.current) clearTimeout(distortTimerRef.current);
         distortTimerRef.current = setTimeout(() => setIsDistorting(false), 750);
@@ -201,53 +190,6 @@ export default function RuggedScreen3D({
           </filter>
         </defs>
       </svg>
-
-      {/* Holographic Device Identity Badge */}
-      <div
-        style={{
-          position: 'absolute',
-          top: isMobile ? '-38px' : '-34px',
-          left: '50%',
-          transform: 'translateX(-50%) translateZ(16px)',
-          display: 'inline-flex',
-          alignItems: 'center',
-          gap: '7px',
-          padding: '4px 14px',
-          borderRadius: '9999px',
-          backgroundColor: 'rgba(10, 16, 32, 0.82)',
-          border: '1px solid rgba(255, 255, 255, 0.22)',
-          backdropFilter: 'blur(10px)',
-          WebkitBackdropFilter: 'blur(10px)',
-          color: isMobile ? '#C084FC' : isLaptop ? '#60A5FA' : '#34D399',
-          fontSize: '10.5px',
-          fontWeight: 800,
-          letterSpacing: '0.08em',
-          textTransform: 'uppercase',
-          pointerEvents: 'none',
-          boxShadow: '0 6px 18px rgba(0, 10, 40, 0.4)',
-          transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)',
-          zIndex: 20,
-          whiteSpace: 'nowrap'
-        }}
-      >
-        <span 
-          style={{ 
-            width: '6px', 
-            height: '6px', 
-            borderRadius: '50%', 
-            backgroundColor: 'currentColor', 
-            boxShadow: '0 0 8px currentColor' 
-          }} 
-        />
-        <span>
-          {isScreen && 'Tactical Workstation'}
-          {isLaptop && 'MacBook Pro 16"'}
-          {isMobile && 'iPhone 16 Pro'}
-        </span>
-        <span style={{ opacity: 0.55, fontSize: '9px', marginLeft: '2px' }}>
-          • {isScreen ? 'Hover to Morph' : 'Morphed'}
-        </span>
-      </div>
 
       {/* ================= 1. LEFT CABLE CONNECTOR & LOOPING CORD (TACTICAL ONLY) ================= */}
       <div
