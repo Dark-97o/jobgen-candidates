@@ -2,11 +2,13 @@ import React, { useState, useRef, useEffect } from 'react';
 
 /**
  * RuggedScreen3D
- * Recreates the rugged, industrial tactical tablet/monitor and morphs into a Laptop or Mobile randomly on hover.
+ * Recreates the 3D figure that morphs between 5 distinct physical hardware devices on hover or click:
  * Modes:
- * - 'screen': Heavy-duty industrial tactical tablet with hex bolts, chamfers, and cybernetic cord.
- * - 'laptop': Sleek modern space-gray laptop with 3D folding keyboard deck, glass trackpad, and camera notch.
- * - 'mobile': Modern flagship smartphone with dynamic island, curved titanium chassis, and side hardware.
+ * 1. 'screen'  : Heavy-duty industrial tactical terminal with antenna, hex bumpers, cable, and CRT scanlines.
+ * 2. 'laptop'  : Modern space-gray laptop with 3D folding keyboard deck, glass trackpad, and camera notch.
+ * 3. 'mobile'  : Flagship smartphone with dynamic island, titanium chassis, and side buttons.
+ * 4. 'tablet'  : Sleek modern landscape pro tablet with magnetically attached stylus and front sensor.
+ * 5. 'tv'      : Cinematic widescreen OLED TV screen with bottom soundbar chin and dual stand feet.
  */
 export default function RuggedScreen3D({
   containerRef,
@@ -17,13 +19,16 @@ export default function RuggedScreen3D({
   onPointerEnter,
   onPointerLeave
 }) {
-  const [deviceMode, setDeviceMode] = useState('screen'); // 'screen' | 'laptop' | 'mobile'
+  // Modes: 'screen' | 'laptop' | 'mobile' | 'tablet' | 'tv'
+  const [deviceMode, setDeviceMode] = useState('screen');
   const [isHovered, setIsHovered] = useState(false);
   const [isDistorting, setIsDistorting] = useState(false);
   const [distortKey, setDistortKey] = useState(0);
   const lastRandomModeRef = useRef('screen');
   const distortTimerRef = useRef(null);
   const videoRef = useRef(null);
+
+  const ALL_MODES = ['screen', 'laptop', 'mobile', 'tablet', 'tv'];
 
   // Clean up distortion timer on unmount
   useEffect(() => {
@@ -82,12 +87,8 @@ export default function RuggedScreen3D({
     };
   }, [videoSrc, isActive]);
 
-  const handlePointerEnter = (e) => {
-    setIsHovered(true);
-
-    // Randomly choose a different mode among 'screen', 'laptop', 'mobile' on every hover
-    const allModes = ['screen', 'laptop', 'mobile'];
-    const otherModes = allModes.filter((m) => m !== deviceMode);
+  const triggerRandomMorph = () => {
+    const otherModes = ALL_MODES.filter((m) => m !== deviceMode);
     const chosen = otherModes[Math.floor(Math.random() * otherModes.length)];
     lastRandomModeRef.current = chosen;
     setDeviceMode(chosen);
@@ -103,6 +104,11 @@ export default function RuggedScreen3D({
     if (videoRef.current && videoRef.current.paused) {
       videoRef.current.play().catch(() => {});
     }
+  };
+
+  const handlePointerEnter = (e) => {
+    setIsHovered(true);
+    triggerRandomMorph();
     if (onPointerEnter) onPointerEnter(e);
   };
 
@@ -115,18 +121,44 @@ export default function RuggedScreen3D({
   const isScreen = deviceMode === 'screen';
   const isLaptop = deviceMode === 'laptop';
   const isMobile = deviceMode === 'mobile';
+  const isTablet = deviceMode === 'tablet';
+  const isTV = deviceMode === 'tv';
 
   // Dynamic geometry per morph state
   const containerWidth = isMobile
     ? 'clamp(210px, 22vw, 290px)'
+    : isTablet
+    ? 'clamp(320px, 40vw, 560px)'
+    : isTV
+    ? 'clamp(380px, 48vw, 680px)'
     : isLaptop
     ? 'clamp(360px, 46vw, 640px)'
     : 'clamp(340px, 44vw, 620px)';
 
-  const containerAspectRatio = isMobile ? '9 / 18.5' : '16 / 10';
-  const containerRadius = isMobile ? '42px' : isLaptop ? '14px 14px 4px 4px' : '18px';
+  const containerAspectRatio = isMobile 
+    ? '9 / 18.5' 
+    : isTablet 
+    ? '4 / 3' 
+    : isTV 
+    ? '16 / 9' 
+    : '16 / 10';
+
+  const containerRadius = isMobile 
+    ? '42px' 
+    : isTablet 
+    ? '22px' 
+    : isTV 
+    ? '6px' 
+    : isLaptop 
+    ? '14px 14px 4px 4px' 
+    : '18px';
+
   const containerPadding = isMobile
     ? '9px'
+    : isTablet
+    ? '11px'
+    : isTV
+    ? '4px 4px 20px 4px'
     : isLaptop
     ? '8px 8px 14px 8px'
     : 'clamp(12px, 1.8vw, 18px)';
@@ -136,16 +168,7 @@ export default function RuggedScreen3D({
       ref={containerRef}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
-      onClick={() => {
-        // Also allow clicking to trigger next random morph
-        const allModes = ['screen', 'laptop', 'mobile'];
-        const otherModes = allModes.filter((m) => m !== deviceMode);
-        const chosen = otherModes[Math.floor(Math.random() * otherModes.length)];
-        setDeviceMode(chosen);
-        setIsDistorting(true);
-        if (distortTimerRef.current) clearTimeout(distortTimerRef.current);
-        distortTimerRef.current = setTimeout(() => setIsDistorting(false), 750);
-      }}
+      onClick={triggerRandomMorph}
       style={{
         position: 'relative',
         width: containerWidth,
@@ -158,10 +181,30 @@ export default function RuggedScreen3D({
           ? 'drop-shadow(0 30px 60px rgba(1, 10, 45, 0.65)) drop-shadow(0 12px 24px rgba(0, 0, 0, 0.45))'
           : isLaptop
           ? 'drop-shadow(0 40px 75px rgba(1, 10, 45, 0.7)) drop-shadow(0 20px 30px rgba(0, 0, 0, 0.5))'
+          : isTablet
+          ? 'drop-shadow(0 32px 65px rgba(1, 10, 45, 0.65)) drop-shadow(0 14px 28px rgba(0, 0, 0, 0.45))'
+          : isTV
+          ? 'drop-shadow(0 42px 80px rgba(1, 10, 45, 0.72)) drop-shadow(0 22px 34px rgba(0, 0, 0, 0.5))'
           : 'drop-shadow(0 35px 65px rgba(1, 10, 45, 0.65)) drop-shadow(0 15px 25px rgba(0, 0, 0, 0.45))',
         transition: 'width 0.7s cubic-bezier(0.34, 1.25, 0.64, 1), aspect-ratio 0.7s cubic-bezier(0.34, 1.25, 0.64, 1), filter 0.5s ease',
       }}
     >
+      {/* Dynamic Keyframes for Hardware Signals */}
+      <style>{`
+        @keyframes antennaBeaconPulse {
+          0%, 100% {
+            opacity: 1;
+            transform: scale(1);
+            box-shadow: 0 0 10px #10B981, 0 0 20px rgba(16, 185, 129, 0.7);
+          }
+          50% {
+            opacity: 0.45;
+            transform: scale(0.85);
+            box-shadow: 0 0 4px #10B981, 0 0 8px rgba(16, 185, 129, 0.3);
+          }
+        }
+      `}</style>
+
       {/* SVG Pulse Wave Distortion Filter */}
       <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }} aria-hidden="true">
         <defs>
@@ -191,7 +234,122 @@ export default function RuggedScreen3D({
         </defs>
       </svg>
 
-      {/* ================= 1. LEFT CABLE CONNECTOR & LOOPING CORD (TACTICAL ONLY) ================= */}
+      {/* ================= 1. TACTICAL ANTENNA (TERMINAL SCREEN ONLY) ================= */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-98px',
+          right: '62px',
+          width: '26px',
+          height: '110px',
+          pointerEvents: 'none',
+          zIndex: 9,
+          transformOrigin: 'bottom center',
+          transform: isScreen
+            ? 'translateZ(14px) rotate(8deg) scale(1)'
+            : 'translateZ(0px) translateY(36px) rotate(8deg) scale(0.2)',
+          opacity: isScreen ? 1 : 0,
+          transition: 'opacity 0.45s ease, transform 0.55s cubic-bezier(0.34, 1.25, 0.64, 1)',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'flex-end'
+        }}
+      >
+        {/* Signal Tip Beacon LED */}
+        <div
+          style={{
+            width: '8px',
+            height: '8px',
+            borderRadius: '50%',
+            backgroundColor: '#10B981',
+            animation: 'antennaBeaconPulse 1.8s infinite ease-in-out',
+            marginBottom: '2px'
+          }}
+        />
+
+        {/* Telescopic Top Rod */}
+        <div
+          style={{
+            width: '3.5px',
+            height: '34px',
+            background: 'linear-gradient(90deg, #94A3B8 0%, #F1F5F9 50%, #64748B 100%)',
+            borderRadius: '2px 2px 0 0',
+            boxShadow: '0 0 4px rgba(0,0,0,0.5)'
+          }}
+        />
+
+        {/* Mid Stage Collar */}
+        <div
+          style={{
+            width: '6.5px',
+            height: '4px',
+            backgroundColor: '#1E293B',
+            border: '0.5px solid #475569',
+            borderRadius: '1px'
+          }}
+        />
+
+        {/* Telescopic Mid Rod */}
+        <div
+          style={{
+            width: '5px',
+            height: '36px',
+            background: 'linear-gradient(90deg, #64748B 0%, #CBD5E1 50%, #475569 100%)',
+            boxShadow: '0 0 4px rgba(0,0,0,0.5)'
+          }}
+        />
+
+        {/* Base Collar Ring */}
+        <div
+          style={{
+            width: '8.5px',
+            height: '5px',
+            backgroundColor: '#0F172A',
+            border: '0.5px solid #64748B',
+            borderRadius: '1.5px'
+          }}
+        />
+
+        {/* Telescopic Base Mast */}
+        <div
+          style={{
+            width: '7.5px',
+            height: '24px',
+            background: 'linear-gradient(90deg, #334155 0%, #64748B 50%, #1E293B 100%)',
+            boxShadow: '0 0 5px rgba(0,0,0,0.6)'
+          }}
+        />
+
+        {/* Swivel Pivot Mounting Bracket */}
+        <div
+          style={{
+            width: '18px',
+            height: '11px',
+            borderRadius: '4px 4px 0 0',
+            background: 'linear-gradient(180deg, #475569 0%, #1E293B 55%, #0F172A 100%)',
+            border: '1px solid #111827',
+            boxShadow: '0 2px 6px rgba(0,0,0,0.7), inset 0 1px 0 rgba(255,255,255,0.25)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          }}
+        >
+          {/* Brass Hex Screw on Swivel */}
+          <div
+            style={{
+              width: '5px',
+              height: '5px',
+              borderRadius: '50%',
+              backgroundColor: '#F59E0B',
+              border: '0.5px solid #78350F',
+              boxShadow: 'inset 0 0.5px 0 rgba(255,255,255,0.6)'
+            }}
+          />
+        </div>
+      </div>
+
+      {/* ================= 2. LEFT CABLE CONNECTOR & LOOPING CORD (TACTICAL ONLY) ================= */}
       <div
         style={{
           position: 'absolute',
@@ -253,7 +411,37 @@ export default function RuggedScreen3D({
         </svg>
       </div>
 
-      {/* ================= 2. MAIN CHASSIS (MORPHING HOUSING) ================= */}
+      {/* ================= 3. TABLET MAGNETIC STYLUS (TABLET ONLY) ================= */}
+      <div
+        style={{
+          position: 'absolute',
+          top: '-9px',
+          left: '30%',
+          width: '40%',
+          height: '6.5px',
+          borderRadius: '3.5px',
+          background: 'linear-gradient(180deg, #FFFFFF 0%, #F1F5F9 55%, #CBD5E1 100%)',
+          boxShadow: '0 3px 8px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.95)',
+          border: '0.5px solid rgba(148, 163, 184, 0.6)',
+          opacity: isTablet ? 1 : 0,
+          transform: isTablet ? 'translateY(0) scale(1)' : 'translateY(8px) scale(0.6)',
+          pointerEvents: 'none',
+          transition: 'all 0.5s cubic-bezier(0.34, 1.25, 0.64, 1)',
+          zIndex: 15,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 5px',
+          boxSizing: 'border-box'
+        }}
+      >
+        <div style={{ width: '4px', height: '4px', borderRadius: '50%', backgroundColor: '#64748B' }} />
+        {/* Magnetic wireless charging band */}
+        <div style={{ width: '12px', height: '2px', backgroundColor: '#94A3B8', borderRadius: '1px' }} />
+        <div style={{ width: '5px', height: '3px', backgroundColor: '#38BDF8', borderRadius: '1px', boxShadow: '0 0 4px #38BDF8' }} />
+      </div>
+
+      {/* ================= 4. MAIN CHASSIS (MORPHING HOUSING) ================= */}
       <div
         style={{
           position: 'absolute',
@@ -263,14 +451,24 @@ export default function RuggedScreen3D({
             ? 'linear-gradient(145deg, #334155 0%, #1E293B 40%, #0F172A 100%)'
             : isLaptop
             ? 'linear-gradient(145deg, #374151 0%, #1F2937 45%, #111827 100%)'
+            : isTablet
+            ? 'linear-gradient(145deg, #3F4756 0%, #252B37 45%, #141821 100%)'
+            : isTV
+            ? 'linear-gradient(145deg, #1E232E 0%, #11141B 60%, #090B0E 100%)'
             : 'linear-gradient(145deg, #2D333F 0%, #1A1E27 45%, #0F1218 100%)',
           boxShadow: isMobile
             ? 'inset 0 1px 1px rgba(255,255,255,0.35), inset 0 -2px 4px rgba(0,0,0,0.8), 0 0 0 2px #334155, 0 16px 36px rgba(0,0,0,0.5)'
             : isLaptop
             ? 'inset 0 1px 1px rgba(255,255,255,0.25), inset 0 -2px 4px rgba(0,0,0,0.8), 0 0 0 1.5px #374151, 0 20px 40px rgba(0,0,0,0.5)'
+            : isTablet
+            ? 'inset 0 1px 1.5px rgba(255,255,255,0.3), inset 0 -2px 4px rgba(0,0,0,0.8), 0 0 0 1.5px #475569, 0 22px 44px rgba(0,0,0,0.55)'
+            : isTV
+            ? 'inset 0 1px 1px rgba(255,255,255,0.2), inset 0 -2px 4px rgba(0,0,0,0.85), 0 0 0 1px #334155, 0 26px 50px rgba(0,0,0,0.6)'
             : 'inset 0 2px 1px rgba(255,255,255,0.18), inset 0 -2px 4px rgba(0,0,0,0.8), 0 20px 40px rgba(0,0,0,0.5)',
           border: isMobile
             ? '1.5px solid rgba(255,255,255,0.22)'
+            : isTV
+            ? '1px solid rgba(255,255,255,0.1)'
             : '1px solid rgba(255,255,255,0.14)',
           overflow: 'hidden',
           display: 'flex',
@@ -309,13 +507,21 @@ export default function RuggedScreen3D({
           }}
         />
 
-        {/* ================= 3. INNER SCREEN BEZEL & RECESSED FRAME ================= */}
+        {/* ================= 5. INNER SCREEN BEZEL & RECESSED FRAME ================= */}
         <div
           style={{
             position: 'relative',
             width: '100%',
             height: '100%',
-            borderRadius: isMobile ? '34px' : isLaptop ? '8px' : '10px',
+            borderRadius: isMobile 
+              ? '34px' 
+              : isTablet 
+              ? '14px' 
+              : isTV 
+              ? '4px' 
+              : isLaptop 
+              ? '8px' 
+              : '10px',
             backgroundColor: '#05070B',
             boxShadow: 'inset 0 0 16px rgba(0,0,0,0.9), 0 0 0 1.5px #11141B',
             overflow: 'hidden',
@@ -412,6 +618,60 @@ export default function RuggedScreen3D({
             }}
           />
 
+          {/* Tablet Front Camera & Ambient Sensor */}
+          <div
+            style={{
+              position: 'absolute',
+              top: '4px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              display: 'flex',
+              alignItems: 'center',
+              gap: '6px',
+              opacity: isTablet ? 1 : 0,
+              pointerEvents: 'none',
+              transition: 'opacity 0.4s ease',
+              zIndex: 14
+            }}
+          >
+            <div
+              style={{
+                width: '6px',
+                height: '6px',
+                borderRadius: '50%',
+                background: 'radial-gradient(circle at 35% 35%, #1E3A8A 0%, #000 70%)',
+                border: '1px solid #334155'
+              }}
+            />
+            <div
+              style={{
+                width: '3.5px',
+                height: '3.5px',
+                borderRadius: '50%',
+                backgroundColor: '#10B981',
+                boxShadow: '0 0 4px #10B981'
+              }}
+            />
+          </div>
+
+          {/* Tablet Bottom Home Bar */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: '6px',
+              left: '50%',
+              transform: 'translateX(-50%)',
+              width: isTablet ? '30%' : '0px',
+              height: isTablet ? '3.5px' : '0px',
+              backgroundColor: 'rgba(255, 255, 255, 0.65)',
+              borderRadius: '9999px',
+              zIndex: 14,
+              opacity: isTablet ? 1 : 0,
+              pointerEvents: 'none',
+              transition: 'all 0.4s ease'
+            }}
+          />
+
           {/* Laptop Webcam Notch */}
           <div
             style={{
@@ -453,6 +713,62 @@ export default function RuggedScreen3D({
             />
           </div>
 
+          {/* TV Bottom Integrated Soundbar Chin */}
+          <div
+            style={{
+              position: 'absolute',
+              bottom: 0,
+              left: 0,
+              right: 0,
+              height: '18px',
+              backgroundColor: '#090B0E',
+              borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+              opacity: isTV ? 1 : 0,
+              pointerEvents: 'none',
+              transition: 'opacity 0.45s ease',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              padding: '0 14px',
+              boxSizing: 'border-box',
+              zIndex: 14
+            }}
+          >
+            {/* Left micro grille */}
+            <div
+              style={{
+                flex: 1,
+                height: '4px',
+                marginRight: '12px',
+                background: 'repeating-linear-gradient(90deg, #1E293B, #1E293B 2px, transparent 2px, transparent 4px)',
+                opacity: 0.6
+              }}
+            />
+            {/* TV Standby Brand LED */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '5px' }}>
+              <span style={{ fontSize: '8px', fontWeight: 900, color: '#64748B', letterSpacing: '0.12em' }}>JOBGEN</span>
+              <div
+                style={{
+                  width: '4px',
+                  height: '4px',
+                  borderRadius: '50%',
+                  backgroundColor: '#38BDF8',
+                  boxShadow: '0 0 6px #38BDF8, 0 0 12px rgba(56, 189, 248, 0.8)'
+                }}
+              />
+            </div>
+            {/* Right micro grille */}
+            <div
+              style={{
+                flex: 1,
+                height: '4px',
+                marginLeft: '12px',
+                background: 'repeating-linear-gradient(90deg, #1E293B, #1E293B 2px, transparent 2px, transparent 4px)',
+                opacity: 0.6
+              }}
+            />
+          </div>
+
           {/* CRT Scanline / Tactical Texture (Screen mode only) */}
           <div
             style={{
@@ -482,7 +798,7 @@ export default function RuggedScreen3D({
         </div>
       </div>
 
-      {/* ================= 4. INDUSTRIAL CORNER PROTECTIVE BUMPERS (TACTICAL ONLY) ================= */}
+      {/* ================= 6. INDUSTRIAL CORNER PROTECTIVE BUMPERS (TACTICAL ONLY) ================= */}
       {/* Corner 1: TOP-LEFT BUMPER */}
       <div
         style={{
@@ -621,7 +937,57 @@ export default function RuggedScreen3D({
         </svg>
       </div>
 
-      {/* ================= 5. LAPTOP 3D BASE DECK (UNFOLDS IN 3D PERSPECTIVE) ================= */}
+      {/* ================= 7. TV DUAL STAND FEET (TV ONLY) ================= */}
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '-16px',
+          left: '12%',
+          width: '32px',
+          height: '18px',
+          opacity: isTV ? 1 : 0,
+          transform: isTV ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.4)',
+          pointerEvents: 'none',
+          transition: 'all 0.5s cubic-bezier(0.34, 1.25, 0.64, 1)',
+          zIndex: 4
+        }}
+      >
+        <svg width="32" height="18" viewBox="0 0 32 18" fill="none">
+          <path d="M 16 0 L 2 16 L 8 18 L 18 3 Z" fill="url(#tvStandGrad)" />
+          <path d="M 16 0 L 30 16 L 24 18 L 14 3 Z" fill="url(#tvStandGradDark)" />
+        </svg>
+      </div>
+      <div
+        style={{
+          position: 'absolute',
+          bottom: '-16px',
+          right: '12%',
+          width: '32px',
+          height: '18px',
+          opacity: isTV ? 1 : 0,
+          transform: isTV ? 'translateY(0) scale(1)' : 'translateY(-10px) scale(0.4)',
+          pointerEvents: 'none',
+          transition: 'all 0.5s cubic-bezier(0.34, 1.25, 0.64, 1)',
+          zIndex: 4
+        }}
+      >
+        <svg width="32" height="18" viewBox="0 0 32 18" fill="none">
+          <path d="M 16 0 L 2 16 L 8 18 L 18 3 Z" fill="url(#tvStandGrad)" />
+          <path d="M 16 0 L 30 16 L 24 18 L 14 3 Z" fill="url(#tvStandGradDark)" />
+          <defs>
+            <linearGradient id="tvStandGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#94A3B8" />
+              <stop offset="100%" stopColor="#334155" />
+            </linearGradient>
+            <linearGradient id="tvStandGradDark" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stopColor="#64748B" />
+              <stop offset="100%" stopColor="#1E293B" />
+            </linearGradient>
+          </defs>
+        </svg>
+      </div>
+
+      {/* ================= 8. LAPTOP 3D BASE DECK (UNFOLDS IN 3D PERSPECTIVE) ================= */}
       <div
         style={{
           position: 'absolute',
@@ -728,7 +1094,7 @@ export default function RuggedScreen3D({
         />
       </div>
 
-      {/* ================= 6. SMARTPHONE PHYSICAL SIDE BUTTONS ================= */}
+      {/* ================= 9. SMARTPHONE PHYSICAL SIDE BUTTONS ================= */}
       {/* Left side: Action Button + Volume Buttons */}
       <div
         style={{
