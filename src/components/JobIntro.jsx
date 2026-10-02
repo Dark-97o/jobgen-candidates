@@ -1,20 +1,53 @@
-import React, { useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 
 export default function JobIntro({ onComplete }) {
   const videoRef = useRef(null);
   const completedRef = useRef(false);
+  const [videoSrc, setVideoSrc] = useState('/jobintro.mp4');
+  const blobUrlRef = useRef(null);
 
   const finishIntro = () => {
     if (completedRef.current) return;
     completedRef.current = true;
+    if (blobUrlRef.current) {
+      try {
+        URL.revokeObjectURL(blobUrlRef.current);
+      } catch {
+        // ignore
+      }
+    }
     if (onComplete) onComplete();
   };
+
+  // Pre-load video data into memory buffer to guarantee stutter-free 60fps playback
+  useEffect(() => {
+    let isCancelled = false;
+
+    fetch('/jobintro.mp4')
+      .then((res) => {
+        if (!res.ok) throw new Error('Fetch failed');
+        return res.blob();
+      })
+      .then((blob) => {
+        if (isCancelled) return;
+        const objectUrl = URL.createObjectURL(blob);
+        blobUrlRef.current = objectUrl;
+        setVideoSrc(objectUrl);
+      })
+      .catch(() => {
+        // Fallback to static URL
+      });
+
+    return () => {
+      isCancelled = true;
+    };
+  }, []);
 
   useEffect(() => {
     const video = videoRef.current;
     if (!video) return;
 
-    // Strict 1.25x speed requirement
+    // Strict 1.25x speed
     const applySpeed = () => {
       video.playbackRate = 1.25;
     };
@@ -24,21 +57,25 @@ export default function JobIntro({ onComplete }) {
     video.addEventListener('canplay', applySpeed);
     video.addEventListener('play', applySpeed);
 
-    // Start video playback cleanly
-    const startPlay = async () => {
+    // Play as soon as ready
+    const playVideo = async () => {
       try {
         video.playbackRate = 1.25;
         await video.play();
       } catch {
-        // Fallback for strict browser autoplay
         video.muted = true;
         video.playbackRate = 1.25;
         video.play().catch(() => {});
       }
     };
-    startPlay();
 
-    // Safety timeout: 4.0s / 1.25 = 3.2s + 0.4s buffer = 3.6s
+    if (video.readyState >= 2) {
+      playVideo();
+    } else {
+      video.addEventListener('canplay', playVideo, { once: true });
+    }
+
+    // Safety timeout: 2.85s / 1.25 = 2.28s + 1.2s buffer = 3.5s
     const safetyTimer = setTimeout(() => {
       finishIntro();
     }, 3600);
@@ -57,8 +94,9 @@ export default function JobIntro({ onComplete }) {
       video.removeEventListener('loadedmetadata', applySpeed);
       video.removeEventListener('canplay', applySpeed);
       video.removeEventListener('play', applySpeed);
+      video.removeEventListener('canplay', playVideo);
     };
-  }, []);
+  }, [videoSrc]);
 
   return (
     <div
@@ -78,7 +116,8 @@ export default function JobIntro({ onComplete }) {
     >
       <video
         ref={videoRef}
-        src="/jobintro.mp4"
+        key={videoSrc}
+        src={videoSrc}
         playsInline
         autoPlay
         muted

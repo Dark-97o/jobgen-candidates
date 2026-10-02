@@ -219,7 +219,7 @@ const FAQS = [
 // =========================================================================
 // FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REAL RESUME
 // =========================================================================
-function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick, onPricingClick }) {
+function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick, onPricingClick, isActive = true }) {
   const resumeContainerRef = useRef(null);
   const titleWrapperRef = useRef(null);
   const glintRef = useRef(null);
@@ -567,6 +567,7 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           containerRef={resumeContainerRef}
           glintRef={glintRef}
           videoSrc="/jobs.mp4"
+          isActive={isActive}
           onPointerEnter={handleScreenPointerEnter}
           onPointerLeave={handleScreenPointerLeave}
         />
@@ -635,7 +636,7 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
   );
 }
 
-export default function LandingPage({ onSignIn, onLaunchApp }) {
+export default function LandingPage({ onSignIn, onLaunchApp, isIntroActive = false }) {
   const [activeFeatureTab, setActiveFeatureTab] = useState(0);
   const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'yearly'
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
@@ -1025,6 +1026,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         onScanClick={() => scrollToSection('ats-scanner')} 
         onProductivityClick={() => scrollToSection('productivity')}
         onPricingClick={() => scrollToSection('pricing')}
+        isActive={!isIntroActive}
       />
 
       {/* =========================================================================

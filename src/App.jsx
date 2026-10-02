@@ -129,6 +129,7 @@ export default function App() {
           <JobIntro onComplete={handleIntroComplete} />
         )}
         <LandingPage 
+          isIntroActive={!introDone}
           onSignIn={() => setAuthMode('login')} 
           onLaunchApp={() => {
             sessionStorage.setItem('jobgen_candidate_auth', 'true');

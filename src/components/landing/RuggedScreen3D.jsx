@@ -16,13 +16,13 @@ export default function RuggedScreen3D({
   glintRef,
   videoSrc = '/jobs.mp4',
   poster = '/preview_clean.png',
+  isActive = true,
   onPointerEnter,
   onPointerLeave
 }) {
   const [isHovered, setIsHovered] = useState(false);
   const [isDistorting, setIsDistorting] = useState(false);
   const [distortKey, setDistortKey] = useState(0);
-  const [pulseOrigin, setPulseOrigin] = useState({ x: 50, y: 50 });
   const distortTimerRef = useRef(null);
   const videoRef = useRef(null);
 
@@ -38,6 +38,13 @@ export default function RuggedScreen3D({
     const video = videoRef.current;
     if (!video) return;
 
+    if (!isActive) {
+      if (!video.paused) {
+        try { video.pause(); } catch {}
+      }
+      return;
+    }
+
     video.defaultMuted = true;
     video.muted = true;
     video.playsInline = true;
@@ -46,9 +53,7 @@ export default function RuggedScreen3D({
       if (video.paused) {
         const promise = video.play();
         if (promise !== undefined) {
-          promise.catch((err) => {
-            console.warn('[RuggedScreen3D] Autoplay blocked, waiting for user gesture:', err);
-          });
+          promise.catch(() => {});
         }
       }
     };
@@ -81,17 +86,7 @@ export default function RuggedScreen3D({
 
   const handlePointerEnter = (e) => {
     setIsHovered(true);
-    // Track pointer entry coordinates for localized pulse wave origin
-    if (e && e.clientX && e.clientY) {
-      const rect = e.currentTarget.getBoundingClientRect();
-      const x = Math.max(8, Math.min(92, ((e.clientX - rect.left) / rect.width) * 100));
-      const y = Math.max(8, Math.min(92, ((e.clientY - rect.top) / rect.height) * 100));
-      setPulseOrigin({ x, y });
-    } else {
-      setPulseOrigin({ x: 50, y: 50 });
-    }
-
-    // Trigger one-shot pulse wave distortion across the figure
+    // Trigger one-shot liquid surface distortion across the figure
     setDistortKey((prev) => prev + 1);
     setIsDistorting(true);
     if (distortTimerRef.current) clearTimeout(distortTimerRef.current);
@@ -298,59 +293,7 @@ export default function RuggedScreen3D({
             <source src={videoSrc} type="video/mp4" />
           </video>
 
-          {/* Traveling Pulse Wave Shockwave Across the 3D Figure (Luminous Red) */}
-          {isDistorting && (
-            <div
-              key={`pulse-overlay-${distortKey}`}
-              style={{
-                position: 'absolute',
-                left: `${pulseOrigin.x}%`,
-                top: `${pulseOrigin.y}%`,
-                width: '100px',
-                height: '100px',
-                pointerEvents: 'none',
-                zIndex: 4,
-                transform: 'translate(-50%, -50%)',
-              }}
-            >
-              {/* Primary Pulse Wavefront (Neon Red) */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: 0,
-                  borderRadius: '50%',
-                  border: '2.5px solid rgba(239, 68, 68, 0.95)',
-                  boxShadow: '0 0 28px 5px rgba(239, 68, 68, 0.65), 0 0 45px 10px rgba(220, 38, 38, 0.35), inset 0 0 16px 2px rgba(255, 180, 180, 0.5)',
-                  animation: 'pulseWaveFront 1.15s cubic-bezier(0.12, 0.7, 0.15, 1) forwards',
-                  backdropFilter: 'contrast(1.18) brightness(1.1)',
-                  WebkitBackdropFilter: 'contrast(1.18) brightness(1.1)',
-                }}
-              />
 
-              {/* Secondary Trailing Echo Ripple (Crimson / Coral Red) */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: '-15px',
-                  borderRadius: '50%',
-                  border: '1.5px solid rgba(251, 113, 133, 0.8)',
-                  boxShadow: '0 0 20px 3px rgba(244, 63, 94, 0.4), inset 0 0 12px 1px rgba(255, 200, 200, 0.3)',
-                  animation: 'pulseWaveEcho 1.15s cubic-bezier(0.18, 0.75, 0.2, 1) forwards',
-                }}
-              />
-
-              {/* Atmospheric Water Caustic Gradient Mesh (Red Refraction) */}
-              <div
-                style={{
-                  position: 'absolute',
-                  inset: '-30px',
-                  borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, rgba(225, 29, 72, 0.12) 40%, transparent 70%)',
-                  animation: 'pulseWaveGlow 1.15s cubic-bezier(0.15, 0.8, 0.2, 1) forwards',
-                }}
-              />
-            </div>
-          )}
 
           {/* CRT Scanline / Tactical Bezel Texture Overlay */}
           <div
