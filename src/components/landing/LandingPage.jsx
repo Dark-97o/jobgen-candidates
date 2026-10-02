@@ -36,7 +36,6 @@ import InteractiveFluidGradient from './InteractiveFluidGradient';
 import RuggedScreen3D from './RuggedScreen3D';
 import HandwrittenSubtitle from './HandwrittenSubtitle';
 import RevealingTitle from './RevealingTitle';
-import VideoShowcaseSection from './VideoShowcaseSection';
 import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
 import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
 
@@ -991,7 +990,6 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           <nav style={{ display: 'flex', alignItems: 'center', gap: '22px' }} className="nav-desktop">
             {[
               { label: 'Features', id: 'features' },
-              { label: 'Productivity', id: 'productivity' },
               { label: 'Interview Lab', id: 'interview-copilot' },
               { label: 'ATS Scanner', id: 'ats-scanner' },
               { label: 'Pricing', id: 'pricing' },
@@ -1090,355 +1088,25 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       </header>
 
       {/* =========================================================================
-          2 & 3. HERO & VIDEO REVEAL CONTAINER
-          Hero section scrolls away over the stationary video section underneath
+          2. FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REALISTIC RESUME
           ========================================================================= */}
-      <div 
-        style={{
-          position: 'relative',
-          width: '100%',
-          height: '200vh'
-        }}
-      >
-        {/* Stationary Sticky Video Section: Waiting underneath at top: 0 */}
-        <div 
-          style={{
-            position: 'sticky',
-            top: 0,
-            width: '100%',
-            height: '100vh',
-            zIndex: 1,
-            backgroundColor: '#FFFFFF',
-            overflow: 'hidden'
-          }}
-        >
-          <VideoShowcaseSection />
-        </div>
-
-        {/* Hero Section: Positioned on top (zIndex: 2), scrolls away over the video */}
-        <div 
-          style={{
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100vh',
-            zIndex: 2
-          }}
-        >
-          <FluidBlueHero 
-            onSignIn={onSignIn} 
-            onLaunchApp={onLaunchApp} 
-            onScanClick={() => scrollToSection('ats-scanner')} 
-            onProductivityClick={() => scrollToSection('productivity')}
-            onPricingClick={() => scrollToSection('pricing')}
-          />
-        </div>
-      </div>
+      <FluidBlueHero 
+        onSignIn={onSignIn} 
+        onLaunchApp={onLaunchApp} 
+        onScanClick={() => scrollToSection('ats-scanner')} 
+        onProductivityClick={() => scrollToSection('features')} 
+        onPricingClick={() => scrollToSection('pricing')}
+      />
 
       {/* =========================================================================
-          4. INTERACTIVE AUTONOMOUS WORKSPACE PREVIEW
+          3. INTERACTIVE AUTONOMOUS WORKSPACE PREVIEW
           ========================================================================= */}
       <AutonomousWorkspacePreview onLaunchApp={onLaunchApp} />
 
       {/* =========================================================================
-          5. SOCIAL PROOF / INTERACTIVE 3D FALLING LOGO BALLS
+          4. SOCIAL PROOF / INTERACTIVE 3D FALLING LOGO BALLS
           ========================================================================= */}
       <InteractiveLogoBallsBand />
-
-      {/* =========================================================================
-          4. UNMATCHED PRODUCTIVITY — LIGHT ASYMMETRIC BENTO GRID
-          ========================================================================= */}
-      <section 
-        id="productivity"
-        style={{
-          padding: '100px 0',
-          position: 'relative',
-          backgroundColor: '#FFFFFF'
-        }}
-      >
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          
-          {/* Section Header */}
-          <div style={{ maxWidth: '680px', marginBottom: '56px' }}>
-            <div 
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '4px 12px',
-                borderRadius: '9999px',
-                backgroundColor: '#EFF6FF',
-                border: '1px solid #BFDBFE',
-                color: '#1A53CF',
-                fontSize: '11px',
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                letterSpacing: '0.05em',
-                marginBottom: '16px'
-              }}
-            >
-              <Cpu size={12} />
-              <span>Unmatched Productivity</span>
-            </div>
-
-            <h2 
-              style={{
-                fontSize: 'clamp(32px, 4.5vw, 56px)',
-                fontWeight: 900,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.05,
-                color: '#090C15',
-                marginBottom: '16px'
-              }}
-            >
-              Engineered for candidates who demand an unfair advantage.
-            </h2>
-
-            <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6 }}>
-              JobGen integrates resume engineering, opportunity tracking, behavioral coaching, and career strategy into one hyper-fluid workspace.
-            </p>
-          </div>
-
-          {/* Asymmetric Bento Grid on White */}
-          <div 
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(12, 1fr)',
-              gap: '20px'
-            }}
-          >
-            {/* Bento 1: Keyboard Shortcuts / Command Bar (Col 4) */}
-            <div 
-              className="white-bento-card" 
-              style={{ 
-                gridColumn: 'span 4', 
-                padding: '32px 28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                minHeight: '360px'
-              }}
-            >
-              <div>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #BFDBFE' }}>
-                  <Command size={20} color="#1A53CF" />
-                </div>
-                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
-                  Keyboard shortcuts & command bar
-                </h3>
-                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5 }}>
-                  Work at high velocity with instant ⌘K search, stage flipping, and document switching.
-                </p>
-              </div>
-
-              {/* Simulated Command Palette UI */}
-              <div 
-                style={{
-                  backgroundColor: '#F8FAFC',
-                  borderRadius: '12px',
-                  border: '1px solid #E2E8F0',
-                  padding: '12px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '8px'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '12px', color: '#1A53CF', padding: '6px 8px', borderRadius: '6px', backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE' }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
-                    <Search size={12} color="#1A53CF" />
-                    <span style={{ fontWeight: 700 }}>Search target roles...</span>
-                  </div>
-                  <span style={{ fontSize: '10px', padding: '2px 5px', borderRadius: '4px', backgroundColor: '#FFFFFF', border: '1px solid #CBD5E1', color: '#090C15' }}>⌘K</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11.5px', color: '#475569', padding: '4px 8px' }}>
-                  <span>Tailor resume for Canva</span>
-                  <span style={{ fontSize: '10px', color: '#64748B' }}>⌘T</span>
-                </div>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '11.5px', color: '#475569', padding: '4px 8px' }}>
-                  <span>Start Mock Round with Emma</span>
-                  <span style={{ fontSize: '10px', color: '#64748B' }}>⌘E</span>
-                </div>
-              </div>
-            </div>
-
-            {/* Bento 2: Autonomous Kanban Pipeline (Col 8) */}
-            <div 
-              className="white-bento-card" 
-              style={{ 
-                gridColumn: 'span 8', 
-                padding: '32px 28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                minHeight: '360px'
-              }}
-            >
-              <div>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #A7F3D0' }}>
-                  <LayoutDashboard size={20} color="#059669" />
-                </div>
-                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
-                  Autonomous Kanban Pipeline & Opportunity Tracking
-                </h3>
-                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5, maxWidth: '580px' }}>
-                  Track applications across Bookmarked, Applied, Screening, Interviewing, and Offer stages with salary benchmarking and automated follow-up alerts.
-                </p>
-              </div>
-
-              {/* Simulated Kanban Columns */}
-              <div 
-                style={{
-                  display: 'grid',
-                  gridTemplateColumns: 'repeat(3, 1fr)',
-                  gap: '12px',
-                  marginTop: '20px'
-                }}
-              >
-                {/* Column 1 */}
-                <div style={{ backgroundColor: '#F8FAFC', borderRadius: '10px', padding: '12px', border: '1px solid #E2E8F0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', fontWeight: 800, color: '#64748B' }}>
-                    <span>APPLIED (12)</span>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#1A53CF' }} />
-                  </div>
-                  <div style={{ backgroundColor: '#FFFFFF', borderRadius: '6px', padding: '8px', border: '1px solid #E2E8F0', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15' }}>Canva &bull; Product Lead</div>
-                    <div style={{ fontSize: '10.5px', color: '#059669', marginTop: '2px', fontWeight: 700 }}>$195K &bull; 92% Match</div>
-                  </div>
-                </div>
-
-                {/* Column 2 */}
-                <div style={{ backgroundColor: '#F8FAFC', borderRadius: '10px', padding: '12px', border: '1px solid #E2E8F0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', fontWeight: 800, color: '#D97706' }}>
-                    <span>INTERVIEWING (4)</span>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#F59E0B' }} />
-                  </div>
-                  <div style={{ backgroundColor: '#FFFFFF', borderRadius: '6px', padding: '8px', border: '1px solid #FDE68A', boxShadow: '0 1px 3px rgba(15, 23, 42, 0.03)' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15' }}>Atlassian &bull; Staff Architect</div>
-                    <div style={{ fontSize: '10.5px', color: '#D97706', marginTop: '2px', fontWeight: 700 }}>Round 3: System Design</div>
-                  </div>
-                </div>
-
-                {/* Column 3 */}
-                <div style={{ backgroundColor: '#F8FAFC', borderRadius: '10px', padding: '12px', border: '1px solid #E2E8F0' }}>
-                  <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '8px', fontSize: '11px', fontWeight: 800, color: '#059669' }}>
-                    <span>OFFERS (2)</span>
-                    <span style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                  </div>
-                  <div style={{ backgroundColor: '#ECFDF5', borderRadius: '6px', padding: '8px', border: '1px solid #A7F3D0' }}>
-                    <div style={{ fontSize: '12px', fontWeight: 800, color: '#065F46' }}>Stripe &bull; Tech Lead</div>
-                    <div style={{ fontSize: '10.5px', color: '#059669', marginTop: '2px', fontWeight: 700 }}>$230K Base + Equity</div>
-                  </div>
-                </div>
-              </div>
-            </div>
-
-            {/* Bento 3: Precision ATS Scoring (Col 8) */}
-            <div 
-              className="white-bento-card" 
-              style={{ 
-                gridColumn: 'span 8', 
-                padding: '32px 28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                minHeight: '360px'
-              }}
-            >
-              <div>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#F3E8FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #E9D5FF' }}>
-                  <FileText size={20} color="#7C3AED" />
-                </div>
-                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
-                  ATS Scoring Engine & Precision Keyword Calibration
-                </h3>
-                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5, maxWidth: '580px' }}>
-                  Never guess what recruiters want. JobGen scans target job descriptions and aligns your experience to strict keyword rubrics.
-                </p>
-              </div>
-
-              {/* Simulated ATS Calibration Gauge */}
-              <div 
-                style={{
-                  backgroundColor: '#F8FAFC',
-                  borderRadius: '12px',
-                  padding: '16px 20px',
-                  border: '1px solid #E2E8F0',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '16px',
-                  marginTop: '20px'
-                }}
-              >
-                <div style={{ display: 'flex', alignItems: 'center', gap: '16px' }}>
-                  <div style={{ width: '54px', height: '54px', borderRadius: '50%', backgroundColor: '#ECFDF5', border: '2px solid #10B981', display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                    <span style={{ fontSize: '18px', fontWeight: 900, color: '#059669', lineHeight: 1 }}>94</span>
-                    <span style={{ fontSize: '8px', color: '#047857', fontWeight: 800 }}>ATS</span>
-                  </div>
-                  <div>
-                    <div style={{ fontSize: '13px', fontWeight: 800, color: '#090C15' }}>Workday & Greenhouse Optimized</div>
-                    <div style={{ fontSize: '11.5px', color: '#64748B' }}>99.8% Semantic Parse Accuracy Verified</div>
-                  </div>
-                </div>
-
-                <div style={{ display: 'flex', gap: '6px', flexWrap: 'wrap' }}>
-                  {['+ TypeScript 5.4', '+ System Architecture', '+ Micro-Frontends'].map((kw, idx) => (
-                    <span key={idx} style={{ fontSize: '11px', fontWeight: 700, padding: '3px 8px', borderRadius: '6px', backgroundColor: '#ECFDF5', color: '#065F46', border: '1px solid #A7F3D0' }}>
-                      {kw}
-                    </span>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Bento 4: 12-Week Strategic Roadmap (Col 4) */}
-            <div 
-              className="white-bento-card" 
-              style={{ 
-                gridColumn: 'span 4', 
-                padding: '32px 28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                minHeight: '360px'
-              }}
-            >
-              <div>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '20px', border: '1px solid #FDE68A' }}>
-                  <Compass size={20} color="#D97706" />
-                </div>
-                <h3 style={{ fontSize: '19px', fontWeight: 800, color: '#090C15', marginBottom: '8px' }}>
-                  12-Week Strategic Roadmap
-                </h3>
-                <p style={{ fontSize: '13.5px', color: '#475569', lineHeight: 1.5 }}>
-                  Structured milestone time-blocking, recruiter reach-out templates, and compensation scripts.
-                </p>
-              </div>
-
-              {/* Simulated Roadmap Progress */}
-              <div 
-                style={{
-                  backgroundColor: '#F8FAFC',
-                  borderRadius: '12px',
-                  padding: '12px',
-                  border: '1px solid #E2E8F0'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', fontWeight: 800, marginBottom: '6px' }}>
-                  <span style={{ color: '#090C15' }}>Phase 4: Technical Deep-Dive</span>
-                  <span style={{ color: '#D97706' }}>8/10 Done</span>
-                </div>
-                <div style={{ width: '100%', height: '6px', borderRadius: '9999px', backgroundColor: '#E2E8F0', overflow: 'hidden' }}>
-                  <div style={{ width: '80%', height: '100%', backgroundColor: '#D97706', borderRadius: '9999px' }} />
-                </div>
-              </div>
-            </div>
-
-          </div>
-        </div>
-      </section>
 
       {/* =========================================================================
           5. "PREPARE WITH AI" INTERVIEW SIMULATOR (WHITE / LIGHT PALETTE)
