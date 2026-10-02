@@ -39,6 +39,7 @@ import RevealingTitle from './RevealingTitle';
 import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
 import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
 import BlueMistAnimation from './BlueMistAnimation';
+import BentoVideoCard from './BentoVideoCard';
 
 // ==========================================
 // STATIC DATA & CONTENT FROM CANDIDATES.JOBGEN.AI
@@ -1166,233 +1167,37 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               gap: '24px'
             }}
           >
-            {/* ROW 1 — CARD 1: RECTANGLE (Col 8) — Kanban Pipeline (sc2.png) */}
-            <div 
-              className="white-bento-card productivity-card-rect" 
-              style={{ 
-                gridColumn: 'span 8', 
-                height: '380px',
-                position: 'relative',
-                overflow: 'hidden',
-                borderRadius: '24px',
-                border: '1px solid rgba(226, 232, 240, 0.85)',
-                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04)',
-                backgroundColor: '#0F172A',
-                cursor: 'pointer'
-              }}
-            >
-              <img 
-                src="/sc2.png" 
-                alt="Autonomous Kanban Pipeline & Opportunity Tracking" 
-                className="bento-img-hover"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'top left',
-                  display: 'block'
-                }} 
-              />
-              {/* Bottom Black Fade Overlay with Headline Text */}
-              <div 
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: '48px 32px 26px 32px',
-                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.72) 45%, rgba(0, 0, 0, 0.2) 80%, transparent 100%)',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  pointerEvents: 'none'
-                }}
-              >
-                <h3 
-                  style={{ 
-                    fontSize: '22px', 
-                    fontWeight: 800, 
-                    color: '#FFFFFF', 
-                    letterSpacing: '-0.02em', 
-                    lineHeight: 1.25,
-                    margin: 0,
-                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
-                  }}
-                >
-                  Autonomous Kanban Pipeline & Opportunity Tracking
-                </h3>
-              </div>
-            </div>
+            {/* ROW 1 — CARD 1: RECTANGLE (Col 8) — Kanban Pipeline (bento2.mp4) */}
+            <BentoVideoCard
+              src="/bento2.mp4"
+              headline="Autonomous Kanban Pipeline & Opportunity Tracking"
+              colSpan={8}
+              objectPosition="top left"
+            />
 
-            {/* ROW 1 — CARD 2: SQUARE (Col 4) — Resume Studio (sc4.png) */}
-            <div 
-              className="white-bento-card productivity-card-square" 
-              style={{ 
-                gridColumn: 'span 4', 
-                height: '380px',
-                position: 'relative',
-                overflow: 'hidden',
-                borderRadius: '24px',
-                border: '1px solid rgba(226, 232, 240, 0.85)',
-                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04)',
-                backgroundColor: '#0F172A',
-                cursor: 'pointer'
-              }}
-            >
-              <img 
-                src="/sc4.png" 
-                alt="Precision Resume Studio" 
-                className="bento-img-hover"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'top center',
-                  display: 'block'
-                }} 
-              />
-              {/* Bottom Black Fade Overlay with Headline Text */}
-              <div 
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: '48px 28px 26px 28px',
-                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.72) 45%, rgba(0, 0, 0, 0.2) 80%, transparent 100%)',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  pointerEvents: 'none'
-                }}
-              >
-                <h3 
-                  style={{ 
-                    fontSize: '22px', 
-                    fontWeight: 800, 
-                    color: '#FFFFFF', 
-                    letterSpacing: '-0.02em', 
-                    lineHeight: 1.25,
-                    margin: 0,
-                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
-                  }}
-                >
-                  Precision Resume Studio
-                </h3>
-              </div>
-            </div>
+            {/* ROW 1 — CARD 2: SQUARE (Col 4) — Resume Studio (bento4.mp4) */}
+            <BentoVideoCard
+              src="/bento4.mp4"
+              headline="Precision Resume Studio"
+              colSpan={4}
+              objectPosition="top center"
+            />
 
-            {/* ROW 2 — CARD 3: SQUARE (Col 4) — 12-Week Strategic Roadmap (sc3.png) */}
-            <div 
-              className="white-bento-card productivity-card-square" 
-              style={{ 
-                gridColumn: 'span 4', 
-                height: '380px',
-                position: 'relative',
-                overflow: 'hidden',
-                borderRadius: '24px',
-                border: '1px solid rgba(226, 232, 240, 0.85)',
-                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04)',
-                backgroundColor: '#0F172A',
-                cursor: 'pointer'
-              }}
-            >
-              <img 
-                src="/sc3.png" 
-                alt="12-Week Strategic Roadmap" 
-                className="bento-img-hover"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'top center',
-                  display: 'block'
-                }} 
-              />
-              {/* Bottom Black Fade Overlay with Headline Text */}
-              <div 
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: '48px 28px 26px 28px',
-                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.72) 45%, rgba(0, 0, 0, 0.2) 80%, transparent 100%)',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  pointerEvents: 'none'
-                }}
-              >
-                <h3 
-                  style={{ 
-                    fontSize: '22px', 
-                    fontWeight: 800, 
-                    color: '#FFFFFF', 
-                    letterSpacing: '-0.02em', 
-                    lineHeight: 1.25,
-                    margin: 0,
-                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
-                  }}
-                >
-                  12-Week Strategic Roadmap
-                </h3>
-              </div>
-            </div>
+            {/* ROW 2 — CARD 3: SQUARE (Col 4) — 12-Week Strategic Roadmap (bento3.mp4) */}
+            <BentoVideoCard
+              src="/bento3.mp4"
+              headline="12-Week Strategic Roadmap"
+              colSpan={4}
+              objectPosition="top center"
+            />
 
-            {/* ROW 2 — CARD 4: RECTANGLE (Col 8) — Target Role & Location Radar (sc1.png) */}
-            <div 
-              className="white-bento-card productivity-card-rect" 
-              style={{ 
-                gridColumn: 'span 8', 
-                height: '380px',
-                position: 'relative',
-                overflow: 'hidden',
-                borderRadius: '24px',
-                border: '1px solid rgba(226, 232, 240, 0.85)',
-                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04)',
-                backgroundColor: '#0F172A',
-                cursor: 'pointer'
-              }}
-            >
-              <img 
-                src="/sc1.png" 
-                alt="Target Role & Global Location Radar" 
-                className="bento-img-hover"
-                style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'top left',
-                  display: 'block'
-                }} 
-              />
-              {/* Bottom Black Fade Overlay with Headline Text */}
-              <div 
-                style={{
-                  position: 'absolute',
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  padding: '48px 32px 26px 32px',
-                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.72) 45%, rgba(0, 0, 0, 0.2) 80%, transparent 100%)',
-                  display: 'flex',
-                  alignItems: 'flex-end',
-                  pointerEvents: 'none'
-                }}
-              >
-                <h3 
-                  style={{ 
-                    fontSize: '22px', 
-                    fontWeight: 800, 
-                    color: '#FFFFFF', 
-                    letterSpacing: '-0.02em', 
-                    lineHeight: 1.25,
-                    margin: 0,
-                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
-                  }}
-                >
-                  Target Role & Global Location Radar
-                </h3>
-              </div>
-            </div>
+            {/* ROW 2 — CARD 4: RECTANGLE (Col 8) — Target Role & Location Radar (bento1.mp4) */}
+            <BentoVideoCard
+              src="/bento1.mp4"
+              headline="Target Role & Global Location Radar"
+              colSpan={8}
+              objectPosition="top left"
+            />
 
           </div>
         </div>
