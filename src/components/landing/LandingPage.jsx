@@ -40,6 +40,7 @@ import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
 import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
 import BlueMistAnimation from './BlueMistAnimation';
 import BentoVideoCard from './BentoVideoCard';
+import MeetEmmaSection from './MeetEmmaSection';
 
 // ==========================================
 // STATIC DATA & CONTENT FROM CANDIDATES.JOBGEN.AI
@@ -1191,180 +1192,12 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       <InteractiveLogoBallsBand />
 
       {/* =========================================================================
-          5. "PREPARE WITH AI" INTERVIEW SIMULATOR (WHITE / LIGHT PALETTE)
+          5. MEET EMMA: DARK THEME EMMA INTERVIEW & RESUME INTELLIGENCE SECTION
           ========================================================================= */}
-      <section 
-        id="interview-copilot"
-        style={{
-          padding: '100px 0',
-          borderTop: '1px solid #E2E8F0',
-          backgroundColor: '#F8FAFC',
-          position: 'relative'
-        }}
-      >
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
-          
-          <div style={{ textAlign: 'center', maxWidth: '720px', margin: '0 auto 60px auto' }}>
-            <div 
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '6px',
-                padding: '4px 12px',
-                borderRadius: '9999px',
-                backgroundColor: '#ECFDF5',
-                border: '1px solid #A7F3D0',
-                color: '#059669',
-                fontSize: '11px',
-                fontWeight: 800,
-                textTransform: 'uppercase',
-                marginBottom: '16px'
-              }}
-            >
-              <Video size={12} />
-              <span>Real-Time Voice & Behavioral Simulation</span>
-            </div>
-
-            <h2 
-              style={{
-                fontSize: 'clamp(32px, 4.5vw, 54px)',
-                fontWeight: 900,
-                letterSpacing: '-0.03em',
-                lineHeight: 1.05,
-                color: '#090C15',
-                marginBottom: '16px'
-              }}
-            >
-              Prepare with AI. Like in the real interview room.
-            </h2>
-
-            <p style={{ fontSize: '16px', color: '#475569', lineHeight: 1.6 }}>
-              Step into high-stakes loops with custom role-specific questions across HR, technical, hiring manager, and executive stages.
-            </p>
-          </div>
-
-          {/* Video Call HUD Simulator on White */}
-          <div 
-            style={{
-              maxWidth: '980px',
-              margin: '0 auto',
-              padding: '24px',
-              backgroundColor: '#FFFFFF',
-              borderRadius: '24px',
-              border: '1px solid #E2E8F0',
-              boxShadow: '0 24px 60px -10px rgba(15, 23, 42, 0.08)'
-            }}
-          >
-            {/* Call Header */}
-            <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', paddingBottom: '16px', borderBottom: '1px solid #F1F5F9' }}>
-              <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <span className="radar-live" style={{ width: '8px', height: '8px', borderRadius: '50%', backgroundColor: '#EF4444' }} />
-                <span style={{ fontSize: '13px', fontWeight: 800, color: '#090C15' }}>Emma AI &bull; Mock Round 3: System Design & Leadership</span>
-              </div>
-              <span style={{ fontSize: '11.5px', color: '#64748B', fontFamily: 'monospace', fontWeight: 700 }}>00:14:28 / 45:00</span>
-            </div>
-
-            {/* Video HUD Grid */}
-            <div 
-              style={{
-                display: 'grid',
-                gridTemplateColumns: 'minmax(0, 1.4fr) minmax(0, 1fr)',
-                gap: '20px',
-                marginTop: '20px'
-              }}
-              className="interview-sim-grid"
-            >
-              {/* Left: Emma AI Coach Active Tile */}
-              <div 
-                style={{
-                  position: 'relative',
-                  borderRadius: '14px',
-                  backgroundColor: '#F8FAFC',
-                  border: '1px solid #E2E8F0',
-                  overflow: 'hidden',
-                  minHeight: '260px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between',
-                  padding: '20px'
-                }}
-              >
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                  <span style={{ fontSize: '11px', fontWeight: 800, backgroundColor: '#EFF6FF', color: '#1A53CF', padding: '3px 8px', borderRadius: '6px', border: '1px solid #BFDBFE' }}>
-                    EXECUTIVE INTERVIEWER
-                  </span>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: '4px' }}>
-                    <div style={{ width: '3px', height: '12px', backgroundColor: '#10B981', borderRadius: '2px' }} />
-                    <div style={{ width: '3px', height: '18px', backgroundColor: '#10B981', borderRadius: '2px' }} />
-                    <div style={{ width: '3px', height: '8px', backgroundColor: '#10B981', borderRadius: '2px' }} />
-                    <div style={{ width: '3px', height: '14px', backgroundColor: '#10B981', borderRadius: '2px' }} />
-                  </div>
-                </div>
-
-                <div>
-                  <p style={{ fontSize: '14px', color: '#090C15', fontStyle: 'italic', lineHeight: 1.5, marginBottom: '8px', fontWeight: 500 }}>
-                    "Tell me about a time you had to resolve a high-severity microservices latency spike while squads were pushing conflicting changes."
-                  </p>
-                  <span style={{ fontSize: '11px', color: '#64748B', fontWeight: 600 }}>Target Rubric: Canva / Atlassian Lead Level</span>
-                </div>
-              </div>
-
-              {/* Right: Live STAR Feedback & Scoring */}
-              <div 
-                style={{
-                  borderRadius: '14px',
-                  backgroundColor: '#F8FAFC',
-                  border: '1px solid #E2E8F0',
-                  padding: '20px',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  justifyContent: 'space-between'
-                }}
-              >
-                <div>
-                  <div style={{ fontSize: '12px', fontWeight: 800, color: '#1A53CF', textTransform: 'uppercase', marginBottom: '12px' }}>
-                    Real-Time STAR Evaluation
-                  </div>
-                  
-                  {[
-                    { label: 'Situation (Context clarity)', score: '95%', color: '#059669' },
-                    { label: 'Task (Ownership & scope)', score: '92%', color: '#059669' },
-                    { label: 'Action (Technical depth)', score: '98%', color: '#1A53CF' },
-                    { label: 'Result (Quantified metric)', score: '94%', color: '#059669' }
-                  ].map((s, idx) => (
-                    <div key={idx} style={{ marginBottom: '10px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '11.5px', marginBottom: '3px' }}>
-                        <span style={{ color: '#475569', fontWeight: 600 }}>{s.label}</span>
-                        <span style={{ fontWeight: 800, color: s.color }}>{s.score}</span>
-                      </div>
-                      <div style={{ width: '100%', height: '5px', backgroundColor: '#E2E8F0', borderRadius: '9999px', overflow: 'hidden' }}>
-                        <div style={{ width: s.score, height: '100%', backgroundColor: s.color, borderRadius: '9999px' }} />
-                      </div>
-                    </div>
-                  ))}
-                </div>
-
-                <div style={{ padding: '8px 12px', borderRadius: '8px', backgroundColor: '#ECFDF5', border: '1px solid #A7F3D0', fontSize: '11.5px', color: '#065F46', fontWeight: 600 }}>
-                  ✓ Coach Tip: Excellent job citing the 42% latency reduction upfront!
-                </div>
-              </div>
-            </div>
-
-            {/* Bottom Controls Bar */}
-            <div style={{ display: 'flex', justifyContent: 'center', gap: '14px', marginTop: '20px', paddingTop: '16px', borderTop: '1px solid #F1F5F9' }}>
-              <button 
-                onClick={onLaunchApp}
-                className="white-primary-btn"
-                style={{ padding: '10px 24px', fontSize: '12.5px' }}
-              >
-                <span>Launch Emma Interview Copilot</span>
-                <ArrowRight size={13} style={{ marginLeft: '6px' }} />
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </section>
+      <MeetEmmaSection 
+        onLaunchApp={onLaunchApp} 
+        onScoreClick={() => scrollToSection('ats-scanner')} 
+      />
 
       {/* =========================================================================
           6. "REPLACES ALL YOUR SUBSCRIPTIONS" COMPARISON (WHITE TABLE)
