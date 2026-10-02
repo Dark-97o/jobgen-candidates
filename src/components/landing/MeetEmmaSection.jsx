@@ -194,7 +194,7 @@ export default function MeetEmmaSection({ onLaunchApp, onScoreClick }) {
 
       <div 
         style={{
-          maxWidth: '1240px',
+          maxWidth: '1280px',
           margin: '0 auto',
           padding: '0 24px',
           position: 'relative',
@@ -205,8 +205,8 @@ export default function MeetEmmaSection({ onLaunchApp, onScoreClick }) {
           className="meet-emma-grid"
           style={{
             display: 'grid',
-            gridTemplateColumns: 'minmax(0, 1.08fr) minmax(0, 1fr)',
-            gap: '64px',
+            gridTemplateColumns: 'minmax(0, 65fr) minmax(0, 35fr)',
+            gap: '48px',
             alignItems: 'center'
           }}
         >
@@ -357,11 +357,11 @@ export default function MeetEmmaSection({ onLaunchApp, onScoreClick }) {
                   fontSize: 'clamp(24px, 2.5vw, 32px)',
                   fontWeight: 800,
                   letterSpacing: '-0.025em',
-                  color: '#FFFFFF',
+                  color: '#60A5FA',
                   margin: '0 0 10px 0'
                 }}
               >
-                Meet Emma :
+                Meet Emma
               </h3>
               <p
                 style={{
