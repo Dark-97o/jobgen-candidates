@@ -28,7 +28,7 @@ export default function AutonomousWorkspacePreview() {
       style={{
         position: 'relative',
         width: '100%',
-        backgroundColor: '#FFFFFF',
+        backgroundColor: '#193cbe',
         overflow: 'hidden'
       }}
     >
@@ -53,7 +53,7 @@ export default function AutonomousWorkspacePreview() {
           position: 'relative', 
           width: '100%', 
           overflow: 'hidden',
-          backgroundColor: '#FFFFFF'
+          backgroundColor: '#193cbe'
         }}
       >
         {/* 150% Width Wrapper (Centered with -25% margin, shifted up by 100px so it crops from above) */}
@@ -189,7 +189,8 @@ export default function AutonomousWorkspacePreview() {
                   fontWeight: 900,
                   letterSpacing: '-0.04em',
                   lineHeight: 1.08,
-                  color: '#090D16',
+                  color: '#FFFFFF',
+                  textShadow: '0 2px 24px rgba(0, 0, 0, 0.4)',
                   margin: '0 0 16px 0'
                 }}
               >
@@ -201,7 +202,8 @@ export default function AutonomousWorkspacePreview() {
                 style={{
                   fontSize: 'clamp(14px, 1.3vw, 17px)',
                   lineHeight: 1.6,
-                  color: '#475569',
+                  color: 'rgba(255, 255, 255, 0.88)',
+                  textShadow: '0 1px 12px rgba(0, 0, 0, 0.3)',
                   maxWidth: '520px',
                   margin: 0,
                   fontWeight: 500
