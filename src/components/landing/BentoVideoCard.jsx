@@ -1,5 +1,4 @@
 import React, { useRef, useEffect } from 'react';
-import { Lock } from 'lucide-react';
 
 /**
  * BentoVideoCard
@@ -62,12 +61,6 @@ export default function BentoVideoCard({
     }
   };
 
-  // Sleek macOS window label (clean, without .app)
-  const rawLabel = fileName || (
-    blueText ? blueText.toLowerCase().replace(/\s+/g, '-') : 'jobgen'
-  );
-  const windowLabel = rawLabel.replace(/\.app$/i, '');
-
   return (
     <div
       className={`white-bento-card productivity-card-${colSpan === 8 ? 'rect' : 'square'}`}
@@ -79,14 +72,13 @@ export default function BentoVideoCard({
         position: 'relative',
         overflow: 'hidden',
         borderRadius: '22px',
-        // macOS Liquid Glass & Double-Bezel Border
-        border: '1.5px solid rgba(255, 255, 255, 0.28)',
+        border: '1.5px solid rgba(255, 255, 255, 0.35)',
+        // Blur outline (no black outline)
         boxShadow: `
-          0 0 0 1px rgba(15, 23, 42, 0.1),
-          0 24px 50px -12px rgba(15, 23, 42, 0.18),
-          0 8px 24px -4px rgba(26, 83, 207, 0.1),
-          inset 0 1.5px 1.5px rgba(255, 255, 255, 0.5),
-          inset 0 0 0 1px rgba(255, 255, 255, 0.1)
+          0 0 24px 3px rgba(96, 165, 250, 0.28),
+          0 0 50px 10px rgba(37, 99, 235, 0.15),
+          0 20px 40px -10px rgba(15, 23, 42, 0.25),
+          inset 0 1px 2px rgba(255, 255, 255, 0.45)
         `,
         backgroundColor: '#0F172A',
         cursor: 'pointer'
@@ -150,30 +142,6 @@ export default function BentoVideoCard({
             }}
           />
         </div>
-
-        {/* Center Mac Window Tab / File Pill */}
-        <div
-          style={{
-            display: 'inline-flex',
-            alignItems: 'center',
-            gap: '5px',
-            padding: '2px 10px',
-            borderRadius: '6px',
-            backgroundColor: 'rgba(255, 255, 255, 0.08)',
-            border: '1px solid rgba(255, 255, 255, 0.12)',
-            color: '#94A3B8',
-            fontSize: '11px',
-            fontFamily: '"JetBrains Mono", monospace',
-            letterSpacing: '0.02em',
-            boxShadow: 'inset 0 1px 1px rgba(0, 0, 0, 0.3)'
-          }}
-        >
-          <Lock size={9} color="#64748B" />
-          <span>{windowLabel}</span>
-        </div>
-
-        {/* Right Corner Placeholder to Balance Flex Layout */}
-        <div style={{ width: '44px' }} />
       </div>
 
       {/* Video Canvas (Full-Bleed) */}
@@ -211,10 +179,10 @@ export default function BentoVideoCard({
       >
         <h3
           style={{
-            fontSize: '22px',
+            fontSize: 'clamp(26px, 2.3vw, 32px)',
             fontWeight: 800,
-            letterSpacing: '-0.02em',
-            lineHeight: 1.25,
+            letterSpacing: '-0.025em',
+            lineHeight: 1.2,
             margin: 0,
             textShadow: '0 2px 14px rgba(0, 0, 0, 0.9)'
           }}

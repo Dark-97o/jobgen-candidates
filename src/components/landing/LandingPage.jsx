@@ -903,9 +903,14 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         .bento-img-hover {
           transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .white-bento-card:hover .bento-img-hover {
-          transform: scale(1.04);
+        .productivity-card-rect, .productivity-card-square {
+          border: 1.5px solid rgba(255, 255, 255, 0.4) !important;
         }
+        .productivity-card-rect:hover, .productivity-card-square:hover {
+          border-color: rgba(255, 255, 255, 0.7) !important;
+          box-shadow: 0 0 32px 6px rgba(96, 165, 250, 0.38), 0 0 55px 12px rgba(37, 99, 235, 0.2), 0 20px 40px -10px rgba(15, 23, 42, 0.25) !important;
+        }
+
 
         @media (max-width: 960px) {
           .productivity-grid {

@@ -15,7 +15,7 @@ const FEATURES = [
   { label: '1-Click Chrome Extension', icon: Puzzle, color: '#60A5FA' },
   { label: 'Salary & Equity Benchmark', icon: TrendingUp, color: '#10B981' },
   { label: 'ATS Resume Studio', icon: FileCheck, color: '#38BDF8' },
-  { label: 'Opportunity Kanban Pipeline', icon: Kanban, color: '#818CF8' },
+  { label: 'Opportunity Kanban', icon: Kanban, color: '#818CF8' },
   { label: 'Real-time AI Match Scoring', icon: Zap, color: '#FBBF24' },
   { label: 'STAR Interview Prep Copilot', icon: Bot, color: '#A78BFA' },
   { label: '12-Week Strategic Career Plan', icon: Calendar, color: '#34D399' }
@@ -161,11 +161,11 @@ export default function AutonomousWorkspacePreview() {
           </div>
         </div>
 
-        {/* 2. Text Overlay: Placed Directly Above the Background Only */}
+        {/* 2. Text Overlay: Shifted down by 30px */}
         <div 
           style={{ 
             position: 'absolute',
-            top: 0,
+            top: '30px',
             left: 0,
             right: 0,
             zIndex: 12,
@@ -241,7 +241,7 @@ export default function AutonomousWorkspacePreview() {
         }}
       >
         <div style={{ width: '100%', overflow: 'hidden' }}>
-          {/* Marquee ticker with larger text & favicons */}
+          {/* Marquee ticker with 30% smaller refined text & favicons */}
           <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', position: 'relative' }}>
             <div className="animate-white-marquee">
               {FEATURES.concat(FEATURES).map((item, idx) => {
@@ -252,20 +252,20 @@ export default function AutonomousWorkspacePreview() {
                     style={{
                       display: 'inline-flex',
                       alignItems: 'center',
-                      gap: '12px',
-                      marginRight: '48px',
+                      gap: '9px',
+                      marginRight: '40px',
                       verticalAlign: 'middle'
                     }}
                   >
-                    {/* Direct Favicon Icon (No Card Box) */}
-                    <IconComponent size={22} color={item.color} style={{ flexShrink: 0 }} />
+                    {/* Direct Favicon Icon */}
+                    <IconComponent size={16} color={item.color} style={{ flexShrink: 0 }} />
 
-                    {/* Bigger Feature Text */}
+                    {/* Feature Text (30% Smaller) */}
                     <span
                       style={{
-                        fontSize: 'clamp(17px, 1.4vw, 21px)',
-                        fontWeight: 750,
-                        letterSpacing: '-0.02em',
+                        fontSize: 'clamp(12px, 1vw, 14.5px)',
+                        fontWeight: 650,
+                        letterSpacing: '-0.01em',
                         color: '#F8FAFC'
                       }}
                     >

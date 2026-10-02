@@ -313,15 +313,15 @@ export default function InteractiveLogoBallsBand() {
         ctx.fillStyle = ballGrad;
         ctx.fill();
 
-        // 3. Crisp Clean Border
+        // 3. Thick Blue Outline
         ctx.shadowColor = 'transparent';
-        ctx.lineWidth = 1.75;
-        ctx.strokeStyle = '#CBD5E1';
+        ctx.lineWidth = 4;
+        ctx.strokeStyle = '#1A53CF';
         ctx.stroke();
 
         // Subtle brand-colored hairline inner rim
         ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.radius - 2.5, 0, Math.PI * 2);
+        ctx.arc(ball.x, ball.y, ball.radius - 3.5, 0, Math.PI * 2);
         ctx.lineWidth = 1.2;
         ctx.strokeStyle = ball.company.brandColor ? `${ball.company.brandColor}35` : 'rgba(226, 232, 240, 0.5)';
         ctx.stroke();
