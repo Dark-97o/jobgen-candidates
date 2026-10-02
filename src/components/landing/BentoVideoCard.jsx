@@ -63,7 +63,7 @@ export default function BentoVideoCard({
 
   return (
     <div
-      className={`white-bento-card productivity-card-${colSpan === 8 ? 'rect' : 'square'}`}
+      className={`productivity-card-${colSpan === 8 ? 'rect' : 'square'}`}
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       style={{
@@ -71,20 +71,21 @@ export default function BentoVideoCard({
         height: '380px',
         position: 'relative',
         overflow: 'hidden',
-        borderRadius: '22px',
-        border: '1.5px solid rgba(255, 255, 255, 0.35)',
-        // Blur outline (no black outline)
+        borderRadius: '24px',
+        border: '1.5px solid rgba(255, 255, 255, 0.9)',
+        outline: 'none',
+        // Pure luminous blur effect outline (zero black/dark shadows)
         boxShadow: `
-          0 0 24px 3px rgba(96, 165, 250, 0.28),
-          0 0 50px 10px rgba(37, 99, 235, 0.15),
-          0 20px 40px -10px rgba(15, 23, 42, 0.25),
-          inset 0 1px 2px rgba(255, 255, 255, 0.45)
+          0 0 0 1px rgba(255, 255, 255, 0.9),
+          0 0 22px 4px rgba(147, 197, 253, 0.65),
+          0 0 45px 10px rgba(96, 165, 250, 0.45),
+          0 0 75px 18px rgba(59, 130, 246, 0.28)
         `,
         backgroundColor: '#0F172A',
         cursor: 'pointer'
       }}
     >
-      {/* ================= macOS WINDOW TOP TITLE BAR ================= */}
+      {/* ================= macOS WINDOW TOP TITLE BAR (FROSTED GLASS) ================= */}
       <div
         style={{
           position: 'absolute',
@@ -92,10 +93,10 @@ export default function BentoVideoCard({
           left: 0,
           right: 0,
           height: '38px',
-          background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.78) 0%, rgba(15, 23, 42, 0.45) 75%, transparent 100%)',
-          backdropFilter: 'blur(16px)',
-          WebkitBackdropFilter: 'blur(16px)',
-          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          background: 'linear-gradient(180deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.04) 80%, transparent 100%)',
+          backdropFilter: 'blur(20px)',
+          WebkitBackdropFilter: 'blur(20px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.14)',
           zIndex: 10,
           display: 'flex',
           alignItems: 'center',
