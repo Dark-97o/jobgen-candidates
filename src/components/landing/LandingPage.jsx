@@ -897,12 +897,20 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
 
 
 
+        .bento-img-hover {
+          transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .white-bento-card:hover .bento-img-hover {
+          transform: scale(1.04);
+        }
+
         @media (max-width: 960px) {
           .productivity-grid {
             grid-template-columns: 1fr !important;
           }
           .productivity-card-rect, .productivity-card-square {
             grid-column: span 12 !important;
+            height: 300px !important;
           }
         }
       `}</style>
@@ -1163,49 +1171,55 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               className="white-bento-card productivity-card-rect" 
               style={{ 
                 gridColumn: 'span 8', 
-                padding: '32px 30px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                background: 'rgba(255, 255, 255, 0.88)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(219, 234, 254, 0.85)',
+                height: '380px',
+                position: 'relative',
+                overflow: 'hidden',
                 borderRadius: '24px',
-                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.05), 0 2px 10px rgba(15, 23, 42, 0.03)'
+                border: '1px solid rgba(226, 232, 240, 0.85)',
+                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04)',
+                backgroundColor: '#0F172A',
+                cursor: 'pointer'
               }}
             >
-              <div style={{ marginBottom: '20px' }}>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#ECFDF5', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', border: '1px solid #A7F3D0' }}>
-                  <LayoutDashboard size={20} color="#059669" />
-                </div>
-                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#090C15', marginBottom: '8px', letterSpacing: '-0.01em' }}>
-                  Autonomous Kanban Pipeline & Opportunity Tracking
-                </h3>
-                <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5, maxWidth: '620px' }}>
-                  Track applications across Bookmarked, Applied, Screening, Interviewing, and Offer stages with salary benchmarking and automated follow-up alerts.
-                </p>
-              </div>
-
-              {/* Card Screenshot Container (Rectangle) */}
+              <img 
+                src="/sc2.png" 
+                alt="Autonomous Kanban Pipeline & Opportunity Tracking" 
+                className="bento-img-hover"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'top left',
+                  display: 'block'
+                }} 
+              />
+              {/* Bottom Black Fade Overlay with Headline Text */}
               <div 
                 style={{
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  border: '1px solid #E2E8F0',
-                  backgroundColor: '#FFFFFF',
-                  boxShadow: '0 6px 20px -2px rgba(15, 23, 42, 0.06)'
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: '48px 32px 26px 32px',
+                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.72) 45%, rgba(0, 0, 0, 0.2) 80%, transparent 100%)',
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  pointerEvents: 'none'
                 }}
               >
-                <img 
-                  src="/sc2.png" 
-                  alt="Autonomous Kanban Pipeline" 
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    display: 'block',
-                    transition: 'transform 0.35s ease'
-                  }} 
-                />
+                <h3 
+                  style={{ 
+                    fontSize: '22px', 
+                    fontWeight: 800, 
+                    color: '#FFFFFF', 
+                    letterSpacing: '-0.02em', 
+                    lineHeight: 1.25,
+                    margin: 0,
+                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
+                  }}
+                >
+                  Autonomous Kanban Pipeline & Opportunity Tracking
+                </h3>
               </div>
             </div>
 
@@ -1214,56 +1228,55 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               className="white-bento-card productivity-card-square" 
               style={{ 
                 gridColumn: 'span 4', 
-                padding: '32px 28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                background: 'rgba(255, 255, 255, 0.88)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(219, 234, 254, 0.85)',
+                height: '380px',
+                position: 'relative',
+                overflow: 'hidden',
                 borderRadius: '24px',
-                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.05), 0 2px 10px rgba(15, 23, 42, 0.03)'
+                border: '1px solid rgba(226, 232, 240, 0.85)',
+                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04)',
+                backgroundColor: '#0F172A',
+                cursor: 'pointer'
               }}
             >
-              <div style={{ marginBottom: '20px' }}>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#F3E8FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', border: '1px solid #E9D5FF' }}>
-                  <FileText size={20} color="#7C3AED" />
-                </div>
-                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#090C15', marginBottom: '8px', letterSpacing: '-0.01em' }}>
-                  Precision Resume Studio
-                </h3>
-                <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5 }}>
-                  Multi-format ATS-ready executive resumes, portfolios, and CV designs calibrated for maximum recruiter impact.
-                </p>
-              </div>
-
-              {/* Card Screenshot Container (Square) */}
+              <img 
+                src="/sc4.png" 
+                alt="Precision Resume Studio" 
+                className="bento-img-hover"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'top center',
+                  display: 'block'
+                }} 
+              />
+              {/* Bottom Black Fade Overlay with Headline Text */}
               <div 
                 style={{
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  border: '1px solid #E2E8F0',
-                  backgroundColor: '#F8FAFC',
-                  boxShadow: '0 6px 20px -2px rgba(15, 23, 42, 0.06)',
-                  padding: '12px',
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: '48px 28px 26px 28px',
+                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.72) 45%, rgba(0, 0, 0, 0.2) 80%, transparent 100%)',
                   display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  alignItems: 'flex-end',
+                  pointerEvents: 'none'
                 }}
               >
-                <img 
-                  src="/sc4.png" 
-                  alt="Precision Resume Studio Templates" 
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    maxHeight: '300px',
-                    objectFit: 'contain',
-                    borderRadius: '10px',
-                    display: 'block',
-                    transition: 'transform 0.35s ease'
-                  }} 
-                />
+                <h3 
+                  style={{ 
+                    fontSize: '22px', 
+                    fontWeight: 800, 
+                    color: '#FFFFFF', 
+                    letterSpacing: '-0.02em', 
+                    lineHeight: 1.25,
+                    margin: 0,
+                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
+                  }}
+                >
+                  Precision Resume Studio
+                </h3>
               </div>
             </div>
 
@@ -1272,56 +1285,55 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               className="white-bento-card productivity-card-square" 
               style={{ 
                 gridColumn: 'span 4', 
-                padding: '32px 28px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                background: 'rgba(255, 255, 255, 0.88)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(219, 234, 254, 0.85)',
+                height: '380px',
+                position: 'relative',
+                overflow: 'hidden',
                 borderRadius: '24px',
-                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.05), 0 2px 10px rgba(15, 23, 42, 0.03)'
+                border: '1px solid rgba(226, 232, 240, 0.85)',
+                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04)',
+                backgroundColor: '#0F172A',
+                cursor: 'pointer'
               }}
             >
-              <div style={{ marginBottom: '20px' }}>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#FEF3C7', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', border: '1px solid #FDE68A' }}>
-                  <Compass size={20} color="#D97706" />
-                </div>
-                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#090C15', marginBottom: '8px', letterSpacing: '-0.01em' }}>
-                  12-Week Strategic Roadmap
-                </h3>
-                <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5 }}>
-                  Milestone-driven sprints covering system architecture, leadership alignment, and targeted interview preparation.
-                </p>
-              </div>
-
-              {/* Card Screenshot Container (Square) */}
+              <img 
+                src="/sc3.png" 
+                alt="12-Week Strategic Roadmap" 
+                className="bento-img-hover"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'top center',
+                  display: 'block'
+                }} 
+              />
+              {/* Bottom Black Fade Overlay with Headline Text */}
               <div 
                 style={{
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  border: '1px solid #E2E8F0',
-                  backgroundColor: '#F8FAFC',
-                  boxShadow: '0 6px 20px -2px rgba(15, 23, 42, 0.06)',
-                  padding: '12px',
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: '48px 28px 26px 28px',
+                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.72) 45%, rgba(0, 0, 0, 0.2) 80%, transparent 100%)',
                   display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
+                  alignItems: 'flex-end',
+                  pointerEvents: 'none'
                 }}
               >
-                <img 
-                  src="/sc3.png" 
-                  alt="12-Week Strategic Roadmap" 
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    maxHeight: '300px',
-                    objectFit: 'contain',
-                    borderRadius: '10px',
-                    display: 'block',
-                    transition: 'transform 0.35s ease'
-                  }} 
-                />
+                <h3 
+                  style={{ 
+                    fontSize: '22px', 
+                    fontWeight: 800, 
+                    color: '#FFFFFF', 
+                    letterSpacing: '-0.02em', 
+                    lineHeight: 1.25,
+                    margin: 0,
+                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
+                  }}
+                >
+                  12-Week Strategic Roadmap
+                </h3>
               </div>
             </div>
 
@@ -1330,49 +1342,55 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               className="white-bento-card productivity-card-rect" 
               style={{ 
                 gridColumn: 'span 8', 
-                padding: '32px 30px',
-                display: 'flex',
-                flexDirection: 'column',
-                justifyContent: 'space-between',
-                background: 'rgba(255, 255, 255, 0.88)',
-                backdropFilter: 'blur(20px)',
-                border: '1px solid rgba(219, 234, 254, 0.85)',
+                height: '380px',
+                position: 'relative',
+                overflow: 'hidden',
                 borderRadius: '24px',
-                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.05), 0 2px 10px rgba(15, 23, 42, 0.03)'
+                border: '1px solid rgba(226, 232, 240, 0.85)',
+                boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04)',
+                backgroundColor: '#0F172A',
+                cursor: 'pointer'
               }}
             >
-              <div style={{ marginBottom: '20px' }}>
-                <div style={{ width: '42px', height: '42px', borderRadius: '10px', backgroundColor: '#EFF6FF', display: 'flex', alignItems: 'center', justifyContent: 'center', marginBottom: '18px', border: '1px solid #BFDBFE' }}>
-                  <MapPin size={20} color="#1A53CF" />
-                </div>
-                <h3 style={{ fontSize: '20px', fontWeight: 800, color: '#090C15', marginBottom: '8px', letterSpacing: '-0.01em' }}>
-                  Target Role & Global Location Radar
-                </h3>
-                <p style={{ fontSize: '14px', color: '#475569', lineHeight: 1.5, maxWidth: '620px' }}>
-                  Pinpoint top tier tech hubs across Sydney, San Francisco, Melbourne, and Bangalore with verified hiring demand and median compensation insights.
-                </p>
-              </div>
-
-              {/* Card Screenshot Container (Rectangle) */}
+              <img 
+                src="/sc1.png" 
+                alt="Target Role & Global Location Radar" 
+                className="bento-img-hover"
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'cover',
+                  objectPosition: 'top left',
+                  display: 'block'
+                }} 
+              />
+              {/* Bottom Black Fade Overlay with Headline Text */}
               <div 
                 style={{
-                  borderRadius: '16px',
-                  overflow: 'hidden',
-                  border: '1px solid #E2E8F0',
-                  backgroundColor: '#FFFFFF',
-                  boxShadow: '0 6px 20px -2px rgba(15, 23, 42, 0.06)'
+                  position: 'absolute',
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  padding: '48px 32px 26px 32px',
+                  background: 'linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.72) 45%, rgba(0, 0, 0, 0.2) 80%, transparent 100%)',
+                  display: 'flex',
+                  alignItems: 'flex-end',
+                  pointerEvents: 'none'
                 }}
               >
-                <img 
-                  src="/sc1.png" 
-                  alt="Target Role & Location Radar" 
-                  style={{
-                    width: '100%',
-                    height: 'auto',
-                    display: 'block',
-                    transition: 'transform 0.35s ease'
-                  }} 
-                />
+                <h3 
+                  style={{ 
+                    fontSize: '22px', 
+                    fontWeight: 800, 
+                    color: '#FFFFFF', 
+                    letterSpacing: '-0.02em', 
+                    lineHeight: 1.25,
+                    margin: 0,
+                    textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
+                  }}
+                >
+                  Target Role & Global Location Radar
+                </h3>
               </div>
             </div>
 
