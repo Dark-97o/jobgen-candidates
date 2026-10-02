@@ -371,28 +371,6 @@ export default function PricingEngineSection({ onLaunchApp }) {
         {/* ================= HEADER & BILLING TOGGLES ================= */}
         <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 52px auto' }}>
           
-          {/* Subtle Pill */}
-          <div
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '6px 14px',
-              borderRadius: '9999px',
-              backgroundColor: '#EFF6FF',
-              border: '1px solid #BFDBFE',
-              color: '#1D4ED8',
-              fontSize: '11.5px',
-              fontWeight: 800,
-              letterSpacing: '0.04em',
-              textTransform: 'uppercase',
-              marginBottom: '16px',
-              boxShadow: '0 2px 8px rgba(29, 78, 216, 0.08)'
-            }}
-          >
-            <Sparkles size={13} color="#2563EB" />
-            <span>JobGen Membership</span>
-          </div>
 
           {/* Main Title from Prompt */}
           <h2

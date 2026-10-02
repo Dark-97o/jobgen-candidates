@@ -94,6 +94,7 @@ export default function MeetEmmaSection({ onLaunchApp, onScoreClick }) {
       }}
     >
       <div id="interview-copilot" style={{ position: 'absolute', top: 0, left: 0 }} />
+      <div id="ats-scanner" style={{ position: 'absolute', top: 0, left: 0 }} />
 
       {/* Dynamic Background Atmosphere (Dark Blue Nebula / Glow) */}
       <div
