@@ -35,12 +35,13 @@ export default function AutonomousWorkspacePreview() {
           backgroundColor: '#FFFFFF'
         }}
       >
-        {/* 150% Width Wrapper (Centered with -25% margin, scales fall.mp4 and pic1 by 50%) */}
+        {/* 150% Width Wrapper (Centered with -25% margin, shifted up by 100px so it crops from above) */}
         <div
           style={{
             position: 'relative',
             width: '150%',
             marginLeft: '-25%',
+            marginTop: '-100px',
             aspectRatio: '1920 / 1080'
           }}
         >
