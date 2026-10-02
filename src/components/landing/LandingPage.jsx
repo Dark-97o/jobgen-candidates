@@ -856,11 +856,17 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             alignItems: 'center',
             justifyContent: 'space-between',
             gap: '16px',
-            backgroundColor: 'rgba(15, 23, 42, 0.84)',
-            backdropFilter: 'blur(24px)',
-            WebkitBackdropFilter: 'blur(24px)',
-            border: '1px solid rgba(255, 255, 255, 0.18)',
-            boxShadow: '0 16px 36px -4px rgba(0, 0, 0, 0.35)'
+            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.16) 0%, rgba(255, 255, 255, 0.05) 45%, rgba(10, 16, 32, 0.35) 100%)',
+            backgroundColor: 'rgba(15, 23, 42, 0.32)',
+            backdropFilter: 'blur(30px) saturate(190%)',
+            WebkitBackdropFilter: 'blur(30px) saturate(190%)',
+            border: '1px solid rgba(255, 255, 255, 0.26)',
+            boxShadow: `
+              0 20px 48px -10px rgba(0, 0, 0, 0.3),
+              0 0 0 1px rgba(255, 255, 255, 0.1),
+              inset 0 1.5px 1px 0 rgba(255, 255, 255, 0.35),
+              inset 0 -1px 1px 0 rgba(0, 0, 0, 0.2)
+            `
           }}
         >
           {/* Logo & Brand: Pure White Logo with text JobGen.IO */}
@@ -942,27 +948,30 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             <button
               onClick={onSignIn}
               style={{
-                background: 'rgba(255, 255, 255, 0.12)',
-                border: '1px solid rgba(255, 255, 255, 0.35)',
+                background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)',
+                border: '1px solid rgba(255, 255, 255, 0.42)',
                 borderRadius: '9999px',
                 padding: '8px 22px',
                 fontSize: '13px',
                 fontWeight: 700,
                 color: '#FFFFFF',
                 cursor: 'pointer',
-                transition: 'all 0.15s ease',
-                backdropFilter: 'blur(8px)',
-                WebkitBackdropFilter: 'blur(8px)'
+                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                boxShadow: '0 2px 10px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3)'
               }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.borderColor = '#FFFFFF';
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.35) 0%, rgba(255, 255, 255, 0.16) 100%)';
                 e.currentTarget.style.transform = 'translateY(-1px)';
+                e.currentTarget.style.boxShadow = '0 6px 18px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.5)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.35)';
-                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.42)';
+                e.currentTarget.style.background = 'linear-gradient(135deg, rgba(255, 255, 255, 0.22) 0%, rgba(255, 255, 255, 0.08) 100%)';
                 e.currentTarget.style.transform = 'translateY(0)';
+                e.currentTarget.style.boxShadow = '0 2px 10px rgba(0, 0, 0, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.3)';
               }}
             >
               Sign In
