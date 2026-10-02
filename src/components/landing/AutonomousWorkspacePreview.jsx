@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import FluidDownstreamBeam from './FluidDownstreamBeam';
 import { 
   Bell, 
   Calendar, 
@@ -88,6 +89,9 @@ export default function AutonomousWorkspacePreview({ onLaunchApp }) {
         }}
         aria-hidden="true"
       >
+        {/* Real-Time Hero Fluid Simulation Flowing Downstream */}
+        <FluidDownstreamBeam />
+
         {/* Diffused Atmospheric Blue Ambient Radiance */}
         <div
           style={{
