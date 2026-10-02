@@ -223,94 +223,14 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
   const resumeContainerRef = useRef(null);
   const titleWrapperRef = useRef(null);
   const glintRef = useRef(null);
-  const introVideoRef = useRef(null);
-
-  // Check if intro has already played in this browser session
-  const [hasSeenIntro, setHasSeenIntro] = useState(() => {
-    try {
-      return sessionStorage.getItem('jobgen_has_seen_jobintro') === 'true';
-    } catch {
-      return false;
-    }
-  });
-
-  // 'playing' (video playing) -> 'revealed' (video dissolved, UI elements gliding in)
-  const [introStep, setIntroStep] = useState(() => {
-    return hasSeenIntro ? 'revealed' : 'playing';
-  });
-  const [introVideoFading, setIntroVideoFading] = useState(false);
-  const isRevealed = introStep === 'revealed';
-
-  const triggerReveal = useCallback(() => {
-    setIntroVideoFading(true);
-    setIntroStep('revealed');
-    try {
-      sessionStorage.setItem('jobgen_has_seen_jobintro', 'true');
-    } catch {}
-    setHasSeenIntro(true);
-  }, []);
-
-  // When video ends, pause 1 second on final frame then reveal UI smoothly
-  const handleIntroEnded = useCallback(() => {
-    setTimeout(() => {
-      triggerReveal();
-    }, 1000);
-  }, [triggerReveal]);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (hasSeenIntro) return;
-
-    const video = introVideoRef.current;
-    if (!video) return;
-
-    video.playbackRate = 1.25;
-
-    const setSpeed = () => {
-      video.playbackRate = 1.25;
-    };
-    video.addEventListener('loadedmetadata', setSpeed);
-    video.addEventListener('canplay', setSpeed);
-    video.addEventListener('play', setSpeed);
-
-    const playVideo = async () => {
-      try {
-        video.playbackRate = 1.25;
-        await video.play();
-      } catch {
-        video.muted = true;
-        video.playbackRate = 1.25;
-        video.play().catch(() => {});
-      }
-    };
-
-    if (video.readyState >= 2) {
-      playVideo();
-    } else {
-      video.addEventListener('canplay', playVideo, { once: true });
-    }
-
-    // Safety fallback: 3.2s / 1.25 = 2.56s + 1.0s hold + 0.9s buffer = 4.5s
-    const fallbackTimer = setTimeout(() => {
-      triggerReveal();
-    }, 4500);
-
-    // Keyboard shortcuts to skip straight to reveal
-    const handleKeyDown = (e) => {
-      if (['Escape', ' ', 'Enter'].includes(e.key)) {
-        triggerReveal();
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-
-    return () => {
-      clearTimeout(fallbackTimer);
-      window.removeEventListener('keydown', handleKeyDown);
-      video.removeEventListener('loadedmetadata', setSpeed);
-      video.removeEventListener('canplay', setSpeed);
-      video.removeEventListener('play', setSpeed);
-      video.removeEventListener('canplay', playVideo);
-    };
-  }, [hasSeenIntro, triggerReveal]);
+    const timer = setTimeout(() => {
+      setMounted(true);
+    }, 40);
+    return () => clearTimeout(timer);
+  }, []);
 
   // 3D Resume look-towards-pointer tracking
   const rotRef = useRef({
@@ -445,40 +365,41 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
         userSelect: 'none'
       }}
     >
-      {/* 0. INTRO VIDEO OVERLAY (Starts with hero, plays at 1.25x, holds 1s after ending, then dissolves) */}
-      {!hasSeenIntro && (
-        <div
-          onClick={triggerReveal}
-          style={{
-            position: 'absolute',
-            inset: 0,
-            zIndex: 35,
-            backgroundColor: '#000000',
-            opacity: introVideoFading ? 0 : 1,
-            transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
-            pointerEvents: introVideoFading ? 'none' : 'auto',
-            overflow: 'hidden',
-          }}
-        >
-          <video
-            ref={introVideoRef}
-            src="/jobintro.mp4"
-            autoPlay
-            muted
-            playsInline
-            preload="auto"
-            onEnded={handleIntroEnded}
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'cover',
-              display: 'block',
-              transform: 'translateZ(0)',
-              willChange: 'transform',
-            }}
-          />
-        </div>
-      )}
+      {/* Dynamic 3D Figure Swing-in Keyframes & Transitions */}
+      <style>{`
+        @keyframes figureSwingFromRight {
+          0% {
+            opacity: 0;
+            transform: translate3d(clamp(160px, 32vw, 440px), -40px, 0) rotate(15deg) rotateY(-25deg) scale(0.9);
+            filter: drop-shadow(0 24px 48px rgba(0, 10, 45, 0.45));
+          }
+          62% {
+            opacity: 1;
+            transform: translate3d(-18px, 6px, 0) rotate(-2.8deg) rotateY(4deg) scale(1.02);
+          }
+          82% {
+            transform: translate3d(6px, -2px, 0) rotate(1deg) rotateY(-1.5deg) scale(0.996);
+          }
+          93% {
+            transform: translate3d(-2px, 1px, 0) rotate(-0.3deg) rotateY(0.4deg) scale(1.002);
+          }
+          100% {
+            opacity: 1;
+            transform: translate3d(0, 0, 0) rotate(0deg) rotateY(0deg) scale(1);
+            filter: drop-shadow(0 14px 32px rgba(0, 18, 70, 0.45));
+          }
+        }
+        .figure-swing-enter {
+          animation: figureSwingFromRight 1.35s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
+          transform-origin: 75% -20%;
+          will-change: transform, opacity;
+        }
+        .figure-swing-hidden {
+          opacity: 0;
+          transform: translate3d(clamp(160px, 32vw, 440px), -40px, 0) rotate(15deg) rotateY(-25deg) scale(0.9);
+          pointer-events: none;
+        }
+      `}</style>
 
       {/* 1. INTERACTIVE FLUID GRADIENT WEBGL BACKGROUND (CODEGRID SHADER) */}
       <InteractiveFluidGradient />
@@ -493,12 +414,11 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           alignItems: 'center',
           gap: 'clamp(8px, 1.1vw, 14px)',
           zIndex: 25,
-          pointerEvents: isRevealed ? 'auto' : 'none',
+          pointerEvents: mounted ? 'auto' : 'none',
           boxSizing: 'border-box',
-          opacity: isRevealed ? 1 : 0,
-          transform: isRevealed ? 'translateY(0)' : 'translateY(-14px)',
-          transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
-          transitionDelay: hasSeenIntro ? '0s' : '0.1s',
+          opacity: mounted ? 1 : 0,
+          transform: mounted ? 'translateY(0)' : 'translateY(-14px)',
+          transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.12s, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.12s',
         }}
       >
         {/* Productivity Button */}
@@ -603,7 +523,7 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           position: 'absolute',
           top: 'clamp(68px, calc(9.5vh + 12px), 116px)',
           left: '50%',
-          transform: isRevealed ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(18px)',
+          transform: mounted ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(18px)',
           width: '100%',
           maxWidth: '1340px',
           padding: '0 24px',
@@ -612,9 +532,8 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           zIndex: 2,
           pointerEvents: 'none',
           boxSizing: 'border-box',
-          opacity: isRevealed ? 1 : 0,
-          transition: 'opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1), transform 0.95s cubic-bezier(0.16, 1, 0.3, 1)',
-          transitionDelay: hasSeenIntro ? '0s' : '0.2s',
+          opacity: mounted ? 1 : 0,
+          transition: 'opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.22s, transform 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.22s',
         }}
       >
         <div 
@@ -681,8 +600,9 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
         </div>
       </div>
 
-      {/* 3. 3D FLOATING & POINTER-LOOKING RUGGED TACTICAL SCREEN (PLAYING VIDEO) */}
+      {/* 3. 3D FLOATING & POINTER-LOOKING RUGGED TACTICAL SCREEN (SWING FROM RIGHT) */}
       <div
+        className={mounted ? "figure-swing-enter" : "figure-swing-hidden"}
         style={{
           position: 'relative',
           zIndex: 10,
@@ -690,18 +610,15 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          pointerEvents: isRevealed ? 'auto' : 'none',
-          opacity: isRevealed ? 1 : 0,
-          transform: isRevealed ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.96)',
-          transition: 'opacity 1.05s cubic-bezier(0.16, 1, 0.3, 1), transform 1.05s cubic-bezier(0.16, 1, 0.3, 1)',
-          transitionDelay: hasSeenIntro ? '0s' : '0.35s',
+          pointerEvents: mounted ? 'auto' : 'none',
+          transformStyle: 'preserve-3d',
         }}
       >
         <RuggedScreen3D
           containerRef={resumeContainerRef}
           glintRef={glintRef}
           videoSrc="/jobs.mp4"
-          isActive={isRevealed}
+          isActive={true}
           onPointerEnter={handleScreenPointerEnter}
           onPointerLeave={handleScreenPointerLeave}
         />
@@ -719,9 +636,8 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           gap: '10px',
           zIndex: 10,
           pointerEvents: 'none',
-          opacity: isRevealed ? 1 : 0,
-          transition: 'opacity 1.0s ease',
-          transitionDelay: hasSeenIntro ? '0s' : '0.45s',
+          opacity: mounted ? 1 : 0,
+          transition: 'opacity 1.0s ease 0.38s',
         }}
         aria-hidden="true"
       >
@@ -746,7 +662,7 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
         })}
       </div>
 
-      {/* 5. BOTTOM SCROLL CUE */}
+      {/* 5. SUBTLE SCROLL DOWN CUE */}
       <div
         style={{
           position: 'absolute',
@@ -763,7 +679,9 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           fontWeight: 700,
           letterSpacing: '0.04em',
           textTransform: 'uppercase',
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          opacity: mounted ? 1 : 0,
+          transition: 'opacity 1.0s ease 0.45s',
         }}
       >
         <span>Scroll to explore</span>
