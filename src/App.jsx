@@ -124,19 +124,18 @@ export default function App() {
         onBackToLanding={() => setAuthMode('landing')} 
       />
     ) : (
-      <>
-        {!introDone ? (
+      <div style={{ backgroundColor: '#1A53CF', minHeight: '100vh', position: 'relative' }}>
+        {!introDone && (
           <JobIntro onComplete={handleIntroComplete} />
-        ) : (
-          <LandingPage 
-            onSignIn={() => setAuthMode('login')} 
-            onLaunchApp={() => {
-              sessionStorage.setItem('jobgen_candidate_auth', 'true');
-              setIsAuthenticated(true);
-            }} 
-          />
         )}
-      </>
+        <LandingPage 
+          onSignIn={() => setAuthMode('login')} 
+          onLaunchApp={() => {
+            sessionStorage.setItem('jobgen_candidate_auth', 'true');
+            setIsAuthenticated(true);
+          }} 
+        />
+      </div>
     );
   }
 

@@ -1,17 +1,13 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useEffect, useRef } from 'react';
 
 export default function JobIntro({ onComplete }) {
   const videoRef = useRef(null);
-  const [isFading, setIsFading] = useState(false);
   const completedRef = useRef(false);
 
   const finishIntro = () => {
     if (completedRef.current) return;
     completedRef.current = true;
-    setIsFading(true);
-    setTimeout(() => {
-      if (onComplete) onComplete();
-    }, 450);
+    if (onComplete) onComplete();
   };
 
   useEffect(() => {
@@ -28,13 +24,13 @@ export default function JobIntro({ onComplete }) {
     video.addEventListener('canplay', applySpeed);
     video.addEventListener('play', applySpeed);
 
-    // Start video playback
+    // Start video playback cleanly
     const startPlay = async () => {
       try {
         video.playbackRate = 1.25;
         await video.play();
       } catch {
-        // Ensure muted autoplay succeeds in all browsers
+        // Fallback for strict browser autoplay
         video.muted = true;
         video.playbackRate = 1.25;
         video.play().catch(() => {});
@@ -42,12 +38,12 @@ export default function JobIntro({ onComplete }) {
     };
     startPlay();
 
-    // Safety timeout: 4s / 1.25 = 3.2s + 1.2s buffer
+    // Safety timeout: 4.0s / 1.25 = 3.2s + 0.4s buffer = 3.6s
     const safetyTimer = setTimeout(() => {
       finishIntro();
-    }, 4400);
+    }, 3600);
 
-    // Keyboard shortcuts or click to pass through
+    // Keyboard shortcuts or click to pass through instantly
     const handleKeyDown = (e) => {
       if (['Escape', ' ', 'Enter'].includes(e.key)) {
         finishIntro();
@@ -78,9 +74,6 @@ export default function JobIntro({ onComplete }) {
         alignItems: 'center',
         justifyContent: 'center',
         overflow: 'hidden',
-        opacity: isFading ? 0 : 1,
-        transition: 'opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1)',
-        pointerEvents: isFading ? 'none' : 'auto',
       }}
     >
       <video
