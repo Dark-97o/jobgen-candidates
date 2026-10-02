@@ -191,90 +191,96 @@ export default function AutonomousWorkspacePreview() {
           </div>
         </div>
 
-        {/* 3. Black Fade at the bottom covering the base with the feature ticker ON the fade */}
+        {/* 3. Black Fade at the bottom of the video background to seamlessly blend with the black band */}
         <div
           style={{
             position: 'absolute',
             bottom: 0,
             left: 0,
             right: 0,
-            height: '240px',
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(9, 13, 22, 0.45) 25%, rgba(9, 13, 22, 0.85) 60%, #090D16 85%, #090D16 100%)',
-            zIndex: 15,
-            display: 'flex',
-            flexDirection: 'column',
-            justifyContent: 'flex-end',
-            paddingBottom: '28px',
-            pointerEvents: 'auto'
+            height: '180px',
+            background: 'linear-gradient(to bottom, transparent 0%, rgba(9, 13, 22, 0.35) 30%, rgba(9, 13, 22, 0.85) 75%, #090D16 100%)',
+            zIndex: 10,
+            pointerEvents: 'none'
           }}
-        >
-          <div style={{ width: '100%', maxWidth: '1240px', margin: '0 auto', padding: '0 24px' }}>
-            {/* Header text ON the black fade */}
-            <p
-              style={{
-                fontSize: '12px',
-                color: '#94A3B8',
-                fontWeight: 700,
-                textTransform: 'uppercase',
-                letterSpacing: '0.08em',
-                marginBottom: '14px',
-                textAlign: 'center'
-              }}
-            >
-              Everything you need for autonomous career advancement:
-            </p>
+        />
+      </div>
 
-            {/* Marquee ticker ON the black fade */}
-            <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', position: 'relative' }}>
-              <div className="animate-white-marquee">
-                {[
-                  'ATS Resume Studio',
-                  'Opportunity Kanban Pipeline',
-                  'Real-time AI Match Scoring',
-                  'STAR Interview Prep Copilot',
-                  '12-Week Strategic Career Plan',
-                  'Tailored Cover Letter Studio',
-                  '1-Click Chrome Extension',
-                  'Salary & Equity Benchmark'
-                ].concat([
-                  'ATS Resume Studio',
-                  'Opportunity Kanban Pipeline',
-                  'Real-time AI Match Scoring',
-                  'STAR Interview Prep Copilot',
-                  '12-Week Strategic Career Plan',
-                  'Tailored Cover Letter Studio',
-                  '1-Click Chrome Extension',
-                  'Salary & Equity Benchmark'
-                ]).map((item, idx) => (
-                  <span
-                    key={idx}
-                    style={{
-                      display: 'inline-flex',
-                      alignItems: 'center',
-                      gap: '8px',
-                      marginRight: '36px',
-                      fontSize: '13.5px',
-                      fontWeight: 650,
-                      color: '#F8FAFC'
-                    }}
-                  >
-                    <span 
-                      style={{ 
-                        width: '6px', 
-                        height: '6px', 
-                        borderRadius: '50%', 
-                        backgroundColor: '#38BDF8', 
-                        boxShadow: '0 0 8px #38BDF8' 
-                      }} 
-                    />
-                    {item}
-                  </span>
-                ))}
-              </div>
+      {/* 4. Dedicated Black Band with Feature Ticker */}
+      <div
+        style={{
+          position: 'relative',
+          width: '100%',
+          backgroundColor: '#090D16',
+          padding: '36px 0 42px 0',
+          zIndex: 15
+        }}
+      >
+        <div style={{ width: '100%', maxWidth: '1240px', margin: '0 auto', padding: '0 24px' }}>
+          {/* Header text on the black band */}
+          <p
+            style={{
+              fontSize: '12px',
+              color: '#94A3B8',
+              fontWeight: 700,
+              textTransform: 'uppercase',
+              letterSpacing: '0.08em',
+              marginBottom: '16px',
+              textAlign: 'center'
+            }}
+          >
+            Everything you need for autonomous career advancement:
+          </p>
+
+          {/* Marquee ticker on the black band */}
+          <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', position: 'relative' }}>
+            <div className="animate-white-marquee">
+              {[
+                'ATS Resume Studio',
+                'Opportunity Kanban Pipeline',
+                'Real-time AI Match Scoring',
+                'STAR Interview Prep Copilot',
+                '12-Week Strategic Career Plan',
+                'Tailored Cover Letter Studio',
+                '1-Click Chrome Extension',
+                'Salary & Equity Benchmark'
+              ].concat([
+                'ATS Resume Studio',
+                'Opportunity Kanban Pipeline',
+                'Real-time AI Match Scoring',
+                'STAR Interview Prep Copilot',
+                '12-Week Strategic Career Plan',
+                'Tailored Cover Letter Studio',
+                '1-Click Chrome Extension',
+                'Salary & Equity Benchmark'
+              ]).map((item, idx) => (
+                <span
+                  key={idx}
+                  style={{
+                    display: 'inline-flex',
+                    alignItems: 'center',
+                    gap: '8px',
+                    marginRight: '36px',
+                    fontSize: '13.5px',
+                    fontWeight: 650,
+                    color: '#F8FAFC'
+                  }}
+                >
+                  <span 
+                    style={{ 
+                      width: '6px', 
+                      height: '6px', 
+                      borderRadius: '50%', 
+                      backgroundColor: '#38BDF8', 
+                      boxShadow: '0 0 8px #38BDF8' 
+                    }} 
+                  />
+                  {item}
+                </span>
+              ))}
             </div>
           </div>
         </div>
-
       </div>
     </section>
   );
