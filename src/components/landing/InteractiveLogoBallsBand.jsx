@@ -37,7 +37,7 @@ export default function InteractiveLogoBallsBand() {
     });
 
     let width = canvas.clientWidth || 560;
-    let height = canvas.clientHeight || 340;
+    let height = canvas.clientHeight || 170;
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const resizeCanvas = () => {
@@ -52,19 +52,19 @@ export default function InteractiveLogoBallsBand() {
 
     resizeCanvas();
 
-    // 2D Physics Ball Setup
-    const radius = Math.max(34, Math.min(42, Math.floor(width / 14)));
+    // 2D Physics Ball Setup (proportional to compact band height)
+    const radius = Math.max(25, Math.min(29, Math.floor(width / 18)));
     const balls = COMPANIES.map((comp, idx) => {
       const colStep = (width - radius * 4) / Math.max(1, COMPANIES.length - 1);
       const startX = radius * 2;
       return {
         company: comp,
         radius,
-        x: startX + colStep * idx + (Math.random() - 0.5) * 15,
-        // Spawn staggered above top edge so they fall into the band
-        y: -radius - 30 - idx * 45 - Math.random() * 30,
-        vx: (Math.random() - 0.5) * 40,
-        vy: 40 + Math.random() * 60,
+        x: startX + colStep * idx + (Math.random() - 0.5) * 12,
+        // Spawn staggered above top edge so they fall smoothly into the band
+        y: -radius - 20 - idx * 35 - Math.random() * 20,
+        vx: (Math.random() - 0.5) * 35,
+        vy: 35 + Math.random() * 50,
         isDragging: false
       };
     });
@@ -99,7 +99,7 @@ export default function InteractiveLogoBallsBand() {
           lastPointer = { x: pos.x, y: pos.y, time: performance.now() };
           pointerVelocity = { x: 0, y: 0 };
           canvas.style.cursor = 'grabbing';
-          // Move grabbed ball to top of render stack
+          // Move grabbed ball to top of stack
           balls.splice(i, 1);
           balls.push(ball);
           break;
@@ -144,9 +144,9 @@ export default function InteractiveLogoBallsBand() {
 
     const onPointerUp = () => {
       if (draggedBall) {
-        // Impart toss velocity
-        draggedBall.vx = Math.max(-900, Math.min(900, pointerVelocity.x * 0.85));
-        draggedBall.vy = Math.max(-900, Math.min(900, pointerVelocity.y * 0.85));
+        // Impart fling momentum
+        draggedBall.vx = Math.max(-800, Math.min(800, pointerVelocity.x * 0.85));
+        draggedBall.vy = Math.max(-800, Math.min(800, pointerVelocity.y * 0.85));
         draggedBall = null;
         canvas.style.cursor = 'default';
       }
@@ -166,9 +166,9 @@ export default function InteractiveLogoBallsBand() {
     resizeObserver.observe(container);
 
     // Physics constants
-    const gravity = 1200; // px/s^2
-    const restitution = 0.65; // Bounciness
-    const friction = 0.985; // Floor damping
+    const gravity = 1100; // px/s^2
+    const restitution = 0.62; // Bounciness
+    const friction = 0.985; // Ground friction
 
     let lastTime = performance.now();
 
@@ -190,7 +190,7 @@ export default function InteractiveLogoBallsBand() {
           // Apply Gravity
           ball.vy += gravity * dt;
 
-          // Air resistance
+          // Air drag
           ball.vx *= (1 - 0.008);
           ball.vy *= (1 - 0.004);
 
@@ -201,7 +201,7 @@ export default function InteractiveLogoBallsBand() {
           if (ball.y >= height - ball.radius) {
             ball.y = height - ball.radius;
             ball.vy = -ball.vy * restitution;
-            if (Math.abs(ball.vy) < 25) ball.vy = 0;
+            if (Math.abs(ball.vy) < 22) ball.vy = 0;
             ball.vx *= friction;
           }
 
@@ -253,7 +253,7 @@ export default function InteractiveLogoBallsBand() {
                 b2.y += ny * overlap * 0.5;
               }
 
-              // Elastic impulse
+              // Elastic momentum exchange
               const kx = b1.vx - b2.vx;
               const ky = b1.vy - b2.vy;
               const p = 2 * (nx * kx + ny * ky) / 2;
@@ -274,23 +274,22 @@ export default function InteractiveLogoBallsBand() {
         }
       }
 
-      // Render 2D Frame
+      // Render 2D Frame (Transparent background - no box)
       ctx.clearRect(0, 0, width, height);
 
       // Draw all balls
       balls.forEach((ball) => {
-        // Don't render if completely above viewport
         if (ball.y < -ball.radius * 2) return;
 
         ctx.save();
 
         // 1. Soft Ambient Drop Shadow
         ctx.shadowColor = 'rgba(15, 23, 42, 0.12)';
-        ctx.shadowBlur = 14;
+        ctx.shadowBlur = 10;
         ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 6;
+        ctx.shadowOffsetY = 4;
 
-        // 2. 2D Ball Body (Crisp porcelain white with subtle sleek depth gradient)
+        // 2. 2D Ball Body (Crisp porcelain white)
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
         const ballGrad = ctx.createRadialGradient(
@@ -302,7 +301,7 @@ export default function InteractiveLogoBallsBand() {
           ball.radius
         );
         ballGrad.addColorStop(0, '#FFFFFF');
-        ballGrad.addColorStop(0.7, '#FFFFFF');
+        ballGrad.addColorStop(0.75, '#FFFFFF');
         ballGrad.addColorStop(1, '#F1F5F9');
         ctx.fillStyle = ballGrad;
         ctx.fill();
@@ -310,14 +309,14 @@ export default function InteractiveLogoBallsBand() {
         // 3. Subtle Clean Outline Border
         ctx.shadowColor = 'transparent';
         ctx.lineWidth = 1.5;
-        ctx.strokeStyle = '#E2E8F0';
+        ctx.strokeStyle = '#CBD5E1';
         ctx.stroke();
 
         // Subtle brand-colored hairline inner rim
         ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.radius - 2.5, 0, Math.PI * 2);
+        ctx.arc(ball.x, ball.y, ball.radius - 2, 0, Math.PI * 2);
         ctx.lineWidth = 1;
-        ctx.strokeStyle = ball.company.brandColor ? `${ball.company.brandColor}33` : 'rgba(226, 232, 240, 0.5)';
+        ctx.strokeStyle = ball.company.brandColor ? `${ball.company.brandColor}30` : 'rgba(226, 232, 240, 0.4)';
         ctx.stroke();
 
         // 4. STILL COMPANY LOGO ON TOP OF BALL (ALWAYS UPRIGHT, NEVER ROTATING)
@@ -342,8 +341,7 @@ export default function InteractiveLogoBallsBand() {
             drawH
           );
         } else {
-          // Fallback clean text if image is loading
-          ctx.font = 'bold 12px "Plus Jakarta Sans", system-ui, sans-serif';
+          ctx.font = 'bold 10px "Plus Jakarta Sans", system-ui, sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillStyle = '#090D16';
@@ -352,9 +350,9 @@ export default function InteractiveLogoBallsBand() {
 
         // 5. Subtle Top Gloss Highlight Arc
         ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.radius - 3, -Math.PI * 0.8, -Math.PI * 0.2);
-        ctx.lineWidth = 2;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.75)';
+        ctx.arc(ball.x, ball.y, ball.radius - 2.5, -Math.PI * 0.8, -Math.PI * 0.2);
+        ctx.lineWidth = 1.5;
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
         ctx.stroke();
 
         ctx.restore();
@@ -382,7 +380,7 @@ export default function InteractiveLogoBallsBand() {
     <section 
       style={{ 
         position: 'relative',
-        padding: '64px 0', 
+        padding: '24px 0', 
         borderTop: '1px solid #E2E8F0',
         borderBottom: '1px solid #E2E8F0',
         backgroundColor: '#F8FAFC',
@@ -396,69 +394,51 @@ export default function InteractiveLogoBallsBand() {
           padding: '0 24px'
         }}
       >
-        {/* Half Text and Half Balls Grid Layout */}
+        {/* Half Text and Half Balls - Seamless, No Enclosing Box */}
         <div 
           style={{ 
             display: 'grid', 
             gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
             alignItems: 'center',
-            gap: '48px'
+            gap: '32px'
           }}
         >
-          {/* Half Text (Left-Aligned, No Buttons) */}
-          <div style={{ textAlign: 'left', maxWidth: '540px' }}>
+          {/* Half Text (Left-Aligned, Compact Height) */}
+          <div style={{ textAlign: 'left', maxWidth: '520px' }}>
             <h2 
               style={{ 
                 fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
-                fontSize: 'clamp(28px, 3.6vw, 46px)', 
+                fontSize: 'clamp(20px, 2.4vw, 30px)', 
                 fontWeight: 800, 
-                letterSpacing: '-0.035em', 
+                letterSpacing: '-0.03em', 
                 color: '#090D16', 
                 margin: 0,
                 textAlign: 'left',
-                lineHeight: 1.15
+                lineHeight: 1.2
               }}
             >
               JobGen candidates have landed dream roles at industry giants
             </h2>
           </div>
 
-          {/* Half Balls (Interactive 2D Physics Canvas Band) */}
+          {/* Half Balls (Borderless, Transparent Physics Band) */}
           <div 
             ref={containerRef}
             style={{ 
               position: 'relative', 
               width: '100%', 
-              height: '320px',
-              backgroundColor: '#FFFFFF',
-              borderRadius: '20px',
-              border: '1px solid #E2E8F0',
-              boxShadow: 'inset 0 2px 8px rgba(15, 23, 42, 0.02), 0 8px 24px -4px rgba(15, 23, 42, 0.04)',
+              height: '160px',
               overflow: 'hidden',
               touchAction: 'none'
             }}
           >
-            {/* Subtle Dotted Matrix Texture on Floor */}
-            <div 
-              style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: 'radial-gradient(rgba(148, 163, 184, 0.22) 1.2px, transparent 1.2px)',
-                backgroundSize: '18px 18px',
-                pointerEvents: 'none',
-                opacity: 0.6
-              }}
-            />
-
-            {/* 2D Physics Canvas */}
+            {/* 2D Physics Canvas on Natural Section Background */}
             <canvas 
               ref={canvasRef}
               style={{
                 width: '100%',
                 height: '100%',
-                display: 'block',
-                position: 'relative',
-                zIndex: 2
+                display: 'block'
               }}
             />
           </div>
