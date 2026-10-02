@@ -36,16 +36,16 @@ export default function InteractiveLogoBallsBand() {
       };
     });
 
-    // Dimensions with reliable fallbacks
-    let width = Math.max(320, container.clientWidth || 560);
-    let height = Math.max(150, container.clientHeight || 160);
+    // Dimensions with reliable fallbacks (Height increased to 230px to prevent clipping of 70% larger balls)
+    let width = Math.max(340, container.clientWidth || 560);
+    let height = Math.max(200, container.clientHeight || 230);
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const resizeCanvas = () => {
       if (!canvas || !container) return;
       const rect = container.getBoundingClientRect();
-      const newW = Math.max(300, Math.floor(rect.width || container.clientWidth || 560));
-      const newH = Math.max(140, Math.floor(rect.height || container.clientHeight || 160));
+      const newW = Math.max(320, Math.floor(rect.width || container.clientWidth || 560));
+      const newH = Math.max(200, Math.floor(rect.height || container.clientHeight || 230));
       
       width = newW;
       height = newH;
@@ -56,24 +56,23 @@ export default function InteractiveLogoBallsBand() {
 
     resizeCanvas();
 
-    // 2D Physics Ball Setup
-    // Ball radius calibrated to fit 160px height
-    const radius = 28;
+    // 2D Physics Ball Setup - 70% BIGGER (from radius 28px to 48px, diameter 96px)
+    const radius = 48;
     
     // Spawn balls visibly INSIDE the canvas, near top/mid, so they are guaranteed visible immediately!
     const balls = COMPANIES.map((comp, idx) => {
       const totalBalls = COMPANIES.length;
-      const usableW = Math.max(radius * 3, width - radius * 4);
+      const usableW = Math.max(radius * 2, width - radius * 3);
       const stepX = usableW / Math.max(1, totalBalls - 1);
-      const startX = radius * 2;
+      const startX = radius * 1.5;
       
       return {
         company: comp,
         radius,
-        x: Math.max(radius + 4, Math.min(width - radius - 4, startX + stepX * idx + (Math.random() - 0.5) * 8)),
+        x: Math.max(radius + 8, Math.min(width - radius - 8, startX + stepX * idx + (Math.random() - 0.5) * 8)),
         // Placed visibly inside the top half of the canvas to drop naturally to the floor
-        y: Math.max(radius + 6, 25 + (idx % 2) * 35 + Math.random() * 15),
-        vx: (Math.random() - 0.5) * 30,
+        y: Math.max(radius + 8, 30 + (idx % 2) * 45 + Math.random() * 15),
+        vx: (Math.random() - 0.5) * 35,
         vy: 30 + Math.random() * 40,
         isDragging: false
       };
@@ -131,8 +130,9 @@ export default function InteractiveLogoBallsBand() {
         pointerVelocity.x = (targetX - lastPointer.x) / dt;
         pointerVelocity.y = (targetY - lastPointer.y) / dt;
 
-        draggedBall.x = Math.max(draggedBall.radius, Math.min(width - draggedBall.radius, targetX));
-        draggedBall.y = Math.max(draggedBall.radius, Math.min(height - draggedBall.radius, targetY));
+        // Clamp inside bounds with 18px bottom clearance to prevent any shadow clipping
+        draggedBall.x = Math.max(draggedBall.radius + 8, Math.min(width - draggedBall.radius - 8, targetX));
+        draggedBall.y = Math.max(draggedBall.radius + 8, Math.min(height - draggedBall.radius - 18, targetY));
 
         draggedBall.vx = 0;
         draggedBall.vy = 0;
@@ -174,8 +174,8 @@ export default function InteractiveLogoBallsBand() {
     resizeObserver.observe(container);
 
     // Physics constants
-    const gravity = 950; // px/s^2
-    const restitution = 0.65; // Elasticity
+    const gravity = 1000; // px/s^2
+    const restitution = 0.62; // Elasticity
     const friction = 0.985; // Ground friction
 
     let lastTime = performance.now();
@@ -205,8 +205,8 @@ export default function InteractiveLogoBallsBand() {
           ball.x += ball.vx * dt;
           ball.y += ball.vy * dt;
 
-          // Bottom Floor Collision
-          const floorY = height - ball.radius;
+          // Bottom Floor Collision: leaves 18px margin so the drop-shadow NEVER clips at the bottom
+          const floorY = height - ball.radius - 18;
           if (ball.y >= floorY) {
             ball.y = floorY;
             ball.vy = -ball.vy * restitution;
@@ -215,20 +215,20 @@ export default function InteractiveLogoBallsBand() {
           }
 
           // Left Wall Collision
-          if (ball.x <= ball.radius) {
-            ball.x = ball.radius;
+          if (ball.x <= ball.radius + 8) {
+            ball.x = ball.radius + 8;
             ball.vx = -ball.vx * restitution;
           }
 
           // Right Wall Collision
-          if (ball.x >= width - ball.radius) {
-            ball.x = width - ball.radius;
+          if (ball.x >= width - ball.radius - 8) {
+            ball.x = width - ball.radius - 8;
             ball.vx = -ball.vx * restitution;
           }
 
           // Top Ceiling Collision
-          if (ball.y <= ball.radius && ball.vy < 0) {
-            ball.y = ball.radius;
+          if (ball.y <= ball.radius + 8 && ball.vy < 0) {
+            ball.y = ball.radius + 8;
             ball.vy = -ball.vy * restitution;
           }
         });
@@ -290,11 +290,11 @@ export default function InteractiveLogoBallsBand() {
       balls.forEach((ball) => {
         ctx.save();
 
-        // 1. Soft Ambient Drop Shadow underneath ball
+        // 1. Soft Ambient Drop Shadow underneath ball (fully unclipped)
         ctx.shadowColor = 'rgba(15, 23, 42, 0.16)';
-        ctx.shadowBlur = 12;
+        ctx.shadowBlur = 14;
         ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 5;
+        ctx.shadowOffsetY = 6;
 
         // 2. 2D Ball Body (Porcelain white with subtle depth)
         ctx.beginPath();
@@ -315,14 +315,14 @@ export default function InteractiveLogoBallsBand() {
 
         // 3. Crisp Clean Border
         ctx.shadowColor = 'transparent';
-        ctx.lineWidth = 1.5;
+        ctx.lineWidth = 1.75;
         ctx.strokeStyle = '#CBD5E1';
         ctx.stroke();
 
         // Subtle brand-colored hairline inner rim
         ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.radius - 2, 0, Math.PI * 2);
-        ctx.lineWidth = 1;
+        ctx.arc(ball.x, ball.y, ball.radius - 2.5, 0, Math.PI * 2);
+        ctx.lineWidth = 1.2;
         ctx.strokeStyle = ball.company.brandColor ? `${ball.company.brandColor}35` : 'rgba(226, 232, 240, 0.5)';
         ctx.stroke();
 
@@ -348,7 +348,7 @@ export default function InteractiveLogoBallsBand() {
           );
         } else {
           // Clean company text fallback while image loads
-          ctx.font = 'bold 11px "Plus Jakarta Sans", system-ui, sans-serif';
+          ctx.font = 'bold 12px "Plus Jakarta Sans", system-ui, sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillStyle = '#090D16';
@@ -357,8 +357,8 @@ export default function InteractiveLogoBallsBand() {
 
         // 5. Subtle Top Gloss Highlight Arc
         ctx.beginPath();
-        ctx.arc(ball.x, ball.y, ball.radius - 2.5, -Math.PI * 0.8, -Math.PI * 0.2);
-        ctx.lineWidth = 1.5;
+        ctx.arc(ball.x, ball.y, ball.radius - 3, -Math.PI * 0.8, -Math.PI * 0.2);
+        ctx.lineWidth = 2;
         ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
         ctx.stroke();
 
@@ -387,7 +387,7 @@ export default function InteractiveLogoBallsBand() {
     <section 
       style={{ 
         position: 'relative',
-        padding: '24px 0', 
+        padding: '36px 0', 
         borderTop: '1px solid #E2E8F0',
         borderBottom: '1px solid #E2E8F0',
         backgroundColor: '#F8FAFC',
@@ -407,7 +407,7 @@ export default function InteractiveLogoBallsBand() {
             display: grid;
             grid-template-columns: 1fr 1fr;
             align-items: center;
-            gap: 32px;
+            gap: 36px;
           }
           @media (max-width: 768px) {
             .logo-balls-band-grid {
@@ -423,7 +423,7 @@ export default function InteractiveLogoBallsBand() {
             <h2 
               style={{ 
                 fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
-                fontSize: 'clamp(20px, 2.5vw, 32px)', 
+                fontSize: 'clamp(22px, 2.7vw, 34px)', 
                 fontWeight: 800, 
                 letterSpacing: '-0.03em', 
                 color: '#090D16', 
@@ -436,14 +436,14 @@ export default function InteractiveLogoBallsBand() {
             </h2>
           </div>
 
-          {/* Half Balls (Directly on section background, no enclosing box) */}
+          {/* Half Balls (Directly on section background, no enclosing box, 230px height, unclipped) */}
           <div 
             ref={containerRef}
             style={{ 
               position: 'relative', 
               width: '100%', 
-              height: '160px',
-              minHeight: '160px',
+              height: '230px',
+              minHeight: '230px',
               minWidth: 0,
               touchAction: 'none'
             }}
