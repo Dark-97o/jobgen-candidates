@@ -690,6 +690,20 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
         <span>Scroll to explore</span>
         <ChevronDown size={14} style={{ animation: 'bounce 1.5s infinite' }} />
       </div>
+
+      {/* Crisp White Line Separator at the end of the Hero Section */}
+      <div 
+        style={{
+          position: 'absolute',
+          bottom: 0,
+          left: 0,
+          right: 0,
+          height: '1px',
+          backgroundColor: '#FFFFFF',
+          zIndex: 35,
+          pointerEvents: 'none'
+        }}
+      />
     </section>
   );
 }
@@ -1076,20 +1090,51 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       </header>
 
       {/* =========================================================================
-          2. FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REALISTIC RESUME
+          2 & 3. HERO & VIDEO REVEAL CONTAINER
+          Hero section scrolls away over the stationary video section underneath
           ========================================================================= */}
-      <FluidBlueHero 
-        onSignIn={onSignIn} 
-        onLaunchApp={onLaunchApp} 
-        onScanClick={() => scrollToSection('ats-scanner')} 
-        onProductivityClick={() => scrollToSection('productivity')}
-        onPricingClick={() => scrollToSection('pricing')}
-      />
+      <div 
+        style={{
+          position: 'relative',
+          width: '100%',
+          height: '200vh'
+        }}
+      >
+        {/* Stationary Sticky Video Section: Waiting underneath at top: 0 */}
+        <div 
+          style={{
+            position: 'sticky',
+            top: 0,
+            width: '100%',
+            height: '100vh',
+            zIndex: 1,
+            backgroundColor: '#FFFFFF',
+            overflow: 'hidden'
+          }}
+        >
+          <VideoShowcaseSection />
+        </div>
 
-      {/* =========================================================================
-          3. VIDEO SHOWCASE (BACKGROUND VIDEO + BLACK OVERLAY + FRAMED VIDEO)
-          ========================================================================= */}
-      <VideoShowcaseSection />
+        {/* Hero Section: Positioned on top (zIndex: 2), scrolls away over the video */}
+        <div 
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100vh',
+            zIndex: 2
+          }}
+        >
+          <FluidBlueHero 
+            onSignIn={onSignIn} 
+            onLaunchApp={onLaunchApp} 
+            onScanClick={() => scrollToSection('ats-scanner')} 
+            onProductivityClick={() => scrollToSection('productivity')}
+            onPricingClick={() => scrollToSection('pricing')}
+          />
+        </div>
+      </div>
 
       {/* =========================================================================
           4. INTERACTIVE AUTONOMOUS WORKSPACE PREVIEW
