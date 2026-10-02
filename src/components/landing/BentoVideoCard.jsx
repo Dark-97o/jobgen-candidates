@@ -1,16 +1,21 @@
 import React, { useRef, useEffect } from 'react';
+import { Lock } from 'lucide-react';
 
 /**
  * BentoVideoCard
- * Renders a full-bleed bento card containing a muted video that stays paused
- * by default and only plays while the user hovers over the card.
- * Overlaid with an atmospheric bottom black fade and headline text.
+ * Renders a full-bleed bento card styled as a native macOS window:
+ * - Iconic macOS traffic lights (red, yellow, green)
+ * - Frosted macOS top title bar with security/file indicator
+ * - Mac-style double-bezel border with specular glass rim
+ * - Muted video that only plays on card hover
+ * - Bottom atmospheric black fade with half-white half-blue headline typography
  */
 export default function BentoVideoCard({
   src,
   headline,
   whiteText,
   blueText,
+  fileName,
   colSpan = 8,
   objectPosition = 'center'
 }) {
@@ -26,7 +31,6 @@ export default function BentoVideoCard({
     video.playsInline = true;
 
     const handleLoadedData = () => {
-      // Seek slightly into the video to ensure browsers decode and paint the first frame
       try {
         if (video.currentTime === 0) {
           video.currentTime = 0.05;
@@ -58,6 +62,11 @@ export default function BentoVideoCard({
     }
   };
 
+  // Sleek macOS window label
+  const windowLabel = fileName || (
+    blueText ? `${blueText.toLowerCase().replace(/\s+/g, '-')}.app` : 'jobgen.app'
+  );
+
   return (
     <div
       className={`white-bento-card productivity-card-${colSpan === 8 ? 'rect' : 'square'}`}
@@ -68,13 +77,105 @@ export default function BentoVideoCard({
         height: '380px',
         position: 'relative',
         overflow: 'hidden',
-        borderRadius: '24px',
-        border: '1px solid rgba(226, 232, 240, 0.85)',
-        boxShadow: '0 10px 30px -5px rgba(26, 83, 207, 0.08), 0 2px 10px rgba(15, 23, 42, 0.04)',
+        borderRadius: '22px',
+        // macOS Liquid Glass & Double-Bezel Border
+        border: '1.5px solid rgba(255, 255, 255, 0.28)',
+        boxShadow: `
+          0 0 0 1px rgba(15, 23, 42, 0.1),
+          0 24px 50px -12px rgba(15, 23, 42, 0.18),
+          0 8px 24px -4px rgba(26, 83, 207, 0.1),
+          inset 0 1.5px 1.5px rgba(255, 255, 255, 0.5),
+          inset 0 0 0 1px rgba(255, 255, 255, 0.1)
+        `,
         backgroundColor: '#0F172A',
         cursor: 'pointer'
       }}
     >
+      {/* ================= macOS WINDOW TOP TITLE BAR ================= */}
+      <div
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '38px',
+          background: 'linear-gradient(180deg, rgba(15, 23, 42, 0.78) 0%, rgba(15, 23, 42, 0.45) 75%, transparent 100%)',
+          backdropFilter: 'blur(16px)',
+          WebkitBackdropFilter: 'blur(16px)',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+          zIndex: 10,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          padding: '0 16px',
+          boxSizing: 'border-box',
+          pointerEvents: 'none',
+          userSelect: 'none'
+        }}
+      >
+        {/* macOS Traffic Lights */}
+        <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
+          <span
+            style={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '50%',
+              backgroundColor: '#FF5F56',
+              border: '0.5px solid #E0443E',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
+              display: 'inline-block'
+            }}
+          />
+          <span
+            style={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '50%',
+              backgroundColor: '#FFBD2E',
+              border: '0.5px solid #DEA123',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
+              display: 'inline-block'
+            }}
+          />
+          <span
+            style={{
+              width: '10px',
+              height: '10px',
+              borderRadius: '50%',
+              backgroundColor: '#27C93F',
+              border: '0.5px solid #1AAB29',
+              boxShadow: '0 1px 2px rgba(0, 0, 0, 0.3)',
+              display: 'inline-block'
+            }}
+          />
+        </div>
+
+        {/* Center Mac Window Tab / File Pill */}
+        <div
+          style={{
+            display: 'inline-flex',
+            alignItems: 'center',
+            gap: '5px',
+            padding: '2px 10px',
+            borderRadius: '6px',
+            backgroundColor: 'rgba(255, 255, 255, 0.08)',
+            border: '1px solid rgba(255, 255, 255, 0.12)',
+            color: '#94A3B8',
+            fontSize: '11px',
+            fontFamily: '"JetBrains Mono", monospace',
+            letterSpacing: '0.02em',
+            boxShadow: 'inset 0 1px 1px rgba(0, 0, 0, 0.3)'
+          }}
+        >
+          <Lock size={9} color="#64748B" />
+          <span>{windowLabel}</span>
+        </div>
+
+        {/* Right Corner Placeholder to Balance Flex Layout */}
+        <div style={{ width: '44px' }} />
+      </div>
+
+      {/* Video Canvas (Full-Bleed) */}
       <video
         ref={videoRef}
         src={src}
@@ -99,7 +200,7 @@ export default function BentoVideoCard({
           bottom: 0,
           left: 0,
           right: 0,
-          padding: colSpan === 8 ? '48px 32px 26px 32px' : '48px 28px 26px 28px',
+          padding: colSpan === 8 ? '52px 32px 26px 32px' : '52px 28px 26px 28px',
           background: 'linear-gradient(to top, rgba(0, 0, 0, 0.94) 0%, rgba(0, 0, 0, 0.72) 45%, rgba(0, 0, 0, 0.2) 80%, transparent 100%)',
           display: 'flex',
           alignItems: 'flex-end',
