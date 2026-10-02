@@ -38,6 +38,7 @@ import HandwrittenSubtitle from './HandwrittenSubtitle';
 import RevealingTitle from './RevealingTitle';
 import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
 import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
+import BlueMistAnimation from './BlueMistAnimation';
 
 // ==========================================
 // STATIC DATA & CONTENT FROM CANDIDATES.JOBGEN.AI
@@ -894,21 +895,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           animation: laserSweep 1.8s infinite ease-in-out;
         }
 
-        /* Floating Blue Mist & Cloud Animations */
-        @keyframes floatCloudLeft {
-          0% { transform: translate3d(-30px, -15px, 0) scale(1); opacity: 0.72; }
-          50% { transform: translate3d(30px, 20px, 0) scale(1.06); opacity: 0.9; }
-          100% { transform: translate3d(-30px, -15px, 0) scale(1); opacity: 0.72; }
-        }
-        @keyframes floatCloudRight {
-          0% { transform: translate3d(25px, 15px, 0) scale(1.04); opacity: 0.65; }
-          50% { transform: translate3d(-25px, -20px, 0) scale(0.97); opacity: 0.85; }
-          100% { transform: translate3d(25px, 15px, 0) scale(1.04); opacity: 0.65; }
-        }
-        @keyframes pulseMistGlow {
-          0%, 100% { opacity: 0.45; transform: scale(1); }
-          50% { opacity: 0.75; transform: scale(1.12); }
-        }
+
 
         @media (max-width: 960px) {
           .productivity-grid {
@@ -1136,118 +1123,8 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           overflow: 'hidden'
         }}
       >
-        {/* Floating Blue Mist Ambient Radial Glows */}
-        <div 
-          style={{
-            position: 'absolute',
-            top: '-5%',
-            left: '-8%',
-            width: '650px',
-            height: '650px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(59, 130, 246, 0.22) 0%, rgba(147, 197, 253, 0.1) 45%, transparent 70%)',
-            filter: 'blur(70px)',
-            pointerEvents: 'none',
-            animation: 'pulseMistGlow 12s ease-in-out infinite alternate',
-            zIndex: 0
-          }} 
-        />
-        <div 
-          style={{
-            position: 'absolute',
-            bottom: '-10%',
-            right: '-6%',
-            width: '750px',
-            height: '750px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(37, 99, 235, 0.2) 0%, rgba(96, 165, 250, 0.1) 45%, transparent 70%)',
-            filter: 'blur(80px)',
-            pointerEvents: 'none',
-            animation: 'pulseMistGlow 15s ease-in-out infinite alternate-reverse',
-            zIndex: 0
-          }} 
-        />
-        <div 
-          style={{
-            position: 'absolute',
-            top: '35%',
-            left: '30%',
-            width: '600px',
-            height: '600px',
-            borderRadius: '50%',
-            background: 'radial-gradient(circle, rgba(147, 197, 253, 0.25) 0%, transparent 65%)',
-            filter: 'blur(85px)',
-            pointerEvents: 'none',
-            animation: 'pulseMistGlow 10s ease-in-out infinite alternate',
-            zIndex: 0
-          }} 
-        />
-
-        {/* Floating Blue Mist Cloud 1 (Top Left / Drifting) */}
-        <div 
-          style={{
-            position: 'absolute',
-            top: '-50px',
-            left: '-100px',
-            width: '880px',
-            maxWidth: '60vw',
-            pointerEvents: 'none',
-            zIndex: 0,
-            opacity: 0.75,
-            animation: 'floatCloudLeft 18s ease-in-out infinite',
-            filter: 'drop-shadow(0 25px 45px rgba(59, 130, 246, 0.22)) hue-rotate(195deg) saturate(1.4)'
-          }}
-        >
-          <img 
-            src="/cloud-vfx-1.png" 
-            alt="Blue mist cloud" 
-            style={{ width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }} 
-          />
-        </div>
-
-        {/* Floating Blue Mist Cloud 2 (Bottom Right / Drifting) */}
-        <div 
-          style={{
-            position: 'absolute',
-            bottom: '-90px',
-            right: '-110px',
-            width: '960px',
-            maxWidth: '65vw',
-            pointerEvents: 'none',
-            zIndex: 0,
-            opacity: 0.7,
-            animation: 'floatCloudRight 22s ease-in-out infinite',
-            filter: 'drop-shadow(0 25px 50px rgba(37, 99, 235, 0.25)) hue-rotate(200deg) saturate(1.5)'
-          }}
-        >
-          <img 
-            src="/cloud-vfx-2.png" 
-            alt="Blue mist cloud" 
-            style={{ width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }} 
-          />
-        </div>
-
-        {/* Floating Blue Mist Cloud 3 (Mid-Left Accent) */}
-        <div 
-          style={{
-            position: 'absolute',
-            top: '42%',
-            left: '-120px',
-            width: '620px',
-            maxWidth: '45vw',
-            pointerEvents: 'none',
-            zIndex: 0,
-            opacity: 0.5,
-            animation: 'floatCloudRight 25s ease-in-out infinite reverse',
-            filter: 'drop-shadow(0 15px 35px rgba(96, 165, 250, 0.25)) hue-rotate(190deg) saturate(1.3)'
-          }}
-        >
-          <img 
-            src="/cloud1.png" 
-            alt="Blue mist cloud" 
-            style={{ width: '100%', height: 'auto', display: 'block', pointerEvents: 'none' }} 
-          />
-        </div>
+        {/* Animated Procedural Blue Mist Background (Particle Flow + Fluid Mist Morphology) */}
+        <BlueMistAnimation />
 
         {/* Section Content */}
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
