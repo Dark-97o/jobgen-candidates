@@ -636,10 +636,6 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
 }
 
 export default function LandingPage({ onSignIn, onLaunchApp }) {
-  // Intro Animation State (disabled by default so blue hero loads instantly)
-  const [showIntro, setShowIntro] = useState(false);
-  const [introPhase, setIntroPhase] = useState('enter'); // 'enter' | 'zoom' | 'reveal'
-
   const [activeFeatureTab, setActiveFeatureTab] = useState(0);
   const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'yearly'
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
@@ -657,40 +653,6 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
-
-  useEffect(() => {
-    // Phase 1: Pure white logo sits on solid black background
-    const t1 = setTimeout(() => {
-      setIntroPhase('zoom'); // Triggers dramatic zoom-in while background stays solid black
-    }, 850);
-
-    // Phase 2: After zoom engulfs viewport, fade out black overlay to reveal white webpage
-    const t2 = setTimeout(() => {
-      setIntroPhase('reveal');
-    }, 1900);
-
-    // Phase 3: Unmount intro overlay
-    const t3 = setTimeout(() => {
-      setShowIntro(false);
-    }, 2450);
-
-    return () => {
-      clearTimeout(t1);
-      clearTimeout(t2);
-      clearTimeout(t3);
-    };
-  }, []);
-
-  // Keyboard shortcut (Escape, Space, Enter) or click to skip intro
-  useEffect(() => {
-    const handleKeyDown = (e) => {
-      if (showIntro && ['Escape', ' ', 'Enter'].includes(e.key)) {
-        setShowIntro(false);
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => window.removeEventListener('keydown', handleKeyDown);
-  }, [showIntro]);
 
   // Simulated ATS file upload & scan
   const handleFileUpload = (e) => {
@@ -729,81 +691,6 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         overflowX: 'hidden'
       }}
     >
-      {/* =========================================================================
-          INTRO ANIMATION: SOLID BLACK BACKGROUND -> PURE WHITE LOGO -> ZOOM IN WITH LOADINGBG -> REVEAL WHITE WEBPAGE
-          ========================================================================= */}
-      {showIntro && (
-        <div
-          onClick={() => setShowIntro(false)}
-          title="Click to skip intro"
-          style={{
-            position: 'fixed',
-            inset: 0,
-            zIndex: 999999,
-            backgroundColor: '#000000',
-            opacity: introPhase === 'reveal' ? 0 : 1,
-            pointerEvents: introPhase === 'reveal' ? 'none' : 'auto',
-            transition: 'opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            overflow: 'hidden'
-          }}
-        >
-          {/* Loading Background (loadingbg.png) replacing plain white bg during zoom */}
-          <div
-            style={{
-              position: 'absolute',
-              inset: 0,
-              backgroundImage: 'url(/loadingbg.png)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              opacity: introPhase === 'zoom' || introPhase === 'reveal' ? 1 : 0,
-              transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
-              zIndex: 1
-            }}
-          >
-            {/* Atmospheric overlay to blend smoothly */}
-            <div
-              style={{
-                position: 'absolute',
-                inset: 0,
-                background: 'linear-gradient(180deg, rgba(9, 12, 21, 0.6) 0%, rgba(9, 12, 21, 0.35) 50%, rgba(9, 12, 21, 0.75) 100%)',
-              }}
-            />
-          </div>
-
-          <div
-            style={{
-              position: 'relative',
-              zIndex: 2,
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transform: introPhase === 'enter' 
-                ? 'scale(1)' 
-                : 'scale(70)',
-              transition: introPhase === 'zoom' || introPhase === 'reveal'
-                ? 'transform 1.2s cubic-bezier(0.7, 0, 0.25, 1)' 
-                : 'none',
-              willChange: 'transform'
-            }}
-          >
-            <img 
-              src="/Whitelogo.webp" 
-              alt="JobGen Logo" 
-              style={{
-                width: '130px',
-                height: '130px',
-                objectFit: 'contain',
-                filter: 'brightness(0) invert(1) drop-shadow(0 0 45px rgba(255, 255, 255, 0.95))',
-                userSelect: 'none'
-              }}
-            />
-          </div>
-        </div>
-      )}
-
       {/* =========================================================================
           GLOBAL STYLES & LIGHT AESTHETIC CLASSES
           ========================================================================= */}
