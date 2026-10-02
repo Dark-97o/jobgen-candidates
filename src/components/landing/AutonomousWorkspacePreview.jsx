@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-import FluidDownstreamBeam from './FluidDownstreamBeam';
 import { 
   Bell, 
   Calendar, 
@@ -36,21 +35,7 @@ export default function AutonomousWorkspacePreview({ onLaunchApp }) {
         overflow: 'hidden'
       }}
     >
-      {/* Styles for blue streak flow and glow animations */}
       <style>{`
-        @keyframes streakFlow {
-          0% { stroke-dashoffset: 700; opacity: 0.85; }
-          50% { opacity: 1; }
-          100% { stroke-dashoffset: 0; opacity: 0.85; }
-        }
-        @keyframes streakGlowPulse {
-          0%, 100% { filter: drop-shadow(0 0 18px #2563EB) drop-shadow(0 0 45px rgba(59, 130, 246, 0.65)); opacity: 0.95; }
-          50% { filter: drop-shadow(0 0 28px #3B82F6) drop-shadow(0 0 65px rgba(96, 165, 250, 0.85)); opacity: 1; }
-        }
-        @keyframes vertexFlareGlow {
-          0%, 100% { transform: scale(1); opacity: 0.9; }
-          50% { transform: scale(1.15); opacity: 1; }
-        }
         @keyframes floatingCardHover {
           0%, 100% { transform: translateY(0px) rotate(-1.5deg); }
           50% { transform: translateY(-4px) rotate(-1deg); }
@@ -72,159 +57,6 @@ export default function AutonomousWorkspacePreview({ onLaunchApp }) {
           }
         }
       `}</style>
-
-      {/* =========================================================================
-          1. LUMINOUS BLUE STREAK FLOWING DOWN (STRICT REFERENCE RECREATION)
-          ========================================================================= */}
-      <div 
-        style={{
-          position: 'absolute',
-          top: 0,
-          left: 0,
-          right: 0,
-          height: '680px',
-          pointerEvents: 'none',
-          zIndex: 5,
-          overflow: 'hidden'
-        }}
-        aria-hidden="true"
-      >
-        {/* Real-Time Hero Fluid Simulation Flowing Downstream */}
-        <FluidDownstreamBeam />
-
-        {/* Diffused Atmospheric Blue Ambient Radiance */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '-60px',
-            right: '22%',
-            width: '460px',
-            height: '520px',
-            background: 'radial-gradient(ellipse at center, rgba(37, 99, 235, 0.22) 0%, rgba(59, 130, 246, 0.12) 45%, transparent 75%)',
-            filter: 'blur(50px)',
-            pointerEvents: 'none'
-          }}
-        />
-
-        {/* Ambient Crest Glow above App Window */}
-        <div
-          style={{
-            position: 'absolute',
-            top: '250px',
-            right: '12%',
-            width: '560px',
-            height: '240px',
-            background: 'radial-gradient(ellipse at center, rgba(59, 130, 246, 0.3) 0%, rgba(29, 78, 216, 0.15) 50%, transparent 80%)',
-            filter: 'blur(45px)',
-            pointerEvents: 'none'
-          }}
-        />
-
-        {/* The Exact SVG Light Beam & Flared Wave Crest */}
-        <svg
-          viewBox="0 0 1440 680"
-          fill="none"
-          preserveAspectRatio="none"
-          style={{
-            width: '100%',
-            height: '100%',
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            overflow: 'visible'
-          }}
-        >
-          <defs>
-            {/* Vertical Flowing Beam Gradient */}
-            <linearGradient id="beamFlowGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stopColor="#FFFFFF" stopOpacity="0.9" />
-              <stop offset="40%" stopColor="#93C5FD" stopOpacity="1" />
-              <stop offset="75%" stopColor="#3B82F6" stopOpacity="1" />
-              <stop offset="100%" stopColor="#1D4ED8" stopOpacity="0.85" />
-            </linearGradient>
-
-            {/* Cyan-White Flare Core Gradient */}
-            <linearGradient id="flareCoreGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#3B82F6" stopOpacity="0" />
-              <stop offset="35%" stopColor="#60A5FA" stopOpacity="0.8" />
-              <stop offset="50%" stopColor="#FFFFFF" stopOpacity="1" />
-              <stop offset="65%" stopColor="#60A5FA" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#3B82F6" stopOpacity="0" />
-            </linearGradient>
-
-            {/* Flared Crest Curve Gradient */}
-            <linearGradient id="crestCurveGrad" x1="0%" y1="0%" x2="100%" y2="0%">
-              <stop offset="0%" stopColor="#1D4ED8" stopOpacity="0" />
-              <stop offset="45%" stopColor="#3B82F6" stopOpacity="0.75" />
-              <stop offset="68%" stopColor="#FFFFFF" stopOpacity="1" />
-              <stop offset="85%" stopColor="#3B82F6" stopOpacity="0.8" />
-              <stop offset="100%" stopColor="#1D4ED8" stopOpacity="0" />
-            </linearGradient>
-          </defs>
-
-          {/* Group with Glowing Filters */}
-          <g className="streak-glow-group" style={{ animation: 'streakGlowPulse 3s ease-in-out infinite' }}>
-            {/* Layer 1: Wide Diffused Royal Blue Halo */}
-            <path
-              d="M 980 0 L 980 250 C 980 320, 920 345, 520 350 M 980 250 C 980 320, 1030 350, 1180 440"
-              stroke="#2563EB"
-              strokeWidth="42"
-              strokeLinecap="round"
-              opacity="0.3"
-              style={{ filter: 'blur(20px)' }}
-            />
-
-            {/* Layer 2: Electric Azure Body */}
-            <path
-              d="M 980 0 L 980 250 C 980 320, 920 345, 520 350 M 980 250 C 980 320, 1030 350, 1180 440"
-              stroke="#3B82F6"
-              strokeWidth="18"
-              strokeLinecap="round"
-              opacity="0.65"
-              style={{ filter: 'blur(8px)' }}
-            />
-
-            {/* Layer 3: High-Intensity Cyan Core */}
-            <path
-              d="M 980 0 L 980 250 C 980 320, 920 345, 520 350 M 980 250 C 980 320, 1030 350, 1180 440"
-              stroke="#93C5FD"
-              strokeWidth="6"
-              strokeLinecap="round"
-              opacity="0.9"
-              style={{ filter: 'blur(2px)' }}
-            />
-
-            {/* Layer 4: Pure White Laser Filament */}
-            <path
-              d="M 980 0 L 980 250 C 980 320, 920 345, 520 350 M 980 250 C 980 320, 1030 350, 1180 440"
-              stroke="#FFFFFF"
-              strokeWidth="2.5"
-              strokeLinecap="round"
-              opacity="1"
-            />
-
-            {/* Layer 5: Dynamic Animated Flow Pulse running downward */}
-            <path
-              d="M 980 0 L 980 250 C 980 320, 920 345, 520 350 M 980 250 C 980 320, 1030 350, 1180 440"
-              stroke="#FFFFFF"
-              strokeWidth="4"
-              strokeDasharray="90 320"
-              strokeLinecap="round"
-              style={{
-                animation: 'streakFlow 2.2s linear infinite',
-                filter: 'drop-shadow(0 0 10px #60A5FA)'
-              }}
-            />
-          </g>
-
-          {/* Focal Flare Star Burst at Crest Vertex */}
-          <g transform="translate(980, 252)" style={{ animation: 'vertexFlareGlow 3s ease-in-out infinite' }}>
-            <ellipse cx="0" cy="0" rx="90" ry="18" fill="url(#flareCoreGrad)" />
-            <circle cx="0" cy="0" r="14" fill="#FFFFFF" style={{ filter: 'drop-shadow(0 0 16px #60A5FA)' }} />
-            <circle cx="0" cy="0" r="6" fill="#FFFFFF" />
-          </g>
-        </svg>
-      </div>
 
       {/* Main Container */}
       <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 10 }}>
