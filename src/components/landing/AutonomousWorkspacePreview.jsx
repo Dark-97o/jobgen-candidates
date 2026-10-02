@@ -1,4 +1,25 @@
 import React from 'react';
+import { 
+  FileEdit, 
+  Puzzle, 
+  TrendingUp, 
+  FileCheck, 
+  Kanban, 
+  Zap, 
+  Bot, 
+  Calendar 
+} from 'lucide-react';
+
+const FEATURES = [
+  { label: 'Tailored Cover Letter Studio', icon: FileEdit, color: '#F472B6' },
+  { label: '1-Click Chrome Extension', icon: Puzzle, color: '#60A5FA' },
+  { label: 'Salary & Equity Benchmark', icon: TrendingUp, color: '#10B981' },
+  { label: 'ATS Resume Studio', icon: FileCheck, color: '#38BDF8' },
+  { label: 'Opportunity Kanban Pipeline', icon: Kanban, color: '#818CF8' },
+  { label: 'Real-time AI Match Scoring', icon: Zap, color: '#FBBF24' },
+  { label: 'STAR Interview Prep Copilot', icon: Bot, color: '#A78BFA' },
+  { label: '12-Week Strategic Career Plan', icon: Calendar, color: '#34D399' }
+];
 
 export default function AutonomousWorkspacePreview() {
   return (
@@ -19,7 +40,7 @@ export default function AutonomousWorkspacePreview() {
         .animate-white-marquee {
           display: inline-block;
           white-space: nowrap;
-          animation: whiteMarquee 28s linear infinite;
+          animation: whiteMarquee 26s linear infinite;
         }
         .animate-white-marquee:hover {
           animation-play-state: paused;
@@ -207,78 +228,65 @@ export default function AutonomousWorkspacePreview() {
         />
       </div>
 
-      {/* 4. Dedicated Black Band with Feature Ticker */}
+      {/* 4. Dedicated Black Band with Bigger Feature Ticker & Favicons */}
       <div
         style={{
           position: 'relative',
           width: '100%',
           backgroundColor: '#090D16',
-          padding: '36px 0 42px 0',
+          padding: '28px 0 32px 0',
           zIndex: 15
         }}
       >
-        <div style={{ width: '100%', maxWidth: '1240px', margin: '0 auto', padding: '0 24px' }}>
-          {/* Header text on the black band */}
-          <p
-            style={{
-              fontSize: '12px',
-              color: '#94A3B8',
-              fontWeight: 700,
-              textTransform: 'uppercase',
-              letterSpacing: '0.08em',
-              marginBottom: '16px',
-              textAlign: 'center'
-            }}
-          >
-            Everything you need for autonomous career advancement:
-          </p>
-
-          {/* Marquee ticker on the black band */}
+        <div style={{ width: '100%', overflow: 'hidden' }}>
+          {/* Marquee ticker with larger text & favicons */}
           <div style={{ overflow: 'hidden', whiteSpace: 'nowrap', position: 'relative' }}>
             <div className="animate-white-marquee">
-              {[
-                'ATS Resume Studio',
-                'Opportunity Kanban Pipeline',
-                'Real-time AI Match Scoring',
-                'STAR Interview Prep Copilot',
-                '12-Week Strategic Career Plan',
-                'Tailored Cover Letter Studio',
-                '1-Click Chrome Extension',
-                'Salary & Equity Benchmark'
-              ].concat([
-                'ATS Resume Studio',
-                'Opportunity Kanban Pipeline',
-                'Real-time AI Match Scoring',
-                'STAR Interview Prep Copilot',
-                '12-Week Strategic Career Plan',
-                'Tailored Cover Letter Studio',
-                '1-Click Chrome Extension',
-                'Salary & Equity Benchmark'
-              ]).map((item, idx) => (
-                <span
-                  key={idx}
-                  style={{
-                    display: 'inline-flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    marginRight: '36px',
-                    fontSize: '13.5px',
-                    fontWeight: 650,
-                    color: '#F8FAFC'
-                  }}
-                >
-                  <span 
-                    style={{ 
-                      width: '6px', 
-                      height: '6px', 
-                      borderRadius: '50%', 
-                      backgroundColor: '#38BDF8', 
-                      boxShadow: '0 0 8px #38BDF8' 
-                    }} 
-                  />
-                  {item}
-                </span>
-              ))}
+              {FEATURES.concat(FEATURES).map((item, idx) => {
+                const IconComponent = item.icon;
+                return (
+                  <span
+                    key={idx}
+                    style={{
+                      display: 'inline-flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                      marginRight: '48px',
+                      verticalAlign: 'middle'
+                    }}
+                  >
+                    {/* Favicon Box */}
+                    <span 
+                      style={{ 
+                        display: 'inline-flex', 
+                        alignItems: 'center', 
+                        justifyContent: 'center',
+                        width: '36px', 
+                        height: '36px', 
+                        borderRadius: '10px', 
+                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                        border: '1px solid rgba(255, 255, 255, 0.12)',
+                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
+                        flexShrink: 0
+                      }}
+                    >
+                      <IconComponent size={18} color={item.color} />
+                    </span>
+
+                    {/* Bigger Feature Text */}
+                    <span
+                      style={{
+                        fontSize: 'clamp(17px, 1.4vw, 21px)',
+                        fontWeight: 750,
+                        letterSpacing: '-0.02em',
+                        color: '#F8FAFC'
+                      }}
+                    >
+                      {item.label}
+                    </span>
+                  </span>
+                );
+              })}
             </div>
           </div>
         </div>

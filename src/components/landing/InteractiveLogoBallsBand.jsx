@@ -423,13 +423,13 @@ export default function InteractiveLogoBallsBand() {
             <h2 
               style={{ 
                 fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
-                fontSize: 'clamp(22px, 2.7vw, 34px)', 
-                fontWeight: 800, 
-                letterSpacing: '-0.03em', 
+                fontSize: 'clamp(30px, 3.6vw, 50px)', 
+                fontWeight: 900, 
+                letterSpacing: '-0.035em', 
                 color: '#090D16', 
                 margin: 0,
                 textAlign: 'left',
-                lineHeight: 1.2
+                lineHeight: 1.08
               }}
             >
               JobGen candidates have landed dream roles at industry giants
