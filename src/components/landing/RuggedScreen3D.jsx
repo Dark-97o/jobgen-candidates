@@ -131,39 +131,28 @@ export default function RuggedScreen3D({
       {/* SVG Pulse Wave Distortion Filter */}
       <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }} aria-hidden="true">
         <defs>
-          <filter key={`pulse-filter-${distortKey}`} id="screen-pulse-wave-distortion" x="-20%" y="-20%" width="140%" height="140%">
+          <filter id="screen-surface-distortion" x="-20%" y="-20%" width="140%" height="140%">
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.02 0.04"
+              baseFrequency="0.045 0.06"
               numOctaves="3"
-              result="waveTurbulence"
+              result="turbulence"
             >
               <animate
                 attributeName="baseFrequency"
-                dur="1.15s"
-                values="0.008 0.016; 0.038 0.075; 0.065 0.11; 0.015 0.02"
-                keyTimes="0; 0.35; 0.7; 1"
-                repeatCount="1"
-                begin="0s"
+                dur="2.4s"
+                values="0.038 0.048; 0.058 0.072; 0.038 0.048"
+                repeatCount="indefinite"
               />
             </feTurbulence>
             <feDisplacementMap
               in="SourceGraphic"
-              in2="waveTurbulence"
-              scale="0"
+              in2="turbulence"
+              scale="32"
               xChannelSelector="R"
               yChannelSelector="G"
               result="displaced"
-            >
-              <animate
-                attributeName="scale"
-                dur="1.15s"
-                values="0; 38; 20; 0"
-                keyTimes="0; 0.28; 0.65; 1"
-                repeatCount="1"
-                begin="0s"
-              />
-            </feDisplacementMap>
+            />
           </filter>
         </defs>
       </svg>
@@ -301,15 +290,15 @@ export default function RuggedScreen3D({
               objectFit: 'cover',
               display: 'block',
               backgroundColor: '#000000',
-              filter: isDistorting ? 'url(#screen-pulse-wave-distortion)' : 'none',
-              transform: isDistorting ? 'scale(1.02)' : 'scale(1.0)',
+              filter: isDistorting ? 'url(#screen-surface-distortion)' : 'none',
+              transform: isDistorting ? 'scale(1.025)' : 'scale(1.0)',
               transition: isDistorting ? 'transform 0.3s ease' : 'transform 0.4s ease, filter 0.25s ease'
             }}
           >
             <source src={videoSrc} type="video/mp4" />
           </video>
 
-          {/* Traveling Pulse Wave Shockwave Across the 3D Figure */}
+          {/* Traveling Pulse Wave Shockwave Across the 3D Figure (Luminous Red) */}
           {isDistorting && (
             <div
               key={`pulse-overlay-${distortKey}`}
@@ -324,39 +313,39 @@ export default function RuggedScreen3D({
                 transform: 'translate(-50%, -50%)',
               }}
             >
-              {/* Primary Pulse Wavefront */}
+              {/* Primary Pulse Wavefront (Neon Red) */}
               <div
                 style={{
                   position: 'absolute',
                   inset: 0,
                   borderRadius: '50%',
-                  border: '2px solid rgba(56, 189, 248, 0.85)',
-                  boxShadow: '0 0 24px 3px rgba(56, 189, 248, 0.5), inset 0 0 16px 2px rgba(255, 255, 255, 0.4)',
+                  border: '2.5px solid rgba(239, 68, 68, 0.95)',
+                  boxShadow: '0 0 28px 5px rgba(239, 68, 68, 0.65), 0 0 45px 10px rgba(220, 38, 38, 0.35), inset 0 0 16px 2px rgba(255, 180, 180, 0.5)',
                   animation: 'pulseWaveFront 1.15s cubic-bezier(0.12, 0.7, 0.15, 1) forwards',
-                  backdropFilter: 'contrast(1.15) brightness(1.08)',
-                  WebkitBackdropFilter: 'contrast(1.15) brightness(1.08)',
+                  backdropFilter: 'contrast(1.18) brightness(1.1)',
+                  WebkitBackdropFilter: 'contrast(1.18) brightness(1.1)',
                 }}
               />
 
-              {/* Secondary Trailing Echo Ripple */}
+              {/* Secondary Trailing Echo Ripple (Crimson / Coral Red) */}
               <div
                 style={{
                   position: 'absolute',
                   inset: '-15px',
                   borderRadius: '50%',
-                  border: '1.5px solid rgba(147, 197, 253, 0.65)',
-                  boxShadow: '0 0 18px 2px rgba(99, 102, 241, 0.35)',
+                  border: '1.5px solid rgba(251, 113, 133, 0.8)',
+                  boxShadow: '0 0 20px 3px rgba(244, 63, 94, 0.4), inset 0 0 12px 1px rgba(255, 200, 200, 0.3)',
                   animation: 'pulseWaveEcho 1.15s cubic-bezier(0.18, 0.75, 0.2, 1) forwards',
                 }}
               />
 
-              {/* Atmospheric Water Caustic Gradient Mesh */}
+              {/* Atmospheric Water Caustic Gradient Mesh (Red Refraction) */}
               <div
                 style={{
                   position: 'absolute',
                   inset: '-30px',
                   borderRadius: '50%',
-                  background: 'radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(99, 102, 241, 0.1) 40%, transparent 70%)',
+                  background: 'radial-gradient(circle, rgba(239, 68, 68, 0.3) 0%, rgba(225, 29, 72, 0.12) 40%, transparent 70%)',
                   animation: 'pulseWaveGlow 1.15s cubic-bezier(0.15, 0.8, 0.2, 1) forwards',
                 }}
               />
