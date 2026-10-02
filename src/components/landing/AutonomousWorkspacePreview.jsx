@@ -255,23 +255,8 @@ export default function AutonomousWorkspacePreview() {
                       verticalAlign: 'middle'
                     }}
                   >
-                    {/* Favicon Box */}
-                    <span 
-                      style={{ 
-                        display: 'inline-flex', 
-                        alignItems: 'center', 
-                        justifyContent: 'center',
-                        width: '36px', 
-                        height: '36px', 
-                        borderRadius: '10px', 
-                        backgroundColor: 'rgba(255, 255, 255, 0.08)',
-                        border: '1px solid rgba(255, 255, 255, 0.12)',
-                        boxShadow: '0 2px 8px rgba(0, 0, 0, 0.25)',
-                        flexShrink: 0
-                      }}
-                    >
-                      <IconComponent size={18} color={item.color} />
-                    </span>
+                    {/* Direct Favicon Icon (No Card Box) */}
+                    <IconComponent size={22} color={item.color} style={{ flexShrink: 0 }} />
 
                     {/* Bigger Feature Text */}
                     <span
