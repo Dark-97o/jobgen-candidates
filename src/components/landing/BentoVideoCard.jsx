@@ -62,10 +62,11 @@ export default function BentoVideoCard({
     }
   };
 
-  // Sleek macOS window label
-  const windowLabel = fileName || (
-    blueText ? `${blueText.toLowerCase().replace(/\s+/g, '-')}.app` : 'jobgen.app'
+  // Sleek macOS window label (clean, without .app)
+  const rawLabel = fileName || (
+    blueText ? blueText.toLowerCase().replace(/\s+/g, '-') : 'jobgen'
   );
+  const windowLabel = rawLabel.replace(/\.app$/i, '');
 
   return (
     <div
@@ -221,7 +222,7 @@ export default function BentoVideoCard({
           {whiteText || blueText ? (
             <>
               <span style={{ color: '#FFFFFF' }}>{whiteText}</span>
-              <span style={{ color: '#60A5FA', textShadow: '0 0 16px rgba(96, 165, 250, 0.45)' }}>{blueText}</span>
+              <span style={{ color: '#60A5FA' }}>{blueText}</span>
             </>
           ) : (
             <span style={{ color: '#FFFFFF' }}>{headline}</span>

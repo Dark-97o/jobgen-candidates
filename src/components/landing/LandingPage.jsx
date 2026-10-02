@@ -748,7 +748,9 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
   };
 
   const scrollToSection = (id) => {
-    const el = document.getElementById(id);
+    const el = document.getElementById(id) || 
+      (id === 'features' ? document.getElementById('productivity') : null) ||
+      (id === 'productivity' ? document.getElementById('features') : null);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
     }
@@ -951,7 +953,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             boxShadow: '0 16px 36px -4px rgba(0, 0, 0, 0.35)'
           }}
         >
-          {/* Logo & Brand: Pure White Logo with text JobGen.AI */}
+          {/* Logo & Brand: Pure White Logo with text JobGen.IO */}
           <div 
             onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
             style={{ 
@@ -964,7 +966,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           >
             <img 
               src="/Whitelogo.webp" 
-              alt="JobGen.AI" 
+              alt="JobGen.IO" 
               style={{ 
                 width: '28px', 
                 height: '28px', 
@@ -976,43 +978,24 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 e.currentTarget.style.filter = 'brightness(0) invert(1)';
               }}
             />
-            <div style={{ display: 'flex', alignItems: 'baseline', gap: '3px' }}>
-              <span 
-                style={{ 
-                  fontFamily: '"Plus Jakarta Sans", var(--font-title, sans-serif)',
-                  fontSize: '19px', 
-                  fontWeight: 900, 
-                  color: '#FFFFFF',
-                  letterSpacing: '-0.03em',
-                  textShadow: '0 2px 10px rgba(0, 18, 70, 0.35)'
-                }}
-              >
-                JobGen
-              </span>
-              <span 
-                style={{ 
-                  fontSize: '11px', 
-                  fontWeight: 900, 
-                  color: '#FFFFFF',
-                  backgroundColor: 'rgba(255, 255, 255, 0.18)',
-                  border: '1px solid rgba(255, 255, 255, 0.35)',
-                  padding: '1px 6px',
-                  borderRadius: '5px',
-                  letterSpacing: '0.04em',
-                  textShadow: '0 1px 4px rgba(0, 18, 70, 0.25)'
-                }}
-              >
-                AI
-              </span>
-            </div>
+            <span 
+              style={{ 
+                fontFamily: '"Plus Jakarta Sans", var(--font-title, sans-serif)',
+                fontSize: '19px', 
+                fontWeight: 900, 
+                color: '#FFFFFF',
+                letterSpacing: '-0.03em',
+                textShadow: '0 2px 10px rgba(0, 18, 70, 0.35)'
+              }}
+            >
+              JobGen.IO
+            </span>
           </div>
 
           {/* Desktop Nav Links */}
-          <nav style={{ display: 'flex', alignItems: 'center', gap: '22px' }} className="nav-desktop">
+          <nav style={{ display: 'flex', alignItems: 'center', gap: '26px' }} className="nav-desktop">
             {[
-              { label: 'Productivity', id: 'productivity' },
               { label: 'Features', id: 'features' },
-              { label: 'Interview Lab', id: 'interview-copilot' },
               { label: 'ATS Scanner', id: 'ats-scanner' },
               { label: 'Pricing', id: 'pricing' },
               { label: 'FAQ', id: 'faq' }
@@ -1023,7 +1006,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 style={{
                   background: 'none',
                   border: 'none',
-                  fontSize: '13px',
+                  fontSize: '13.5px',
                   fontWeight: 600,
                   color: 'rgba(255, 255, 255, 0.85)',
                   cursor: 'pointer',
@@ -1045,16 +1028,16 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             ))}
           </nav>
 
-          {/* Action CTAs */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+          {/* Action: Sign In, nothing else */}
+          <div style={{ display: 'flex', alignItems: 'center' }}>
             <button
               onClick={onSignIn}
               style={{
                 background: 'rgba(255, 255, 255, 0.12)',
                 border: '1px solid rgba(255, 255, 255, 0.35)',
                 borderRadius: '9999px',
-                padding: '7px 18px',
-                fontSize: '12.5px',
+                padding: '8px 22px',
+                fontSize: '13px',
                 fontWeight: 700,
                 color: '#FFFFFF',
                 cursor: 'pointer',
@@ -1074,36 +1057,6 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               }}
             >
               Sign In
-            </button>
-
-            <button
-              onClick={onLaunchApp}
-              style={{
-                display: 'inline-flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                padding: '8px 20px',
-                borderRadius: '9999px',
-                fontSize: '12px',
-                fontWeight: 800,
-                color: '#1A53CF',
-                backgroundColor: '#FFFFFF',
-                border: 'none',
-                boxShadow: '0 4px 16px rgba(0, 18, 70, 0.25)',
-                cursor: 'pointer',
-                transition: 'all 0.15s ease'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-1px)';
-                e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.35)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 18, 70, 0.25)';
-              }}
-            >
-              <span>Launch App</span>
-              <ArrowRight size={13} style={{ marginLeft: '6px' }} />
             </button>
           </div>
         </div>
@@ -1125,6 +1078,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           ========================================================================= */}
       <section 
         id="productivity"
+        data-section="features"
         style={{
           padding: '110px 0 120px 0',
           position: 'relative',
@@ -1132,6 +1086,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           overflow: 'hidden'
         }}
       >
+        <div id="features" style={{ position: 'absolute', top: 0, left: 0 }} />
         {/* Animated Procedural Blue Mist Background (Particle Flow + Fluid Mist Morphology) */}
         <BlueMistAnimation />
 
