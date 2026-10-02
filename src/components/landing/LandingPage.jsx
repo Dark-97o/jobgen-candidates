@@ -219,10 +219,98 @@ const FAQS = [
 // =========================================================================
 // FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REAL RESUME
 // =========================================================================
-function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick, onPricingClick, isActive = true }) {
+function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick, onPricingClick }) {
   const resumeContainerRef = useRef(null);
   const titleWrapperRef = useRef(null);
   const glintRef = useRef(null);
+  const introVideoRef = useRef(null);
+
+  // Check if intro has already played in this browser session
+  const [hasSeenIntro, setHasSeenIntro] = useState(() => {
+    try {
+      return sessionStorage.getItem('jobgen_has_seen_jobintro') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  // 'playing' (video playing) -> 'revealed' (video dissolved, UI elements gliding in)
+  const [introStep, setIntroStep] = useState(() => {
+    return hasSeenIntro ? 'revealed' : 'playing';
+  });
+  const [introVideoFading, setIntroVideoFading] = useState(false);
+  const isRevealed = introStep === 'revealed';
+
+  const triggerReveal = useCallback(() => {
+    setIntroVideoFading(true);
+    setIntroStep('revealed');
+    try {
+      sessionStorage.setItem('jobgen_has_seen_jobintro', 'true');
+    } catch {}
+    setHasSeenIntro(true);
+  }, []);
+
+  // When video ends, pause 1 second on final frame then reveal UI smoothly
+  const handleIntroEnded = useCallback(() => {
+    setTimeout(() => {
+      triggerReveal();
+    }, 1000);
+  }, [triggerReveal]);
+
+  useEffect(() => {
+    if (hasSeenIntro) return;
+
+    const video = introVideoRef.current;
+    if (!video) return;
+
+    video.playbackRate = 1.25;
+
+    const setSpeed = () => {
+      video.playbackRate = 1.25;
+    };
+    video.addEventListener('loadedmetadata', setSpeed);
+    video.addEventListener('canplay', setSpeed);
+    video.addEventListener('play', setSpeed);
+
+    const playVideo = async () => {
+      try {
+        video.playbackRate = 1.25;
+        await video.play();
+      } catch {
+        video.muted = true;
+        video.playbackRate = 1.25;
+        video.play().catch(() => {});
+      }
+    };
+
+    if (video.readyState >= 2) {
+      playVideo();
+    } else {
+      video.addEventListener('canplay', playVideo, { once: true });
+    }
+
+    // Safety fallback: 3.2s / 1.25 = 2.56s + 1.0s hold + 0.9s buffer = 4.5s
+    const fallbackTimer = setTimeout(() => {
+      triggerReveal();
+    }, 4500);
+
+    // Keyboard shortcuts to skip straight to reveal
+    const handleKeyDown = (e) => {
+      if (['Escape', ' ', 'Enter'].includes(e.key)) {
+        triggerReveal();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      clearTimeout(fallbackTimer);
+      window.removeEventListener('keydown', handleKeyDown);
+      video.removeEventListener('loadedmetadata', setSpeed);
+      video.removeEventListener('canplay', setSpeed);
+      video.removeEventListener('play', setSpeed);
+      video.removeEventListener('canplay', playVideo);
+    };
+  }, [hasSeenIntro, triggerReveal]);
 
   // 3D Resume look-towards-pointer tracking
   const rotRef = useRef({
@@ -357,6 +445,41 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
         userSelect: 'none'
       }}
     >
+      {/* 0. INTRO VIDEO OVERLAY (Starts with hero, plays at 1.25x, holds 1s after ending, then dissolves) */}
+      {!hasSeenIntro && (
+        <div
+          onClick={triggerReveal}
+          style={{
+            position: 'absolute',
+            inset: 0,
+            zIndex: 35,
+            backgroundColor: '#000000',
+            opacity: introVideoFading ? 0 : 1,
+            transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
+            pointerEvents: introVideoFading ? 'none' : 'auto',
+            overflow: 'hidden',
+          }}
+        >
+          <video
+            ref={introVideoRef}
+            src="/jobintro.mp4"
+            autoPlay
+            muted
+            playsInline
+            preload="auto"
+            onEnded={handleIntroEnded}
+            style={{
+              width: '100%',
+              height: '100%',
+              objectFit: 'cover',
+              display: 'block',
+              transform: 'translateZ(0)',
+              willChange: 'transform',
+            }}
+          />
+        </div>
+      )}
+
       {/* 1. INTERACTIVE FLUID GRADIENT WEBGL BACKGROUND (CODEGRID SHADER) */}
       <InteractiveFluidGradient />
 
@@ -370,8 +493,12 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           alignItems: 'center',
           gap: 'clamp(8px, 1.1vw, 14px)',
           zIndex: 25,
-          pointerEvents: 'auto',
-          boxSizing: 'border-box'
+          pointerEvents: isRevealed ? 'auto' : 'none',
+          boxSizing: 'border-box',
+          opacity: isRevealed ? 1 : 0,
+          transform: isRevealed ? 'translateY(0)' : 'translateY(-14px)',
+          transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)',
+          transitionDelay: hasSeenIntro ? '0s' : '0.1s',
         }}
       >
         {/* Productivity Button */}
@@ -476,7 +603,7 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           position: 'absolute',
           top: 'clamp(68px, calc(9.5vh + 12px), 116px)',
           left: '50%',
-          transform: 'translateX(-50%)',
+          transform: isRevealed ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(18px)',
           width: '100%',
           maxWidth: '1340px',
           padding: '0 24px',
@@ -484,7 +611,10 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           justifyContent: 'center',
           zIndex: 2,
           pointerEvents: 'none',
-          boxSizing: 'border-box'
+          boxSizing: 'border-box',
+          opacity: isRevealed ? 1 : 0,
+          transition: 'opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1), transform 0.95s cubic-bezier(0.16, 1, 0.3, 1)',
+          transitionDelay: hasSeenIntro ? '0s' : '0.2s',
         }}
       >
         <div 
@@ -560,14 +690,18 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           display: 'flex',
           flexDirection: 'column',
           alignItems: 'center',
-          pointerEvents: 'auto'
+          pointerEvents: isRevealed ? 'auto' : 'none',
+          opacity: isRevealed ? 1 : 0,
+          transform: isRevealed ? 'translateY(0) scale(1)' : 'translateY(24px) scale(0.96)',
+          transition: 'opacity 1.05s cubic-bezier(0.16, 1, 0.3, 1), transform 1.05s cubic-bezier(0.16, 1, 0.3, 1)',
+          transitionDelay: hasSeenIntro ? '0s' : '0.35s',
         }}
       >
         <RuggedScreen3D
           containerRef={resumeContainerRef}
           glintRef={glintRef}
           videoSrc="/jobs.mp4"
-          isActive={isActive}
+          isActive={isRevealed}
           onPointerEnter={handleScreenPointerEnter}
           onPointerLeave={handleScreenPointerLeave}
         />
@@ -584,7 +718,10 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
           gridTemplateRows: 'repeat(5, 6px)',
           gap: '10px',
           zIndex: 10,
-          pointerEvents: 'none'
+          pointerEvents: 'none',
+          opacity: isRevealed ? 1 : 0,
+          transition: 'opacity 1.0s ease',
+          transitionDelay: hasSeenIntro ? '0s' : '0.45s',
         }}
         aria-hidden="true"
       >
@@ -636,7 +773,7 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
   );
 }
 
-export default function LandingPage({ onSignIn, onLaunchApp, isIntroActive = false }) {
+export default function LandingPage({ onSignIn, onLaunchApp }) {
   const [activeFeatureTab, setActiveFeatureTab] = useState(0);
   const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'yearly'
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
@@ -1026,7 +1163,6 @@ export default function LandingPage({ onSignIn, onLaunchApp, isIntroActive = fal
         onScanClick={() => scrollToSection('ats-scanner')} 
         onProductivityClick={() => scrollToSection('productivity')}
         onPricingClick={() => scrollToSection('pricing')}
-        isActive={!isIntroActive}
       />
 
       {/* =========================================================================

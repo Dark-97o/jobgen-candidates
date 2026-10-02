@@ -15,26 +15,12 @@ import AtsScanModal from './components/dashboard/AtsScanModal';
 import Footer from './components/dashboard/Footer';
 import LoginView from './components/auth/LoginView';
 import LandingPage from './components/landing/LandingPage';
-import JobIntro from './components/JobIntro';
-
-// Ensure jobintro.mp4 plays only once per session
-let globalHasSeenJobIntro = false;
-
-const checkHasSeenJobIntro = () => {
-  if (globalHasSeenJobIntro) return true;
-  try {
-    return sessionStorage.getItem('jobgen_has_seen_jobintro') === 'true';
-  } catch {
-    return false;
-  }
-};
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem('jobgen_candidate_auth') === 'true';
   });
   const [authMode, setAuthMode] = useState('landing'); // 'landing' | 'login'
-  const [introDone, setIntroDone] = useState(checkHasSeenJobIntro);
   const [currentTab, setCurrentTab] = useState('overview');
   const [atsModalOpen, setAtsModalOpen] = useState(false);
 
@@ -102,21 +88,6 @@ export default function App() {
     setAuthMode('landing');
   };
 
-  const handleIntroComplete = () => {
-    globalHasSeenJobIntro = true;
-    try {
-      sessionStorage.setItem('jobgen_has_seen_jobintro', 'true');
-    } catch {
-      // ignore
-    }
-    setIntroDone(true);
-    if (window.lenis) {
-      window.lenis.scrollTo(0, { immediate: true });
-    } else {
-      window.scrollTo(0, 0);
-    }
-  };
-
   if (!isAuthenticated) {
     return authMode === 'login' ? (
       <LoginView 
@@ -124,19 +95,13 @@ export default function App() {
         onBackToLanding={() => setAuthMode('landing')} 
       />
     ) : (
-      <div style={{ backgroundColor: '#1A53CF', minHeight: '100vh', position: 'relative' }}>
-        {!introDone && (
-          <JobIntro onComplete={handleIntroComplete} />
-        )}
-        <LandingPage 
-          isIntroActive={!introDone}
-          onSignIn={() => setAuthMode('login')} 
-          onLaunchApp={() => {
-            sessionStorage.setItem('jobgen_candidate_auth', 'true');
-            setIsAuthenticated(true);
-          }} 
-        />
-      </div>
+      <LandingPage 
+        onSignIn={() => setAuthMode('login')} 
+        onLaunchApp={() => {
+          sessionStorage.setItem('jobgen_candidate_auth', 'true');
+          setIsAuthenticated(true);
+        }} 
+      />
     );
   }
 
