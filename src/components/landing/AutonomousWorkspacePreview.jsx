@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import { 
   FileEdit, 
   Puzzle, 
@@ -7,7 +7,9 @@ import {
   Kanban, 
   Zap, 
   Bot, 
-  Calendar 
+  Calendar,
+  Volume2,
+  VolumeX
 } from 'lucide-react';
 
 const FEATURES = [
@@ -22,13 +24,61 @@ const FEATURES = [
 ];
 
 export default function AutonomousWorkspacePreview() {
+  const bgVideoRef = useRef(null);
+  const fgVideoRef = useRef(null);
+  const [isMuted, setIsMuted] = useState(true);
+
+  // Synchronize background video with foreground framed video in lockstep
+  useEffect(() => {
+    const bg = bgVideoRef.current;
+    const fg = fgVideoRef.current;
+    if (!bg || !fg) return;
+
+    const handleTimeUpdate = () => {
+      if (Math.abs(bg.currentTime - fg.currentTime) > 0.15) {
+        bg.currentTime = fg.currentTime;
+      }
+    };
+
+    const handlePlay = () => {
+      bg.play().catch(() => {});
+    };
+
+    const handlePause = () => {
+      bg.pause();
+    };
+
+    fg.addEventListener('timeupdate', handleTimeUpdate);
+    fg.addEventListener('play', handlePlay);
+    fg.addEventListener('pause', handlePause);
+
+    // Initial sync
+    bg.currentTime = fg.currentTime;
+    fg.play().catch(() => {});
+    bg.play().catch(() => {});
+
+    return () => {
+      fg.removeEventListener('timeupdate', handleTimeUpdate);
+      fg.removeEventListener('play', handlePlay);
+      fg.removeEventListener('pause', handlePause);
+    };
+  }, []);
+
+  const toggleMute = () => {
+    if (fgVideoRef.current) {
+      const nextMuted = !isMuted;
+      fgVideoRef.current.muted = nextMuted;
+      setIsMuted(nextMuted);
+    }
+  };
+
   return (
     <section 
       id="features"
       style={{
         position: 'relative',
         width: '100%',
-        backgroundColor: '#193cbe',
+        backgroundColor: '#090D16',
         overflow: 'hidden'
       }}
     >
@@ -47,79 +97,106 @@ export default function AutonomousWorkspacePreview() {
         }
       `}</style>
 
-      {/* 1. Full-Bleed Background Video & pic1 Window (Scaled 1.5x) */}
+      {/* 1. SECTION WRAPPER WITH BACKGROUND VIDEO & BLACK OVERLAY */}
       <div 
         style={{ 
           position: 'relative', 
           width: '100%', 
           overflow: 'hidden',
-          backgroundColor: '#193cbe'
+          backgroundColor: '#090D16'
         }}
       >
-        {/* 150% Width Wrapper (Centered with -25% margin, shifted up by 100px so it crops from above) */}
+        {/* Background Video: videoplayback.mp4 */}
+        <video
+          ref={bgVideoRef}
+          autoPlay
+          loop
+          muted
+          playsInline
+          src="/videoplayback.mp4"
+          style={{
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            objectFit: 'cover',
+            transform: 'scale(1.06)',
+            filter: 'blur(3px)',
+            pointerEvents: 'none'
+          }}
+        />
+
+        {/* Black Overlay on Background Video */}
         <div
           style={{
-            position: 'relative',
-            width: '150%',
-            marginLeft: '-25%',
-            marginTop: '-100px',
-            aspectRatio: '1920 / 1080'
+            position: 'absolute',
+            inset: 0,
+            backgroundColor: 'rgba(0, 0, 0, 0.65)',
+            zIndex: 1,
+            pointerEvents: 'none'
+          }}
+        />
+
+        {/* Smooth Top & Bottom Dark Gradients for Seamless Blending */}
+        <div
+          style={{
+            position: 'absolute',
+            inset: 0,
+            background: 'linear-gradient(to bottom, rgba(2, 6, 23, 0.5) 0%, transparent 18%, transparent 78%, #090D16 100%)',
+            zIndex: 2,
+            pointerEvents: 'none'
+          }}
+        />
+
+        {/* 2. FOREGROUND FRAME: Playing the same videoplayback.mp4 video */}
+        <div 
+          style={{ 
+            position: 'relative', 
+            zIndex: 5, 
+            maxWidth: '1240px', 
+            margin: '0 auto', 
+            padding: 'clamp(44px, 5.5vw, 84px) 24px clamp(56px, 6.5vw, 92px) 24px'
           }}
         >
-          {/* Background Video fall.mp4 (Scaled 50% larger) */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            src="/fall.mp4"
-            style={{
-              width: '100%',
-              height: '100%',
-              objectFit: 'contain',
-              display: 'block',
-              pointerEvents: 'none'
-            }}
-          />
-
-          {/* pic1 Image inside the exact black rectangle on fall.mp4 with macOS window border */}
+          {/* Framed Window */}
           <div
             style={{
-              position: 'absolute',
-              left: '18.39%',
-              top: '50.93%',
-              width: '53.23%',
-              height: '49.07%',
-              borderRadius: '14px 14px 0 0',
+              position: 'relative',
+              width: '100%',
+              borderRadius: '16px',
               overflow: 'hidden',
               backgroundColor: '#090D16',
-              border: '1px solid rgba(255, 255, 255, 0.16)',
-              borderBottom: 'none',
-              boxShadow: '0 -4px 30px rgba(0, 0, 0, 0.6)',
-              display: 'flex',
-              flexDirection: 'column',
-              zIndex: 5
+              border: '1px solid rgba(255, 255, 255, 0.18)',
+              boxShadow: '0 25px 80px -15px rgba(0, 0, 0, 0.9), 0 0 50px rgba(0, 82, 255, 0.18), 0 1px 0 rgba(255, 255, 255, 0.2) inset',
+              aspectRatio: '16 / 9'
             }}
           >
-            {/* macOS Title Bar Header */}
+            {/* macOS / App Title Bar */}
             <div
               style={{
-                flexShrink: 0,
-                height: 'clamp(24px, 3.2%, 38px)',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+                right: 0,
+                height: 'clamp(28px, 3.4%, 40px)',
                 display: 'flex',
                 alignItems: 'center',
                 justifyContent: 'space-between',
-                padding: '0 14px',
-                backgroundColor: '#0F131D',
+                padding: '0 16px',
+                backgroundColor: 'rgba(15, 19, 29, 0.88)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
                 borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                zIndex: 10,
                 userSelect: 'none'
               }}
             >
-              {/* macOS Window Traffic Lights */}
+              {/* Traffic Light Dots */}
               <div style={{ display: 'flex', alignItems: 'center', gap: '7px' }}>
-                <span style={{ width: '9px', height: '9px', borderRadius: '50%', backgroundColor: '#FF5F56', border: '0.5px solid #E0443E', display: 'inline-block' }} />
-                <span style={{ width: '9px', height: '9px', borderRadius: '50%', backgroundColor: '#FFBD2E', border: '0.5px solid #DEA123', display: 'inline-block' }} />
-                <span style={{ width: '9px', height: '9px', borderRadius: '50%', backgroundColor: '#27C93F', border: '0.5px solid #1AAB29', display: 'inline-block' }} />
+                <span style={{ width: '9px', height: '9px', borderRadius: '50%', backgroundColor: '#FF5F56', display: 'inline-block' }} />
+                <span style={{ width: '9px', height: '9px', borderRadius: '50%', backgroundColor: '#FFBD2E', display: 'inline-block' }} />
+                <span style={{ width: '9px', height: '9px', borderRadius: '50%', backgroundColor: '#27C93F', display: 'inline-block' }} />
               </div>
 
               {/* Status Address Pill */}
@@ -128,116 +205,72 @@ export default function AutonomousWorkspacePreview() {
                   display: 'inline-flex',
                   alignItems: 'center',
                   gap: '6px',
-                  padding: '3px 14px',
+                  padding: '3px 16px',
                   borderRadius: '6px',
                   backgroundColor: 'rgba(255, 255, 255, 0.06)',
                   border: '1px solid rgba(255, 255, 255, 0.08)',
                   color: '#94A3B8',
-                  fontSize: 'clamp(9px, 0.8vw, 12px)',
-                  fontWeight: 500
+                  fontSize: 'clamp(10px, 0.8vw, 12px)',
+                  fontWeight: 500,
+                  letterSpacing: '0.01em'
                 }}
               >
                 <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                candidates.jobgen.ai/workspace
+                jobgen.ai / platform-overview
               </div>
 
-              <div style={{ width: '40px' }} />
-            </div>
-
-            {/* pic1 Image inside the black canvas */}
-            <div style={{ flex: 1, position: 'relative', overflow: 'hidden', backgroundColor: '#090D16' }}>
-              <img
-                src="/pic1.png"
-                alt="Autonomous Candidate Workspace"
+              {/* Sound / Mute Toggle Button */}
+              <button
+                onClick={toggleMute}
+                type="button"
                 style={{
-                  width: '100%',
-                  height: '100%',
-                  objectFit: 'cover',
-                  objectPosition: 'top center',
-                  display: 'block'
-                }}
-              />
-            </div>
-          </div>
-        </div>
-
-        {/* 2. Text Overlay: Placed Directly Above the Background Only */}
-        <div 
-          style={{ 
-            position: 'absolute',
-            top: 0,
-            left: 0,
-            right: 0,
-            zIndex: 12,
-            pointerEvents: 'none'
-          }}
-        >
-          <div 
-            style={{ 
-              maxWidth: '1240px', 
-              margin: '0 auto', 
-              padding: 'clamp(32px, 4vw, 56px) 24px 0 24px', 
-              textAlign: 'left'
-            }}
-          >
-            <div style={{ maxWidth: '640px' }}>
-              {/* Main Title */}
-              <h2
-                style={{
-                  fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: 'clamp(28px, 4vw, 54px)',
-                  fontWeight: 900,
-                  letterSpacing: '-0.04em',
-                  lineHeight: 1.08,
-                  color: '#FFFFFF',
-                  textShadow: '0 2px 24px rgba(0, 0, 0, 0.4)',
-                  margin: '0 0 16px 0'
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '6px',
+                  background: 'rgba(255, 255, 255, 0.08)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
+                  borderRadius: '6px',
+                  color: isMuted ? '#94A3B8' : '#38BDF8',
+                  cursor: 'pointer',
+                  padding: '3px 10px',
+                  fontSize: '11px',
+                  fontWeight: 600,
+                  transition: 'all 0.2s ease'
                 }}
               >
-                Explore the Autonomous<br />Candidate Workspace
-              </h2>
-
-              {/* Subtitle Paragraph */}
-              <p
-                style={{
-                  fontSize: 'clamp(14px, 1.3vw, 17px)',
-                  lineHeight: 1.6,
-                  color: 'rgba(255, 255, 255, 0.88)',
-                  textShadow: '0 1px 12px rgba(0, 0, 0, 0.3)',
-                  maxWidth: '520px',
-                  margin: 0,
-                  fontWeight: 500
-                }}
-              >
-                JobGen, an AI-powered autonomous platform, serves as an all-in-one workspace replacing fragmented job boards, manual trackers, and generic interview prep.
-              </p>
+                {isMuted ? <VolumeX size={13} /> : <Volume2 size={13} />}
+                <span>{isMuted ? 'Unmute' : 'Mute'}</span>
+              </button>
             </div>
+
+            {/* Foreground Video: videoplayback.mp4 */}
+            <video
+              ref={fgVideoRef}
+              autoPlay
+              loop
+              muted={isMuted}
+              playsInline
+              src="/videoplayback.mp4"
+              style={{
+                width: '100%',
+                height: '100%',
+                objectFit: 'cover',
+                display: 'block'
+              }}
+            />
           </div>
         </div>
-
-        {/* 3. Black Fade at the bottom of the video background to seamlessly blend with the black band */}
-        <div
-          style={{
-            position: 'absolute',
-            bottom: 0,
-            left: 0,
-            right: 0,
-            height: '180px',
-            background: 'linear-gradient(to bottom, transparent 0%, rgba(9, 13, 22, 0.35) 30%, rgba(9, 13, 22, 0.85) 75%, #090D16 100%)',
-            zIndex: 10,
-            pointerEvents: 'none'
-          }}
-        />
       </div>
 
-      {/* 4. Dedicated Black Band with Bigger Feature Ticker & Favicons */}
+      {/* 3. DEDICATED BLACK BAND WITH BIGGER FEATURE TICKER & FAVICONS */}
       <div
         style={{
           position: 'relative',
           width: '100%',
           backgroundColor: '#090D16',
-          padding: '28px 0 32px 0',
-          zIndex: 15
+          padding: '24px 0 32px 0',
+          zIndex: 15,
+          borderTop: '1px solid rgba(255, 255, 255, 0.06)'
         }}
       >
         <div style={{ width: '100%', overflow: 'hidden' }}>
