@@ -56,13 +56,14 @@ export default function AutonomousWorkspacePreview() {
           backgroundColor: '#193cbe'
         }}
       >
-        {/* 150% Width Wrapper (Centered with -25% margin, shifted up by 100px so it crops from above) */}
+        {/* 150% Width Wrapper (Centered with -25% margin, shifted up by 200px to clip top by 100px) */}
         <div
           style={{
             position: 'relative',
             width: '150%',
             marginLeft: '-25%',
-            marginTop: '-100px',
+            marginTop: '-200px',
+            marginBottom: '-60px',
             aspectRatio: '1920 / 1080'
           }}
         >
@@ -222,7 +223,7 @@ export default function AutonomousWorkspacePreview() {
             bottom: 0,
             left: 0,
             right: 0,
-            height: '180px',
+            height: '220px',
             background: 'linear-gradient(to bottom, transparent 0%, rgba(9, 13, 22, 0.35) 30%, rgba(9, 13, 22, 0.85) 75%, #090D16 100%)',
             zIndex: 10,
             pointerEvents: 'none'
