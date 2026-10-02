@@ -1167,34 +1167,38 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               gap: '24px'
             }}
           >
-            {/* ROW 1 — CARD 1: RECTANGLE (Col 8) — Kanban Pipeline (bento2.mp4) */}
+            {/* ROW 1 — CARD 1: RECTANGLE (Col 8) — Track & Document (bento2.mp4) */}
             <BentoVideoCard
               src="/bento2.mp4"
-              headline="Autonomous Kanban Pipeline & Opportunity Tracking"
+              whiteText="Track and "
+              blueText="Document"
               colSpan={8}
               objectPosition="top left"
             />
 
-            {/* ROW 1 — CARD 2: SQUARE (Col 4) — Resume Studio (bento4.mp4) */}
+            {/* ROW 1 — CARD 2: SQUARE (Col 4) — Personalized Roadmap (bento4.mp4) */}
             <BentoVideoCard
               src="/bento4.mp4"
-              headline="Precision Resume Studio"
+              whiteText="Personalized "
+              blueText="Roadmap"
               colSpan={4}
               objectPosition="top center"
             />
 
-            {/* ROW 2 — CARD 3: SQUARE (Col 4) — 12-Week Strategic Roadmap (bento3.mp4) */}
+            {/* ROW 2 — CARD 3: SQUARE (Col 4) — Resume Studio (bento3.mp4) */}
             <BentoVideoCard
               src="/bento3.mp4"
-              headline="12-Week Strategic Roadmap"
+              whiteText="Resume "
+              blueText="Studio"
               colSpan={4}
               objectPosition="top center"
             />
 
-            {/* ROW 2 — CARD 4: RECTANGLE (Col 8) — Target Role & Location Radar (bento1.mp4) */}
+            {/* ROW 2 — CARD 4: RECTANGLE (Col 8) — Global Job Seeker (bento1.mp4) */}
             <BentoVideoCard
               src="/bento1.mp4"
-              headline="Target Role & Global Location Radar"
+              whiteText="Global "
+              blueText="Job Seeker"
               colSpan={8}
               objectPosition="top left"
             />

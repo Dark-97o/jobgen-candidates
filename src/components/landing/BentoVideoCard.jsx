@@ -9,6 +9,8 @@ import React, { useRef, useEffect } from 'react';
 export default function BentoVideoCard({
   src,
   headline,
+  whiteText,
+  blueText,
   colSpan = 8,
   objectPosition = 'center'
 }) {
@@ -109,14 +111,20 @@ export default function BentoVideoCard({
           style={{
             fontSize: '22px',
             fontWeight: 800,
-            color: '#FFFFFF',
             letterSpacing: '-0.02em',
             lineHeight: 1.25,
             margin: 0,
-            textShadow: '0 2px 12px rgba(0, 0, 0, 0.8)'
+            textShadow: '0 2px 14px rgba(0, 0, 0, 0.9)'
           }}
         >
-          {headline}
+          {whiteText || blueText ? (
+            <>
+              <span style={{ color: '#FFFFFF' }}>{whiteText}</span>
+              <span style={{ color: '#60A5FA', textShadow: '0 0 16px rgba(96, 165, 250, 0.45)' }}>{blueText}</span>
+            </>
+          ) : (
+            <span style={{ color: '#FFFFFF' }}>{headline}</span>
+          )}
         </h3>
       </div>
     </div>
