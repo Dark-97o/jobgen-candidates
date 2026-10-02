@@ -291,8 +291,8 @@ export default function InteractiveLogoBallsBand() {
         ctx.save();
 
         // 1. Soft Ambient Drop Shadow underneath ball (fully unclipped)
-        ctx.shadowColor = 'rgba(0, 0, 0, 0.38)';
-        ctx.shadowBlur = 16;
+        ctx.shadowColor = 'rgba(15, 23, 42, 0.16)';
+        ctx.shadowBlur = 14;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 6;
 
@@ -388,9 +388,9 @@ export default function InteractiveLogoBallsBand() {
       style={{ 
         position: 'relative', 
         padding: '36px 0', 
-        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-        backgroundColor: '#08122F',
+        borderTop: '1px solid #E2E8F0',
+        borderBottom: '1px solid #E2E8F0',
+        backgroundColor: '#F8FAFC',
         overflow: 'hidden'
       }}
     >
@@ -426,7 +426,7 @@ export default function InteractiveLogoBallsBand() {
                 fontSize: 'clamp(30px, 3.6vw, 50px)', 
                 fontWeight: 900, 
                 letterSpacing: '-0.035em', 
-                color: '#FFFFFF', 
+                color: '#090D16', 
                 margin: 0,
                 textAlign: 'left',
                 lineHeight: 1.08

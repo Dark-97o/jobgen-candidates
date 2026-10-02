@@ -1086,14 +1086,14 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       />
 
       {/* =========================================================================
-          3. SOCIAL PROOF / INTERACTIVE 3D FALLING LOGO BALLS
-          ========================================================================= */}
-      <InteractiveLogoBallsBand />
-
-      {/* =========================================================================
-          4. INTERACTIVE AUTONOMOUS WORKSPACE PREVIEW
+          3. INTERACTIVE AUTONOMOUS WORKSPACE PREVIEW
           ========================================================================= */}
       <AutonomousWorkspacePreview onLaunchApp={onLaunchApp} />
+
+      {/* =========================================================================
+          4. SOCIAL PROOF / INTERACTIVE 3D FALLING LOGO BALLS
+          ========================================================================= */}
+      <InteractiveLogoBallsBand />
 
       {/* =========================================================================
           4. UNMATCHED PRODUCTIVITY — LIGHT ASYMMETRIC BENTO GRID
