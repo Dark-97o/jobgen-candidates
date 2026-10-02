@@ -41,6 +41,7 @@ import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
 import BlueMistAnimation from './BlueMistAnimation';
 import BentoVideoCard from './BentoVideoCard';
 import MeetEmmaSection from './MeetEmmaSection';
+import PricingEngineSection from './PricingEngineSection';
 
 // ==========================================
 // STATIC DATA & CONTENT FROM CANDIDATES.JOBGEN.AI
@@ -712,7 +713,6 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
 
 export default function LandingPage({ onSignIn, onLaunchApp }) {
   const [activeFeatureTab, setActiveFeatureTab] = useState(0);
-  const [billingCycle, setBillingCycle] = useState('monthly'); // 'monthly' | 'yearly'
   const [openFaqIndex, setOpenFaqIndex] = useState(0);
   const [uploadedResumeName, setUploadedResumeName] = useState(null);
   const [isScanning, setIsScanning] = useState(false);
@@ -1200,6 +1200,11 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       />
 
       {/* =========================================================================
+          6. PRICING ENGINE: WHITE THEME WITH BLUE MIST & DYNAMIC REGIONAL PRICING
+          ========================================================================= */}
+      <PricingEngineSection onLaunchApp={onLaunchApp} />
+
+      {/* =========================================================================
           6. "REPLACES ALL YOUR SUBSCRIPTIONS" COMPARISON (WHITE TABLE)
           ========================================================================= */}
       <section 
@@ -1511,206 +1516,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         </div>
       </section>
 
-      {/* =========================================================================
-          9. FAIR & TRANSPARENT PRICING
-          ========================================================================= */}
-      <section 
-        id="pricing"
-        style={{
-          padding: '100px 0',
-          borderTop: '1px solid #E2E8F0',
-          backgroundColor: '#F8FAFC'
-        }}
-      >
-        <div style={{ maxWidth: '1140px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
-          
-          <div 
-            style={{
-              display: 'inline-flex',
-              alignItems: 'center',
-              gap: '6px',
-              padding: '4px 12px',
-              borderRadius: '9999px',
-              backgroundColor: '#EFF6FF',
-              border: '1px solid #BFDBFE',
-              color: '#1A53CF',
-              fontSize: '11px',
-              fontWeight: 800,
-              textTransform: 'uppercase',
-              marginBottom: '16px'
-            }}
-          >
-            <Award size={12} />
-            <span>Fair & Transparent Pricing</span>
-          </div>
 
-          <h2 style={{ fontSize: 'clamp(32px, 4.5vw, 52px)', fontWeight: 900, color: '#090C15', letterSpacing: '-0.03em', marginBottom: '14px' }}>
-            Invest in your career. Not subscriptions.
-          </h2>
-
-          <p style={{ fontSize: '16px', color: '#475569', marginBottom: '32px' }}>
-            Start completely free. Upgrade only when you want unlimited tailoring and AI interview prep.
-          </p>
-
-          {/* Billing Toggle */}
-          <div style={{ display: 'inline-flex', alignItems: 'center', gap: '8px', padding: '4px', borderRadius: '9999px', backgroundColor: '#FFFFFF', border: '1px solid #CBD5E1', marginBottom: '50px', boxShadow: '0 2px 6px rgba(15, 23, 42, 0.04)' }}>
-            <button
-              onClick={() => setBillingCycle('monthly')}
-              style={{
-                padding: '6px 16px',
-                borderRadius: '9999px',
-                border: 'none',
-                fontSize: '12px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                backgroundColor: billingCycle === 'monthly' ? '#1A53CF' : 'transparent',
-                color: billingCycle === 'monthly' ? '#FFFFFF' : '#64748B'
-              }}
-            >
-              Monthly
-            </button>
-            <button
-              onClick={() => setBillingCycle('yearly')}
-              style={{
-                padding: '6px 16px',
-                borderRadius: '9999px',
-                border: 'none',
-                fontSize: '12px',
-                fontWeight: 700,
-                cursor: 'pointer',
-                backgroundColor: billingCycle === 'yearly' ? '#1A53CF' : 'transparent',
-                color: billingCycle === 'yearly' ? '#FFFFFF' : '#64748B',
-                display: 'flex',
-                alignItems: 'center',
-                gap: '6px'
-              }}
-            >
-              <span>Yearly</span>
-              <span style={{ fontSize: '10px', padding: '1px 5px', borderRadius: '4px', backgroundColor: '#10B981', color: '#FFFFFF', fontWeight: 800 }}>Save 40%</span>
-            </button>
-          </div>
-
-          {/* Pricing Cards Grid on White */}
-          <div 
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
-              gap: '24px',
-              textAlign: 'left'
-            }}
-          >
-            {/* Tier 1: Free Forever */}
-            <div className="white-bento-card" style={{ padding: '36px 30px' }}>
-              <div style={{ fontSize: '14px', fontWeight: 800, color: '#64748B', marginBottom: '8px' }}>Free Forever</div>
-              <div style={{ fontSize: '42px', fontWeight: 900, color: '#090C15', marginBottom: '4px' }}>$0</div>
-              <div style={{ fontSize: '12px', color: '#64748B', marginBottom: '24px' }}>No credit card required</div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
-                {[
-                  '1 Master ATS Resume',
-                  '5 Target Job Match Scans',
-                  'Application Pipeline Kanban',
-                  'Chrome Extension Bookmarking',
-                  'Standard Email Support'
-                ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
-                    <Check size={14} color="#059669" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={onLaunchApp}
-                className="white-secondary-btn"
-                style={{ width: '100%' }}
-              >
-                Start Free
-              </button>
-            </div>
-
-            {/* Tier 2: Candidate Pro (Highlighted) */}
-            <div 
-              className="white-bento-card" 
-              style={{ 
-                padding: '36px 30px', 
-                border: '2px solid #1A53CF',
-                boxShadow: '0 12px 36px rgba(26, 83, 207, 0.16)',
-                position: 'relative'
-              }}
-            >
-              <div style={{ position: 'absolute', top: '16px', right: '16px', fontSize: '10px', fontWeight: 800, textTransform: 'uppercase', padding: '3px 8px', borderRadius: '4px', backgroundColor: '#1A53CF', color: '#FFFFFF' }}>
-                Most Popular
-              </div>
-
-              <div style={{ fontSize: '14px', fontWeight: 800, color: '#1A53CF', marginBottom: '8px' }}>Candidate Pro</div>
-              <div style={{ fontSize: '42px', fontWeight: 900, color: '#090C15', marginBottom: '4px' }}>
-                {billingCycle === 'monthly' ? '$19' : '$12'}
-                <span style={{ fontSize: '14px', fontWeight: 500, color: '#64748B' }}> / mo</span>
-              </div>
-              <div style={{ fontSize: '12px', color: '#64748B', marginBottom: '24px' }}>Billed {billingCycle}</div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
-                {[
-                  'Unlimited AI-Tailored Resumes',
-                  'Unlimited Cover Letter Generator',
-                  'Emma AI Voice & Behavioral Simulator',
-                  '12-Week Strategic Career Roadmap',
-                  'Salary Benchmarking & Equity Calculator',
-                  'Priority Real-Time ATS Feedback'
-                ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#090C15', fontWeight: 600 }}>
-                    <Check size={14} color="#1A53CF" strokeWidth={3} />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={onLaunchApp}
-                className="white-primary-btn"
-                style={{ width: '100%' }}
-              >
-                Launch Pro Hub
-              </button>
-            </div>
-
-            {/* Tier 3: Executive Loop */}
-            <div className="white-bento-card" style={{ padding: '36px 30px' }}>
-              <div style={{ fontSize: '14px', fontWeight: 800, color: '#7C3AED', marginBottom: '8px' }}>Executive Loop</div>
-              <div style={{ fontSize: '42px', fontWeight: 900, color: '#090C15', marginBottom: '4px' }}>
-                {billingCycle === 'monthly' ? '$49' : '$29'}
-                <span style={{ fontSize: '14px', fontWeight: 500, color: '#64748B' }}> / mo</span>
-              </div>
-              <div style={{ fontSize: '12px', color: '#64748B', marginBottom: '24px' }}>For Staff, Lead & VP loops</div>
-
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '32px' }}>
-                {[
-                  'Everything in Candidate Pro',
-                  '1-on-1 Human Executive Resume Audit',
-                  'Custom Compensation Negotiation Script',
-                  'Executive Headhunter Direct Intro',
-                  'Private Dedicated Coach Channel'
-                ].map((item, i) => (
-                  <div key={i} style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '13px', color: '#334155' }}>
-                    <Check size={14} color="#7C3AED" />
-                    <span>{item}</span>
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={onLaunchApp}
-                className="white-secondary-btn"
-                style={{ width: '100%' }}
-              >
-                Join Executive Loop
-              </button>
-            </div>
-          </div>
-
-        </div>
-      </section>
 
       {/* =========================================================================
           10. FAQ ACCORDION (WHITE / CLEAN)
