@@ -22,6 +22,7 @@ export default function RuggedScreen3D({
   const [isHovered, setIsHovered] = useState(false);
   const [isDistorting, setIsDistorting] = useState(false);
   const [distortKey, setDistortKey] = useState(0);
+  const [pulseOrigin, setPulseOrigin] = useState({ x: 50, y: 50 });
   const distortTimerRef = useRef(null);
   const videoRef = useRef(null);
 
@@ -80,13 +81,23 @@ export default function RuggedScreen3D({
 
   const handlePointerEnter = (e) => {
     setIsHovered(true);
-    // Trigger one-shot distortion animation (does not stay permanently)
+    // Track pointer entry coordinates for localized pulse wave origin
+    if (e && e.clientX && e.clientY) {
+      const rect = e.currentTarget.getBoundingClientRect();
+      const x = Math.max(8, Math.min(92, ((e.clientX - rect.left) / rect.width) * 100));
+      const y = Math.max(8, Math.min(92, ((e.clientY - rect.top) / rect.height) * 100));
+      setPulseOrigin({ x, y });
+    } else {
+      setPulseOrigin({ x: 50, y: 50 });
+    }
+
+    // Trigger one-shot pulse wave distortion across the figure
     setDistortKey((prev) => prev + 1);
     setIsDistorting(true);
     if (distortTimerRef.current) clearTimeout(distortTimerRef.current);
     distortTimerRef.current = setTimeout(() => {
       setIsDistorting(false);
-    }, 1200);
+    }, 1150);
 
     if (videoRef.current && videoRef.current.paused) {
       videoRef.current.play().catch(() => {});
@@ -117,31 +128,42 @@ export default function RuggedScreen3D({
         filter: 'drop-shadow(0 35px 65px rgba(1, 10, 45, 0.65)) drop-shadow(0 15px 25px rgba(0, 0, 0, 0.45))'
       }}
     >
-      {/* SVG Distortion Filter for Surface Warping Effect */}
+      {/* SVG Pulse Wave Distortion Filter */}
       <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }} aria-hidden="true">
         <defs>
-          <filter id="screen-surface-distortion" x="-10%" y="-10%" width="120%" height="120%">
+          <filter key={`pulse-filter-${distortKey}`} id="screen-pulse-wave-distortion" x="-20%" y="-20%" width="140%" height="140%">
             <feTurbulence
               type="fractalNoise"
-              baseFrequency="0.04 0.05"
+              baseFrequency="0.02 0.04"
               numOctaves="3"
-              result="turbulence"
+              result="waveTurbulence"
             >
               <animate
                 attributeName="baseFrequency"
-                dur="3.2s"
-                values="0.035 0.045; 0.055 0.065; 0.035 0.045"
-                repeatCount="indefinite"
+                dur="1.15s"
+                values="0.008 0.016; 0.038 0.075; 0.065 0.11; 0.015 0.02"
+                keyTimes="0; 0.35; 0.7; 1"
+                repeatCount="1"
+                begin="0s"
               />
             </feTurbulence>
             <feDisplacementMap
               in="SourceGraphic"
-              in2="turbulence"
-              scale="24"
+              in2="waveTurbulence"
+              scale="0"
               xChannelSelector="R"
               yChannelSelector="G"
               result="displaced"
-            />
+            >
+              <animate
+                attributeName="scale"
+                dur="1.15s"
+                values="0; 38; 20; 0"
+                keyTimes="0; 0.28; 0.65; 1"
+                repeatCount="1"
+                begin="0s"
+              />
+            </feDisplacementMap>
           </filter>
         </defs>
       </svg>
@@ -279,13 +301,67 @@ export default function RuggedScreen3D({
               objectFit: 'cover',
               display: 'block',
               backgroundColor: '#000000',
-              filter: isDistorting ? 'url(#screen-surface-distortion)' : 'none',
-              transform: isDistorting ? 'scale(1.025)' : 'scale(1.0)',
-              transition: 'filter 0.35s ease, transform 0.35s ease'
+              filter: isDistorting ? 'url(#screen-pulse-wave-distortion)' : 'none',
+              transform: isDistorting ? 'scale(1.02)' : 'scale(1.0)',
+              transition: isDistorting ? 'transform 0.3s ease' : 'transform 0.4s ease, filter 0.25s ease'
             }}
           >
             <source src={videoSrc} type="video/mp4" />
           </video>
+
+          {/* Traveling Pulse Wave Shockwave Across the 3D Figure */}
+          {isDistorting && (
+            <div
+              key={`pulse-overlay-${distortKey}`}
+              style={{
+                position: 'absolute',
+                left: `${pulseOrigin.x}%`,
+                top: `${pulseOrigin.y}%`,
+                width: '100px',
+                height: '100px',
+                pointerEvents: 'none',
+                zIndex: 4,
+                transform: 'translate(-50%, -50%)',
+              }}
+            >
+              {/* Primary Pulse Wavefront */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: 0,
+                  borderRadius: '50%',
+                  border: '2px solid rgba(56, 189, 248, 0.85)',
+                  boxShadow: '0 0 24px 3px rgba(56, 189, 248, 0.5), inset 0 0 16px 2px rgba(255, 255, 255, 0.4)',
+                  animation: 'pulseWaveFront 1.15s cubic-bezier(0.12, 0.7, 0.15, 1) forwards',
+                  backdropFilter: 'contrast(1.15) brightness(1.08)',
+                  WebkitBackdropFilter: 'contrast(1.15) brightness(1.08)',
+                }}
+              />
+
+              {/* Secondary Trailing Echo Ripple */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: '-15px',
+                  borderRadius: '50%',
+                  border: '1.5px solid rgba(147, 197, 253, 0.65)',
+                  boxShadow: '0 0 18px 2px rgba(99, 102, 241, 0.35)',
+                  animation: 'pulseWaveEcho 1.15s cubic-bezier(0.18, 0.75, 0.2, 1) forwards',
+                }}
+              />
+
+              {/* Atmospheric Water Caustic Gradient Mesh */}
+              <div
+                style={{
+                  position: 'absolute',
+                  inset: '-30px',
+                  borderRadius: '50%',
+                  background: 'radial-gradient(circle, rgba(56, 189, 248, 0.22) 0%, rgba(99, 102, 241, 0.1) 40%, transparent 70%)',
+                  animation: 'pulseWaveGlow 1.15s cubic-bezier(0.15, 0.8, 0.2, 1) forwards',
+                }}
+              />
+            </div>
+          )}
 
           {/* CRT Scanline / Tactical Bezel Texture Overlay */}
           <div
