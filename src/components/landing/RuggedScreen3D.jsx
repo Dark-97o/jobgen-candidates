@@ -22,20 +22,10 @@ export default function RuggedScreen3D({
   // Modes: 'screen' | 'laptop' | 'mobile' | 'tablet' | 'tv'
   const [deviceMode, setDeviceMode] = useState('screen');
   const [isHovered, setIsHovered] = useState(false);
-  const [isDistorting, setIsDistorting] = useState(false);
-  const [distortKey, setDistortKey] = useState(0);
   const lastRandomModeRef = useRef('screen');
-  const distortTimerRef = useRef(null);
   const videoRef = useRef(null);
 
   const ALL_MODES = ['screen', 'laptop', 'mobile', 'tablet', 'tv'];
-
-  // Clean up distortion timer on unmount
-  useEffect(() => {
-    return () => {
-      if (distortTimerRef.current) clearTimeout(distortTimerRef.current);
-    };
-  }, []);
 
   // Guarantee seamless video playback across all browsers & autoplay policies
   useEffect(() => {
@@ -92,14 +82,6 @@ export default function RuggedScreen3D({
     const chosen = otherModes[Math.floor(Math.random() * otherModes.length)];
     lastRandomModeRef.current = chosen;
     setDeviceMode(chosen);
-
-    // Trigger physical liquid surface distortion during shape-shifting morph
-    setDistortKey((prev) => prev + 1);
-    setIsDistorting(true);
-    if (distortTimerRef.current) clearTimeout(distortTimerRef.current);
-    distortTimerRef.current = setTimeout(() => {
-      setIsDistorting(false);
-    }, 850);
 
     if (videoRef.current && videoRef.current.paused) {
       videoRef.current.play().catch(() => {});
@@ -205,34 +187,6 @@ export default function RuggedScreen3D({
         }
       `}</style>
 
-      {/* SVG Pulse Wave Distortion Filter */}
-      <svg style={{ position: 'absolute', width: 0, height: 0, pointerEvents: 'none' }} aria-hidden="true">
-        <defs>
-          <filter id="screen-surface-distortion" x="-20%" y="-20%" width="140%" height="140%">
-            <feTurbulence
-              type="fractalNoise"
-              baseFrequency="0.045 0.06"
-              numOctaves="3"
-              result="turbulence"
-            >
-              <animate
-                attributeName="baseFrequency"
-                dur="1.8s"
-                values="0.038 0.048; 0.058 0.072; 0.038 0.048"
-                repeatCount="indefinite"
-              />
-            </feTurbulence>
-            <feDisplacementMap
-              in="SourceGraphic"
-              in2="turbulence"
-              scale="24"
-              xChannelSelector="R"
-              yChannelSelector="G"
-              result="displaced"
-            />
-          </filter>
-        </defs>
-      </svg>
 
       {/* ================= 1. TACTICAL ANTENNA (TERMINAL SCREEN ONLY) ================= */}
       <div
@@ -546,9 +500,8 @@ export default function RuggedScreen3D({
               objectFit: 'cover',
               display: 'block',
               backgroundColor: '#000000',
-              filter: isDistorting ? 'url(#screen-surface-distortion)' : 'none',
-              transform: isDistorting ? 'scale(1.03)' : 'scale(1.0)',
-              transition: isDistorting ? 'transform 0.3s ease' : 'transform 0.4s ease, filter 0.25s ease'
+              filter: 'none',
+              transform: 'scale(1.0)'
             }}
           >
             <source src={videoSrc} type="video/mp4" />
