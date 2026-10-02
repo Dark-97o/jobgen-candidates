@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function AutonomousWorkspacePreview({ onLaunchApp }) {
+export default function AutonomousWorkspacePreview() {
   return (
     <section 
       id="features"
@@ -8,8 +8,6 @@ export default function AutonomousWorkspacePreview({ onLaunchApp }) {
         position: 'relative',
         width: '100%',
         backgroundColor: '#FFFFFF',
-        paddingTop: '72px',
-        paddingBottom: '0',
         overflow: 'hidden'
       }}
     >
@@ -28,100 +26,7 @@ export default function AutonomousWorkspacePreview({ onLaunchApp }) {
         }
       `}</style>
 
-      {/* Header Container (Full-bleed section, clean left-aligned text) */}
-      <div 
-        style={{ 
-          maxWidth: '1240px', 
-          margin: '0 auto', 
-          padding: '0 24px', 
-          position: 'relative', 
-          zIndex: 20, 
-          textAlign: 'left',
-          marginBottom: '20px'
-        }}
-      >
-        <div style={{ maxWidth: '780px' }}>
-          {/* Main Title */}
-          <h2
-            style={{
-              fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
-              fontSize: 'clamp(32px, 4.5vw, 64px)',
-              fontWeight: 900,
-              letterSpacing: '-0.04em',
-              lineHeight: 1.06,
-              color: '#090D16',
-              margin: '0 0 16px 0'
-            }}
-          >
-            Explore the Autonomous<br />Candidate Workspace
-          </h2>
-
-          {/* Subtitle Paragraph */}
-          <p
-            style={{
-              fontSize: 'clamp(14px, 1.4vw, 17px)',
-              lineHeight: 1.6,
-              color: '#475569',
-              maxWidth: '560px',
-              margin: '0 0 24px 0',
-              fontWeight: 500
-            }}
-          >
-            JobGen, an AI-powered autonomous platform, serves as an all-in-one workspace replacing fragmented job boards, manual trackers, and generic interview prep.
-          </p>
-
-          {/* Pill CTA Button with Radiant Amber Halo */}
-          <div style={{ position: 'relative', display: 'inline-block' }}>
-            <div
-              style={{
-                position: 'absolute',
-                inset: '-4px',
-                borderRadius: '9999px',
-                background: 'radial-gradient(ellipse at center, rgba(249, 115, 22, 0.7) 0%, rgba(249, 115, 22, 0) 75%)',
-                filter: 'blur(14px)',
-                pointerEvents: 'none',
-                zIndex: 0
-              }}
-            />
-
-            <button
-              onClick={onLaunchApp}
-              style={{
-                position: 'relative',
-                zIndex: 1,
-                display: 'inline-flex',
-                alignItems: 'center',
-                gap: '8px',
-                padding: '12px 28px',
-                borderRadius: '9999px',
-                backgroundColor: 'rgba(255, 255, 255, 0.96)',
-                border: '1px solid rgba(251, 146, 60, 0.65)',
-                boxShadow: '0 4px 20px rgba(249, 115, 22, 0.3)',
-                color: '#0F172A',
-                fontSize: '12.5px',
-                fontWeight: 800,
-                letterSpacing: '0.04em',
-                textTransform: 'uppercase',
-                cursor: 'pointer',
-                transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-              }}
-              onMouseEnter={(e) => {
-                e.currentTarget.style.transform = 'translateY(-2px)';
-                e.currentTarget.style.boxShadow = '0 6px 26px rgba(249, 115, 22, 0.45)';
-              }}
-              onMouseLeave={(e) => {
-                e.currentTarget.style.transform = 'translateY(0)';
-                e.currentTarget.style.boxShadow = '0 4px 20px rgba(249, 115, 22, 0.3)';
-              }}
-            >
-              <span>SEE IN ACTION</span>
-              <span>→</span>
-            </button>
-          </div>
-        </div>
-      </div>
-
-      {/* Full-Bleed Section Video & pic1 (Scaled 1.5x, Fully Covering Section without Boxed Margin) */}
+      {/* 1. Full-Bleed Background Video & pic1 Window (Scaled 1.5x) */}
       <div 
         style={{ 
           position: 'relative', 
@@ -234,7 +139,59 @@ export default function AutonomousWorkspacePreview({ onLaunchApp }) {
           </div>
         </div>
 
-        {/* Black Fade at the bottom covering the base with the feature ticker ON the fade */}
+        {/* 2. Text Overlay: Placed Directly Above the Background Only */}
+        <div 
+          style={{ 
+            position: 'absolute',
+            top: 0,
+            left: 0,
+            right: 0,
+            zIndex: 12,
+            pointerEvents: 'none'
+          }}
+        >
+          <div 
+            style={{ 
+              maxWidth: '1240px', 
+              margin: '0 auto', 
+              padding: 'clamp(32px, 4vw, 56px) 24px 0 24px', 
+              textAlign: 'left'
+            }}
+          >
+            <div style={{ maxWidth: '640px' }}>
+              {/* Main Title */}
+              <h2
+                style={{
+                  fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
+                  fontSize: 'clamp(28px, 4vw, 54px)',
+                  fontWeight: 900,
+                  letterSpacing: '-0.04em',
+                  lineHeight: 1.08,
+                  color: '#090D16',
+                  margin: '0 0 16px 0'
+                }}
+              >
+                Explore the Autonomous<br />Candidate Workspace
+              </h2>
+
+              {/* Subtitle Paragraph */}
+              <p
+                style={{
+                  fontSize: 'clamp(14px, 1.3vw, 17px)',
+                  lineHeight: 1.6,
+                  color: '#475569',
+                  maxWidth: '520px',
+                  margin: 0,
+                  fontWeight: 500
+                }}
+              >
+                JobGen, an AI-powered autonomous platform, serves as an all-in-one workspace replacing fragmented job boards, manual trackers, and generic interview prep.
+              </p>
+            </div>
+          </div>
+        </div>
+
+        {/* 3. Black Fade at the bottom covering the base with the feature ticker ON the fade */}
         <div
           style={{
             position: 'absolute',
