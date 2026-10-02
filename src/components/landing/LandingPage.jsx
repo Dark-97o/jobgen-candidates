@@ -35,6 +35,7 @@ import {
 import InteractiveFluidGradient from './InteractiveFluidGradient';
 import RuggedScreen3D from './RuggedScreen3D';
 import HandwrittenSubtitle from './HandwrittenSubtitle';
+import RevealingTitle from './RevealingTitle';
 import VideoShowcaseSection from './VideoShowcaseSection';
 import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
 import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
