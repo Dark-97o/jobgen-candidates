@@ -27,21 +27,20 @@ export default function JobIntro({ onComplete }) {
     video.addEventListener('loadedmetadata', applySpeed);
     video.addEventListener('canplay', applySpeed);
     video.addEventListener('play', applySpeed);
-    video.addEventListener('ratechange', () => {
-      if (video.playbackRate !== 1.25) {
-        video.playbackRate = 1.25;
-      }
-    });
 
     // Start video playback
-    const playPromise = video.play();
-    if (playPromise !== undefined) {
-      playPromise.catch(() => {
+    const startPlay = async () => {
+      try {
+        video.playbackRate = 1.25;
+        await video.play();
+      } catch {
         // Ensure muted autoplay succeeds in all browsers
         video.muted = true;
+        video.playbackRate = 1.25;
         video.play().catch(() => {});
-      });
-    }
+      }
+    };
+    startPlay();
 
     // Safety timeout: 4s / 1.25 = 3.2s + 1.2s buffer
     const safetyTimer = setTimeout(() => {
@@ -97,6 +96,9 @@ export default function JobIntro({ onComplete }) {
           height: '100%',
           objectFit: 'cover',
           display: 'block',
+          transform: 'translateZ(0)',
+          willChange: 'transform',
+          backfaceVisibility: 'hidden',
         }}
       />
     </div>
