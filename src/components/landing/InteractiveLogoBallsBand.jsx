@@ -36,15 +36,19 @@ export default function InteractiveLogoBallsBand() {
       };
     });
 
-    let width = canvas.clientWidth || 560;
-    let height = canvas.clientHeight || 170;
+    // Dimensions with reliable fallbacks
+    let width = Math.max(320, container.clientWidth || 560);
+    let height = Math.max(150, container.clientHeight || 160);
     const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
     const resizeCanvas = () => {
       if (!canvas || !container) return;
       const rect = container.getBoundingClientRect();
-      width = Math.floor(rect.width);
-      height = Math.floor(rect.height);
+      const newW = Math.max(300, Math.floor(rect.width || container.clientWidth || 560));
+      const newH = Math.max(140, Math.floor(rect.height || container.clientHeight || 160));
+      
+      width = newW;
+      height = newH;
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
@@ -52,19 +56,25 @@ export default function InteractiveLogoBallsBand() {
 
     resizeCanvas();
 
-    // 2D Physics Ball Setup (proportional to compact band height)
-    const radius = Math.max(25, Math.min(29, Math.floor(width / 18)));
+    // 2D Physics Ball Setup
+    // Ball radius calibrated to fit 160px height
+    const radius = 28;
+    
+    // Spawn balls visibly INSIDE the canvas, near top/mid, so they are guaranteed visible immediately!
     const balls = COMPANIES.map((comp, idx) => {
-      const colStep = (width - radius * 4) / Math.max(1, COMPANIES.length - 1);
+      const totalBalls = COMPANIES.length;
+      const usableW = Math.max(radius * 3, width - radius * 4);
+      const stepX = usableW / Math.max(1, totalBalls - 1);
       const startX = radius * 2;
+      
       return {
         company: comp,
         radius,
-        x: startX + colStep * idx + (Math.random() - 0.5) * 12,
-        // Spawn staggered above top edge so they fall smoothly into the band
-        y: -radius - 20 - idx * 35 - Math.random() * 20,
-        vx: (Math.random() - 0.5) * 35,
-        vy: 35 + Math.random() * 50,
+        x: Math.max(radius + 4, Math.min(width - radius - 4, startX + stepX * idx + (Math.random() - 0.5) * 8)),
+        // Placed visibly inside the top half of the canvas to drop naturally to the floor
+        y: Math.max(radius + 6, 25 + (idx % 2) * 35 + Math.random() * 15),
+        vx: (Math.random() - 0.5) * 30,
+        vy: 30 + Math.random() * 40,
         isDragging: false
       };
     });
@@ -91,7 +101,7 @@ export default function InteractiveLogoBallsBand() {
       for (let i = balls.length - 1; i >= 0; i--) {
         const ball = balls[i];
         const dist = Math.hypot(pos.x - ball.x, pos.y - ball.y);
-        if (dist <= ball.radius + 4) {
+        if (dist <= ball.radius + 6) {
           if (e.cancelable) e.preventDefault();
           draggedBall = ball;
           dragOffset.x = ball.x - pos.x;
@@ -99,7 +109,7 @@ export default function InteractiveLogoBallsBand() {
           lastPointer = { x: pos.x, y: pos.y, time: performance.now() };
           pointerVelocity = { x: 0, y: 0 };
           canvas.style.cursor = 'grabbing';
-          // Move grabbed ball to top of stack
+          // Move grabbed ball to top of render list
           balls.splice(i, 1);
           balls.push(ball);
           break;
@@ -129,11 +139,10 @@ export default function InteractiveLogoBallsBand() {
 
         lastPointer = { x: targetX, y: targetY, time: now };
       } else {
-        // Check hover
         let hovering = false;
         for (let i = 0; i < balls.length; i++) {
           const ball = balls[i];
-          if (Math.hypot(pos.x - ball.x, pos.y - ball.y) <= ball.radius + 2) {
+          if (Math.hypot(pos.x - ball.x, pos.y - ball.y) <= ball.radius + 3) {
             hovering = true;
             break;
           }
@@ -144,9 +153,8 @@ export default function InteractiveLogoBallsBand() {
 
     const onPointerUp = () => {
       if (draggedBall) {
-        // Impart fling momentum
-        draggedBall.vx = Math.max(-800, Math.min(800, pointerVelocity.x * 0.85));
-        draggedBall.vy = Math.max(-800, Math.min(800, pointerVelocity.y * 0.85));
+        draggedBall.vx = Math.max(-850, Math.min(850, pointerVelocity.x * 0.85));
+        draggedBall.vy = Math.max(-850, Math.min(850, pointerVelocity.y * 0.85));
         draggedBall = null;
         canvas.style.cursor = 'default';
       }
@@ -166,8 +174,8 @@ export default function InteractiveLogoBallsBand() {
     resizeObserver.observe(container);
 
     // Physics constants
-    const gravity = 1100; // px/s^2
-    const restitution = 0.62; // Bounciness
+    const gravity = 950; // px/s^2
+    const restitution = 0.65; // Elasticity
     const friction = 0.985; // Ground friction
 
     let lastTime = performance.now();
@@ -191,34 +199,35 @@ export default function InteractiveLogoBallsBand() {
           ball.vy += gravity * dt;
 
           // Air drag
-          ball.vx *= (1 - 0.008);
-          ball.vy *= (1 - 0.004);
+          ball.vx *= (1 - 0.006);
+          ball.vy *= (1 - 0.003);
 
           ball.x += ball.vx * dt;
           ball.y += ball.vy * dt;
 
-          // Bottom Floor
-          if (ball.y >= height - ball.radius) {
-            ball.y = height - ball.radius;
+          // Bottom Floor Collision
+          const floorY = height - ball.radius;
+          if (ball.y >= floorY) {
+            ball.y = floorY;
             ball.vy = -ball.vy * restitution;
-            if (Math.abs(ball.vy) < 22) ball.vy = 0;
+            if (Math.abs(ball.vy) < 18) ball.vy = 0;
             ball.vx *= friction;
           }
 
-          // Left Wall
+          // Left Wall Collision
           if (ball.x <= ball.radius) {
             ball.x = ball.radius;
             ball.vx = -ball.vx * restitution;
           }
 
-          // Right Wall
+          // Right Wall Collision
           if (ball.x >= width - ball.radius) {
             ball.x = width - ball.radius;
             ball.vx = -ball.vx * restitution;
           }
 
-          // Top Ceiling (only if ball is moving upwards and inside the canvas)
-          if (ball.y <= ball.radius && ball.vy < 0 && ball.y > -ball.radius) {
+          // Top Ceiling Collision
+          if (ball.y <= ball.radius && ball.vy < 0) {
             ball.y = ball.radius;
             ball.vy = -ball.vy * restitution;
           }
@@ -274,22 +283,20 @@ export default function InteractiveLogoBallsBand() {
         }
       }
 
-      // Render 2D Frame (Transparent background - no box)
+      // Render 2D Frame (Transparent, borderless)
       ctx.clearRect(0, 0, width, height);
 
       // Draw all balls
       balls.forEach((ball) => {
-        if (ball.y < -ball.radius * 2) return;
-
         ctx.save();
 
-        // 1. Soft Ambient Drop Shadow
-        ctx.shadowColor = 'rgba(15, 23, 42, 0.12)';
-        ctx.shadowBlur = 10;
+        // 1. Soft Ambient Drop Shadow underneath ball
+        ctx.shadowColor = 'rgba(15, 23, 42, 0.16)';
+        ctx.shadowBlur = 12;
         ctx.shadowOffsetX = 0;
-        ctx.shadowOffsetY = 4;
+        ctx.shadowOffsetY = 5;
 
-        // 2. 2D Ball Body (Crisp porcelain white)
+        // 2. 2D Ball Body (Porcelain white with subtle depth)
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.radius, 0, Math.PI * 2);
         const ballGrad = ctx.createRadialGradient(
@@ -306,7 +313,7 @@ export default function InteractiveLogoBallsBand() {
         ctx.fillStyle = ballGrad;
         ctx.fill();
 
-        // 3. Subtle Clean Outline Border
+        // 3. Crisp Clean Border
         ctx.shadowColor = 'transparent';
         ctx.lineWidth = 1.5;
         ctx.strokeStyle = '#CBD5E1';
@@ -316,14 +323,14 @@ export default function InteractiveLogoBallsBand() {
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.radius - 2, 0, Math.PI * 2);
         ctx.lineWidth = 1;
-        ctx.strokeStyle = ball.company.brandColor ? `${ball.company.brandColor}30` : 'rgba(226, 232, 240, 0.4)';
+        ctx.strokeStyle = ball.company.brandColor ? `${ball.company.brandColor}35` : 'rgba(226, 232, 240, 0.5)';
         ctx.stroke();
 
         // 4. STILL COMPANY LOGO ON TOP OF BALL (ALWAYS UPRIGHT, NEVER ROTATING)
         const img = loadedImages[ball.company.name];
         if (img && img.complete && img.naturalWidth > 0) {
-          const maxLogoW = ball.radius * 1.25;
-          const maxLogoH = ball.radius * 0.68;
+          const maxLogoW = ball.radius * 1.35;
+          const maxLogoH = ball.radius * 0.72;
           const aspect = img.naturalWidth / img.naturalHeight;
           let drawW = maxLogoW;
           let drawH = drawW / aspect;
@@ -332,7 +339,6 @@ export default function InteractiveLogoBallsBand() {
             drawW = drawH * aspect;
           }
 
-          // Drawn strictly upright and centered on top of the ball
           ctx.drawImage(
             img,
             ball.x - drawW / 2,
@@ -341,7 +347,8 @@ export default function InteractiveLogoBallsBand() {
             drawH
           );
         } else {
-          ctx.font = 'bold 10px "Plus Jakarta Sans", system-ui, sans-serif';
+          // Clean company text fallback while image loads
+          ctx.font = 'bold 11px "Plus Jakarta Sans", system-ui, sans-serif';
           ctx.textAlign = 'center';
           ctx.textBaseline = 'middle';
           ctx.fillStyle = '#090D16';
@@ -352,7 +359,7 @@ export default function InteractiveLogoBallsBand() {
         ctx.beginPath();
         ctx.arc(ball.x, ball.y, ball.radius - 2.5, -Math.PI * 0.8, -Math.PI * 0.2);
         ctx.lineWidth = 1.5;
-        ctx.strokeStyle = 'rgba(255, 255, 255, 0.8)';
+        ctx.strokeStyle = 'rgba(255, 255, 255, 0.85)';
         ctx.stroke();
 
         ctx.restore();
@@ -394,21 +401,29 @@ export default function InteractiveLogoBallsBand() {
           padding: '0 24px'
         }}
       >
-        {/* Half Text and Half Balls - Seamless, No Enclosing Box */}
-        <div 
-          style={{ 
-            display: 'grid', 
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            alignItems: 'center',
-            gap: '32px'
-          }}
-        >
-          {/* Half Text (Left-Aligned, Compact Height) */}
-          <div style={{ textAlign: 'left', maxWidth: '520px' }}>
+        {/* Responsive Grid: Half Text & Half Balls (No Box Container) */}
+        <style>{`
+          .logo-balls-band-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            align-items: center;
+            gap: 32px;
+          }
+          @media (max-width: 768px) {
+            .logo-balls-band-grid {
+              grid-template-columns: 1fr;
+              gap: 20px;
+            }
+          }
+        `}</style>
+
+        <div className="logo-balls-band-grid">
+          {/* Half Text (Left-Aligned, No Extra Buttons) */}
+          <div style={{ textAlign: 'left', minWidth: 0 }}>
             <h2 
               style={{ 
                 fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
-                fontSize: 'clamp(20px, 2.4vw, 30px)', 
+                fontSize: 'clamp(20px, 2.5vw, 32px)', 
                 fontWeight: 800, 
                 letterSpacing: '-0.03em', 
                 color: '#090D16', 
@@ -421,18 +436,18 @@ export default function InteractiveLogoBallsBand() {
             </h2>
           </div>
 
-          {/* Half Balls (Borderless, Transparent Physics Band) */}
+          {/* Half Balls (Directly on section background, no enclosing box) */}
           <div 
             ref={containerRef}
             style={{ 
               position: 'relative', 
               width: '100%', 
               height: '160px',
-              overflow: 'hidden',
+              minHeight: '160px',
+              minWidth: 0,
               touchAction: 'none'
             }}
           >
-            {/* 2D Physics Canvas on Natural Section Background */}
             <canvas 
               ref={canvasRef}
               style={{
