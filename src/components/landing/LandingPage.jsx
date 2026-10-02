@@ -37,6 +37,7 @@ import RuggedScreen3D from './RuggedScreen3D';
 import HandwrittenSubtitle from './HandwrittenSubtitle';
 import RevealingTitle from './RevealingTitle';
 import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
+import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
 
 // ==========================================
 // STATIC DATA & CONTENT FROM CANDIDATES.JOBGEN.AI
@@ -1090,61 +1091,9 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       <AutonomousWorkspacePreview onLaunchApp={onLaunchApp} />
 
       {/* =========================================================================
-          3. SOCIAL PROOF / EMPLOYER LOGOS MARQUEE (WHITE BACKGROUND)
+          3. SOCIAL PROOF / INTERACTIVE 3D FALLING LOGO BALLS (WHITE BACKGROUND)
           ========================================================================= */}
-      <section 
-        style={{ 
-          padding: '40px 0', 
-          borderTop: '1px solid #E2E8F0',
-          borderBottom: '1px solid #E2E8F0',
-          backgroundColor: '#F8FAFC'
-        }}
-      >
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', textAlign: 'center' }}>
-          <p style={{ fontSize: '12px', fontWeight: 800, textTransform: 'uppercase', letterSpacing: '0.08em', color: '#64748B', marginBottom: '24px' }}>
-            JobGen candidates have landed dream roles at industry giants
-          </p>
-
-          <div 
-            style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              gap: '40px', 
-              flexWrap: 'wrap'
-            }}
-          >
-            {TRUST_LOGOS.map((company, idx) => (
-              <div 
-                key={idx} 
-                style={{ 
-                  display: 'flex', 
-                  alignItems: 'center', 
-                  gap: '8px', 
-                  opacity: 0.8,
-                  transition: 'opacity 0.2s ease, transform 0.2s ease',
-                  cursor: 'default'
-                }}
-                onMouseEnter={(e) => {
-                  e.currentTarget.style.opacity = '1';
-                  e.currentTarget.style.transform = 'scale(1.05)';
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.opacity = '0.8';
-                  e.currentTarget.style.transform = 'scale(1)';
-                }}
-              >
-                <img 
-                  src={company.src} 
-                  alt={company.name} 
-                  style={{ height: '24px', objectFit: 'contain' }}
-                />
-                <span style={{ fontSize: '13px', fontWeight: 700, color: '#090C15' }}>{company.name}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
+      <InteractiveLogoBallsBand />
 
       {/* =========================================================================
           4. UNMATCHED PRODUCTIVITY — LIGHT ASYMMETRIC BENTO GRID
