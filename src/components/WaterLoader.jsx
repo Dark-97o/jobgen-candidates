@@ -16,6 +16,7 @@ const PRELOAD_IMAGES = [
 ];
 
 const PRELOAD_VIDEOS = [
+  '/jobintro.mp4',
   '/jobs.mp4',
   '/waves.mp4',
   '/herow.mp4',

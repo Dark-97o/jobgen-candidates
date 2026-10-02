@@ -15,12 +15,14 @@ import AtsScanModal from './components/dashboard/AtsScanModal';
 import Footer from './components/dashboard/Footer';
 import LoginView from './components/auth/LoginView';
 import LandingPage from './components/landing/LandingPage';
+import JobIntro from './components/JobIntro';
 
 export default function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(() => {
     return sessionStorage.getItem('jobgen_candidate_auth') === 'true';
   });
   const [authMode, setAuthMode] = useState('landing'); // 'landing' | 'login'
+  const [introDone, setIntroDone] = useState(false);
   const [currentTab, setCurrentTab] = useState('overview');
   const [atsModalOpen, setAtsModalOpen] = useState(false);
 
@@ -95,13 +97,18 @@ export default function App() {
         onBackToLanding={() => setAuthMode('landing')} 
       />
     ) : (
-      <LandingPage 
-        onSignIn={() => setAuthMode('login')} 
-        onLaunchApp={() => {
-          sessionStorage.setItem('jobgen_candidate_auth', 'true');
-          setIsAuthenticated(true);
-        }} 
-      />
+      <>
+        {!introDone && (
+          <JobIntro onComplete={() => setIntroDone(true)} />
+        )}
+        <LandingPage 
+          onSignIn={() => setAuthMode('login')} 
+          onLaunchApp={() => {
+            sessionStorage.setItem('jobgen_candidate_auth', 'true');
+            setIsAuthenticated(true);
+          }} 
+        />
+      </>
     );
   }
 
