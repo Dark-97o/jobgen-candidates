@@ -38,6 +38,7 @@ import RevealingTitle from './RevealingTitle';
 import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
 import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
 import BlueMistAnimation from './BlueMistAnimation';
+import WhiteMatrixGridAnimation from './WhiteMatrixGridAnimation';
 import BentoVideoCard from './BentoVideoCard';
 import MeetEmmaSection from './MeetEmmaSection';
 import PricingEngineSection from './PricingEngineSection';
@@ -659,7 +660,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       <FluidBlueHero />
 
       {/* =========================================================================
-          4. UNMATCHED PRODUCTIVITY — DARK ASYMMETRIC BENTO GRID
+          4. UNMATCHED PRODUCTIVITY — WHITE MATRIX WITH GLOWING DOTS & THIN BLUE LINES
           ========================================================================= */}
       <section 
         id="productivity"
@@ -667,13 +668,13 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         style={{
           padding: '110px 0 120px 0',
           position: 'relative',
-          backgroundColor: '#090D16',
+          backgroundColor: '#FFFFFF',
           overflow: 'hidden'
         }}
       >
         <div id="features" style={{ position: 'absolute', top: 0, left: 0 }} />
-        {/* Animated Procedural Blue Mist Background (Particle Flow + Fluid Mist Morphology) */}
-        <BlueMistAnimation />
+        {/* White Background with Thin Blue Lines & Grey Matrix of Glowing Dots */}
+        <WhiteMatrixGridAnimation />
 
         {/* Section Content */}
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
@@ -686,14 +687,14 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 fontWeight: 900,
                 letterSpacing: '-0.03em',
                 lineHeight: 1.05,
-                color: '#FFFFFF',
+                color: '#090C15',
                 marginBottom: '16px'
               }}
             >
               Unmatched Productivity
             </h2>
 
-            <p style={{ fontSize: '16.5px', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.6, maxWidth: '640px' }}>
+            <p style={{ fontSize: '16.5px', color: '#475569', lineHeight: 1.6, maxWidth: '640px' }}>
               JobGen integrates opportunity tracking, resume engineering, strategic roadmaps, and global role discovery into one hyper-fluid workspace.
             </p>
           </div>
