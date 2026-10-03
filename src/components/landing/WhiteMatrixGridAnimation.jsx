@@ -4,10 +4,10 @@ import React, { useEffect, useRef } from 'react';
  * WhiteMatrixGridAnimation
  * 
  * Clean white background with:
- * 1. A uniform grey matrix of subtle dots across the canvas.
- * 2. Clusters of thin static lines positioned on the right side of the section.
+ * 1. Pure crisp white surface (all dots completely removed).
+ * 2. Clusters of thin static lines (both horizontal and vertical) on the right side.
  * 3. High-DPR crisp rendering without battery drain or continuous animation overhead.
- * 4. Zero glowing dots.
+ * 4. Zero glowing dots and zero grey dots.
  */
 export default function WhiteMatrixGridAnimation({ style = {} }) {
   const canvasRef = useRef(null);
@@ -18,10 +18,6 @@ export default function WhiteMatrixGridAnimation({ style = {} }) {
     if (!canvas) return;
     const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
-
-    const SPACING = 38; // Dot matrix grid spacing
-    const BASE_DOT_RADIUS = 1.35;
-    const BASE_DOT_COLOR = 'rgba(148, 163, 184, 0.40)'; // Clean subtle grey dot
 
     // Palette of refined tech electric blue and cyan tones for the right-side static line clusters
     const BLUE_PALETTE = [
@@ -48,34 +44,121 @@ export default function WhiteMatrixGridAnimation({ style = {} }) {
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // 1. Fill solid crisp white background
+      // 1. Fill solid crisp white background (no dots)
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, width, height);
 
-      // 2. Draw Uniform Grey Matrix of Dots
-      const cols = Math.ceil(width / SPACING) + 1;
-      const rows = Math.ceil(height / SPACING) + 1;
-
-      ctx.fillStyle = BASE_DOT_COLOR;
-      ctx.beginPath();
-      for (let c = 0; c < cols; c++) {
-        const x = c * SPACING;
-        for (let r = 0; r < rows; r++) {
-          const y = r * SPACING;
-          ctx.moveTo(x + BASE_DOT_RADIUS, y);
-          ctx.arc(x, y, BASE_DOT_RADIUS, 0, Math.PI * 2);
-        }
-      }
-      ctx.fill();
-
-      // 3. Draw Clusters of Thin Static Lines on the Right Side
-      // Placed strictly in the right region (from 52% to 96% of section width)
+      // 2. Setup bounds for the right-side clusters
       const rightMinX = width * 0.54;
       const rightMaxX = width * 0.96;
       const availableWidth = rightMaxX - rightMinX;
 
-      // Define static line clusters vertically distributed across the right side
-      const clusters = [
+      // --- Long Structural Vertical Lines (Right Side) ---
+      const structuralVerticals = [
+        { xRatio: 0.58, yStartRatio: 0.05, yEndRatio: 0.92, width: 0.9, opacity: 0.35, theme: BLUE_PALETTE[2] },
+        { xRatio: 0.72, yStartRatio: 0.02, yEndRatio: 0.96, width: 1.15, opacity: 0.48, theme: BLUE_PALETTE[1] },
+        { xRatio: 0.85, yStartRatio: 0.08, yEndRatio: 0.94, width: 0.95, opacity: 0.40, theme: BLUE_PALETTE[0] },
+        { xRatio: 0.94, yStartRatio: 0.04, yEndRatio: 0.88, width: 0.85, opacity: 0.32, theme: BLUE_PALETTE[3] }
+      ];
+
+      structuralVerticals.forEach((v) => {
+        const x = Math.round(rightMinX + availableWidth * v.xRatio) + 0.5;
+        const y1 = height * v.yStartRatio;
+        const y2 = height * v.yEndRatio;
+
+        ctx.save();
+        ctx.lineWidth = v.width;
+        ctx.lineCap = 'round';
+
+        const grad = ctx.createLinearGradient(x, y1, x, y2);
+        grad.addColorStop(0, `rgba(${v.theme.rgb}, 0.0)`);
+        grad.addColorStop(0.15, `rgba(${v.theme.rgb}, ${v.opacity * 0.8})`);
+        grad.addColorStop(0.5, `rgba(${v.theme.rgb}, ${v.opacity})`);
+        grad.addColorStop(0.85, `rgba(${v.theme.rgb}, ${v.opacity * 0.8})`);
+        grad.addColorStop(1, `rgba(${v.theme.rgb}, 0.0)`);
+
+        ctx.strokeStyle = grad;
+        ctx.beginPath();
+        ctx.moveTo(x, y1);
+        ctx.lineTo(x, y2);
+        ctx.stroke();
+        ctx.restore();
+      });
+
+      // --- Clusters of Thin Static Vertical Lines ---
+      const verticalClusters = [
+        {
+          baseXRatio: 0.64,
+          lines: [
+            { offset: -16, yStartRatio: 0.12, lenRatio: 0.42, theme: BLUE_PALETTE[0], width: 0.85, opacity: 0.50 },
+            { offset: -10, yStartRatio: 0.06, lenRatio: 0.62, theme: BLUE_PALETTE[1], width: 1.1, opacity: 0.70 },
+            { offset: -4,  yStartRatio: 0.20, lenRatio: 0.35, theme: BLUE_PALETTE[2], width: 0.8, opacity: 0.45 },
+            { offset: 4,   yStartRatio: 0.10, lenRatio: 0.55, theme: BLUE_PALETTE[0], width: 1.05, opacity: 0.65 },
+            { offset: 12,  yStartRatio: 0.25, lenRatio: 0.40, theme: BLUE_PALETTE[3], width: 0.8, opacity: 0.40 },
+            { offset: 18,  yStartRatio: 0.15, lenRatio: 0.48, theme: BLUE_PALETTE[1], width: 0.95, opacity: 0.60 }
+          ]
+        },
+        {
+          baseXRatio: 0.78,
+          lines: [
+            { offset: -20, yStartRatio: 0.30, lenRatio: 0.50, theme: BLUE_PALETTE[2], width: 0.85, opacity: 0.45 },
+            { offset: -12, yStartRatio: 0.18, lenRatio: 0.68, theme: BLUE_PALETTE[0], width: 1.1, opacity: 0.75 },
+            { offset: -4,  yStartRatio: 0.36, lenRatio: 0.38, theme: BLUE_PALETTE[1], width: 0.9, opacity: 0.55 },
+            { offset: 4,   yStartRatio: 0.14, lenRatio: 0.74, theme: BLUE_PALETTE[1], width: 1.25, opacity: 0.85 },
+            { offset: 12,  yStartRatio: 0.24, lenRatio: 0.58, theme: BLUE_PALETTE[3], width: 0.85, opacity: 0.50 },
+            { offset: 20,  yStartRatio: 0.40, lenRatio: 0.34, theme: BLUE_PALETTE[0], width: 0.75, opacity: 0.40 }
+          ]
+        },
+        {
+          baseXRatio: 0.89,
+          lines: [
+            { offset: -14, yStartRatio: 0.42, lenRatio: 0.45, theme: BLUE_PALETTE[3], width: 0.8, opacity: 0.40 },
+            { offset: -8,  yStartRatio: 0.22, lenRatio: 0.65, theme: BLUE_PALETTE[1], width: 1.15, opacity: 0.80 },
+            { offset: 0,   yStartRatio: 0.32, lenRatio: 0.52, theme: BLUE_PALETTE[0], width: 0.95, opacity: 0.60 },
+            { offset: 8,   yStartRatio: 0.48, lenRatio: 0.38, theme: BLUE_PALETTE[2], width: 0.85, opacity: 0.50 },
+            { offset: 16,  yStartRatio: 0.28, lenRatio: 0.56, theme: BLUE_PALETTE[0], width: 1.0, opacity: 0.65 }
+          ]
+        },
+        {
+          baseXRatio: 0.95,
+          lines: [
+            { offset: -8, yStartRatio: 0.16, lenRatio: 0.42, theme: BLUE_PALETTE[0], width: 0.8, opacity: 0.45 },
+            { offset: 0,  yStartRatio: 0.06, lenRatio: 0.60, theme: BLUE_PALETTE[1], width: 1.05, opacity: 0.68 },
+            { offset: 8,  yStartRatio: 0.22, lenRatio: 0.36, theme: BLUE_PALETTE[2], width: 0.8, opacity: 0.40 }
+          ]
+        }
+      ];
+
+      verticalClusters.forEach((cluster) => {
+        const baseX = rightMinX + availableWidth * cluster.baseXRatio;
+
+        cluster.lines.forEach((line) => {
+          const x = Math.round(baseX + line.offset) + 0.5;
+          const y1 = height * line.yStartRatio;
+          const len = Math.max(60, height * line.lenRatio);
+          const y2 = Math.min(height * 0.98, y1 + len);
+
+          ctx.save();
+          ctx.lineWidth = line.width;
+          ctx.lineCap = 'round';
+
+          const grad = ctx.createLinearGradient(x, y1, x, y2);
+          grad.addColorStop(0, `rgba(${line.theme.rgb}, 0.05)`);
+          grad.addColorStop(0.2, `rgba(${line.theme.rgb}, ${line.opacity * 0.8})`);
+          grad.addColorStop(0.8, `rgba(${line.theme.rgb}, ${line.opacity})`);
+          grad.addColorStop(1, `rgba(${line.theme.rgb}, 0.08)`);
+
+          ctx.strokeStyle = grad;
+          ctx.beginPath();
+          ctx.moveTo(x, y1);
+          ctx.lineTo(x, y2);
+          ctx.stroke();
+          ctx.restore();
+        });
+      });
+
+      // --- Clusters of Thin Static Horizontal Lines ---
+      const horizontalClusters = [
         {
           yRatio: 0.12,
           lines: [
@@ -154,13 +237,13 @@ export default function WhiteMatrixGridAnimation({ style = {} }) {
         }
       ];
 
-      // Render each cluster of thin static lines
-      clusters.forEach((cluster) => {
+      // Render each horizontal cluster
+      horizontalClusters.forEach((cluster) => {
         const centerY = height * cluster.yRatio;
 
-        // Render horizontal thin lines in the cluster
+        // Render horizontal thin lines
         cluster.lines.forEach((line) => {
-          const y = Math.round(centerY + line.offset) + 0.5; // Half-pixel offset for razor-sharp 1px lines
+          const y = Math.round(centerY + line.offset) + 0.5;
           const x1 = rightMinX + availableWidth * line.startRatio;
           const lineLength = Math.max(40, availableWidth * line.lenRatio);
           const x2 = Math.min(rightMaxX, x1 + lineLength);
@@ -169,7 +252,6 @@ export default function WhiteMatrixGridAnimation({ style = {} }) {
           ctx.lineWidth = line.width;
           ctx.lineCap = 'round';
 
-          // Sleek gradient fade on endpoints
           const grad = ctx.createLinearGradient(x1, y, x2, y);
           grad.addColorStop(0, `rgba(${line.theme.rgb}, 0.05)`);
           grad.addColorStop(0.2, `rgba(${line.theme.rgb}, ${line.opacity * 0.75})`);
@@ -184,7 +266,7 @@ export default function WhiteMatrixGridAnimation({ style = {} }) {
           ctx.restore();
         });
 
-        // Render delicate vertical accent tick marks / brackets in the cluster
+        // Render small vertical accent tick marks / brackets in the cluster
         if (cluster.ticks) {
           cluster.ticks.forEach((tick) => {
             const x = Math.round(rightMinX + availableWidth * tick.xRatio) + 0.5;
