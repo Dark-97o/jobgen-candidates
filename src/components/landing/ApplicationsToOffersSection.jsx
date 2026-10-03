@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Star } from 'lucide-react';
+import { Star, Copy, Check } from 'lucide-react';
 import { RollingText } from '@/components/v1/skiper27';
 
 // Authentic Official 4-Color Google Logo SVG
@@ -151,9 +151,18 @@ const CURATED_STORIES = [
 
 export default function ApplicationsToOffersSection() {
   const [showAll, setShowAll] = useState(false);
+  const [copiedCommand, setCopiedCommand] = useState(false);
   const INITIAL_COUNT = 6;
   const visibleStories = showAll ? CURATED_STORIES : CURATED_STORIES.slice(0, INITIAL_COUNT);
   const remainingCount = CURATED_STORIES.length - visibleStories.length;
+
+  const handleCopyCommand = () => {
+    try {
+      navigator.clipboard.writeText('npx shadcn add @skiper-ui/skiper27');
+      setCopiedCommand(true);
+      setTimeout(() => setCopiedCommand(false), 2200);
+    } catch {}
+  };
 
   return (
     <section 
@@ -407,6 +416,77 @@ export default function ApplicationsToOffersSection() {
             </button>
           </div>
         )}
+
+        {/* Terminal Command for Skiper27 at bottom of reviews section */}
+        <div style={{ marginTop: '44px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+          <div
+            onClick={handleCopyCommand}
+            title="Click to copy command"
+            style={{
+              display: 'inline-flex',
+              alignItems: 'center',
+              gap: '12px',
+              padding: '9px 18px',
+              borderRadius: '9999px',
+              backgroundColor: 'rgba(15, 23, 42, 0.85)',
+              border: '1px solid rgba(255, 255, 255, 0.16)',
+              boxShadow: '0 8px 30px rgba(0, 0, 0, 0.45)',
+              backdropFilter: 'blur(16px)',
+              WebkitBackdropFilter: 'blur(16px)',
+              cursor: 'pointer',
+              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.55)';
+              e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 1)';
+              e.currentTarget.style.transform = 'translateY(-1px)';
+              e.currentTarget.style.boxShadow = '0 12px 32px rgba(56, 189, 248, 0.15)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.16)';
+              e.currentTarget.style.backgroundColor = 'rgba(15, 23, 42, 0.85)';
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 8px 30px rgba(0, 0, 0, 0.45)';
+            }}
+          >
+            <span style={{ color: '#38BDF8', fontFamily: 'monospace', fontWeight: 800, fontSize: '14px', userSelect: 'none' }}>
+              $
+            </span>
+            <code
+              style={{
+                fontFamily: '"JetBrains Mono", Consolas, "Courier New", monospace',
+                fontSize: '13px',
+                color: '#E2E8F0',
+                letterSpacing: '-0.01em',
+                userSelect: 'all'
+              }}
+            >
+              npx shadcn add @skiper-ui/skiper27
+            </code>
+            <button
+              type="button"
+              aria-label="Copy command"
+              style={{
+                background: 'none',
+                border: 'none',
+                padding: '4px',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                color: copiedCommand ? '#34D399' : '#94A3B8',
+                cursor: 'pointer',
+                transition: 'color 0.15s ease'
+              }}
+            >
+              {copiedCommand ? <Check size={14} /> : <Copy size={14} />}
+            </button>
+          </div>
+          {copiedCommand && (
+            <span style={{ fontSize: '11px', color: '#34D399', fontWeight: 600 }}>
+              Copied to clipboard!
+            </span>
+          )}
+        </div>
 
       </div>
 

@@ -811,20 +811,35 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
 
 
       {/* =========================================================================
-          12. COMPREHENSIVE FOOTER WITH GIANT "JOBGEN.AI" CONDENSED TEXT & SOCIAL CHANNELS
+          12. COMPREHENSIVE DARK THEME FOOTER WITH GIANT "JOBGEN.AI" CONDENSED TEXT
           ========================================================================= */}
       <footer 
         style={{
           position: 'relative',
           width: '100%',
-          backgroundColor: '#FFFFFF',
-          borderTop: '1px solid #E2E8F0',
+          backgroundColor: '#090D16',
+          borderTop: '1px solid rgba(255, 255, 255, 0.08)',
           padding: '64px 0 24px 0',
           boxSizing: 'border-box',
           overflow: 'hidden'
         }}
       >
-        <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 clamp(16px, 2.5vw, 32px)', boxSizing: 'border-box' }}>
+        {/* Dark Ambient Radial Gradients */}
+        <div
+          aria-hidden="true"
+          style={{
+            position: 'absolute',
+            inset: 0,
+            pointerEvents: 'none',
+            backgroundImage: `
+              radial-gradient(circle at 15% 20%, rgba(30, 58, 138, 0.25) 0%, transparent 45%),
+              radial-gradient(circle at 85% 80%, rgba(14, 116, 144, 0.2) 0%, transparent 45%)
+            `,
+            zIndex: 0
+          }}
+        />
+
+        <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 clamp(16px, 2.5vw, 32px)', boxSizing: 'border-box', position: 'relative', zIndex: 1 }}>
           
           {/* Top Grid: Brand Identity & Multi-column Navigation */}
           <div 
@@ -835,7 +850,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               paddingBottom: '48px'
             }}
           >
-            {/* Column 1: Brand & Live Status */}
+            {/* Column 1: Brand & Tagline */}
             <div style={{ maxWidth: '340px' }}>
               <div 
                 style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', cursor: 'pointer' }}
@@ -847,7 +862,6 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                   style={{ width: '28px', height: '28px', objectFit: 'contain' }}
                   onError={(e) => {
                     e.currentTarget.src = '/Whitelogo.webp';
-                    e.currentTarget.style.filter = 'invert(1)';
                   }}
                 />
                 <span 
@@ -855,7 +869,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                     fontFamily: '"Plus Jakarta Sans", sans-serif',
                     fontSize: '20px', 
                     fontWeight: 900, 
-                    color: '#090C15',
+                    color: '#FFFFFF',
                     letterSpacing: '-0.03em'
                   }}
                 >
@@ -863,78 +877,59 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 </span>
               </div>
 
-              <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: 1.65, margin: '0 0 18px 0' }}>
+              <p style={{ fontSize: '13.5px', color: '#94A3B8', lineHeight: 1.65, margin: 0 }}>
                 The all-in-one AI career operating system. Track job applications across global boards, tailor resumes to recruiter ATS algorithms, and practice live interviews with Emma AI.
               </p>
-
-              {/* Status Badge */}
-              <div 
-                style={{ 
-                  display: 'inline-flex', 
-                  alignItems: 'center', 
-                  gap: '8px', 
-                  padding: '6px 14px', 
-                  borderRadius: '9999px',
-                  backgroundColor: 'rgba(16, 185, 129, 0.08)',
-                  border: '1px solid rgba(16, 185, 129, 0.25)',
-                  fontSize: '11.5px', 
-                  color: '#059669', 
-                  fontWeight: 600 
-                }}
-              >
-                <span className="radar-live" style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-                <span>All Systems Operational &bull; 99.98% Uptime</span>
-              </div>
             </div>
 
             {/* Column 2: Product */}
             <div>
-              <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '18px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '18px' }}>
                 Product
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', fontSize: '13.5px', color: '#64748B' }}>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('features')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Features Overview</span>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('ats-scanner')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>ATS Resume Studio</span>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('meet-emma')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Emma AI Interview Coach</span>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('productivity')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Application Tracker</span>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('pricing')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Regional Pricing</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', fontSize: '13.5px', color: '#94A3B8' }}>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('features')} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Features Overview</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('ats-scanner')} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>ATS Resume Studio</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('meet-emma')} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Emma AI Interview Coach</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('productivity')} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Application Tracker</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('pricing')} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Regional Pricing</span>
               </div>
             </div>
 
             {/* Column 3: Resources & Proof */}
             <div>
-              <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '18px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '18px' }}>
                 Resources
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', fontSize: '13.5px', color: '#64748B' }}>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('testimonials')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Candidate Reviews & Offers</span>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('faq')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Candidate FAQ</span>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('ats-scanner')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>ATS Score Benchmark</span>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onLaunchApp} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Career Roadmap Generator</span>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onSignIn} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Candidate Community</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', fontSize: '13.5px', color: '#94A3B8' }}>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('testimonials')} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Candidate Reviews & Offers</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('faq')} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Candidate FAQ</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('ats-scanner')} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>ATS Score Benchmark</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onLaunchApp} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Career Roadmap Generator</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onSignIn} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Candidate Community</span>
               </div>
             </div>
 
             {/* Column 4: Platform & Extension */}
             <div>
-              <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '18px' }}>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '18px' }}>
                 Platform
               </div>
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', fontSize: '13.5px', color: '#64748B' }}>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onLaunchApp} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Launch Candidate OS</span>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onSignIn} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Candidate Sign In</span>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', fontSize: '13.5px', color: '#94A3B8' }}>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onLaunchApp} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Launch Candidate OS</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onSignIn} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Candidate Sign In</span>
                 <a 
                   href="https://chromewebstore.google.com" 
                   target="_blank" 
                   rel="noopener noreferrer" 
-                  style={{ textDecoration: 'none', color: '#64748B', transition: 'color 0.15s ease' }} 
-                  onMouseEnter={(e) => e.target.style.color = '#1A53CF'} 
-                  onMouseLeave={(e) => e.target.style.color = '#64748B'}
+                  style={{ textDecoration: 'none', color: '#94A3B8', transition: 'color 0.15s ease' }} 
+                  onMouseEnter={(e) => e.target.style.color = '#38BDF8'} 
+                  onMouseLeave={(e) => e.target.style.color = '#94A3B8'}
                 >
                   Chrome Web Store Extension &rarr;
                 </a>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('pricing')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Upgrade to Unlimited</span>
-                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onLaunchApp} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Live Simulation Active</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('pricing')} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Upgrade to Unlimited</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onLaunchApp} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Live Simulation Active</span>
               </div>
             </div>
           </div>
@@ -960,7 +955,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 letterSpacing: '-0.02em',
                 lineHeight: 0.78,
                 color: '#2563EB',
-                opacity: 0.28,
+                opacity: 0.35,
                 whiteSpace: 'nowrap',
                 display: 'inline-block',
               }}
@@ -974,7 +969,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             style={{
               width: '100%',
               height: '1px',
-              background: 'linear-gradient(90deg, rgba(226, 232, 240, 0.4) 0%, rgba(37, 99, 235, 0.35) 40%, rgba(37, 99, 235, 0.35) 60%, rgba(226, 232, 240, 0.4) 100%)',
+              background: 'linear-gradient(90deg, rgba(255, 255, 255, 0.04) 0%, rgba(37, 99, 235, 0.45) 40%, rgba(37, 99, 235, 0.45) 60%, rgba(255, 255, 255, 0.04) 100%)',
               margin: '18px 0 16px 0',
             }}
           />
@@ -989,20 +984,20 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               gap: '14px',
               paddingBottom: '8px',
               fontSize: 'clamp(11px, 0.9vw, 13px)',
-              color: '#64748B',
+              color: '#94A3B8',
               fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
             }}
           >
             {/* Copyright notice */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
-              <span style={{ color: '#475569', fontWeight: 600 }}>
+              <span style={{ color: '#E2E8F0', fontWeight: 600 }}>
                 &copy; {new Date().getFullYear()} JobGen.AI Technologies Inc. All rights reserved.
               </span>
-              <span style={{ color: '#CBD5E1' }}>&bull;</span>
+              <span style={{ color: '#475569' }}>&bull;</span>
               <span style={{ color: '#64748B' }}>Built for ambitious candidates worldwide</span>
             </div>
 
-            {/* Social Media Channels matching Dashboard */}
+            {/* Social Media Channels matching Dashboard (Dark Frosted) */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
               {/* Instagram */}
               <a
@@ -1015,13 +1010,13 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                   width: '34px',
                   height: '34px',
                   borderRadius: '10px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  border: '1px solid rgba(226, 232, 240, 0.95)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#64748B',
-                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
+                  color: '#94A3B8',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -1030,17 +1025,17 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 }}
                 onMouseEnter={(e) => {
                   e.currentTarget.style.color = '#E1306C';
-                  e.currentTarget.style.borderColor = 'rgba(225, 48, 108, 0.4)';
-                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.borderColor = 'rgba(225, 48, 108, 0.5)';
+                  e.currentTarget.style.backgroundColor = 'rgba(225, 48, 108, 0.12)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(225, 48, 108, 0.22)';
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(225, 48, 108, 0.25)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#64748B';
-                  e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.95)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                  e.currentTarget.style.color = '#94A3B8';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
                   e.currentTarget.style.transform = 'translateY(0px)';
-                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.04)';
+                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.3)';
                 }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -1061,13 +1056,13 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                   width: '34px',
                   height: '34px',
                   borderRadius: '10px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  border: '1px solid rgba(226, 232, 240, 0.95)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#64748B',
-                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
+                  color: '#94A3B8',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -1075,18 +1070,18 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                   cursor: 'pointer',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#0A66C2';
-                  e.currentTarget.style.borderColor = 'rgba(10, 102, 194, 0.4)';
-                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.color = '#38BDF8';
+                  e.currentTarget.style.borderColor = 'rgba(56, 189, 248, 0.5)';
+                  e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.12)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(10, 102, 194, 0.22)';
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(56, 189, 248, 0.25)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#64748B';
-                  e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.95)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                  e.currentTarget.style.color = '#94A3B8';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
                   e.currentTarget.style.transform = 'translateY(0px)';
-                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.04)';
+                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.3)';
                 }}
               >
                 <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
@@ -1105,13 +1100,13 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                   width: '34px',
                   height: '34px',
                   borderRadius: '10px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  border: '1px solid rgba(226, 232, 240, 0.95)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#64748B',
-                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
+                  color: '#94A3B8',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -1119,18 +1114,18 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                   cursor: 'pointer',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#090C15';
-                  e.currentTarget.style.borderColor = 'rgba(9, 12, 21, 0.4)';
-                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.color = '#FFFFFF';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.4)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.15)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(9, 12, 21, 0.18)';
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(255, 255, 255, 0.18)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#64748B';
-                  e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.95)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                  e.currentTarget.style.color = '#94A3B8';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
                   e.currentTarget.style.transform = 'translateY(0px)';
-                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.04)';
+                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.3)';
                 }}
               >
                 <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
@@ -1149,13 +1144,13 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                   width: '34px',
                   height: '34px',
                   borderRadius: '10px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
-                  border: '1px solid rgba(226, 232, 240, 0.95)',
+                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
+                  border: '1px solid rgba(255, 255, 255, 0.12)',
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  color: '#64748B',
-                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
+                  color: '#94A3B8',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.3)',
                   backdropFilter: 'blur(8px)',
                   WebkitBackdropFilter: 'blur(8px)',
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
@@ -1163,18 +1158,18 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                   cursor: 'pointer',
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.color = '#FF0000';
-                  e.currentTarget.style.borderColor = 'rgba(255, 0, 0, 0.4)';
-                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.color = '#FF4D4D';
+                  e.currentTarget.style.borderColor = 'rgba(255, 77, 77, 0.5)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 0, 0, 0.12)';
                   e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(255, 0, 0, 0.22)';
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(255, 0, 0, 0.25)';
                 }}
                 onMouseLeave={(e) => {
-                  e.currentTarget.style.color = '#64748B';
-                  e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.95)';
-                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                  e.currentTarget.style.color = '#94A3B8';
+                  e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.12)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.06)';
                   e.currentTarget.style.transform = 'translateY(0px)';
-                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.04)';
+                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.3)';
                 }}
               >
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
@@ -1185,9 +1180,9 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
 
             {/* Policy & Legal Links */}
             <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
-              <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Privacy Policy</span>
-              <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Terms of Service</span>
-              <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Security</span>
+              <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Privacy Policy</span>
+              <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Terms of Service</span>
+              <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#38BDF8'} onMouseLeave={(e) => e.target.style.color = '#94A3B8'}>Security</span>
             </div>
           </div>
 
