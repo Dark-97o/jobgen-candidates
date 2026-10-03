@@ -4,11 +4,10 @@ import React, { useEffect, useRef } from 'react';
  * WhiteMatrixGridAnimation
  * 
  * Clean white background with:
- * 1. A uniform grey matrix of subtle dots.
- * 2. Random dots across the matrix glowing with smooth sapphire/electric blue pulses.
- * 3. Thin, laser-crisp blue lines traveling randomly along horizontal and vertical matrix tracks.
- * 
- * Silky 60fps performance on Retina & High-DPR screens.
+ * 1. A uniform grey matrix of subtle dots across the canvas.
+ * 2. Clusters of thin static lines positioned on the right side of the section.
+ * 3. High-DPR crisp rendering without battery drain or continuous animation overhead.
+ * 4. Zero glowing dots.
  */
 export default function WhiteMatrixGridAnimation({ style = {} }) {
   const canvasRef = useRef(null);
@@ -20,115 +19,27 @@ export default function WhiteMatrixGridAnimation({ style = {} }) {
     const ctx = canvas.getContext('2d', { alpha: false });
     if (!ctx) return;
 
-    let animId;
-    let width = 0;
-    let height = 0;
-    let dpr = Math.min(window.devicePixelRatio || 1, 2);
+    const SPACING = 38; // Dot matrix grid spacing
+    const BASE_DOT_RADIUS = 1.35;
+    const BASE_DOT_COLOR = 'rgba(148, 163, 184, 0.40)'; // Clean subtle grey dot
 
-    const SPACING = 38; // Matrix dot grid spacing
-    const BASE_DOT_RADIUS = 1.4;
-    const BASE_DOT_COLOR = 'rgba(148, 163, 184, 0.42)'; // Refined grey dot
-
-    // Palette of vibrant blue glow tones for glowing dots and thin lines
+    // Palette of refined tech electric blue and cyan tones for the right-side static line clusters
     const BLUE_PALETTE = [
-      { hex: '#2563EB', rgb: '37, 99, 235' },   // Electric Royal Blue
-      { hex: '#1D4ED8', rgb: '29, 78, 216' },   // Deep Sapphire
-      { hex: '#0284C7', rgb: '2, 132, 199' },   // Sky Blue
-      { hex: '#38BDF8', rgb: '56, 189, 248' },  // Bright Cyan Highlight
-      { hex: '#4F46E5', rgb: '79, 70, 229' }    // Indigo Accent
+      { rgb: '37, 99, 235', hex: '#2563EB' },   // Electric Royal Blue
+      { rgb: '56, 189, 248', hex: '#38BDF8' },  // Vibrant Cyan / Sky
+      { rgb: '2, 132, 199', hex: '#0284C7' },   // Deep Ocean Blue
+      { rgb: '96, 165, 250', hex: '#60A5FA' },  // Soft Blue
+      { rgb: '79, 70, 229', hex: '#4F46E5' }    // Indigo Accent
     ];
 
-    // --- State: Glowing Dots ---
-    const MAX_GLOWING_DOTS = 28;
-    const glowingDots = [];
+    const draw = () => {
+      const container = containerRef.current || canvas.parentElement;
+      if (!container) return;
 
-    const spawnGlowingDot = (cols, rows) => {
-      if (cols <= 0 || rows <= 0) return null;
-      const col = Math.floor(Math.random() * cols);
-      const row = Math.floor(Math.random() * rows);
-      const theme = BLUE_PALETTE[Math.floor(Math.random() * BLUE_PALETTE.length)];
-      return {
-        col,
-        row,
-        x: col * SPACING,
-        y: row * SPACING,
-        progress: 0,
-        speed: Math.random() * 0.015 + 0.008, // Slow, elegant breathing pulse
-        maxRadius: Math.random() * 1.6 + 2.2,
-        theme,
-        maxGlow: Math.random() * 8 + 6
-      };
-    };
-
-    // --- State: Thin Blue Lines ---
-    const MAX_LINES = 7;
-    const lines = [];
-
-    const spawnLine = (cols, rows) => {
-      if (!width || !height) return null;
-      const isHorizontal = Math.random() > 0.5;
-      const theme = BLUE_PALETTE[Math.floor(Math.random() * BLUE_PALETTE.length)];
-      const speed = (Math.random() * 1.8 + 1.2) * (Math.random() > 0.5 ? 1 : -1);
-      const length = Math.random() * 180 + 130;
-
-      if (isHorizontal) {
-        const row = Math.floor(Math.random() * (rows + 1));
-        const y = row * SPACING;
-        const x = speed > 0 ? -length : width + length;
-        return {
-          axis: 'h',
-          track: y,
-          pos: x,
-          speed,
-          length,
-          theme,
-          width: Math.random() > 0.6 ? 1.5 : 1.0,
-          opacity: Math.random() * 0.35 + 0.55
-        };
-      } else {
-        const col = Math.floor(Math.random() * (cols + 1));
-        const x = col * SPACING;
-        const y = speed > 0 ? -length : height + length;
-        return {
-          axis: 'v',
-          track: x,
-          pos: y,
-          speed,
-          length,
-          theme,
-          width: Math.random() > 0.6 ? 1.5 : 1.0,
-          opacity: Math.random() * 0.35 + 0.55
-        };
-      }
-    };
-
-    // --- Mouse Interaction ---
-    const mouse = { x: -1000, y: -1000, active: false };
-    const handlePointerMove = (e) => {
-      const rect = canvas.getBoundingClientRect();
-      mouse.x = e.clientX - rect.left;
-      mouse.y = e.clientY - rect.top;
-      mouse.active = true;
-    };
-    const handlePointerLeave = () => {
-      mouse.active = false;
-      mouse.x = -1000;
-      mouse.y = -1000;
-    };
-
-    const container = containerRef.current || canvas.parentElement;
-    if (container) {
-      container.addEventListener('pointermove', handlePointerMove, { passive: true });
-      container.addEventListener('pointerleave', handlePointerLeave, { passive: true });
-    }
-
-    // --- Resize Handler ---
-    const handleResize = () => {
-      if (!canvas || !container) return;
       const rect = container.getBoundingClientRect();
-      width = Math.max(300, Math.floor(rect.width || container.clientWidth || window.innerWidth));
-      height = Math.max(300, Math.floor(rect.height || container.clientHeight || 800));
-      dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const width = Math.max(300, Math.floor(rect.width || container.clientWidth || window.innerWidth));
+      const height = Math.max(300, Math.floor(rect.height || container.clientHeight || 800));
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
 
       canvas.width = Math.floor(width * dpr);
       canvas.height = Math.floor(height * dpr);
@@ -137,182 +48,196 @@ export default function WhiteMatrixGridAnimation({ style = {} }) {
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // Pre-seed glowing dots and lines
-      const cols = Math.ceil(width / SPACING) + 1;
-      const rows = Math.ceil(height / SPACING) + 1;
-
-      while (glowingDots.length < MAX_GLOWING_DOTS) {
-        const dot = spawnGlowingDot(cols, rows);
-        if (dot) {
-          dot.progress = Math.random(); // Stagger initial phases
-          glowingDots.push(dot);
-        }
-      }
-
-      while (lines.length < MAX_LINES) {
-        const line = spawnLine(cols, rows);
-        if (line) {
-          // Pre-position lines randomly along their track
-          line.pos = Math.random() * (line.axis === 'h' ? width : height);
-          lines.push(line);
-        }
-      }
-    };
-
-    handleResize();
-
-    let resizeRaf;
-    const onResize = () => {
-      if (resizeRaf) cancelAnimationFrame(resizeRaf);
-      resizeRaf = requestAnimationFrame(handleResize);
-    };
-    window.addEventListener('resize', onResize);
-
-    // --- Main Render Loop ---
-    const render = () => {
-      if (!width || !height) {
-        animId = requestAnimationFrame(render);
-        return;
-      }
-
-      const cols = Math.ceil(width / SPACING) + 1;
-      const rows = Math.ceil(height / SPACING) + 1;
-
-      // 1. Clear with crisp solid white background
+      // 1. Fill solid crisp white background
       ctx.fillStyle = '#FFFFFF';
       ctx.fillRect(0, 0, width, height);
 
-      // 2. Draw Base Grey Matrix of Dots
+      // 2. Draw Uniform Grey Matrix of Dots
+      const cols = Math.ceil(width / SPACING) + 1;
+      const rows = Math.ceil(height / SPACING) + 1;
+
       ctx.fillStyle = BASE_DOT_COLOR;
       ctx.beginPath();
       for (let c = 0; c < cols; c++) {
         const x = c * SPACING;
         for (let r = 0; r < rows; r++) {
           const y = r * SPACING;
-
-          // Mouse proximity slight brightening
-          let rad = BASE_DOT_RADIUS;
-          if (mouse.active) {
-            const dx = x - mouse.x;
-            const dy = y - mouse.y;
-            const distSq = dx * dx + dy * dy;
-            if (distSq < 14400) { // 120px radius
-              const factor = 1 - Math.sqrt(distSq) / 120;
-              rad += factor * 0.9;
-            }
-          }
-
-          ctx.moveTo(x + rad, y);
-          ctx.arc(x, y, rad, 0, Math.PI * 2);
+          ctx.moveTo(x + BASE_DOT_RADIUS, y);
+          ctx.arc(x, y, BASE_DOT_RADIUS, 0, Math.PI * 2);
         }
       }
       ctx.fill();
 
-      // 3. Draw Thin Blue Lines (Randomly moving along matrix tracks)
-      for (let i = 0; i < lines.length; i++) {
-        const line = lines[i];
-        line.pos += line.speed;
+      // 3. Draw Clusters of Thin Static Lines on the Right Side
+      // Placed strictly in the right region (from 52% to 96% of section width)
+      const rightMinX = width * 0.54;
+      const rightMaxX = width * 0.96;
+      const availableWidth = rightMaxX - rightMinX;
 
-        // Check if line exited canvas bounds
-        const isOutOfBounds = line.speed > 0
-          ? line.pos - line.length > (line.axis === 'h' ? width : height)
-          : line.pos + line.length < 0;
-
-        if (isOutOfBounds) {
-          const freshLine = spawnLine(cols, rows);
-          if (freshLine) {
-            lines[i] = freshLine;
-          }
-          continue;
+      // Define static line clusters vertically distributed across the right side
+      const clusters = [
+        {
+          yRatio: 0.12,
+          lines: [
+            { offset: -16, lenRatio: 0.55, startRatio: 0.25, theme: BLUE_PALETTE[0], width: 0.9, opacity: 0.55 },
+            { offset: -10, lenRatio: 0.85, startRatio: 0.05, theme: BLUE_PALETTE[1], width: 1.1, opacity: 0.75 },
+            { offset: -4,  lenRatio: 0.40, startRatio: 0.45, theme: BLUE_PALETTE[2], width: 0.8, opacity: 0.45 },
+            { offset: 4,   lenRatio: 0.92, startRatio: 0.02, theme: BLUE_PALETTE[0], width: 1.2, opacity: 0.85 },
+            { offset: 12,  lenRatio: 0.65, startRatio: 0.20, theme: BLUE_PALETTE[3], width: 0.85, opacity: 0.50 },
+            { offset: 18,  lenRatio: 0.35, startRatio: 0.50, theme: BLUE_PALETTE[1], width: 1.0, opacity: 0.65 }
+          ],
+          ticks: [
+            { xRatio: 0.88, topOffset: -22, height: 44, theme: BLUE_PALETTE[1], opacity: 0.45 },
+            { xRatio: 0.45, topOffset: -12, height: 26, theme: BLUE_PALETTE[0], opacity: 0.40 }
+          ]
+        },
+        {
+          yRatio: 0.28,
+          lines: [
+            { offset: -20, lenRatio: 0.38, startRatio: 0.55, theme: BLUE_PALETTE[3], width: 0.8, opacity: 0.40 },
+            { offset: -12, lenRatio: 0.72, startRatio: 0.18, theme: BLUE_PALETTE[0], width: 1.0, opacity: 0.65 },
+            { offset: -5,  lenRatio: 0.48, startRatio: 0.35, theme: BLUE_PALETTE[1], width: 0.85, opacity: 0.55 },
+            { offset: 3,   lenRatio: 0.95, startRatio: 0.00, theme: BLUE_PALETTE[1], width: 1.15, opacity: 0.80 },
+            { offset: 11,  lenRatio: 0.60, startRatio: 0.28, theme: BLUE_PALETTE[2], width: 0.9, opacity: 0.60 },
+            { offset: 19,  lenRatio: 0.30, startRatio: 0.62, theme: BLUE_PALETTE[0], width: 0.8, opacity: 0.45 }
+          ],
+          ticks: [
+            { xRatio: 0.92, topOffset: -24, height: 48, theme: BLUE_PALETTE[0], opacity: 0.40 },
+            { xRatio: 0.35, topOffset: -8,  height: 24, theme: BLUE_PALETTE[2], opacity: 0.35 }
+          ]
+        },
+        {
+          yRatio: 0.48,
+          lines: [
+            { offset: -24, lenRatio: 0.45, startRatio: 0.48, theme: BLUE_PALETTE[2], width: 0.8, opacity: 0.45 },
+            { offset: -16, lenRatio: 0.80, startRatio: 0.12, theme: BLUE_PALETTE[1], width: 1.1, opacity: 0.70 },
+            { offset: -8,  lenRatio: 0.98, startRatio: 0.00, theme: BLUE_PALETTE[0], width: 1.25, opacity: 0.90 },
+            { offset: 0,   lenRatio: 0.50, startRatio: 0.32, theme: BLUE_PALETTE[3], width: 0.8, opacity: 0.50 },
+            { offset: 8,   lenRatio: 0.88, startRatio: 0.08, theme: BLUE_PALETTE[1], width: 1.0, opacity: 0.75 },
+            { offset: 16,  lenRatio: 0.62, startRatio: 0.25, theme: BLUE_PALETTE[0], width: 0.85, opacity: 0.55 },
+            { offset: 24,  lenRatio: 0.32, startRatio: 0.60, theme: BLUE_PALETTE[4], width: 0.75, opacity: 0.40 }
+          ],
+          ticks: [
+            { xRatio: 0.95, topOffset: -30, height: 60, theme: BLUE_PALETTE[1], opacity: 0.50 },
+            { xRatio: 0.68, topOffset: -16, height: 32, theme: BLUE_PALETTE[0], opacity: 0.45 },
+            { xRatio: 0.12, topOffset: -10, height: 20, theme: BLUE_PALETTE[2], opacity: 0.35 }
+          ]
+        },
+        {
+          yRatio: 0.68,
+          lines: [
+            { offset: -18, lenRatio: 0.52, startRatio: 0.38, theme: BLUE_PALETTE[0], width: 0.85, opacity: 0.50 },
+            { offset: -10, lenRatio: 0.90, startRatio: 0.04, theme: BLUE_PALETTE[1], width: 1.2, opacity: 0.85 },
+            { offset: -2,  lenRatio: 0.68, startRatio: 0.22, theme: BLUE_PALETTE[2], width: 0.95, opacity: 0.60 },
+            { offset: 6,   lenRatio: 0.42, startRatio: 0.50, theme: BLUE_PALETTE[3], width: 0.8, opacity: 0.45 },
+            { offset: 14,  lenRatio: 0.82, startRatio: 0.10, theme: BLUE_PALETTE[0], width: 1.05, opacity: 0.70 },
+            { offset: 22,  lenRatio: 0.28, startRatio: 0.65, theme: BLUE_PALETTE[1], width: 0.75, opacity: 0.40 }
+          ],
+          ticks: [
+            { xRatio: 0.90, topOffset: -22, height: 46, theme: BLUE_PALETTE[0], opacity: 0.45 },
+            { xRatio: 0.40, topOffset: -14, height: 28, theme: BLUE_PALETTE[1], opacity: 0.35 }
+          ]
+        },
+        {
+          yRatio: 0.86,
+          lines: [
+            { offset: -14, lenRatio: 0.40, startRatio: 0.52, theme: BLUE_PALETTE[3], width: 0.8, opacity: 0.40 },
+            { offset: -7,  lenRatio: 0.78, startRatio: 0.15, theme: BLUE_PALETTE[0], width: 1.0, opacity: 0.65 },
+            { offset: 0,   lenRatio: 0.92, startRatio: 0.02, theme: BLUE_PALETTE[1], width: 1.15, opacity: 0.80 },
+            { offset: 8,   lenRatio: 0.58, startRatio: 0.30, theme: BLUE_PALETTE[2], width: 0.85, opacity: 0.55 },
+            { offset: 16,  lenRatio: 0.34, startRatio: 0.60, theme: BLUE_PALETTE[0], width: 0.75, opacity: 0.45 }
+          ],
+          ticks: [
+            { xRatio: 0.86, topOffset: -18, height: 38, theme: BLUE_PALETTE[1], opacity: 0.40 },
+            { xRatio: 0.55, topOffset: -10, height: 22, theme: BLUE_PALETTE[0], opacity: 0.35 }
+          ]
         }
+      ];
 
-        ctx.save();
-        ctx.lineWidth = line.width;
-        ctx.lineCap = 'round';
-        ctx.shadowBlur = 8;
-        ctx.shadowColor = `rgba(${line.theme.rgb}, 0.8)`;
+      // Render each cluster of thin static lines
+      clusters.forEach((cluster) => {
+        const centerY = height * cluster.yRatio;
 
-        if (line.axis === 'h') {
-          const x1 = line.pos - (line.speed > 0 ? line.length : -line.length);
-          const x2 = line.pos;
-          const grad = ctx.createLinearGradient(x1, line.track, x2, line.track);
-          grad.addColorStop(0, `rgba(${line.theme.rgb}, 0)`);
-          grad.addColorStop(0.65, `rgba(${line.theme.rgb}, ${line.opacity * 0.7})`);
-          grad.addColorStop(1, `rgba(${line.theme.rgb}, ${line.opacity})`);
+        // Render horizontal thin lines in the cluster
+        cluster.lines.forEach((line) => {
+          const y = Math.round(centerY + line.offset) + 0.5; // Half-pixel offset for razor-sharp 1px lines
+          const x1 = rightMinX + availableWidth * line.startRatio;
+          const lineLength = Math.max(40, availableWidth * line.lenRatio);
+          const x2 = Math.min(rightMaxX, x1 + lineLength);
+
+          ctx.save();
+          ctx.lineWidth = line.width;
+          ctx.lineCap = 'round';
+
+          // Sleek gradient fade on endpoints
+          const grad = ctx.createLinearGradient(x1, y, x2, y);
+          grad.addColorStop(0, `rgba(${line.theme.rgb}, 0.05)`);
+          grad.addColorStop(0.2, `rgba(${line.theme.rgb}, ${line.opacity * 0.75})`);
+          grad.addColorStop(0.8, `rgba(${line.theme.rgb}, ${line.opacity})`);
+          grad.addColorStop(1, `rgba(${line.theme.rgb}, 0.1)`);
 
           ctx.strokeStyle = grad;
           ctx.beginPath();
-          ctx.moveTo(x1, line.track);
-          ctx.lineTo(x2, line.track);
+          ctx.moveTo(x1, y);
+          ctx.lineTo(x2, y);
           ctx.stroke();
-        } else {
-          const y1 = line.pos - (line.speed > 0 ? line.length : -line.length);
-          const y2 = line.pos;
-          const grad = ctx.createLinearGradient(line.track, y1, line.track, y2);
-          grad.addColorStop(0, `rgba(${line.theme.rgb}, 0)`);
-          grad.addColorStop(0.65, `rgba(${line.theme.rgb}, ${line.opacity * 0.7})`);
-          grad.addColorStop(1, `rgba(${line.theme.rgb}, ${line.opacity})`);
+          ctx.restore();
+        });
 
-          ctx.strokeStyle = grad;
-          ctx.beginPath();
-          ctx.moveTo(line.track, y1);
-          ctx.lineTo(line.track, y2);
-          ctx.stroke();
+        // Render delicate vertical accent tick marks / brackets in the cluster
+        if (cluster.ticks) {
+          cluster.ticks.forEach((tick) => {
+            const x = Math.round(rightMinX + availableWidth * tick.xRatio) + 0.5;
+            const y1 = centerY + tick.topOffset;
+            const y2 = y1 + tick.height;
+
+            ctx.save();
+            ctx.lineWidth = 0.85;
+            ctx.lineCap = 'round';
+
+            const grad = ctx.createLinearGradient(x, y1, x, y2);
+            grad.addColorStop(0, `rgba(${tick.theme.rgb}, 0.0)`);
+            grad.addColorStop(0.3, `rgba(${tick.theme.rgb}, ${tick.opacity})`);
+            grad.addColorStop(0.7, `rgba(${tick.theme.rgb}, ${tick.opacity})`);
+            grad.addColorStop(1, `rgba(${tick.theme.rgb}, 0.0)`);
+
+            ctx.strokeStyle = grad;
+            ctx.beginPath();
+            ctx.moveTo(x, y1);
+            ctx.lineTo(x, y2);
+            ctx.stroke();
+            ctx.restore();
+          });
         }
-        ctx.restore();
-      }
-
-      // 4. Draw Randomly Glowing Dots Across Matrix
-      for (let i = 0; i < glowingDots.length; i++) {
-        const dot = glowingDots[i];
-        dot.progress += dot.speed;
-
-        if (dot.progress >= 1.0) {
-          const fresh = spawnGlowingDot(cols, rows);
-          if (fresh) {
-            glowingDots[i] = fresh;
-          }
-          continue;
-        }
-
-        // Sinusoidal pulse: 0 -> 1 -> 0
-        const pulse = Math.sin(dot.progress * Math.PI);
-        const radius = BASE_DOT_RADIUS + (dot.maxRadius - BASE_DOT_RADIUS) * pulse;
-        const alpha = Math.min(1, pulse * 1.15);
-
-        ctx.save();
-        ctx.shadowBlur = dot.maxGlow * pulse;
-        ctx.shadowColor = `rgba(${dot.theme.rgb}, ${0.9 * pulse})`;
-        ctx.fillStyle = `rgba(${dot.theme.rgb}, ${alpha})`;
-
-        ctx.beginPath();
-        ctx.arc(dot.x, dot.y, radius, 0, Math.PI * 2);
-        ctx.fill();
-
-        // High-intensity white center spark at peak pulse
-        if (pulse > 0.6) {
-          const sparkAlpha = (pulse - 0.6) / 0.4;
-          ctx.fillStyle = `rgba(255, 255, 255, ${sparkAlpha * 0.95})`;
-          ctx.beginPath();
-          ctx.arc(dot.x, dot.y, radius * 0.55, 0, Math.PI * 2);
-          ctx.fill();
-        }
-
-        ctx.restore();
-      }
-
-      animId = requestAnimationFrame(render);
+      });
     };
 
-    animId = requestAnimationFrame(render);
+    // Initial draw
+    draw();
+
+    // Re-draw on resize using ResizeObserver for precise container tracking
+    let resizeTimer;
+    const onResize = () => {
+      clearTimeout(resizeTimer);
+      resizeTimer = setTimeout(draw, 60);
+    };
+
+    window.addEventListener('resize', onResize);
+
+    const container = containerRef.current || canvas.parentElement;
+    let observer;
+    if (typeof ResizeObserver !== 'undefined' && container) {
+      observer = new ResizeObserver(() => {
+        onResize();
+      });
+      observer.observe(container);
+    }
 
     return () => {
-      cancelAnimationFrame(animId);
-      if (resizeRaf) cancelAnimationFrame(resizeRaf);
+      clearTimeout(resizeTimer);
       window.removeEventListener('resize', onResize);
-      if (container) {
-        container.removeEventListener('pointermove', handlePointerMove);
-        container.removeEventListener('pointerleave', handlePointerLeave);
+      if (observer) {
+        observer.disconnect();
       }
     };
   }, []);
