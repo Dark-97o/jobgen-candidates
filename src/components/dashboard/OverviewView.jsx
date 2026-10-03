@@ -544,7 +544,7 @@ export default function OverviewView({ onNavigate }) {
                   textShadow: '0 2px 14px rgba(255, 255, 255, 0.9)',
                   lineHeight: 1
                 }}>
-                  Good afternoon,
+                  Good Morning,
                 </span>
                 <span
                   className="animated-hero-name"
@@ -556,7 +556,7 @@ export default function OverviewView({ onNavigate }) {
                     lineHeight: 1
                   }}
                 >
-                  Subhranil Baul
+                  Jax Miller
                 </span>
                 <img 
                   src="/cofe.png" 

@@ -228,7 +228,7 @@ function HeaderRightSmokeAnimation() {
 
 export default function TopHeader({ currentTab, onLogout }) {
   // Profile & Settings state shifted to top bar
-  const [candidateName, setCandidateName] = useState('Subhranil Baul');
+  const [candidateName, setCandidateName] = useState('Jax Miller');
   const [candidateRole, setCandidateRole] = useState('Lead Product Architect');
   const [imageError, setImageError] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
@@ -515,24 +515,24 @@ export default function TopHeader({ currentTab, onLogout }) {
               {candidateName}
             </span>
 
-            {/* White Pill Badge showing 'free' */}
+            {/* Pill Badge showing 'PRO' */}
             <span 
               style={{
-                backgroundColor: '#FFFFFF',
-                color: '#090C15',
-                fontSize: '9px',
+                backgroundColor: '#1E40AF',
+                color: '#FFFFFF',
+                fontSize: '9.5px',
                 fontWeight: 800,
-                padding: '2px 7px',
+                padding: '2px 8px',
                 borderRadius: '999px',
                 textTransform: 'uppercase',
-                letterSpacing: '0.04em',
+                letterSpacing: '0.05em',
                 lineHeight: '1.2',
                 flexShrink: 0,
-                boxShadow: '0 1px 3px rgba(0, 0, 0, 0.15)',
-                border: '1px solid rgba(226, 232, 240, 0.8)',
+                boxShadow: '0 1px 4px rgba(30, 64, 175, 0.3)',
+                border: '1px solid rgba(59, 130, 246, 0.4)',
               }}
             >
-              free
+              Pro
             </span>
           </div>
 
@@ -566,7 +566,7 @@ export default function TopHeader({ currentTab, onLogout }) {
                   <div style={{ fontSize: '13px', fontWeight: 800, color: '#090C15' }}>{candidateName}</div>
                   <span 
                     style={{
-                      backgroundColor: '#090C15',
+                      backgroundColor: '#1E40AF',
                       color: '#FFFFFF',
                       fontSize: '9px',
                       fontWeight: 800,
@@ -578,7 +578,7 @@ export default function TopHeader({ currentTab, onLogout }) {
                       flexShrink: 0,
                     }}
                   >
-                    free
+                    Pro
                   </span>
                 </div>
                 <div style={{ fontSize: '11px', color: '#64748B', marginTop: '2px', fontWeight: 500 }}>{candidateRole}</div>
