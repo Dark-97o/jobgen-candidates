@@ -332,7 +332,7 @@ export default function PricingEngineSection({ onLaunchApp }) {
       id="pricing"
       style={{
         position: 'relative',
-        padding: '120px 0 130px 0',
+        padding: '60px 0 68px 0',
         backgroundColor: '#FFFFFF',
         overflow: 'hidden'
       }}
@@ -368,19 +368,19 @@ export default function PricingEngineSection({ onLaunchApp }) {
         }}
       >
         {/* ================= HEADER & BILLING TOGGLES ================= */}
-        <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 52px auto' }}>
+        <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 32px auto' }}>
           
 
           {/* Main Title from Prompt */}
           <h2
             style={{
               fontFamily: '"Plus Jakarta Sans", var(--font-title, sans-serif)',
-              fontSize: 'clamp(32px, 4.4vw, 54px)',
+              fontSize: 'clamp(28px, 3.8vw, 46px)',
               fontWeight: 900,
               letterSpacing: '-0.035em',
-              lineHeight: 1.08,
+              lineHeight: 1.1,
               color: '#090D16',
-              margin: '0 0 16px 0'
+              margin: '0 0 12px 0'
             }}
           >
             Start free. Upgrade when you want the <span style={{ color: '#1A53CF' }}>full engine</span>
@@ -388,11 +388,11 @@ export default function PricingEngineSection({ onLaunchApp }) {
 
           <p
             style={{
-              fontSize: 'clamp(15px, 1.8vw, 17px)',
+              fontSize: 'clamp(14.5px, 1.6vw, 16px)',
               color: '#475569',
-              lineHeight: 1.6,
-              margin: '0 auto 36px auto',
-              maxWidth: '620px'
+              lineHeight: 1.55,
+              margin: '0 auto 24px auto',
+              maxWidth: '600px'
             }}
           >
             Zero commitments. Begin with free autonomous tools and scale seamlessly with our 7-day all-access trial.

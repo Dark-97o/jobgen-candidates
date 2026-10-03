@@ -38,8 +38,10 @@ import RevealingTitle from './RevealingTitle';
 import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
 import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
 import BlueMistAnimation from './BlueMistAnimation';
+import WhiteMatrixGridAnimation from './WhiteMatrixGridAnimation';
 import BentoVideoCard from './BentoVideoCard';
 import MeetEmmaSection from './MeetEmmaSection';
+import ApplicationsToOffersSection from './ApplicationsToOffersSection';
 import PricingEngineSection from './PricingEngineSection';
 import FAQSection from './FAQSection';
 
@@ -468,16 +470,18 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .productivity-card-rect, .productivity-card-square {
-          border: 1.5px solid rgba(59, 130, 246, 0.45) !important;
+          border: 1px solid rgba(255, 255, 255, 0.35) !important;
           outline: none !important;
-          box-shadow: 0 8px 30px rgba(37, 99, 235, 0.16), 0 0 0 1px rgba(37, 99, 235, 0.2) !important;
-          transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
+          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 0 20px 2px rgba(180, 205, 245, 0.22), 0 16px 36px rgba(15, 23, 42, 0.28) !important;
+          backdrop-filter: blur(20px) !important;
+          -webkit-backdrop-filter: blur(20px) !important;
+          transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .productivity-card-rect:hover, .productivity-card-square:hover {
-          border-color: #2563EB !important;
+          border-color: rgba(255, 255, 255, 0.6) !important;
           outline: none !important;
           transform: translateY(-4px) !important;
-          box-shadow: 0 16px 40px rgba(37, 99, 235, 0.32), 0 0 0 1.5px #2563EB !important;
+          box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.4), 0 0 28px 4px rgba(180, 205, 245, 0.35), 0 20px 44px rgba(15, 23, 42, 0.35) !important;
         }
 
 
@@ -577,6 +581,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             {[
               { label: 'Features', id: 'features' },
               { label: 'ATS Scanner', id: 'ats-scanner' },
+              { label: 'Stories', id: 'testimonials' },
               { label: 'Pricing', id: 'pricing' },
               { label: 'FAQ', id: 'faq' }
             ].map(item => (
@@ -676,6 +681,8 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         <div id="features" style={{ position: 'absolute', top: 0, left: 0 }} />
         {/* Procedural Blue Mist Floating Animation in Background */}
         <BlueMistAnimation />
+        {/* Static Thin Blue & Gray Tech Lines Clustered on Right Side */}
+        <WhiteMatrixGridAnimation />
 
         {/* Section Content */}
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
@@ -763,7 +770,12 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       />
 
       {/* =========================================================================
-          6. PRICING ENGINE: WHITE THEME WITH BLUE MIST & DYNAMIC REGIONAL PRICING
+          6. "FROM APPLICATIONS TO OFFERS." SUCCESS STORIES / TESTIMONIALS SECTION
+          ========================================================================= */}
+      <ApplicationsToOffersSection />
+
+      {/* =========================================================================
+          7. PRICING ENGINE: WHITE THEME WITH BLUE MIST & DYNAMIC REGIONAL PRICING
           ========================================================================= */}
       <PricingEngineSection onLaunchApp={onLaunchApp} />
 
@@ -814,6 +826,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             <div style={{ display: 'flex', gap: '20px' }}>
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('features')}>Features</span>
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('ats-scanner')}>ATS Scanner</span>
+              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('testimonials')}>Stories</span>
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('pricing')}>Pricing</span>
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('faq')}>FAQ</span>
               <span style={{ cursor: 'pointer' }} onClick={onSignIn}>Sign In</span>

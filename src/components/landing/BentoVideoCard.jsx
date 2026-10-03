@@ -72,9 +72,11 @@ export default function BentoVideoCard({
         position: 'relative',
         overflow: 'hidden',
         borderRadius: '24px',
-        border: '1.5px solid rgba(59, 130, 246, 0.45)',
+        border: '1px solid rgba(255, 255, 255, 0.35)',
         outline: 'none',
-        boxShadow: '0 8px 30px rgba(37, 99, 235, 0.16), 0 0 0 1px rgba(37, 99, 235, 0.2)',
+        boxShadow: '0 0 0 1px rgba(255, 255, 255, 0.25), 0 0 20px 2px rgba(180, 205, 245, 0.22), 0 16px 36px rgba(15, 23, 42, 0.28)',
+        backdropFilter: 'blur(20px)',
+        WebkitBackdropFilter: 'blur(20px)',
         backgroundColor: '#0F172A',
         cursor: 'pointer'
       }}

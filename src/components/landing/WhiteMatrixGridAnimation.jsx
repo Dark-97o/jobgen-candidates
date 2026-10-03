@@ -16,7 +16,7 @@ export default function WhiteMatrixGridAnimation({ style = {} }) {
   useEffect(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
-    const ctx = canvas.getContext('2d', { alpha: false });
+    const ctx = canvas.getContext('2d', { alpha: true });
     if (!ctx) return;
 
     // Palette of refined tech electric blue and cyan tones for the right-side static line clusters
@@ -44,9 +44,8 @@ export default function WhiteMatrixGridAnimation({ style = {} }) {
 
       ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
 
-      // 1. Fill solid crisp white background (no dots)
-      ctx.fillStyle = '#FFFFFF';
-      ctx.fillRect(0, 0, width, height);
+      // Clear transparently so background mist is visible beneath the lines
+      ctx.clearRect(0, 0, width, height);
 
       // 2. Setup bounds for the right-side clusters
       const rightMinX = width * 0.54;
