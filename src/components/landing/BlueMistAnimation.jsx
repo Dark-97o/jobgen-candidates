@@ -5,10 +5,10 @@ import React, { useEffect, useRef } from 'react';
  * 
  * Ethereal, silky-smooth animated blue mist composed of circular floating mist shapes / orbs.
  * Features:
- * 1. Clearly circular mist shapes floating gently in multi-axis orbital trajectories.
- * 2. Layer 1: Hardware-accelerated CSS floating circular mist orbs with rich blue/cyan radial gradients.
- * 3. Layer 2: High-DPR procedural HTML5 Canvas circular mist particles with organic buoyancy, harmonic wave float, and cursor interactivity.
- * 4. Zero harsh edges; ethereal feathered falloff retaining unmistakable circular morphology.
+ * 1. 3.5x - 4x larger circular mist shapes floating gently in multi-axis orbital trajectories.
+ * 2. Layer 1: Hardware-accelerated CSS floating circular mist orbs (1250px - 1850px) with rich blue/cyan radial gradients.
+ * 3. Layer 2: High-DPR procedural HTML5 Canvas circular mist particles (220px - 580px radius) with organic buoyancy, harmonic wave float, and cursor interactivity.
+ * 4. Zero harsh edges; ethereal feathered falloff retaining unmistakable circular morphology across white backgrounds.
  */
 export default function BlueMistAnimation() {
   const canvasRef = useRef(null);
@@ -75,26 +75,27 @@ export default function BlueMistAnimation() {
       { r: 79, g: 70, b: 229 }    // Indigo Accent Mist (#4F46E5)
     ];
 
-    const PARTICLE_COUNT = 24;
+    const PARTICLE_COUNT = 20;
     const particles = [];
 
     for (let i = 0; i < PARTICLE_COUNT; i++) {
       const color = PALETTES[i % PALETTES.length];
-      const baseRadius = 55 + Math.random() * 95; // 55px to 150px circular radius
+      // 3.5x - 4x larger base radius: 220px to 580px (diameter 440px to 1160px)
+      const baseRadius = 220 + Math.random() * 360;
       particles.push({
-        x: Math.random() * (width + 200) - 100,
-        y: Math.random() * (height + 200) - 100,
+        x: Math.random() * (width + 400) - 200,
+        y: Math.random() * (height + 400) - 200,
         baseRadius,
         radius: baseRadius,
-        vx: (Math.random() - 0.5) * 0.45,       // gentle horizontal drift
-        vy: -0.15 - Math.random() * 0.35,       // gentle upward buoyancy
+        vx: (Math.random() - 0.5) * 0.4,        // gentle horizontal drift
+        vy: -0.12 - Math.random() * 0.28,       // gentle upward buoyancy
         floatAngle: Math.random() * Math.PI * 2, // orbital floating angle
-        floatSpeed: 0.008 + Math.random() * 0.012,
-        orbitRadiusX: 25 + Math.random() * 45,
-        orbitRadiusY: 18 + Math.random() * 35,
-        pulseSpeed: 0.003 + Math.random() * 0.004,
+        floatSpeed: 0.005 + Math.random() * 0.009,
+        orbitRadiusX: 75 + Math.random() * 125, // larger orbital floating sweep
+        orbitRadiusY: 55 + Math.random() * 95,
+        pulseSpeed: 0.002 + Math.random() * 0.003,
         pulsePhase: Math.random() * Math.PI * 2,
-        alpha: 0.16 + Math.random() * 0.16,     // subtle ethereal transparency on white
+        alpha: 0.12 + Math.random() * 0.13,     // luminous ethereal transparency across white
         color
       });
     }
@@ -128,30 +129,30 @@ export default function BlueMistAnimation() {
           const dx = currentX - mouse.x;
           const dy = currentY - mouse.y;
           const dist = Math.sqrt(dx * dx + dy * dy);
-          const maxDist = 240;
+          const maxDist = 380;
           if (dist < maxDist && dist > 0) {
-            const force = (1 - dist / maxDist) * 1.6;
+            const force = (1 - dist / maxDist) * 1.5;
             p.x += (dx / dist) * force;
             p.y += (dy / dist) * force;
           }
         }
 
         // Circular breathing scale
-        const scale = 1 + Math.sin(time * p.pulseSpeed + p.pulsePhase) * 0.12;
+        const scale = 1 + Math.sin(time * p.pulseSpeed + p.pulsePhase) * 0.14;
         const currentRadius = p.baseRadius * scale;
 
-        // Seamless wrap around edges
-        if (p.x - currentRadius > width + 100) {
-          p.x = -currentRadius - 40;
-        } else if (p.x + currentRadius < -100) {
-          p.x = width + currentRadius + 40;
+        // Seamless wrap around edges for large orbs
+        if (p.x - currentRadius > width + 250) {
+          p.x = -currentRadius - 80;
+        } else if (p.x + currentRadius < -250) {
+          p.x = width + currentRadius + 80;
         }
 
-        if (p.y + currentRadius < -120) {
-          p.y = height + currentRadius + 40;
+        if (p.y + currentRadius < -280) {
+          p.y = height + currentRadius + 80;
           p.x = Math.random() * width;
-        } else if (p.y - currentRadius > height + 120) {
-          p.y = -currentRadius - 40;
+        } else if (p.y - currentRadius > height + 280) {
+          p.y = -currentRadius - 80;
         }
 
         // Draw soft, ethereal circular mist shape
@@ -168,8 +169,8 @@ export default function BlueMistAnimation() {
         const a = p.alpha;
 
         grad.addColorStop(0.0, `rgba(${r}, ${g}, ${b}, ${a * 1.15})`);
-        grad.addColorStop(0.35, `rgba(${r}, ${g}, ${b}, ${a * 0.75})`);
-        grad.addColorStop(0.70, `rgba(${r}, ${g}, ${b}, ${a * 0.22})`);
+        grad.addColorStop(0.35, `rgba(${r}, ${g}, ${b}, ${a * 0.72})`);
+        grad.addColorStop(0.70, `rgba(${r}, ${g}, ${b}, ${a * 0.20})`);
         grad.addColorStop(1.0, `rgba(${r}, ${g}, ${b}, 0.0)`);
 
         ctx.save();
@@ -206,90 +207,90 @@ export default function BlueMistAnimation() {
       }}
     >
       {/* =========================================================================
-          LAYER 1: DISTINCT CIRCULAR MIST ORBS FLOATING AROUND (CSS ACCELERATED)
+          LAYER 1: DISTINCT 3.5X-4X CIRCULAR MIST ORBS FLOATING AROUND (CSS ACCELERATED)
           ========================================================================= */}
 
-      {/* Circular Mist Orb 1 - Floating Top Left */}
+      {/* Circular Mist Orb 1 - Floating Top Left (1550px) */}
       <div
         className="circular-mist-orb orb-1"
         style={{
           position: 'absolute',
-          top: '-8%',
-          left: '8%',
-          width: '460px',
-          height: '460px',
+          top: '-35%',
+          left: '-15%',
+          width: '1550px',
+          height: '1550px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.28) 0%, rgba(56, 189, 248, 0.16) 45%, rgba(147, 197, 253, 0.04) 70%, transparent 100%)',
-          filter: 'blur(45px)',
-          animation: 'mistCircleFloat1 20s ease-in-out infinite alternate',
+          background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.22) 0%, rgba(56, 189, 248, 0.14) 42%, rgba(147, 197, 253, 0.03) 72%, transparent 100%)',
+          filter: 'blur(95px)',
+          animation: 'mistCircleFloat1 24s ease-in-out infinite alternate',
           transformOrigin: 'center center'
         }}
       />
 
-      {/* Circular Mist Orb 2 - Floating Right Side */}
+      {/* Circular Mist Orb 2 - Floating Right Side (1850px) */}
       <div
         className="circular-mist-orb orb-2"
         style={{
           position: 'absolute',
-          top: '25%',
-          right: '4%',
-          width: '520px',
-          height: '520px',
+          top: '5%',
+          right: '-25%',
+          width: '1850px',
+          height: '1850px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.30) 0%, rgba(2, 132, 199, 0.18) 45%, rgba(224, 242, 254, 0.05) 72%, transparent 100%)',
-          filter: 'blur(52px)',
-          animation: 'mistCircleFloat2 24s ease-in-out infinite alternate',
+          background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.24) 0%, rgba(2, 132, 199, 0.15) 45%, rgba(224, 242, 254, 0.04) 74%, transparent 100%)',
+          filter: 'blur(110px)',
+          animation: 'mistCircleFloat2 28s ease-in-out infinite alternate',
           transformOrigin: 'center center'
         }}
       />
 
-      {/* Circular Mist Orb 3 - Floating Center / Bottom */}
+      {/* Circular Mist Orb 3 - Floating Center / Bottom (1500px) */}
       <div
         className="circular-mist-orb orb-3"
         style={{
           position: 'absolute',
-          bottom: '-10%',
-          left: '32%',
-          width: '440px',
-          height: '440px',
+          bottom: '-35%',
+          left: '20%',
+          width: '1500px',
+          height: '1500px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle at center, rgba(79, 70, 229, 0.22) 0%, rgba(37, 99, 235, 0.16) 48%, rgba(199, 210, 254, 0.04) 70%, transparent 100%)',
-          filter: 'blur(48px)',
-          animation: 'mistCircleFloat3 18s ease-in-out infinite alternate',
+          background: 'radial-gradient(circle at center, rgba(79, 70, 229, 0.18) 0%, rgba(37, 99, 235, 0.13) 48%, rgba(199, 210, 254, 0.03) 72%, transparent 100%)',
+          filter: 'blur(95px)',
+          animation: 'mistCircleFloat3 22s ease-in-out infinite alternate',
           transformOrigin: 'center center'
         }}
       />
 
-      {/* Circular Mist Orb 4 - Floating Center Left */}
+      {/* Circular Mist Orb 4 - Floating Center Left (1350px) */}
       <div
         className="circular-mist-orb orb-4"
         style={{
           position: 'absolute',
-          top: '45%',
-          left: '-5%',
-          width: '380px',
-          height: '380px',
+          top: '25%',
+          left: '-25%',
+          width: '1350px',
+          height: '1350px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle at center, rgba(6, 182, 212, 0.26) 0%, rgba(56, 189, 248, 0.14) 50%, transparent 72%)',
-          filter: 'blur(38px)',
-          animation: 'mistCircleFloat4 22s ease-in-out infinite alternate',
+          background: 'radial-gradient(circle at center, rgba(6, 182, 212, 0.20) 0%, rgba(56, 189, 248, 0.12) 50%, transparent 74%)',
+          filter: 'blur(90px)',
+          animation: 'mistCircleFloat4 26s ease-in-out infinite alternate',
           transformOrigin: 'center center'
         }}
       />
 
-      {/* Circular Mist Orb 5 - Floating Bottom Right */}
+      {/* Circular Mist Orb 5 - Floating Bottom Right (1250px) */}
       <div
         className="circular-mist-orb orb-5"
         style={{
           position: 'absolute',
-          bottom: '5%',
-          right: '20%',
-          width: '340px',
-          height: '340px',
+          bottom: '-20%',
+          right: '5%',
+          width: '1250px',
+          height: '1250px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.22) 0%, rgba(96, 165, 250, 0.12) 52%, transparent 70%)',
-          filter: 'blur(34px)',
-          animation: 'mistCircleFloat5 16s ease-in-out infinite alternate',
+          background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.18) 0%, rgba(96, 165, 250, 0.10) 52%, transparent 72%)',
+          filter: 'blur(85px)',
+          animation: 'mistCircleFloat5 20s ease-in-out infinite alternate',
           transformOrigin: 'center center'
         }}
       />
@@ -315,13 +316,13 @@ export default function BlueMistAnimation() {
             transform: translate3d(0, 0, 0) scale(1);
           }
           33% {
-            transform: translate3d(55px, 45px, 0) scale(1.08);
+            transform: translate3d(120px, 90px, 0) scale(1.08);
           }
           66% {
-            transform: translate3d(-35px, 65px, 0) scale(0.95);
+            transform: translate3d(-80px, 130px, 0) scale(0.95);
           }
           100% {
-            transform: translate3d(25px, -30px, 0) scale(1.04);
+            transform: translate3d(60px, -60px, 0) scale(1.04);
           }
         }
 
@@ -330,13 +331,13 @@ export default function BlueMistAnimation() {
             transform: translate3d(0, 0, 0) scale(1);
           }
           33% {
-            transform: translate3d(-60px, -45px, 0) scale(0.94);
+            transform: translate3d(-130px, -90px, 0) scale(0.94);
           }
           66% {
-            transform: translate3d(-40px, 50px, 0) scale(1.10);
+            transform: translate3d(-90px, 110px, 0) scale(1.10);
           }
           100% {
-            transform: translate3d(45px, -20px, 0) scale(0.98);
+            transform: translate3d(100px, -50px, 0) scale(0.98);
           }
         }
 
@@ -345,13 +346,13 @@ export default function BlueMistAnimation() {
             transform: translate3d(0, 0, 0) scale(1);
           }
           40% {
-            transform: translate3d(-50px, -60px, 0) scale(1.12);
+            transform: translate3d(-110px, -130px, 0) scale(1.12);
           }
           75% {
-            transform: translate3d(60px, -35px, 0) scale(0.96);
+            transform: translate3d(130px, -70px, 0) scale(0.96);
           }
           100% {
-            transform: translate3d(-20px, 40px, 0) scale(1.05);
+            transform: translate3d(-50px, 80px, 0) scale(1.05);
           }
         }
 
@@ -360,10 +361,10 @@ export default function BlueMistAnimation() {
             transform: translate3d(0, 0, 0) scale(0.96);
           }
           50% {
-            transform: translate3d(70px, -40px, 0) scale(1.10);
+            transform: translate3d(140px, -80px, 0) scale(1.10);
           }
           100% {
-            transform: translate3d(40px, 50px, 0) scale(1.02);
+            transform: translate3d(80px, 100px, 0) scale(1.02);
           }
         }
 
@@ -372,10 +373,10 @@ export default function BlueMistAnimation() {
             transform: translate3d(0, 0, 0) scale(1.05);
           }
           50% {
-            transform: translate3d(-45px, -50px, 0) scale(0.92);
+            transform: translate3d(-100px, -110px, 0) scale(0.92);
           }
           100% {
-            transform: translate3d(35px, 35px, 0) scale(1.08);
+            transform: translate3d(80px, 70px, 0) scale(1.08);
           }
         }
       `}</style>

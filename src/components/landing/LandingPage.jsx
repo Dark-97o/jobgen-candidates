@@ -168,6 +168,20 @@ function FluidBlueHero() {
         userSelect: 'none'
       }}
     >
+      {/* Crisp White Line Separator on top of section */}
+      <div 
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          right: 0,
+          height: '1px',
+          backgroundColor: '#FFFFFF',
+          zIndex: 35,
+          pointerEvents: 'none'
+        }}
+      />
+
       {/* 1. INTERACTIVE FLUID GRADIENT WEBGL BACKGROUND (CODEGRID SHADER) */}
       <InteractiveFluidGradient />
 
@@ -472,18 +486,18 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .productivity-card-rect, .productivity-card-square {
-          border: 1px solid rgba(255, 255, 255, 0.35) !important;
+          border: none !important;
           outline: none !important;
-          box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.25), 0 0 20px 2px rgba(180, 205, 245, 0.22), 0 16px 36px rgba(15, 23, 42, 0.28) !important;
+          box-shadow: 0 0 30px 4px rgba(180, 205, 245, 0.32), 0 20px 40px -10px rgba(37, 99, 235, 0.16) !important;
           backdrop-filter: blur(20px) !important;
           -webkit-backdrop-filter: blur(20px) !important;
           transition: all 0.32s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .productivity-card-rect:hover, .productivity-card-square:hover {
-          border-color: rgba(255, 255, 255, 0.6) !important;
+          border: none !important;
           outline: none !important;
           transform: translateY(-4px) !important;
-          box-shadow: 0 0 0 1.5px rgba(255, 255, 255, 0.4), 0 0 28px 4px rgba(180, 205, 245, 0.35), 0 20px 44px rgba(15, 23, 42, 0.35) !important;
+          box-shadow: 0 0 38px 6px rgba(147, 197, 253, 0.48), 0 24px 48px -8px rgba(37, 99, 235, 0.22) !important;
         }
 
 
