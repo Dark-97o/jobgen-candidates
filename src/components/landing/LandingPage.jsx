@@ -38,7 +38,6 @@ import RevealingTitle from './RevealingTitle';
 import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
 import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
 import BlueMistAnimation from './BlueMistAnimation';
-import WhiteMatrixGridAnimation from './WhiteMatrixGridAnimation';
 import BentoVideoCard from './BentoVideoCard';
 import MeetEmmaSection from './MeetEmmaSection';
 import ApplicationsToOffersSection from './ApplicationsToOffersSection';
@@ -689,8 +688,6 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         <div id="features" style={{ position: 'absolute', top: 0, left: 0 }} />
         {/* Procedural Blue Mist Floating Animation in Background */}
         <BlueMistAnimation />
-        {/* Static Thin Blue & Gray Tech Lines Clustered on Right Side */}
-        <WhiteMatrixGridAnimation />
 
         {/* Section Content */}
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Check, Sparkles, ArrowRight, ShieldCheck, Zap, Globe, ChevronDown } from 'lucide-react';
 import BlueMistAnimation from './BlueMistAnimation';
-import WhiteMatrixGridAnimation from './WhiteMatrixGridAnimation';
 import { RollingText } from '@/components/v1/skiper27';
 
 /**
@@ -340,10 +339,9 @@ export default function PricingEngineSection({ onLaunchApp }) {
       }}
     >
       {/* =========================================================================
-          ANIMATED BLUE MIST VAPOR BACKGROUND (PROCEDURAL CANVAS PARTICLES)
+          ANIMATED BLUE MIST VAPOR BACKGROUND (CIRCULAR FLOATING MIST)
           ========================================================================= */}
       <BlueMistAnimation />
-      <WhiteMatrixGridAnimation />
 
       {/* Atmospheric Soft Radials over White Theme */}
       <div
