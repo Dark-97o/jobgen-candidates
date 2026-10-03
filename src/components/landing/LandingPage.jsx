@@ -652,7 +652,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       </header>
 
       {/* =========================================================================
-          2. INTERACTIVE AUTONOMOUS WORKSPACE PREVIEW (NOW TOP HERO SECTION)
+          2. INTERACTIVE AUTONOMOUS WORKSPACE PREVIEW (TOP HERO SECTION)
           ========================================================================= */}
       <AutonomousWorkspacePreview 
         onSignIn={onSignIn} 
@@ -662,7 +662,12 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       />
 
       {/* =========================================================================
-          3. UNMATCHED PRODUCTIVITY — LIGHT ASYMMETRIC BENTO GRID
+          3. SOLID BLUE JOBGEN.IO CALLOUT WITH FLUID WATER SPLASH SHADER
+          ========================================================================= */}
+      <FluidBlueHero />
+
+      {/* =========================================================================
+          4. UNMATCHED PRODUCTIVITY — DARK ASYMMETRIC BENTO GRID
           ========================================================================= */}
       <section 
         id="productivity"
@@ -670,7 +675,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         style={{
           padding: '110px 0 120px 0',
           position: 'relative',
-          backgroundColor: '#F6FAFE',
+          backgroundColor: '#090D16',
           overflow: 'hidden'
         }}
       >
@@ -689,14 +694,14 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 fontWeight: 900,
                 letterSpacing: '-0.03em',
                 lineHeight: 1.05,
-                color: '#090C15',
+                color: '#FFFFFF',
                 marginBottom: '16px'
               }}
             >
               Unmatched Productivity
             </h2>
 
-            <p style={{ fontSize: '16.5px', color: '#475569', lineHeight: 1.6, maxWidth: '640px' }}>
+            <p style={{ fontSize: '16.5px', color: 'rgba(255, 255, 255, 0.75)', lineHeight: 1.6, maxWidth: '640px' }}>
               JobGen integrates opportunity tracking, resume engineering, strategic roadmaps, and global role discovery into one hyper-fluid workspace.
             </p>
           </div>
@@ -768,10 +773,6 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           ========================================================================= */}
       <PricingEngineSection onLaunchApp={onLaunchApp} />
 
-      {/* =========================================================================
-          7. SOLID BLUE JOBGEN.IO CALLOUT WITH FLUID WATER SPLASH SHADER (PRE-FOOTER)
-          ========================================================================= */}
-      <FluidBlueHero />
 
       {/* =========================================================================
           12. MINIMALIST WHITE FOOTER
