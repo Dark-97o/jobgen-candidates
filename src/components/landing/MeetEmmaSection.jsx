@@ -414,7 +414,7 @@ export default function MeetEmmaSection({ onLaunchApp, onScoreClick }) {
                 textShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
               }}
             >
-              <RollingText text="Confident in your resume ?" />
+              <RollingText text="Confident in your resume?" />
             </h2>
 
             {/* Description Subhead */}

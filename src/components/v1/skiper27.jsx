@@ -4,26 +4,22 @@ import { motion, useInView } from 'framer-motion';
 /**
  * Skiper27 / RollingText
  * 
- * Rolling text animation component featuring staggered character timing
- * radiating from the center to edges with smooth 3D perspective letter roll.
+ * Bulletproof rolling text animation with:
+ * 1. Strict inline styles for `display: inline-block !important; white-space: nowrap !important;`
+ *    on every word so characters within a word CAN NEVER break or wrap across lines.
+ * 2. Words wrap naturally at word boundaries.
+ * 3. Fluid staggered 3D letter roll radiating from center outward.
+ * 4. Punctuation sticks to the previous word so it never orphans.
+ * 5. Zero letter clipping or awkward spaces.
  * 
  * Usage:
  *   import { RollingText } from "@/components/v1/skiper27";
- *   <RollingText text="CUSTOM TEXT" speed={0.05} duration={1.2} />
- * 
- * Props:
- *   - text: The string of text to animate
- *   - speed: Delay between letters radiating from center (default: 0.04)
- *   - duration: Total animation duration per character (default: 0.8)
- *   - className: Additional CSS classes
- *   - style: Inline style overrides
- *   - loop: Boolean whether the rolling loop repeats continuously (default: false)
- *   - as: Wrapper component type (default: 'span')
+ *   <RollingText text="CUSTOM TEXT" speed={0.025} duration={0.65} />
  */
 export function RollingText({
   text = '',
-  speed = 0.04,
-  duration = 0.8,
+  speed = 0.025,
+  duration = 0.65,
   className = '',
   style = {},
   loop = false,
@@ -33,71 +29,101 @@ export function RollingText({
   const isInView = useInView(containerRef, { once: !loop, margin: '-5% 0px' });
 
   const rawText = String(text || '');
-  const characters = Array.from(rawText);
-  const centerIndex = Math.floor(characters.length / 2);
+  const hasLeadingSpace = rawText.startsWith(' ');
+  const hasTrailingSpace = rawText.endsWith(' ');
 
-  // Group characters into words so line wrapping never breaks inside a word
-  const words = rawText.split(' ');
+  // Split into clean words and keep punctuation attached to the preceding word
+  const rawTokens = rawText.trim().split(/\s+/).filter(Boolean);
+  const words = [];
+  for (let i = 0; i < rawTokens.length; i++) {
+    const token = rawTokens[i];
+    if (/^[?!.,:;]+$/.test(token) && words.length > 0) {
+      words[words.length - 1] += token;
+    } else {
+      words.push(token);
+    }
+  }
+
+  // Calculate total characters for center-outwards radiating stagger
+  let totalNonSpaceChars = 0;
+  words.forEach(w => {
+    totalNonSpaceChars += Array.from(w).length;
+  });
+  const centerIndex = Math.floor(totalNonSpaceChars / 2);
+
   let globalCharIndex = 0;
 
   return (
     <Component
       ref={containerRef}
-      className={`inline-flex flex-wrap items-baseline select-none ${className}`}
+      className={`rolling-text-container select-none ${className}`}
       style={{
+        display: 'inline-flex',
+        flexWrap: 'wrap',
+        alignItems: 'baseline',
         perspective: '1000px',
         transformStyle: 'preserve-3d',
+        verticalAlign: 'baseline',
         ...style
       }}
     >
+      {hasLeadingSpace && (
+        <span style={{ display: 'inline', width: '0.28em' }}>&nbsp;</span>
+      )}
+
       {words.map((word, wordIndex) => {
         const wordChars = Array.from(word);
-        const startIndex = globalCharIndex;
-        globalCharIndex += wordChars.length + 1; // +1 for the space
+        const isLastWord = wordIndex === words.length - 1;
 
         return (
           <span
-            key={`word-${wordIndex}`}
-            className="inline-block whitespace-nowrap"
-            style={{ marginRight: wordIndex < words.length - 1 ? '0.28em' : 0 }}
+            key={`word-${wordIndex}-${word}`}
+            style={{
+              display: 'inline-block',
+              whiteSpace: 'nowrap',
+              marginRight: (!isLastWord || hasTrailingSpace) ? '0.28em' : '0',
+              verticalAlign: 'baseline',
+              transformStyle: 'preserve-3d'
+            }}
           >
             {wordChars.map((char, charIdx) => {
-              const currentGlobalIndex = startIndex + charIdx;
-              const distanceFromCenter = Math.abs(currentGlobalIndex - centerIndex);
+              const currentIdx = globalCharIndex++;
+              const distanceFromCenter = Math.abs(currentIdx - centerIndex);
               const delay = distanceFromCenter * speed;
 
               return (
                 <span
-                  key={`char-${currentGlobalIndex}-${char}`}
+                  key={`char-${currentIdx}-${char}`}
                   style={{
                     position: 'relative',
                     display: 'inline-block',
                     overflow: 'hidden',
-                    height: '1.25em',
-                    verticalAlign: 'bottom'
+                    lineHeight: '1.2',
+                    verticalAlign: 'baseline',
+                    letterSpacing: 'inherit',
+                    padding: '0 0.015em'
                   }}
                 >
                   <motion.span
                     style={{
-                      display: 'flex',
-                      flexDirection: 'column',
+                      display: 'inline-block',
                       transformStyle: 'preserve-3d',
-                      willChange: 'transform'
+                      willChange: 'transform, opacity'
                     }}
-                    initial={{ y: '100%', rotateX: -90, opacity: 0 }}
+                    initial={{ y: '100%', rotateX: -80, opacity: 0 }}
                     animate={
                       isInView
                         ? {
-                            y: ['100%', '0%'],
-                            rotateX: [-90, 0],
-                            opacity: [0, 1]
+                            y: '0%',
+                            rotateX: 0,
+                            opacity: 1
                           }
-                        : { y: '100%', rotateX: -90, opacity: 0 }
+                        : { y: '100%', rotateX: -80, opacity: 0 }
                     }
                     transition={{
-                      duration: Math.min(Math.max(duration * 0.5, 0.45), 2.0),
+                      duration,
                       delay,
-                      ease: [0.16, 1, 0.3, 1],
+                      ease: [0.22, 1, 0.36, 1],
                       ...(loop
                         ? {
                             repeat: Infinity,
@@ -107,14 +133,7 @@ export function RollingText({
                         : {})
                     }}
                   >
-                    <span
-                      style={{
-                        display: 'inline-block',
-                        transformOrigin: '50% 100%'
-                      }}
-                    >
-                      {char}
-                    </span>
+                    <span style={{ display: 'inline-block' }}>{char}</span>
                   </motion.span>
                 </span>
               );
