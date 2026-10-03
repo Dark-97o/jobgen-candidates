@@ -42,7 +42,7 @@ export default function InteractiveFluidGradient() {
       stopDecay: 0.85,
       flowSpeed: 1.0,
       idleSpeed: 0.85,
-      color1: '#03091e', // Sapphire Abyss
+      color1: '#071a52', // Deep Sapphire Blue
       color2: '#0c329b', // Deep Royal Blue
       color3: '#1d63ed', // JobGen Electric Cobalt
       color4: '#38bdf8', // Luminous Cyan Highlight
@@ -87,12 +87,15 @@ export default function InteractiveFluidGradient() {
         return length(p - a - (b - a) * clamp(dot(p - a, b - a) / max(dot(b - a, b - a), 1e-4), 0.0, 1.0));
       }
 
+      // Clamped sampling to prevent toroidal wrap-around artifacts at left and right boundaries
       vec4 t(vec2 v, int a, int b) {
-        return texture2D(iPreviousFrame, fract((v + vec2(float(a), float(b))) / ur));
+        vec2 coord = clamp((v + vec2(float(a), float(b))) / ur, vec2(0.001), vec2(0.999));
+        return texture2D(iPreviousFrame, coord);
       }
 
       vec4 t(vec2 v) {
-        return texture2D(iPreviousFrame, fract(v / ur));
+        vec2 coord = clamp(v / ur, vec2(0.001), vec2(0.999));
+        return texture2D(iPreviousFrame, coord);
       }
 
       float area(vec2 a, vec2 b, vec2 c) {
@@ -138,6 +141,11 @@ export default function InteractiveFluidGradient() {
           float decay = pow(uFluidDecay, uFlowSpeed);
           me.xy *= decay;
           me.z  *= uTrailLength;
+
+          // Boundary damping towards left, right, top and bottom edges
+          float edgeDampX = smoothstep(0.0, 0.05, vUv.x) * smoothstep(1.0, 0.95, vUv.x);
+          float edgeDampY = smoothstep(0.0, 0.05, vUv.y) * smoothstep(1.0, 0.95, vUv.y);
+          me.xy *= edgeDampX * edgeDampY;
 
           if (iMouse.z > 0.0) {
             vec2 mousePos  = iMouse.xy;
@@ -193,13 +201,15 @@ export default function InteractiveFluidGradient() {
       varying vec2 vUv;
 
       void main() {
-        vec2 fragCoord = vUv * iResolution;
-
         vec4 fluid = texture2D(iFluid, vUv);
         vec2 fluidVel = fluid.xy;
 
-        float mr = min(iResolution.x, iResolution.y);
-        vec2 uv = (fragCoord * 2.0 - iResolution.xy) / mr;
+        // Aspect-ratio aware coordinate mapping that prevents edge frequency explosion
+        float aspect = iResolution.x / max(iResolution.y, 1.0);
+        vec2 uv = (vUv - 0.5) * 2.0;
+        // Calibrate horizontal coordinate so waves remain smooth and continuous across the wide band
+        uv.x *= clamp(aspect * 0.32, 1.0, 2.2);
+        uv.y *= 1.1;
 
         uv += fluidVel * (0.5 * uDistortionAmount);
 
@@ -227,6 +237,11 @@ export default function InteractiveFluidGradient() {
         col = mix(col, uColor4, mixer3 * 0.4);
 
         col *= uColorIntensity;
+
+        // Smooth color transition towards the far left and right edges so it blends harmoniously
+        float edgeFactor = smoothstep(0.0, 0.07, vUv.x) * smoothstep(1.0, 0.93, vUv.x);
+        vec3 edgeBlendColor = mix(uColor2, uColor3, 0.7);
+        col = mix(edgeBlendColor, col, 0.85 + 0.15 * edgeFactor);
 
         gl_FragColor = vec4(col, 1.0);
         
