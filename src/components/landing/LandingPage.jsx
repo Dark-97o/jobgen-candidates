@@ -467,24 +467,16 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .productivity-card-rect, .productivity-card-square {
-          border: 1.5px solid rgba(255, 255, 255, 0.9) !important;
+          border: 1px solid rgba(255, 255, 255, 0.12) !important;
           outline: none !important;
-          box-shadow: 
-            0 0 0 1px rgba(255, 255, 255, 0.9),
-            0 0 22px 4px rgba(147, 197, 253, 0.65),
-            0 0 45px 10px rgba(96, 165, 250, 0.45),
-            0 0 75px 18px rgba(59, 130, 246, 0.28) !important;
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .productivity-card-rect:hover, .productivity-card-square:hover {
-          border-color: #FFFFFF !important;
+          border-color: rgba(255, 255, 255, 0.28) !important;
           outline: none !important;
           transform: translateY(-4px) !important;
-          box-shadow: 
-            0 0 0 2px #FFFFFF,
-            0 0 30px 6px rgba(147, 197, 253, 0.85),
-            0 0 55px 14px rgba(96, 165, 250, 0.6),
-            0 0 90px 22px rgba(59, 130, 246, 0.35) !important;
+          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5) !important;
         }
 
 

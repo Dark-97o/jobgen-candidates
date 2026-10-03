@@ -72,15 +72,9 @@ export default function BentoVideoCard({
         position: 'relative',
         overflow: 'hidden',
         borderRadius: '24px',
-        border: '1.5px solid rgba(255, 255, 255, 0.9)',
+        border: '1px solid rgba(255, 255, 255, 0.12)',
         outline: 'none',
-        // Pure luminous blur effect outline (zero black/dark shadows)
-        boxShadow: `
-          0 0 0 1px rgba(255, 255, 255, 0.9),
-          0 0 22px 4px rgba(147, 197, 253, 0.65),
-          0 0 45px 10px rgba(96, 165, 250, 0.45),
-          0 0 75px 18px rgba(59, 130, 246, 0.28)
-        `,
+        boxShadow: '0 8px 24px rgba(0, 0, 0, 0.35)',
         backgroundColor: '#0F172A',
         cursor: 'pointer'
       }}
