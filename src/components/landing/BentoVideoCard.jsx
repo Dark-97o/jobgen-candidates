@@ -16,7 +16,9 @@ export default function BentoVideoCard({
   blueText,
   fileName,
   colSpan = 8,
-  objectPosition = 'center'
+  objectPosition = 'center',
+  onHoverChange,
+  style = {}
 }) {
   const videoRef = useRef(null);
 
@@ -44,6 +46,7 @@ export default function BentoVideoCard({
   }, [src]);
 
   const handlePointerEnter = () => {
+    onHoverChange?.(true);
     const video = videoRef.current;
     if (video) {
       video.muted = true;
@@ -55,6 +58,7 @@ export default function BentoVideoCard({
   };
 
   const handlePointerLeave = () => {
+    onHoverChange?.(false);
     const video = videoRef.current;
     if (video) {
       video.pause();
@@ -67,7 +71,7 @@ export default function BentoVideoCard({
       onPointerEnter={handlePointerEnter}
       onPointerLeave={handlePointerLeave}
       style={{
-        gridColumn: `span ${colSpan}`,
+        width: '100%',
         height: '380px',
         position: 'relative',
         overflow: 'hidden',
@@ -78,7 +82,9 @@ export default function BentoVideoCard({
         backdropFilter: 'blur(20px)',
         WebkitBackdropFilter: 'blur(20px)',
         backgroundColor: '#0F172A',
-        cursor: 'pointer'
+        cursor: 'pointer',
+        transition: 'transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease',
+        ...style
       }}
     >
       {/* ================= macOS WINDOW TOP TITLE BAR (FROSTED GLASS) ================= */}

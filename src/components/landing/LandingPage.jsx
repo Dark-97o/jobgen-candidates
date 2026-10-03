@@ -303,6 +303,8 @@ function FluidBlueHero() {
 
 export default function LandingPage({ onSignIn, onLaunchApp }) {
   const [isScrolled, setIsScrolled] = useState(false);
+  const [row1Hovered, setRow1Hovered] = useState(false);
+  const [row2Hovered, setRow2Hovered] = useState(false);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -486,13 +488,18 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         }
 
 
+        .bento-row {
+          display: grid;
+          gap: 24px;
+          transition: grid-template-columns 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
         @media (max-width: 960px) {
-          .productivity-grid {
+          .bento-row {
             grid-template-columns: 1fr !important;
           }
           .productivity-card-rect, .productivity-card-square {
-            grid-column: span 12 !important;
-            height: 300px !important;
+            height: 320px !important;
           }
         }
       `}</style>
@@ -709,51 +716,67 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             </p>
           </div>
 
-          {/* Asymmetric Bento Grid: 2 Rectangles & 2 Squares */}
-          <div 
-            className="productivity-grid"
-            style={{
-              display: 'grid',
-              gridTemplateColumns: 'repeat(12, 1fr)',
-              gap: '24px'
-            }}
-          >
-            {/* ROW 1 — CARD 1: RECTANGLE (Col 8) — Track & Document (bento2.mp4) */}
-            <BentoVideoCard
-              src="/bento2.mp4"
-              whiteText="Track and "
-              blueText="Document"
-              colSpan={8}
-              objectPosition="top left"
-            />
+          {/* Asymmetric Bento Grid: Interactive Expanding Rows */}
+          <div className="productivity-grid" style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+            {/* ROW 1: Card 1 (Track & Document) + Card 2 (Personalized Roadmap) */}
+            <div
+              className="bento-row bento-row-1"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: row1Hovered ? '4fr 8fr' : '8fr 4fr',
+                gap: '24px',
+                transition: 'grid-template-columns 0.45s cubic-bezier(0.16, 1, 0.3, 1)'
+              }}
+            >
+              <BentoVideoCard
+                src="/bento2.mp4"
+                whiteText="Track and "
+                blueText="Document"
+                colSpan={row1Hovered ? 4 : 8}
+                objectPosition="top left"
+                onHoverChange={(hovered) => {
+                  if (hovered) setRow1Hovered(false);
+                }}
+              />
+              <BentoVideoCard
+                src="/bento4.mp4"
+                whiteText="Personalized "
+                blueText="Roadmap"
+                colSpan={row1Hovered ? 8 : 4}
+                objectPosition="top center"
+                onHoverChange={(hovered) => setRow1Hovered(hovered)}
+              />
+            </div>
 
-            {/* ROW 1 — CARD 2: SQUARE (Col 4) — Personalized Roadmap (bento4.mp4) */}
-            <BentoVideoCard
-              src="/bento4.mp4"
-              whiteText="Personalized "
-              blueText="Roadmap"
-              colSpan={4}
-              objectPosition="top center"
-            />
-
-            {/* ROW 2 — CARD 3: SQUARE (Col 4) — Resume Studio (bento3.mp4) */}
-            <BentoVideoCard
-              src="/bento3.mp4"
-              whiteText="Resume "
-              blueText="Studio"
-              colSpan={4}
-              objectPosition="top center"
-            />
-
-            {/* ROW 2 — CARD 4: RECTANGLE (Col 8) — Global Job Seeker (bento1.mp4) */}
-            <BentoVideoCard
-              src="/bento1.mp4"
-              whiteText="Global "
-              blueText="Job Seeker"
-              colSpan={8}
-              objectPosition="top left"
-            />
-
+            {/* ROW 2: Card 3 (Resume Studio) + Card 4 (Global Job Seeker) */}
+            <div
+              className="bento-row bento-row-2"
+              style={{
+                display: 'grid',
+                gridTemplateColumns: row2Hovered ? '8fr 4fr' : '4fr 8fr',
+                gap: '24px',
+                transition: 'grid-template-columns 0.45s cubic-bezier(0.16, 1, 0.3, 1)'
+              }}
+            >
+              <BentoVideoCard
+                src="/bento3.mp4"
+                whiteText="Resume "
+                blueText="Studio"
+                colSpan={row2Hovered ? 8 : 4}
+                objectPosition="top center"
+                onHoverChange={(hovered) => setRow2Hovered(hovered)}
+              />
+              <BentoVideoCard
+                src="/bento1.mp4"
+                whiteText="Global "
+                blueText="Job Seeker"
+                colSpan={row2Hovered ? 4 : 8}
+                objectPosition="top left"
+                onHoverChange={(hovered) => {
+                  if (hovered) setRow2Hovered(false);
+                }}
+              />
+            </div>
           </div>
         </div>
       </section>
@@ -788,50 +811,383 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
 
 
       {/* =========================================================================
-          12. MINIMALIST WHITE FOOTER
+          12. COMPREHENSIVE FOOTER WITH GIANT "JOBGEN.AI" CONDENSED TEXT & SOCIAL CHANNELS
           ========================================================================= */}
       <footer 
         style={{
-          padding: '50px 0 36px 0',
+          position: 'relative',
+          width: '100%',
           backgroundColor: '#FFFFFF',
-          borderTop: '1px solid #E2E8F0'
+          borderTop: '1px solid #E2E8F0',
+          padding: '64px 0 24px 0',
+          boxSizing: 'border-box',
+          overflow: 'hidden'
         }}
       >
-        <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+        <div style={{ maxWidth: '1240px', margin: '0 auto', padding: '0 clamp(16px, 2.5vw, 32px)', boxSizing: 'border-box' }}>
           
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '20px', paddingBottom: '30px', borderBottom: '1px solid #F1F5F9' }}>
-            
-            {/* Left: Brand Identity */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-              <img 
-                src="/jobgen-logo.png" 
-                alt="JobGen" 
-                style={{ width: '24px', height: '24px', objectFit: 'contain' }}
-              />
-              <span style={{ fontSize: '16px', fontWeight: 900, color: '#090C15' }}>JobGen.AI</span>
-              <span style={{ fontSize: '12px', color: '#64748B' }}>&bull; Everything App for Candidates</span>
+          {/* Top Grid: Brand Identity & Multi-column Navigation */}
+          <div 
+            style={{ 
+              display: 'grid', 
+              gridTemplateColumns: 'repeat(auto-fit, minmax(220px, 1fr))', 
+              gap: '40px',
+              paddingBottom: '48px'
+            }}
+          >
+            {/* Column 1: Brand & Live Status */}
+            <div style={{ maxWidth: '340px' }}>
+              <div 
+                style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '14px', cursor: 'pointer' }}
+                onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              >
+                <img 
+                  src="/jobgen-logo.png" 
+                  alt="JobGen" 
+                  style={{ width: '28px', height: '28px', objectFit: 'contain' }}
+                  onError={(e) => {
+                    e.currentTarget.src = '/Whitelogo.webp';
+                    e.currentTarget.style.filter = 'invert(1)';
+                  }}
+                />
+                <span 
+                  style={{ 
+                    fontFamily: '"Plus Jakarta Sans", sans-serif',
+                    fontSize: '20px', 
+                    fontWeight: 900, 
+                    color: '#090C15',
+                    letterSpacing: '-0.03em'
+                  }}
+                >
+                  JobGen.AI
+                </span>
+              </div>
+
+              <p style={{ fontSize: '13.5px', color: '#64748B', lineHeight: 1.65, margin: '0 0 18px 0' }}>
+                The all-in-one AI career operating system. Track job applications across global boards, tailor resumes to recruiter ATS algorithms, and practice live interviews with Emma AI.
+              </p>
+
+              {/* Status Badge */}
+              <div 
+                style={{ 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  gap: '8px', 
+                  padding: '6px 14px', 
+                  borderRadius: '9999px',
+                  backgroundColor: 'rgba(16, 185, 129, 0.08)',
+                  border: '1px solid rgba(16, 185, 129, 0.25)',
+                  fontSize: '11.5px', 
+                  color: '#059669', 
+                  fontWeight: 600 
+                }}
+              >
+                <span className="radar-live" style={{ width: '6px', height: '6px', borderRadius: '50%', backgroundColor: '#10B981' }} />
+                <span>All Systems Operational &bull; 99.98% Uptime</span>
+              </div>
             </div>
 
-            {/* Right: Operational Status */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '12px', color: '#059669', fontWeight: 600 }}>
-              <span className="radar-live" style={{ width: '7px', height: '7px', borderRadius: '50%', backgroundColor: '#10B981' }} />
-              <span>All Systems Operational &bull; 99.98% Parsing Uptime</span>
+            {/* Column 2: Product */}
+            <div>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '18px' }}>
+                Product
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', fontSize: '13.5px', color: '#64748B' }}>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('features')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Features Overview</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('ats-scanner')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>ATS Resume Studio</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('meet-emma')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Emma AI Interview Coach</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('productivity')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Application Tracker</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('pricing')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Regional Pricing</span>
+              </div>
+            </div>
+
+            {/* Column 3: Resources & Proof */}
+            <div>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '18px' }}>
+                Resources
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', fontSize: '13.5px', color: '#64748B' }}>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('testimonials')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Candidate Reviews & Offers</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('faq')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Candidate FAQ</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('ats-scanner')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>ATS Score Benchmark</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onLaunchApp} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Career Roadmap Generator</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onSignIn} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Candidate Community</span>
+              </div>
+            </div>
+
+            {/* Column 4: Platform & Extension */}
+            <div>
+              <div style={{ fontSize: '12px', fontWeight: 800, color: '#090C15', letterSpacing: '0.08em', textTransform: 'uppercase', marginBottom: '18px' }}>
+                Platform
+              </div>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '11px', fontSize: '13.5px', color: '#64748B' }}>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onLaunchApp} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Launch Candidate OS</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onSignIn} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Candidate Sign In</span>
+                <a 
+                  href="https://chromewebstore.google.com" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  style={{ textDecoration: 'none', color: '#64748B', transition: 'color 0.15s ease' }} 
+                  onMouseEnter={(e) => e.target.style.color = '#1A53CF'} 
+                  onMouseLeave={(e) => e.target.style.color = '#64748B'}
+                >
+                  Chrome Web Store Extension &rarr;
+                </a>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={() => scrollToSection('pricing')} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Upgrade to Unlimited</span>
+                <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onClick={onLaunchApp} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Live Simulation Active</span>
+              </div>
             </div>
           </div>
 
-          {/* Subfooter */}
-          <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', flexWrap: 'wrap', gap: '14px', paddingTop: '24px', fontSize: '12px', color: '#64748B' }}>
-            <div>
-              &copy; {new Date().getFullYear()} JobGen Connect Pty Ltd. All rights reserved.
+          {/* Giant Condensed "JOBGEN.AI" from Dashboard with Minimal Letter Spacing & Atmospheric Transparency */}
+          <div 
+            style={{
+              display: 'flex',
+              alignItems: 'flex-end',
+              justifyContent: 'flex-end',
+              userSelect: 'none',
+              pointerEvents: 'none',
+              overflow: 'hidden',
+              marginTop: '20px',
+              marginBottom: '-8px'
+            }}
+          >
+            <span
+              style={{
+                fontSize: 'clamp(85px, 14.5vw, 230px)',
+                fontWeight: 700,
+                fontFamily: '"Teko", "Bebas Neue", sans-serif',
+                letterSpacing: '-0.02em',
+                lineHeight: 0.78,
+                color: '#2563EB',
+                opacity: 0.28,
+                whiteSpace: 'nowrap',
+                display: 'inline-block',
+              }}
+            >
+              JOBGEN.AI
+            </span>
+          </div>
+
+          {/* Horizontal Divider Line matching Dashboard */}
+          <div 
+            style={{
+              width: '100%',
+              height: '1px',
+              background: 'linear-gradient(90deg, rgba(226, 232, 240, 0.4) 0%, rgba(37, 99, 235, 0.35) 40%, rgba(37, 99, 235, 0.35) 60%, rgba(226, 232, 240, 0.4) 100%)',
+              margin: '18px 0 16px 0',
+            }}
+          />
+
+          {/* Copyrights, Social Channels & System Links */}
+          <div 
+            style={{
+              display: 'flex',
+              flexWrap: 'wrap',
+              alignItems: 'center',
+              justifyContent: 'space-between',
+              gap: '14px',
+              paddingBottom: '8px',
+              fontSize: 'clamp(11px, 0.9vw, 13px)',
+              color: '#64748B',
+              fontFamily: '"Plus Jakarta Sans", system-ui, sans-serif',
+            }}
+          >
+            {/* Copyright notice */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '8px', flexWrap: 'wrap' }}>
+              <span style={{ color: '#475569', fontWeight: 600 }}>
+                &copy; {new Date().getFullYear()} JobGen.AI Technologies Inc. All rights reserved.
+              </span>
+              <span style={{ color: '#CBD5E1' }}>&bull;</span>
+              <span style={{ color: '#64748B' }}>Built for ambitious candidates worldwide</span>
             </div>
 
-            <div style={{ display: 'flex', gap: '20px' }}>
-              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('features')}>Features</span>
-              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('ats-scanner')}>ATS Scanner</span>
-              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('pricing')}>Pricing</span>
-              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('testimonials')}>Reviews</span>
-              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('faq')}>FAQ</span>
-              <span style={{ cursor: 'pointer' }} onClick={onSignIn}>Sign In</span>
+            {/* Social Media Channels matching Dashboard */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {/* Instagram */}
+              <a
+                href="https://instagram.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Instagram"
+                title="Instagram"
+                style={{
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  border: '1px solid rgba(226, 232, 240, 0.95)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#64748B',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#E1306C';
+                  e.currentTarget.style.borderColor = 'rgba(225, 48, 108, 0.4)';
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(225, 48, 108, 0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#64748B';
+                  e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.95)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                  e.currentTarget.style.transform = 'translateY(0px)';
+                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.04)';
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                  <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
+                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
+                  <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
+                </svg>
+              </a>
+
+              {/* LinkedIn */}
+              <a
+                href="https://www.linkedin.com/company/jobgenai/"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="LinkedIn"
+                title="LinkedIn"
+                style={{
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  border: '1px solid rgba(226, 232, 240, 0.95)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#64748B',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#0A66C2';
+                  e.currentTarget.style.borderColor = 'rgba(10, 102, 194, 0.4)';
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(10, 102, 194, 0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#64748B';
+                  e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.95)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                  e.currentTarget.style.transform = 'translateY(0px)';
+                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.04)';
+                }}
+              >
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M19 3a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-.5 15.5v-5.3a3.26 3.26 0 0 0-3.26-3.26c-.85 0-1.84.52-2.28 1.3v-1.11h-2.79v8.37h2.79v-4.93c0-.77.62-1.4 1.39-1.4a1.4 1.4 0 0 1 1.4 1.4v4.93h2.75M6.46 10.9v8.37H9.2V10.9H6.46M7.83 6.64a1.64 1.64 0 1 0 0 3.28 1.64 1.64 0 0 0 0-3.28Z"/>
+                </svg>
+              </a>
+
+              {/* X (Twitter) */}
+              <a
+                href="https://x.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="X"
+                title="X (Twitter)"
+                style={{
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  border: '1px solid rgba(226, 232, 240, 0.95)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#64748B',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#090C15';
+                  e.currentTarget.style.borderColor = 'rgba(9, 12, 21, 0.4)';
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(9, 12, 21, 0.18)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#64748B';
+                  e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.95)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                  e.currentTarget.style.transform = 'translateY(0px)';
+                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.04)';
+                }}
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+                </svg>
+              </a>
+
+              {/* YouTube */}
+              <a
+                href="https://youtube.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="YouTube"
+                title="YouTube"
+                style={{
+                  width: '34px',
+                  height: '34px',
+                  borderRadius: '10px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.9)',
+                  border: '1px solid rgba(226, 232, 240, 0.95)',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  color: '#64748B',
+                  boxShadow: '0 2px 6px rgba(0, 0, 0, 0.04)',
+                  backdropFilter: 'blur(8px)',
+                  WebkitBackdropFilter: 'blur(8px)',
+                  transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
+                  textDecoration: 'none',
+                  cursor: 'pointer',
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.color = '#FF0000';
+                  e.currentTarget.style.borderColor = 'rgba(255, 0, 0, 0.4)';
+                  e.currentTarget.style.backgroundColor = '#FFFFFF';
+                  e.currentTarget.style.transform = 'translateY(-2px)';
+                  e.currentTarget.style.boxShadow = '0 6px 16px rgba(255, 0, 0, 0.22)';
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.color = '#64748B';
+                  e.currentTarget.style.borderColor = 'rgba(226, 232, 240, 0.95)';
+                  e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.9)';
+                  e.currentTarget.style.transform = 'translateY(0px)';
+                  e.currentTarget.style.boxShadow = '0 2px 6px rgba(0, 0, 0, 0.04)';
+                }}
+              >
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor">
+                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/>
+                </svg>
+              </a>
+            </div>
+
+            {/* Policy & Legal Links */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: '16px', flexWrap: 'wrap' }}>
+              <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Privacy Policy</span>
+              <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Terms of Service</span>
+              <span style={{ cursor: 'pointer', transition: 'color 0.15s ease' }} onMouseEnter={(e) => e.target.style.color = '#1A53CF'} onMouseLeave={(e) => e.target.style.color = '#64748B'}>Security</span>
             </div>
           </div>
 
