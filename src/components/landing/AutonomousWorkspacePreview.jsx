@@ -21,10 +21,15 @@ const FEATURES = [
   { label: '12-Week Strategic Career Plan', icon: Calendar, color: '#34D399' }
 ];
 
-export default function AutonomousWorkspacePreview() {
+export default function AutonomousWorkspacePreview({ 
+  onSignIn, 
+  onLaunchApp, 
+  onProductivityClick, 
+  onPricingClick 
+}) {
   return (
     <section 
-      id="features"
+      id="autonomous-workspace"
       style={{
         position: 'relative',
         width: '100%',
@@ -177,11 +182,45 @@ export default function AutonomousWorkspacePreview() {
             style={{ 
               maxWidth: '1240px', 
               margin: '0 auto', 
-              padding: 'clamp(32px, 4vw, 56px) 24px 0 24px', 
-              textAlign: 'left'
+              padding: 'clamp(24px, 3.2vw, 48px) 24px 0 24px', 
+              display: 'flex',
+              justifyContent: 'space-between',
+              alignItems: 'flex-start',
+              textAlign: 'left',
+              gap: '24px'
             }}
           >
             <div style={{ maxWidth: '640px' }}>
+              {/* Brand Logo & Name Badge */}
+              <div 
+                style={{ 
+                  display: 'inline-flex', 
+                  alignItems: 'center', 
+                  gap: '9px', 
+                  marginBottom: '14px',
+                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                  padding: '6px 14px 6px 10px',
+                  borderRadius: '9999px',
+                  backdropFilter: 'blur(12px)',
+                  WebkitBackdropFilter: 'blur(12px)',
+                  border: '1px solid rgba(255, 255, 255, 0.25)',
+                  boxShadow: '0 2px 8px rgba(0, 18, 70, 0.2)'
+                }}
+              >
+                <img 
+                  src="/Whitelogo.webp" 
+                  alt="JobGen.IO" 
+                  style={{ width: '20px', height: '20px', objectFit: 'contain' }}
+                  onError={(e) => {
+                    e.currentTarget.src = '/jobgen-logo.png';
+                    e.currentTarget.style.filter = 'brightness(0) invert(1)';
+                  }}
+                />
+                <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
+                  JobGen.IO
+                </span>
+              </div>
+
               {/* Main Title */}
               <h2
                 style={{
@@ -213,6 +252,118 @@ export default function AutonomousWorkspacePreview() {
                 JobGen, an AI-powered autonomous platform, serves as an all-in-one workspace replacing fragmented job boards, manual trackers, and generic interview prep.
               </p>
             </div>
+
+            {/* Top Right Header Buttons on landing view */}
+            {(onSignIn || onProductivityClick || onPricingClick) && (
+              <div
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 'clamp(8px, 1.1vw, 14px)',
+                  pointerEvents: 'auto',
+                  marginTop: '6px',
+                  flexShrink: 0
+                }}
+              >
+                {onProductivityClick && (
+                  <button
+                    onClick={onProductivityClick}
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                      color: '#FFFFFF',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
+                      borderRadius: '9999px',
+                      padding: '8px 20px',
+                      fontSize: '13.5px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 14px rgba(0, 18, 70, 0.2)',
+                      transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                      e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.2)';
+                    }}
+                  >
+                    Productivity
+                  </button>
+                )}
+
+                {onPricingClick && (
+                  <button
+                    onClick={onPricingClick}
+                    style={{
+                      backgroundColor: 'rgba(255, 255, 255, 0.12)',
+                      color: '#FFFFFF',
+                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                      backdropFilter: 'blur(12px)',
+                      WebkitBackdropFilter: 'blur(12px)',
+                      borderRadius: '9999px',
+                      padding: '8px 20px',
+                      fontSize: '13.5px',
+                      fontWeight: 700,
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 14px rgba(0, 18, 70, 0.2)',
+                      transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
+                      e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.3)';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+                      e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+                      e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.2)';
+                    }}
+                  >
+                    Pricing
+                  </button>
+                )}
+
+                {onSignIn && (
+                  <button
+                    onClick={onSignIn}
+                    style={{
+                      backgroundColor: '#FFFFFF',
+                      color: '#1A53CF',
+                      border: 'none',
+                      borderRadius: '9999px',
+                      padding: '8px 24px',
+                      fontSize: '13.5px',
+                      fontWeight: 800,
+                      cursor: 'pointer',
+                      boxShadow: '0 4px 16px rgba(0, 18, 70, 0.25)',
+                      transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+                    }}
+                    onMouseEnter={(e) => {
+                      e.currentTarget.style.transform = 'translateY(-2px)';
+                      e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 18, 70, 0.35)';
+                      e.currentTarget.style.backgroundColor = '#F8FAFC';
+                    }}
+                    onMouseLeave={(e) => {
+                      e.currentTarget.style.transform = 'translateY(0)';
+                      e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 18, 70, 0.25)';
+                      e.currentTarget.style.backgroundColor = '#FFFFFF';
+                    }}
+                  >
+                    Sign In
+                  </button>
+                )}
+              </div>
+            )}
           </div>
         </div>
 

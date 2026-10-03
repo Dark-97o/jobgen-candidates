@@ -140,7 +140,7 @@ const FEATURES_DATA = [
 // =========================================================================
 // FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REAL RESUME
 // =========================================================================
-function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick, onPricingClick }) {
+function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick, onPricingClick, isAtTop = false }) {
   const resumeContainerRef = useRef(null);
   const titleWrapperRef = useRef(null);
   const glintRef = useRef(null);
@@ -325,118 +325,120 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
       {/* 1. INTERACTIVE FLUID GRADIENT WEBGL BACKGROUND (CODEGRID SHADER) */}
       <InteractiveFluidGradient />
 
-      {/* 1b. TOP HEADER ON HERO SECTION: BUTTON GROUP (PRODUCTIVITY, PRICING, SIGN IN) */}
-      <div
-        style={{
-          position: 'absolute',
-          top: 'clamp(26px, 3.8vh, 42px)',
-          right: 'clamp(28px, 4.5vw, 68px)',
-          display: 'flex',
-          alignItems: 'center',
-          gap: 'clamp(8px, 1.1vw, 14px)',
-          zIndex: 25,
-          pointerEvents: mounted ? 'auto' : 'none',
-          boxSizing: 'border-box',
-          opacity: mounted ? 1 : 0,
-          transform: mounted ? 'translateY(0)' : 'translateY(-14px)',
-          transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.12s, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.12s',
-        }}
-      >
-        {/* Productivity Button */}
-        <button
-          onClick={onProductivityClick}
+      {/* 1b. TOP HEADER ON HERO SECTION: BUTTON GROUP (PRODUCTIVITY, PRICING, SIGN IN) - ONLY WHEN AT TOP */}
+      {isAtTop && (
+        <div
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.12)',
-            color: '#FFFFFF',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            borderRadius: '9999px',
-            padding: '8px 20px',
-            fontSize: '13.5px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            boxShadow: '0 4px 14px rgba(0, 18, 70, 0.2)',
-            transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.3)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-            e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.2)';
+            position: 'absolute',
+            top: 'clamp(26px, 3.8vh, 42px)',
+            right: 'clamp(28px, 4.5vw, 68px)',
+            display: 'flex',
+            alignItems: 'center',
+            gap: 'clamp(8px, 1.1vw, 14px)',
+            zIndex: 25,
+            pointerEvents: mounted ? 'auto' : 'none',
+            boxSizing: 'border-box',
+            opacity: mounted ? 1 : 0,
+            transform: mounted ? 'translateY(0)' : 'translateY(-14px)',
+            transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.12s, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.12s',
           }}
         >
-          Productivity
-        </button>
+          {/* Productivity Button */}
+          <button
+            onClick={onProductivityClick}
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.12)',
+              color: '#FFFFFF',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              borderRadius: '9999px',
+              padding: '8px 20px',
+              fontSize: '13.5px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(0, 18, 70, 0.2)',
+              transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+              e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.2)';
+            }}
+          >
+            Productivity
+          </button>
 
-        {/* Pricing Button */}
-        <button
-          onClick={onPricingClick}
-          style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.12)',
-            color: '#FFFFFF',
-            border: '1px solid rgba(255, 255, 255, 0.3)',
-            backdropFilter: 'blur(12px)',
-            WebkitBackdropFilter: 'blur(12px)',
-            borderRadius: '9999px',
-            padding: '8px 20px',
-            fontSize: '13.5px',
-            fontWeight: 700,
-            cursor: 'pointer',
-            boxShadow: '0 4px 14px rgba(0, 18, 70, 0.2)',
-            transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
-            e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.3)';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
-            e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-            e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.2)';
-          }}
-        >
-          Pricing
-        </button>
+          {/* Pricing Button */}
+          <button
+            onClick={onPricingClick}
+            style={{
+              backgroundColor: 'rgba(255, 255, 255, 0.12)',
+              color: '#FFFFFF',
+              border: '1px solid rgba(255, 255, 255, 0.3)',
+              backdropFilter: 'blur(12px)',
+              WebkitBackdropFilter: 'blur(12px)',
+              borderRadius: '9999px',
+              padding: '8px 20px',
+              fontSize: '13.5px',
+              fontWeight: 700,
+              cursor: 'pointer',
+              boxShadow: '0 4px 14px rgba(0, 18, 70, 0.2)',
+              transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
+              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.3)';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
+              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
+              e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.2)';
+            }}
+          >
+            Pricing
+          </button>
 
-        {/* Sign In Button (Prominent White Pill) */}
-        <button
-          onClick={onSignIn}
-          style={{
-            backgroundColor: '#FFFFFF',
-            color: '#1A53CF',
-            border: 'none',
-            borderRadius: '9999px',
-            padding: '8px 24px',
-            fontSize: '13.5px',
-            fontWeight: 800,
-            cursor: 'pointer',
-            boxShadow: '0 4px 16px rgba(0, 18, 70, 0.25)',
-            transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-          }}
-          onMouseEnter={(e) => {
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 18, 70, 0.35)';
-            e.currentTarget.style.backgroundColor = '#F8FAFC';
-          }}
-          onMouseLeave={(e) => {
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 18, 70, 0.25)';
-            e.currentTarget.style.backgroundColor = '#FFFFFF';
-          }}
-        >
-          Sign In
-        </button>
-      </div>
+          {/* Sign In Button (Prominent White Pill) */}
+          <button
+            onClick={onSignIn}
+            style={{
+              backgroundColor: '#FFFFFF',
+              color: '#1A53CF',
+              border: 'none',
+              borderRadius: '9999px',
+              padding: '8px 24px',
+              fontSize: '13.5px',
+              fontWeight: 800,
+              cursor: 'pointer',
+              boxShadow: '0 4px 16px rgba(0, 18, 70, 0.25)',
+              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
+            }}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.transform = 'translateY(-2px)';
+              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 18, 70, 0.35)';
+              e.currentTarget.style.backgroundColor = '#F8FAFC';
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.transform = 'translateY(0)';
+              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 18, 70, 0.25)';
+              e.currentTarget.style.backgroundColor = '#FFFFFF';
+            }}
+          >
+            Sign In
+          </button>
+        </div>
+      )}
 
       {/* 2. HEADLINE: "JobGen.IO" WITH LOGO IN FRONT & SUBTITLE "Land your next dream job" (LOWERED & LIVE REVEAL) */}
       <div
@@ -583,31 +585,33 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
         })}
       </div>
 
-      {/* 5. SUBTLE SCROLL DOWN CUE */}
-      <div
-        style={{
-          position: 'absolute',
-          bottom: '18px',
-          left: '50%',
-          transform: 'translateX(-50%)',
-          zIndex: 10,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          gap: '4px',
-          color: 'rgba(255, 255, 255, 0.75)',
-          fontSize: '11px',
-          fontWeight: 700,
-          letterSpacing: '0.04em',
-          textTransform: 'uppercase',
-          pointerEvents: 'none',
-          opacity: mounted ? 1 : 0,
-          transition: 'opacity 1.0s ease 0.45s',
-        }}
-      >
-        <span>Scroll to explore</span>
-        <ChevronDown size={14} style={{ animation: 'bounce 1.5s infinite' }} />
-      </div>
+      {/* 5. SUBTLE SCROLL DOWN CUE - ONLY WHEN AT TOP */}
+      {isAtTop && (
+        <div
+          style={{
+            position: 'absolute',
+            bottom: '18px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            gap: '4px',
+            color: 'rgba(255, 255, 255, 0.75)',
+            fontSize: '11px',
+            fontWeight: 700,
+            letterSpacing: '0.04em',
+            textTransform: 'uppercase',
+            pointerEvents: 'none',
+            opacity: mounted ? 1 : 0,
+            transition: 'opacity 1.0s ease 0.45s',
+          }}
+        >
+          <span>Scroll to explore</span>
+          <ChevronDown size={14} style={{ animation: 'bounce 1.5s infinite' }} />
+        </div>
+      )}
 
       {/* Crisp White Line Separator at the end of the Hero Section */}
       <div 
@@ -631,8 +635,8 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
 
   useEffect(() => {
     const handleScroll = () => {
-      // Navbar only visible after the full-height hero section is scrolled up
-      const heroThreshold = Math.max(300, window.innerHeight * 0.7);
+      // Navbar only visible after the top section is scrolled up
+      const heroThreshold = Math.max(250, window.innerHeight * 0.45);
       setIsScrolled(window.scrollY > heroThreshold);
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
@@ -981,12 +985,11 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       </header>
 
       {/* =========================================================================
-          2. FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REALISTIC RESUME
+          2. INTERACTIVE AUTONOMOUS WORKSPACE PREVIEW (NOW TOP HERO SECTION)
           ========================================================================= */}
-      <FluidBlueHero 
+      <AutonomousWorkspacePreview 
         onSignIn={onSignIn} 
         onLaunchApp={onLaunchApp} 
-        onScanClick={() => scrollToSection('ats-scanner')} 
         onProductivityClick={() => scrollToSection('productivity')} 
         onPricingClick={() => scrollToSection('pricing')}
       />
@@ -1081,9 +1084,16 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       </section>
 
       {/* =========================================================================
-          4. INTERACTIVE AUTONOMOUS WORKSPACE PREVIEW
+          4. FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REALISTIC RESUME
           ========================================================================= */}
-      <AutonomousWorkspacePreview onLaunchApp={onLaunchApp} />
+      <FluidBlueHero 
+        onSignIn={onSignIn} 
+        onLaunchApp={onLaunchApp} 
+        onScanClick={() => scrollToSection('ats-scanner')} 
+        onProductivityClick={() => scrollToSection('productivity')} 
+        onPricingClick={() => scrollToSection('pricing')}
+        isAtTop={false}
+      />
 
       {/* =========================================================================
           4. SOCIAL PROOF / INTERACTIVE 3D FALLING LOGO BALLS
