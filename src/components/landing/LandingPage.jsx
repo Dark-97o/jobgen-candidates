@@ -33,7 +33,6 @@ import {
   Laptop
 } from 'lucide-react';
 import InteractiveFluidGradient from './InteractiveFluidGradient';
-import RuggedScreen3D from './RuggedScreen3D';
 import HandwrittenSubtitle from './HandwrittenSubtitle';
 import RevealingTitle from './RevealingTitle';
 import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
@@ -138,12 +137,9 @@ const FEATURES_DATA = [
 
 
 // =========================================================================
-// FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REAL RESUME
+// SOLID BLUE JOBGEN.IO SECTION WITH FLUID WATER SPLASH SHADER (PRE-FOOTER)
 // =========================================================================
-function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick, onPricingClick, isAtTop = false }) {
-  const resumeContainerRef = useRef(null);
-  const titleWrapperRef = useRef(null);
-  const glintRef = useRef(null);
+function FluidBlueHero() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
@@ -153,130 +149,13 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
     return () => clearTimeout(timer);
   }, []);
 
-  // 3D Resume look-towards-pointer tracking
-  const rotRef = useRef({
-    currentX: 3,
-    currentY: -4,
-    targetX: 3,
-    targetY: -4,
-    transX: 0,
-    transY: 0,
-    currentScale: 1,
-    targetScale: 1
-  });
-
-  // 3D Title, Logo & Texts look-towards-pointer tracking
-  const titleRotRef = useRef({
-    currentX: 0,
-    currentY: 0,
-    targetX: 0,
-    targetY: 0,
-    transX: 0,
-    transY: 0,
-    targetTransX: 0,
-    targetTransY: 0
-  });
-
-  useEffect(() => {
-    let animId;
-    const animate = () => {
-      const r = rotRef.current;
-      r.currentX += (r.targetX - r.currentX) * 0.085;
-      r.currentY += (r.targetY - r.currentY) * 0.085;
-      r.currentScale += (r.targetScale - r.currentScale) * 0.095;
-
-      const lev = Math.sin(Date.now() * 0.0018) * 8;
-
-      if (resumeContainerRef.current) {
-        resumeContainerRef.current.style.transform = `perspective(1100px) rotateX(${r.currentX}deg) rotateY(${r.currentY}deg) translate3d(${r.transX}px, ${r.transY + lev}px, 45px) scale(${r.currentScale})`;
-      }
-
-      if (glintRef.current) {
-        const angle = 115 + r.currentY * 2.0;
-        glintRef.current.style.background = `linear-gradient(${angle}deg, rgba(255, 255, 255, 0.45) 0%, rgba(255, 255, 255, 0) 52%, rgba(0, 0, 0, 0.04) 100%)`;
-      }
-
-      // Title & Logo 3D pointer look-towards tracking
-      const tr = titleRotRef.current;
-      tr.currentX += (tr.targetX - tr.currentX) * 0.085;
-      tr.currentY += (tr.targetY - tr.currentY) * 0.085;
-      tr.transX += (tr.targetTransX - tr.transX) * 0.085;
-      tr.transY += (tr.targetTransY - tr.transY) * 0.085;
-
-      const titleLev = Math.sin(Date.now() * 0.0016 + 1.2) * 5;
-
-      if (titleWrapperRef.current) {
-        titleWrapperRef.current.style.transform = `perspective(1000px) rotateX(${tr.currentX.toFixed(2)}deg) rotateY(${tr.currentY.toFixed(2)}deg) translate3d(${tr.transX.toFixed(2)}px, ${(tr.transY + titleLev).toFixed(2)}px, 20px)`;
-      }
-
-      animId = requestAnimationFrame(animate);
-    };
-
-    animId = requestAnimationFrame(animate);
-    return () => cancelAnimationFrame(animId);
-  }, []);
-
-  const handlePointerMove = (e) => {
-    const container = resumeContainerRef.current;
-    if (!container) return;
-    const rect = container.getBoundingClientRect();
-    const cx = rect.left + rect.width * 0.5;
-    const cy = rect.top + rect.height * 0.5;
-
-    const dx = e.clientX - cx;
-    const dy = e.clientY - cy;
-
-    const maxDistX = Math.max(300, window.innerWidth * 0.5);
-    const maxDistY = Math.max(250, window.innerHeight * 0.5);
-
-    const normX = Math.max(-1, Math.min(1, dx / maxDistX));
-    const normY = Math.max(-1, Math.min(1, dy / maxDistY));
-
-    // Turn 3D Screen to look directly towards the pointer
-    rotRef.current.targetY = normX * 28;
-    rotRef.current.targetX = -normY * 24;
-    rotRef.current.transX = normX * 18;
-    rotRef.current.transY = normY * 14;
-
-    // Turn Logo & Texts to also follow and gaze towards the pointer
-    titleRotRef.current.targetY = normX * 22;
-    titleRotRef.current.targetX = -normY * 18;
-    titleRotRef.current.targetTransX = normX * 16;
-    titleRotRef.current.targetTransY = normY * 12;
-  };
-
-  const handleScreenPointerEnter = () => {
-    // Grow slightly when pointer touches the 3D screen
-    rotRef.current.targetScale = 1.055;
-  };
-
-  const handleScreenPointerLeave = () => {
-    // Return smoothly to normal scale
-    rotRef.current.targetScale = 1.0;
-  };
-
-  const handlePointerLeave = () => {
-    rotRef.current.targetX = 3;
-    rotRef.current.targetY = -4;
-    rotRef.current.transX = 0;
-    rotRef.current.transY = 0;
-    rotRef.current.targetScale = 1.0;
-
-    titleRotRef.current.targetX = 0;
-    titleRotRef.current.targetY = 0;
-    titleRotRef.current.targetTransX = 0;
-    titleRotRef.current.targetTransY = 0;
-  };
-
   return (
     <section
-      onPointerMove={handlePointerMove}
-      onPointerLeave={handlePointerLeave}
       style={{
         position: 'relative',
         width: '100%',
-        minHeight: '100vh',
-        height: '100vh',
+        minHeight: '300px',
+        height: 'clamp(280px, 36vh, 380px)',
         backgroundColor: '#1A53CF',
         overflow: 'hidden',
         display: 'flex',
@@ -286,194 +165,39 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
         userSelect: 'none'
       }}
     >
-      {/* Dynamic 3D Figure Swing-in Keyframes & Transitions */}
-      <style>{`
-        @keyframes figureSwingFromRight {
-          0% {
-            opacity: 0;
-            transform: translate3d(clamp(160px, 32vw, 440px), -40px, 0) rotate(15deg) rotateY(-25deg) scale(0.9);
-            filter: drop-shadow(0 24px 48px rgba(0, 10, 45, 0.45));
-          }
-          62% {
-            opacity: 1;
-            transform: translate3d(-18px, 6px, 0) rotate(-2.8deg) rotateY(4deg) scale(1.02);
-          }
-          82% {
-            transform: translate3d(6px, -2px, 0) rotate(1deg) rotateY(-1.5deg) scale(0.996);
-          }
-          93% {
-            transform: translate3d(-2px, 1px, 0) rotate(-0.3deg) rotateY(0.4deg) scale(1.002);
-          }
-          100% {
-            opacity: 1;
-            transform: translate3d(0, 0, 0) rotate(0deg) rotateY(0deg) scale(1);
-            filter: drop-shadow(0 14px 32px rgba(0, 18, 70, 0.45));
-          }
-        }
-        .figure-swing-enter {
-          animation: figureSwingFromRight 1.35s cubic-bezier(0.22, 1, 0.36, 1) 0.1s both;
-          transform-origin: 75% -20%;
-          will-change: transform, opacity;
-        }
-        .figure-swing-hidden {
-          opacity: 0;
-          transform: translate3d(clamp(160px, 32vw, 440px), -40px, 0) rotate(15deg) rotateY(-25deg) scale(0.9);
-          pointer-events: none;
-        }
-      `}</style>
-
       {/* 1. INTERACTIVE FLUID GRADIENT WEBGL BACKGROUND (CODEGRID SHADER) */}
       <InteractiveFluidGradient />
 
-      {/* 1b. TOP HEADER ON HERO SECTION: BUTTON GROUP (PRODUCTIVITY, PRICING, SIGN IN) - ONLY WHEN AT TOP */}
-      {isAtTop && (
-        <div
-          style={{
-            position: 'absolute',
-            top: 'clamp(26px, 3.8vh, 42px)',
-            right: 'clamp(28px, 4.5vw, 68px)',
-            display: 'flex',
-            alignItems: 'center',
-            gap: 'clamp(8px, 1.1vw, 14px)',
-            zIndex: 25,
-            pointerEvents: mounted ? 'auto' : 'none',
-            boxSizing: 'border-box',
-            opacity: mounted ? 1 : 0,
-            transform: mounted ? 'translateY(0)' : 'translateY(-14px)',
-            transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.12s, transform 0.85s cubic-bezier(0.16, 1, 0.3, 1) 0.12s',
-          }}
-        >
-          {/* Productivity Button */}
-          <button
-            onClick={onProductivityClick}
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.12)',
-              color: '#FFFFFF',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              borderRadius: '9999px',
-              padding: '8px 20px',
-              fontSize: '13.5px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(0, 18, 70, 0.2)',
-              transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-              e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.2)';
-            }}
-          >
-            Productivity
-          </button>
-
-          {/* Pricing Button */}
-          <button
-            onClick={onPricingClick}
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.12)',
-              color: '#FFFFFF',
-              border: '1px solid rgba(255, 255, 255, 0.3)',
-              backdropFilter: 'blur(12px)',
-              WebkitBackdropFilter: 'blur(12px)',
-              borderRadius: '9999px',
-              padding: '8px 20px',
-              fontSize: '13.5px',
-              fontWeight: 700,
-              cursor: 'pointer',
-              boxShadow: '0 4px 14px rgba(0, 18, 70, 0.2)',
-              transition: 'all 0.22s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.22)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.55)';
-              e.currentTarget.style.boxShadow = '0 6px 20px rgba(0, 18, 70, 0.3)';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.12)';
-              e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.3)';
-              e.currentTarget.style.boxShadow = '0 4px 14px rgba(0, 18, 70, 0.2)';
-            }}
-          >
-            Pricing
-          </button>
-
-          {/* Sign In Button (Prominent White Pill) */}
-          <button
-            onClick={onSignIn}
-            style={{
-              backgroundColor: '#FFFFFF',
-              color: '#1A53CF',
-              border: 'none',
-              borderRadius: '9999px',
-              padding: '8px 24px',
-              fontSize: '13.5px',
-              fontWeight: 800,
-              cursor: 'pointer',
-              boxShadow: '0 4px 16px rgba(0, 18, 70, 0.25)',
-              transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)'
-            }}
-            onMouseEnter={(e) => {
-              e.currentTarget.style.transform = 'translateY(-2px)';
-              e.currentTarget.style.boxShadow = '0 8px 24px rgba(0, 18, 70, 0.35)';
-              e.currentTarget.style.backgroundColor = '#F8FAFC';
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.transform = 'translateY(0)';
-              e.currentTarget.style.boxShadow = '0 4px 16px rgba(0, 18, 70, 0.25)';
-              e.currentTarget.style.backgroundColor = '#FFFFFF';
-            }}
-          >
-            Sign In
-          </button>
-        </div>
-      )}
-
-      {/* 2. HEADLINE: "JobGen.IO" WITH LOGO IN FRONT & SUBTITLE "Land your next dream job" (LOWERED & LIVE REVEAL) */}
+      {/* 2. HEADLINE: "JobGen.IO" WITH LOGO IN FRONT & SUBTITLE "Land your next dream job" */}
       <div
         style={{
-          position: 'absolute',
-          top: 'clamp(68px, calc(9.5vh + 12px), 116px)',
-          left: '50%',
-          transform: mounted ? 'translateX(-50%) translateY(0)' : 'translateX(-50%) translateY(18px)',
+          position: 'relative',
+          zIndex: 10,
           width: '100%',
-          maxWidth: '1340px',
+          maxWidth: '1240px',
           padding: '0 24px',
           display: 'flex',
           justifyContent: 'center',
-          zIndex: 2,
+          alignItems: 'center',
           pointerEvents: 'none',
           boxSizing: 'border-box',
           opacity: mounted ? 1 : 0,
-          transition: 'opacity 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.22s, transform 0.95s cubic-bezier(0.16, 1, 0.3, 1) 0.22s',
+          transform: mounted ? 'translateY(0)' : 'translateY(12px)',
+          transition: 'opacity 0.85s cubic-bezier(0.16, 1, 0.3, 1), transform 0.85s cubic-bezier(0.16, 1, 0.3, 1)'
         }}
       >
         <div 
-          ref={titleWrapperRef}
           style={{ 
             display: 'inline-flex', 
             flexDirection: 'column', 
             alignItems: 'stretch', 
-            position: 'relative',
-            transformStyle: 'preserve-3d',
-            willChange: 'transform'
+            position: 'relative'
           }}
         >
-          <h1
+          <h2
             style={{
-              fontFamily: '"Plus Jakarta Sans", -apple-system, sans-serif',
-              fontSize: 'clamp(58px, 10.5vw, 168px)',
+              fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
+              fontSize: 'clamp(46px, 8vw, 120px)',
               fontWeight: 900,
               letterSpacing: '-0.04em',
               lineHeight: 0.96,
@@ -485,81 +209,52 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
               alignItems: 'center',
               justifyContent: 'center',
               gap: 'clamp(8px, 1.25vw, 20px)',
-              userSelect: 'none',
-              transformStyle: 'preserve-3d'
+              userSelect: 'none'
             }}
           >
             <img 
               src="/Whitelogo.webp" 
               alt="JobGen Logo" 
               style={{ 
-                width: 'clamp(75px, 13.1vw, 202px)', 
-                height: 'clamp(75px, 13.1vw, 202px)', 
+                width: 'clamp(52px, 8.5vw, 130px)', 
+                height: 'clamp(52px, 8.5vw, 130px)', 
                 objectFit: 'contain',
                 filter: 'drop-shadow(0 14px 32px rgba(0, 18, 70, 0.65))',
-                flexShrink: 0,
-                transform: 'translateZ(26px)',
-                willChange: 'transform'
+                flexShrink: 0
               }}
               onError={(e) => {
                 e.currentTarget.src = '/jobgen-logo.png';
                 e.currentTarget.style.filter = 'brightness(0) invert(1)';
               }}
             />
-            <span style={{ transform: 'translateZ(18px)', display: 'inline-flex', alignItems: 'center' }}>
+            <span style={{ display: 'inline-flex', alignItems: 'center' }}>
               <RevealingTitle text="JobGen.IO" delay={200} />
             </span>
-          </h1>
+          </h2>
           <HandwrittenSubtitle
             text="Land your next dream job"
-            delay={720}
+            delay={550}
             style={{
-              margin: 'clamp(-12px, -1.8vh, -4px) 0 0 0',
-              alignSelf: 'flex-end',
-              transform: 'translateZ(12px)',
-              willChange: 'transform'
+              margin: 'clamp(-8px, -1.2vh, -2px) 0 0 0',
+              alignSelf: 'flex-end'
             }}
           />
         </div>
       </div>
 
-      {/* 3. 3D FLOATING & POINTER-LOOKING RUGGED TACTICAL SCREEN (SWING FROM RIGHT) */}
-      <div
-        className={mounted ? "figure-swing-enter" : "figure-swing-hidden"}
-        style={{
-          position: 'relative',
-          zIndex: 10,
-          marginTop: 'clamp(200px, 28vh, 276px)',
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          pointerEvents: mounted ? 'auto' : 'none',
-          transformStyle: 'preserve-3d',
-        }}
-      >
-        <RuggedScreen3D
-          containerRef={resumeContainerRef}
-          glintRef={glintRef}
-          videoSrc="/jobs.mp4"
-          isActive={true}
-          onPointerEnter={handleScreenPointerEnter}
-          onPointerLeave={handleScreenPointerLeave}
-        />
-      </div>
-
-      {/* 4. 5X5 GRID OF SLOWLY GLOWING WHITE DOTS IN BOTTOM CORNER */}
+      {/* 3. 5X5 GRID OF SLOWLY GLOWING WHITE DOTS IN BOTTOM CORNER */}
       <div
         style={{
           position: 'absolute',
-          bottom: 'clamp(24px, 4.2vh, 42px)',
-          left: 'clamp(24px, 4.5vw, 56px)',
+          bottom: 'clamp(18px, 2.8vh, 28px)',
+          left: 'clamp(20px, 3.5vw, 48px)',
           display: 'grid',
-          gridTemplateColumns: 'repeat(5, 6px)',
-          gridTemplateRows: 'repeat(5, 6px)',
-          gap: '10px',
-          zIndex: 10,
+          gridTemplateColumns: 'repeat(5, 5px)',
+          gridTemplateRows: 'repeat(5, 5px)',
+          gap: '8px',
+          zIndex: 5,
           pointerEvents: 'none',
-          opacity: mounted ? 1 : 0,
+          opacity: mounted ? 0.75 : 0,
           transition: 'opacity 1.0s ease 0.38s',
         }}
         aria-hidden="true"
@@ -572,8 +267,8 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
             <div
               key={`dot-${i}`}
               style={{
-                width: '6px',
-                height: '6px',
+                width: '5px',
+                height: '5px',
                 borderRadius: '50%',
                 backgroundColor: '#FFFFFF',
                 animation: 'slowDotGlow 3.6s ease-in-out infinite',
@@ -585,35 +280,7 @@ function FluidBlueHero({ onSignIn, onLaunchApp, onScanClick, onProductivityClick
         })}
       </div>
 
-      {/* 5. SUBTLE SCROLL DOWN CUE - ONLY WHEN AT TOP */}
-      {isAtTop && (
-        <div
-          style={{
-            position: 'absolute',
-            bottom: '18px',
-            left: '50%',
-            transform: 'translateX(-50%)',
-            zIndex: 10,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            gap: '4px',
-            color: 'rgba(255, 255, 255, 0.75)',
-            fontSize: '11px',
-            fontWeight: 700,
-            letterSpacing: '0.04em',
-            textTransform: 'uppercase',
-            pointerEvents: 'none',
-            opacity: mounted ? 1 : 0,
-            transition: 'opacity 1.0s ease 0.45s',
-          }}
-        >
-          <span>Scroll to explore</span>
-          <ChevronDown size={14} style={{ animation: 'bounce 1.5s infinite' }} />
-        </div>
-      )}
-
-      {/* Crisp White Line Separator at the end of the Hero Section */}
+      {/* Crisp White Line Separator before footer */}
       <div 
         style={{
           position: 'absolute',
@@ -1102,16 +769,9 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       <PricingEngineSection onLaunchApp={onLaunchApp} />
 
       {/* =========================================================================
-          7. FULL-SCREEN SOLID BLUE JOBGEN.IO SECTION WITH SHADERS & 3D REALISTIC RESUME
+          7. SOLID BLUE JOBGEN.IO CALLOUT WITH FLUID WATER SPLASH SHADER (PRE-FOOTER)
           ========================================================================= */}
-      <FluidBlueHero 
-        onSignIn={onSignIn} 
-        onLaunchApp={onLaunchApp} 
-        onScanClick={() => scrollToSection('ats-scanner')} 
-        onProductivityClick={() => scrollToSection('productivity')} 
-        onPricingClick={() => scrollToSection('pricing')}
-        isAtTop={false}
-      />
+      <FluidBlueHero />
 
       {/* =========================================================================
           12. MINIMALIST WHITE FOOTER
