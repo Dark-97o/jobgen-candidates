@@ -70,10 +70,9 @@ export default function InteractiveLogoBallsBand() {
         company: comp,
         radius,
         x: Math.max(radius + 8, Math.min(width - radius - 8, startX + stepX * idx + (Math.random() - 0.5) * 8)),
-        // Placed visibly inside the top half of the canvas to drop naturally to the floor
         y: Math.max(radius + 8, 30 + (idx % 2) * 45 + Math.random() * 15),
-        vx: (Math.random() - 0.5) * 160,
-        vy: (Math.random() - 0.5) * 140,
+        vx: (Math.random() - 0.5) * 35,
+        vy: 20 + Math.random() * 30,
         isDragging: false
       };
     });
@@ -173,10 +172,10 @@ export default function InteractiveLogoBallsBand() {
     });
     resizeObserver.observe(container);
 
-    // Physics constants - playful, buoyant gravity and energetic autonomous bounce
-    const gravity = 500; // px/s^2 (buoyant, floaty gravity)
-    const restitution = 0.88; // High elasticity
-    const friction = 0.995; // Minimal ground friction to sustain motion
+    // Physics constants - calm, smooth, natural physics
+    const gravity = 780; // px/s^2 (natural grounded gravity)
+    const restitution = 0.62; // Gentle realistic elasticity
+    const friction = 0.986; // Smooth ground friction
 
     let lastTime = performance.now();
 
@@ -191,16 +190,16 @@ export default function InteractiveLogoBallsBand() {
       const dt = elapsed / subSteps;
 
       for (let s = 0; s < subSteps; s++) {
-        // 1. Move balls, autonomous impulses, and handle boundary collisions
+        // 1. Move balls and handle gentle collisions
         balls.forEach((ball, idx) => {
           if (ball === draggedBall) return;
 
           // Apply Gravity
           ball.vy += gravity * dt;
 
-          // Very light air drag to preserve kinetic bounce
-          ball.vx *= (1 - 0.002);
-          ball.vy *= (1 - 0.001);
+          // Air drag
+          ball.vx *= (1 - 0.005);
+          ball.vy *= (1 - 0.002);
 
           ball.x += ball.vx * dt;
           ball.y += ball.vy * dt;
@@ -209,41 +208,36 @@ export default function InteractiveLogoBallsBand() {
           const floorY = height - ball.radius - 18;
           if (ball.y >= floorY) {
             ball.y = floorY;
-
-            // Autonomous energetic bounce back up into the air
-            const baseBounce = 260 + (idx % 3) * 60 + Math.random() * 120;
-            if (Math.abs(ball.vy) < 180) {
-              ball.vy = -baseBounce;
-              ball.vx += (Math.random() - 0.5) * 160;
-            } else {
-              ball.vy = -Math.abs(ball.vy) * restitution;
-            }
+            ball.vy = -ball.vy * restitution;
+            if (Math.abs(ball.vy) < 18) ball.vy = 0;
             ball.vx *= friction;
+
+            // Very subtle occasional autonomous soft hop (calm and natural)
+            if (s === 0 && Math.random() < 0.002 && Math.abs(ball.vy) === 0) {
+              ball.vy = -(80 + Math.random() * 70);
+              ball.vx += (Math.random() - 0.5) * 40;
+            }
           }
+
+          // Gentle ambient horizontal drift so balls don't stay completely static
+          ball.vx += Math.sin(currentTime * 0.0012 + idx * 1.4) * 8 * dt;
 
           // Left Wall Collision
           if (ball.x <= ball.radius + 8) {
             ball.x = ball.radius + 8;
-            ball.vx = Math.abs(ball.vx) * restitution + 30 + Math.random() * 50;
+            ball.vx = Math.abs(ball.vx) * restitution;
           }
 
           // Right Wall Collision
           if (ball.x >= width - ball.radius - 8) {
             ball.x = width - ball.radius - 8;
-            ball.vx = -(Math.abs(ball.vx) * restitution + 30 + Math.random() * 50);
+            ball.vx = -Math.abs(ball.vx) * restitution;
           }
 
           // Top Ceiling Collision
           if (ball.y <= ball.radius + 8 && ball.vy < 0) {
             ball.y = ball.radius + 8;
             ball.vy = Math.abs(ball.vy) * restitution;
-          }
-
-          // Autonomous Vitality: If ball slows down too much, gently kick it back up
-          const speed = Math.hypot(ball.vx, ball.vy);
-          if (speed < 90 && ball.y > height * 0.45) {
-            ball.vy -= (200 + Math.random() * 160);
-            ball.vx += (Math.random() - 0.5) * 150;
           }
         });
 
