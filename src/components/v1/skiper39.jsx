@@ -259,8 +259,12 @@ export function CrowdCanvas({
       gsap.ticker.add(render);
     };
 
-    img.onload = init;
     img.src = config.src;
+    if (img.complete && img.naturalWidth !== 0) {
+      init();
+    } else {
+      img.onload = init;
+    }
 
     const handleResize = () => resize();
     window.addEventListener("resize", handleResize);
