@@ -167,14 +167,14 @@ export default function AutonomousWorkspacePreview({
           </div>
         </div>
 
-        {/* 2. Text Overlay: Shifted down by 30px */}
+        {/* 2. Top Header Bar: Corner Logo (Clean, No Pill Shape) & Top-Right Action Buttons */}
         <div 
           style={{ 
             position: 'absolute',
-            top: '30px',
+            top: 'clamp(24px, 3.5vh, 40px)',
             left: 0,
             right: 0,
-            zIndex: 12,
+            zIndex: 25,
             pointerEvents: 'none'
           }}
         >
@@ -182,87 +182,63 @@ export default function AutonomousWorkspacePreview({
             style={{ 
               maxWidth: '1240px', 
               margin: '0 auto', 
-              padding: 'clamp(24px, 3.2vw, 48px) 24px 0 24px', 
+              padding: '0 24px', 
               display: 'flex',
               justifyContent: 'space-between',
-              alignItems: 'flex-start',
-              textAlign: 'left',
-              gap: '24px'
+              alignItems: 'center'
             }}
           >
-            <div style={{ maxWidth: '640px' }}>
-              {/* Brand Logo & Name Badge */}
-              <div 
+            {/* Top-Left Corner Brand: Pure logo + typography, NO pill shape */}
+            <div 
+              onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+              style={{ 
+                display: 'inline-flex', 
+                alignItems: 'center', 
+                gap: '10px',
+                cursor: 'pointer',
+                userSelect: 'none',
+                pointerEvents: 'auto',
+                transition: 'opacity 0.2s ease'
+              }}
+              onMouseEnter={(e) => (e.currentTarget.style.opacity = '0.85')}
+              onMouseLeave={(e) => (e.currentTarget.style.opacity = '1')}
+            >
+              <img 
+                src="/Whitelogo.webp" 
+                alt="JobGen.IO" 
                 style={{ 
-                  display: 'inline-flex', 
-                  alignItems: 'center', 
-                  gap: '9px', 
-                  marginBottom: '14px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.12)',
-                  padding: '6px 14px 6px 10px',
-                  borderRadius: '9999px',
-                  backdropFilter: 'blur(12px)',
-                  WebkitBackdropFilter: 'blur(12px)',
-                  border: '1px solid rgba(255, 255, 255, 0.25)',
-                  boxShadow: '0 2px 8px rgba(0, 18, 70, 0.2)'
+                  width: '28px', 
+                  height: '28px', 
+                  objectFit: 'contain',
+                  filter: 'drop-shadow(0 2px 8px rgba(0, 18, 70, 0.4))'
+                }}
+                onError={(e) => {
+                  e.currentTarget.src = '/jobgen-logo.png';
+                  e.currentTarget.style.filter = 'brightness(0) invert(1)';
+                }}
+              />
+              <span 
+                style={{ 
+                  fontFamily: '"Plus Jakarta Sans", var(--font-title, -apple-system, sans-serif)',
+                  fontSize: 'clamp(18px, 1.6vw, 21px)', 
+                  fontWeight: 900, 
+                  color: '#FFFFFF', 
+                  letterSpacing: '-0.03em',
+                  textShadow: '0 2px 10px rgba(0, 18, 70, 0.35)'
                 }}
               >
-                <img 
-                  src="/Whitelogo.webp" 
-                  alt="JobGen.IO" 
-                  style={{ width: '20px', height: '20px', objectFit: 'contain' }}
-                  onError={(e) => {
-                    e.currentTarget.src = '/jobgen-logo.png';
-                    e.currentTarget.style.filter = 'brightness(0) invert(1)';
-                  }}
-                />
-                <span style={{ fontSize: '13px', fontWeight: 800, color: '#FFFFFF', letterSpacing: '-0.02em' }}>
-                  JobGen.IO
-                </span>
-              </div>
-
-              {/* Main Title */}
-              <h2
-                style={{
-                  fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
-                  fontSize: 'clamp(28px, 4vw, 54px)',
-                  fontWeight: 900,
-                  letterSpacing: '-0.04em',
-                  lineHeight: 1.08,
-                  color: '#FFFFFF',
-                  textShadow: '0 2px 24px rgba(0, 0, 0, 0.4)',
-                  margin: '0 0 16px 0'
-                }}
-              >
-                Explore the Autonomous<br />Candidate Workspace
-              </h2>
-
-              {/* Subtitle Paragraph */}
-              <p
-                style={{
-                  fontSize: 'clamp(14px, 1.3vw, 17px)',
-                  lineHeight: 1.6,
-                  color: 'rgba(255, 255, 255, 0.88)',
-                  textShadow: '0 1px 12px rgba(0, 0, 0, 0.3)',
-                  maxWidth: '520px',
-                  margin: 0,
-                  fontWeight: 500
-                }}
-              >
-                JobGen, an AI-powered autonomous platform, serves as an all-in-one workspace replacing fragmented job boards, manual trackers, and generic interview prep.
-              </p>
+                JobGen.IO
+              </span>
             </div>
 
-            {/* Top Right Header Buttons on landing view */}
+            {/* Top-Right Header Action Buttons */}
             {(onSignIn || onProductivityClick || onPricingClick) && (
               <div
                 style={{
                   display: 'flex',
                   alignItems: 'center',
                   gap: 'clamp(8px, 1.1vw, 14px)',
-                  pointerEvents: 'auto',
-                  marginTop: '6px',
-                  flexShrink: 0
+                  pointerEvents: 'auto'
                 }}
               >
                 {onProductivityClick && (
@@ -364,6 +340,60 @@ export default function AutonomousWorkspacePreview({
                 )}
               </div>
             )}
+          </div>
+        </div>
+
+        {/* 3. Hero Text Overlay: Headline & Subtitle placed cleanly below top corner bar */}
+        <div 
+          style={{ 
+            position: 'absolute',
+            top: 'clamp(84px, 12vh, 126px)',
+            left: 0,
+            right: 0,
+            zIndex: 12,
+            pointerEvents: 'none'
+          }}
+        >
+          <div 
+            style={{ 
+              maxWidth: '1240px', 
+              margin: '0 auto', 
+              padding: '0 24px', 
+              textAlign: 'left'
+            }}
+          >
+            <div style={{ maxWidth: '640px' }}>
+              {/* Main Title */}
+              <h2
+                style={{
+                  fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
+                  fontSize: 'clamp(28px, 4vw, 54px)',
+                  fontWeight: 900,
+                  letterSpacing: '-0.04em',
+                  lineHeight: 1.08,
+                  color: '#FFFFFF',
+                  textShadow: '0 2px 24px rgba(0, 0, 0, 0.4)',
+                  margin: '0 0 16px 0'
+                }}
+              >
+                Explore the Autonomous<br />Candidate Workspace
+              </h2>
+
+              {/* Subtitle Paragraph */}
+              <p
+                style={{
+                  fontSize: 'clamp(14px, 1.3vw, 17px)',
+                  lineHeight: 1.6,
+                  color: 'rgba(255, 255, 255, 0.88)',
+                  textShadow: '0 1px 12px rgba(0, 0, 0, 0.3)',
+                  maxWidth: '520px',
+                  margin: 0,
+                  fontWeight: 500
+                }}
+              >
+                JobGen, an AI-powered autonomous platform, serves as an all-in-one workspace replacing fragmented job boards, manual trackers, and generic interview prep.
+              </p>
+            </div>
           </div>
         </div>
 
