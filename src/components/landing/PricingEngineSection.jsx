@@ -371,7 +371,7 @@ export default function PricingEngineSection({ onLaunchApp }) {
         }}
       >
         {/* ================= HEADER & BILLING TOGGLES ================= */}
-        <div style={{ textAlign: 'center', maxWidth: '780px', margin: '0 auto 32px auto' }}>
+        <div style={{ textAlign: 'center', maxWidth: '860px', margin: '0 auto 32px auto' }}>
           
 
           {/* Main Title from Prompt */}
@@ -381,7 +381,7 @@ export default function PricingEngineSection({ onLaunchApp }) {
               fontSize: 'clamp(28px, 3.8vw, 46px)',
               fontWeight: 900,
               letterSpacing: '-0.035em',
-              lineHeight: 1.1,
+              lineHeight: 1.2,
               color: '#090D16',
               margin: '0 0 12px 0'
             }}

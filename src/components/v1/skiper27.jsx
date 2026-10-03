@@ -58,17 +58,13 @@ export function RollingText({
       ref={containerRef}
       className={`rolling-text-container select-none ${className}`}
       style={{
-        display: 'inline-flex',
-        flexWrap: 'wrap',
-        alignItems: 'baseline',
-        perspective: '1000px',
-        transformStyle: 'preserve-3d',
+        display: 'inline',
         verticalAlign: 'baseline',
         ...style
       }}
     >
       {hasLeadingSpace && (
-        <span style={{ display: 'inline', width: '0.28em' }}>&nbsp;</span>
+        <span style={{ display: 'inline' }}>&nbsp;</span>
       )}
 
       {words.map((word, wordIndex) => {
@@ -83,6 +79,7 @@ export function RollingText({
               whiteSpace: 'nowrap',
               marginRight: (!isLastWord || hasTrailingSpace) ? '0.28em' : '0',
               verticalAlign: 'baseline',
+              perspective: '1000px',
               transformStyle: 'preserve-3d'
             }}
           >

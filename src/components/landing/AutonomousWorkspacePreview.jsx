@@ -377,7 +377,7 @@ export default function AutonomousWorkspacePreview({
                   margin: '0 0 16px 0'
                 }}
               >
-                <RollingText text="Explore the Autonomous Candidate Workspace" />
+                <RollingText text="Explore Autonomous Candidate Workspace" />
               </h2>
 
               {/* Subtitle Paragraph */}
