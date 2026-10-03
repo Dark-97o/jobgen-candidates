@@ -72,8 +72,8 @@ export default function InteractiveLogoBallsBand() {
         x: Math.max(radius + 8, Math.min(width - radius - 8, startX + stepX * idx + (Math.random() - 0.5) * 8)),
         // Placed visibly inside the top half of the canvas to drop naturally to the floor
         y: Math.max(radius + 8, 30 + (idx % 2) * 45 + Math.random() * 15),
-        vx: (Math.random() - 0.5) * 35,
-        vy: 30 + Math.random() * 40,
+        vx: (Math.random() - 0.5) * 160,
+        vy: (Math.random() - 0.5) * 140,
         isDragging: false
       };
     });
@@ -173,10 +173,10 @@ export default function InteractiveLogoBallsBand() {
     });
     resizeObserver.observe(container);
 
-    // Physics constants
-    const gravity = 1000; // px/s^2
-    const restitution = 0.62; // Elasticity
-    const friction = 0.985; // Ground friction
+    // Physics constants - playful, buoyant gravity and energetic autonomous bounce
+    const gravity = 500; // px/s^2 (buoyant, floaty gravity)
+    const restitution = 0.88; // High elasticity
+    const friction = 0.995; // Minimal ground friction to sustain motion
 
     let lastTime = performance.now();
 
@@ -191,16 +191,16 @@ export default function InteractiveLogoBallsBand() {
       const dt = elapsed / subSteps;
 
       for (let s = 0; s < subSteps; s++) {
-        // 1. Move balls and handle boundary collisions
-        balls.forEach((ball) => {
+        // 1. Move balls, autonomous impulses, and handle boundary collisions
+        balls.forEach((ball, idx) => {
           if (ball === draggedBall) return;
 
           // Apply Gravity
           ball.vy += gravity * dt;
 
-          // Air drag
-          ball.vx *= (1 - 0.006);
-          ball.vy *= (1 - 0.003);
+          // Very light air drag to preserve kinetic bounce
+          ball.vx *= (1 - 0.002);
+          ball.vy *= (1 - 0.001);
 
           ball.x += ball.vx * dt;
           ball.y += ball.vy * dt;
@@ -209,27 +209,41 @@ export default function InteractiveLogoBallsBand() {
           const floorY = height - ball.radius - 18;
           if (ball.y >= floorY) {
             ball.y = floorY;
-            ball.vy = -ball.vy * restitution;
-            if (Math.abs(ball.vy) < 18) ball.vy = 0;
+
+            // Autonomous energetic bounce back up into the air
+            const baseBounce = 260 + (idx % 3) * 60 + Math.random() * 120;
+            if (Math.abs(ball.vy) < 180) {
+              ball.vy = -baseBounce;
+              ball.vx += (Math.random() - 0.5) * 160;
+            } else {
+              ball.vy = -Math.abs(ball.vy) * restitution;
+            }
             ball.vx *= friction;
           }
 
           // Left Wall Collision
           if (ball.x <= ball.radius + 8) {
             ball.x = ball.radius + 8;
-            ball.vx = -ball.vx * restitution;
+            ball.vx = Math.abs(ball.vx) * restitution + 30 + Math.random() * 50;
           }
 
           // Right Wall Collision
           if (ball.x >= width - ball.radius - 8) {
             ball.x = width - ball.radius - 8;
-            ball.vx = -ball.vx * restitution;
+            ball.vx = -(Math.abs(ball.vx) * restitution + 30 + Math.random() * 50);
           }
 
           // Top Ceiling Collision
           if (ball.y <= ball.radius + 8 && ball.vy < 0) {
             ball.y = ball.radius + 8;
-            ball.vy = -ball.vy * restitution;
+            ball.vy = Math.abs(ball.vy) * restitution;
+          }
+
+          // Autonomous Vitality: If ball slows down too much, gently kick it back up
+          const speed = Math.hypot(ball.vx, ball.vy);
+          if (speed < 90 && ball.y > height * 0.45) {
+            ball.vy -= (200 + Math.random() * 160);
+            ball.vx += (Math.random() - 0.5) * 150;
           }
         });
 

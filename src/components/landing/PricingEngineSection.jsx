@@ -242,7 +242,6 @@ const PREMIUM_FEATURES = [
 export default function PricingEngineSection({ onLaunchApp }) {
   const [billingCycle, setBillingCycle] = useState('quarterly'); // 'monthly' | 'quarterly' | 'yearly'
   const [selectedCurrency, setSelectedCurrency] = useState('INR');
-  const [isCurrencyDropdownOpen, setIsCurrencyDropdownOpen] = useState(false);
 
   // Client-Side Geolocation & Locale Detection
   useEffect(() => {
@@ -515,113 +514,30 @@ export default function PricingEngineSection({ onLaunchApp }) {
               </button>
             </div>
 
-            {/* Region / Currency Selector Pill */}
-            <div style={{ position: 'relative' }}>
-              <button
-                type="button"
-                onClick={() => setIsCurrencyDropdownOpen(!isCurrencyDropdownOpen)}
-                style={{
-                  display: 'inline-flex',
-                  alignItems: 'center',
-                  gap: '8px',
-                  padding: '9px 16px',
-                  borderRadius: '9999px',
-                  backgroundColor: 'rgba(255, 255, 255, 0.95)',
-                  border: '1px solid #CBD5E1',
-                  color: '#0F172A',
-                  fontSize: '12.5px',
-                  fontWeight: 700,
-                  cursor: 'pointer',
-                  boxShadow: '0 2px 8px rgba(15, 23, 42, 0.05)',
-                  transition: 'all 0.2s ease'
-                }}
-              >
-                <Globe size={14} color="#2563EB" />
-                <span>{pricingData.flag}</span>
-                <span>{pricingData.code} ({pricingData.symbol})</span>
-                <ChevronDown size={14} color="#64748B" />
-              </button>
-
-              {/* Currency Dropdown Menu */}
-              {isCurrencyDropdownOpen && (
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: 'calc(100% + 8px)',
-                    right: 0,
-                    backgroundColor: '#FFFFFF',
-                    borderRadius: '16px',
-                    border: '1px solid #E2E8F0',
-                    boxShadow: '0 16px 36px rgba(15, 23, 42, 0.16)',
-                    padding: '6px',
-                    zIndex: 20,
-                    minWidth: '220px',
-                    textAlign: 'left'
-                  }}
-                >
-                  <div style={{ padding: '8px 12px', fontSize: '11px', fontWeight: 800, color: '#94A3B8', textTransform: 'uppercase' }}>
-                    Select Region & Currency
-                  </div>
-                  {Object.values(REGION_PRICING).map((curr) => (
-                    <button
-                      key={curr.code}
-                      type="button"
-                      onClick={() => {
-                        setSelectedCurrency(curr.code);
-                        setIsCurrencyDropdownOpen(false);
-                      }}
-                      style={{
-                        width: '100%',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'space-between',
-                        padding: '9px 12px',
-                        borderRadius: '10px',
-                        border: 'none',
-                        backgroundColor: selectedCurrency === curr.code ? '#EFF6FF' : 'transparent',
-                        color: selectedCurrency === curr.code ? '#1D4ED8' : '#0F172A',
-                        fontSize: '13px',
-                        fontWeight: selectedCurrency === curr.code ? 800 : 500,
-                        cursor: 'pointer',
-                        transition: 'background 0.15s ease'
-                      }}
-                    >
-                      <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-                        <span>{curr.flag}</span>
-                        <span>{curr.countryName}</span>
-                      </div>
-                      <span style={{ fontSize: '12px', color: '#64748B', fontWeight: 700 }}>
-                        {curr.symbol} {curr.code}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </div>
           </div>
         </div>
 
-        {/* ================= PRICING CARDS DUAL GRID ================= */}
+        {/* ================= COMPACT PRICING CARDS DUAL GRID ================= */}
         <div
           style={{
             display: 'grid',
-            gridTemplateColumns: 'repeat(auto-fit, minmax(320px, 1fr))',
-            gap: '32px',
+            gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))',
+            gap: '20px',
             alignItems: 'stretch',
-            maxWidth: '1020px',
+            maxWidth: '860px',
             margin: '0 auto'
           }}
         >
           {/* =========================================================================
-              CARD 1: JOBGEN.AI FREE
+              CARD 1: JOBGEN.AI FREE (COMPACT)
               ========================================================================= */}
           <div
             style={{
               backgroundColor: '#FFFFFF',
-              borderRadius: '24px',
+              borderRadius: '20px',
               border: '1.5px solid #E2E8F0',
-              boxShadow: '0 12px 36px rgba(15, 23, 42, 0.05), 0 2px 6px rgba(15, 23, 42, 0.03)',
-              padding: 'clamp(32px, 3.8vw, 44px) clamp(24px, 3.2vw, 36px)',
+              boxShadow: '0 8px 24px rgba(15, 23, 42, 0.04), 0 1px 3px rgba(15, 23, 42, 0.02)',
+              padding: '26px 24px 22px 24px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
@@ -631,30 +547,30 @@ export default function PricingEngineSection({ onLaunchApp }) {
           >
             <div>
               {/* Plan Header */}
-              <div style={{ marginBottom: '22px' }}>
+              <div style={{ marginBottom: '14px' }}>
                 <h3
                   style={{
                     fontFamily: '"Plus Jakarta Sans", sans-serif',
-                    fontSize: '22px',
+                    fontSize: '20px',
                     fontWeight: 900,
                     color: '#090D16',
                     letterSpacing: '-0.02em',
-                    margin: '0 0 6px 0'
+                    margin: '0 0 4px 0'
                   }}
                 >
                   JobGen.AI Free
                 </h3>
-                <p style={{ margin: 0, fontSize: '14px', color: '#64748B', fontWeight: 500 }}>
+                <p style={{ margin: 0, fontSize: '13px', color: '#64748B', fontWeight: 500 }}>
                   Start with your first resume score.
                 </p>
               </div>
 
               {/* Price Display */}
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '8px' }}>
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px', marginBottom: '4px' }}>
                 <span
                   style={{
                     fontFamily: '"Plus Jakarta Sans", sans-serif',
-                    fontSize: 'clamp(44px, 5.2vw, 56px)',
+                    fontSize: 'clamp(34px, 4vw, 42px)',
                     fontWeight: 900,
                     letterSpacing: '-0.035em',
                     color: '#090D16',
@@ -663,27 +579,27 @@ export default function PricingEngineSection({ onLaunchApp }) {
                 >
                   {pricingData.free.price}
                 </span>
-                <span style={{ fontSize: '15px', fontWeight: 600, color: '#64748B' }}>
+                <span style={{ fontSize: '14px', fontWeight: 600, color: '#64748B' }}>
                   {pricingData.free.period}
                 </span>
               </div>
 
               {/* Sub-billing line */}
-              <div style={{ fontSize: '13px', color: '#059669', fontWeight: 700, marginBottom: '32px' }}>
+              <div style={{ fontSize: '12px', color: '#059669', fontWeight: 700, marginBottom: '14px' }}>
                 {pricingData.free.billing}
               </div>
 
               {/* Divider */}
-              <div style={{ height: '1px', backgroundColor: '#F1F5F9', marginBottom: '28px' }} />
+              <div style={{ height: '1px', backgroundColor: '#F1F5F9', marginBottom: '16px' }} />
 
               {/* Feature List */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '36px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', marginBottom: '22px' }}>
                 {FREE_FEATURES.map((feat, idx) => (
-                  <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '11px' }}>
+                  <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '9px' }}>
                     <div
                       style={{
-                        width: '20px',
-                        height: '20px',
+                        width: '18px',
+                        height: '18px',
                         borderRadius: '50%',
                         backgroundColor: '#EFF6FF',
                         border: '1px solid #BFDBFE',
@@ -691,12 +607,12 @@ export default function PricingEngineSection({ onLaunchApp }) {
                         alignItems: 'center',
                         justifyContent: 'center',
                         flexShrink: 0,
-                        marginTop: '2px'
+                        marginTop: '1px'
                       }}
                     >
-                      <Check size={12} color="#1D4ED8" strokeWidth={3} />
+                      <Check size={11} color="#1D4ED8" strokeWidth={3} />
                     </div>
-                    <span style={{ fontSize: '14.5px', color: '#334155', lineHeight: 1.5, fontWeight: 500 }}>
+                    <span style={{ fontSize: '13px', color: '#334155', lineHeight: 1.45, fontWeight: 500 }}>
                       {feat}
                     </span>
                   </div>
@@ -714,14 +630,14 @@ export default function PricingEngineSection({ onLaunchApp }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '8px',
+                  gap: '6px',
                   width: '100%',
-                  padding: '14px 24px',
-                  borderRadius: '14px',
+                  padding: '11px 20px',
+                  borderRadius: '12px',
                   backgroundColor: '#F8FAFC',
                   border: '1.5px solid #CBD5E1',
                   color: '#090D16',
-                  fontSize: '14.5px',
+                  fontSize: '13.5px',
                   fontWeight: 800,
                   textDecoration: 'none',
                   cursor: 'pointer',
@@ -743,25 +659,25 @@ export default function PricingEngineSection({ onLaunchApp }) {
                 }}
               >
                 <span>Get free ATS score</span>
-                <ArrowRight size={16} />
+                <ArrowRight size={15} />
               </a>
             </div>
           </div>
 
           {/* =========================================================================
-              CARD 2: JOBGEN.AI PREMIUM (HIGHLIGHTED WITH SPECULAR BLUE ACCENTS)
+              CARD 2: JOBGEN.AI PREMIUM (COMPACT HIGHLIGHTED)
               ========================================================================= */}
           <div
             style={{
               backgroundColor: '#FFFFFF',
-              borderRadius: '24px',
+              borderRadius: '20px',
               border: '2px solid #2563EB',
               boxShadow: `
                 0 0 0 1px rgba(37, 99, 235, 0.15),
-                0 22px 50px -10px rgba(37, 99, 235, 0.18),
-                0 4px 16px rgba(15, 23, 42, 0.05)
+                0 18px 40px -10px rgba(37, 99, 235, 0.16),
+                0 4px 14px rgba(15, 23, 42, 0.04)
               `,
-              padding: 'clamp(32px, 3.8vw, 44px) clamp(24px, 3.2vw, 36px)',
+              padding: '26px 24px 22px 24px',
               display: 'flex',
               flexDirection: 'column',
               justifyContent: 'space-between',
@@ -774,17 +690,17 @@ export default function PricingEngineSection({ onLaunchApp }) {
               <div
                 style={{
                   position: 'absolute',
-                  top: '-14px',
-                  right: '28px',
-                  padding: '5px 14px',
+                  top: '-12px',
+                  right: '24px',
+                  padding: '4px 12px',
                   borderRadius: '9999px',
                   background: 'linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%)',
                   color: '#FFFFFF',
-                  fontSize: '11px',
+                  fontSize: '10.5px',
                   fontWeight: 900,
                   letterSpacing: '0.04em',
                   textTransform: 'uppercase',
-                  boxShadow: '0 4px 14px rgba(37, 99, 235, 0.4)'
+                  boxShadow: '0 4px 12px rgba(37, 99, 235, 0.35)'
                 }}
               >
                 {currentPlan.badge}
@@ -793,12 +709,12 @@ export default function PricingEngineSection({ onLaunchApp }) {
 
             <div>
               {/* Plan Header */}
-              <div style={{ marginBottom: '22px' }}>
-                <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '6px' }}>
+              <div style={{ marginBottom: '14px' }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '7px', marginBottom: '4px' }}>
                   <h3
                     style={{
                       fontFamily: '"Plus Jakarta Sans", sans-serif',
-                      fontSize: '22px',
+                      fontSize: '20px',
                       fontWeight: 900,
                       color: '#090D16',
                       letterSpacing: '-0.02em',
@@ -807,20 +723,19 @@ export default function PricingEngineSection({ onLaunchApp }) {
                   >
                     JobGen.AI Premium
                   </h3>
-                  <Zap size={18} color="#2563EB" fill="#2563EB" />
+                  <Zap size={16} color="#2563EB" fill="#2563EB" />
                 </div>
-                <p style={{ margin: 0, fontSize: '14px', color: '#64748B', fontWeight: 500 }}>
+                <p style={{ margin: 0, fontSize: '13px', color: '#64748B', fontWeight: 500 }}>
                   Complete autonomous job-search engine with Emma AI.
                 </p>
               </div>
 
               {/* Price Display */}
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '8px' }}>
-                {/* Strikethrough original price if quarterly or yearly */}
+              <div style={{ display: 'flex', alignItems: 'baseline', gap: '6px', marginBottom: '4px' }}>
                 {currentPlan.originalPrice && (
                   <span
                     style={{
-                      fontSize: '22px',
+                      fontSize: '18px',
                       fontWeight: 700,
                       color: '#94A3B8',
                       textDecoration: 'line-through'
@@ -833,7 +748,7 @@ export default function PricingEngineSection({ onLaunchApp }) {
                 <span
                   style={{
                     fontFamily: '"Plus Jakarta Sans", sans-serif',
-                    fontSize: 'clamp(44px, 5.2vw, 56px)',
+                    fontSize: 'clamp(34px, 4vw, 42px)',
                     fontWeight: 900,
                     letterSpacing: '-0.035em',
                     color: '#1D4ED8',
@@ -843,41 +758,41 @@ export default function PricingEngineSection({ onLaunchApp }) {
                   {currentPlan.price}
                 </span>
 
-                <span style={{ fontSize: '15px', fontWeight: 600, color: '#64748B' }}>
+                <span style={{ fontSize: '14px', fontWeight: 600, color: '#64748B' }}>
                   {currentPlan.period}
                 </span>
               </div>
 
               {/* Sub-billing line */}
-              <div style={{ fontSize: '13px', color: '#334155', fontWeight: 600, marginBottom: '32px' }}>
+              <div style={{ fontSize: '12px', color: '#334155', fontWeight: 600, marginBottom: '14px' }}>
                 {currentPlan.billedText}
               </div>
 
               {/* Divider */}
-              <div style={{ height: '1px', backgroundColor: '#E2E8F0', marginBottom: '24px' }} />
+              <div style={{ height: '1px', backgroundColor: '#E2E8F0', marginBottom: '14px' }} />
 
               {/* "Everything in Free, plus:" label */}
               <div
                 style={{
-                  fontSize: '12px',
+                  fontSize: '11px',
                   fontWeight: 800,
                   color: '#1D4ED8',
                   textTransform: 'uppercase',
                   letterSpacing: '0.04em',
-                  marginBottom: '16px'
+                  marginBottom: '10px'
                 }}
               >
                 Everything in Free, plus:
               </div>
 
               {/* Feature List */}
-              <div style={{ display: 'flex', flexDirection: 'column', gap: '15px', marginBottom: '36px' }}>
+              <div style={{ display: 'flex', flexDirection: 'column', gap: '9px', marginBottom: '22px' }}>
                 {PREMIUM_FEATURES.map((feat, idx) => (
-                  <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '11px' }}>
+                  <div key={idx} style={{ display: 'flex', alignItems: 'flex-start', gap: '9px' }}>
                     <div
                       style={{
-                        width: '20px',
-                        height: '20px',
+                        width: '18px',
+                        height: '18px',
                         borderRadius: '50%',
                         backgroundColor: '#DBEAFE',
                         border: '1px solid #93C5FD',
@@ -885,12 +800,12 @@ export default function PricingEngineSection({ onLaunchApp }) {
                         alignItems: 'center',
                         justifyContent: 'center',
                         flexShrink: 0,
-                        marginTop: '2px'
+                        marginTop: '1px'
                       }}
                     >
-                      <Check size={12} color="#1D4ED8" strokeWidth={3} />
+                      <Check size={11} color="#1D4ED8" strokeWidth={3} />
                     </div>
-                    <span style={{ fontSize: '14.5px', color: '#0F172A', lineHeight: 1.5, fontWeight: 600 }}>
+                    <span style={{ fontSize: '13px', color: '#0F172A', lineHeight: 1.45, fontWeight: 600 }}>
                       {feat}
                     </span>
                   </div>
@@ -908,36 +823,36 @@ export default function PricingEngineSection({ onLaunchApp }) {
                   display: 'flex',
                   alignItems: 'center',
                   justifyContent: 'center',
-                  gap: '8px',
+                  gap: '6px',
                   width: '100%',
-                  padding: '14px 24px',
-                  borderRadius: '14px',
+                  padding: '11px 20px',
+                  borderRadius: '12px',
                   background: 'linear-gradient(135deg, #1D4ED8 0%, #2563EB 100%)',
                   color: '#FFFFFF',
-                  fontSize: '15px',
+                  fontSize: '14px',
                   fontWeight: 800,
                   textDecoration: 'none',
                   cursor: 'pointer',
                   transition: 'all 0.2s cubic-bezier(0.16, 1, 0.3, 1)',
-                  boxShadow: '0 8px 24px rgba(29, 78, 216, 0.35)',
+                  boxShadow: '0 6px 20px rgba(29, 78, 216, 0.32)',
                   boxSizing: 'border-box'
                 }}
                 onMouseEnter={(e) => {
-                  e.currentTarget.style.transform = 'translateY(-2px)';
-                  e.currentTarget.style.boxShadow = '0 12px 32px rgba(29, 78, 216, 0.45)';
+                  e.currentTarget.style.transform = 'translateY(-1px)';
+                  e.currentTarget.style.boxShadow = '0 10px 26px rgba(29, 78, 216, 0.42)';
                   e.currentTarget.style.filter = 'brightness(1.05)';
                 }}
                 onMouseLeave={(e) => {
                   e.currentTarget.style.transform = 'translateY(0)';
-                  e.currentTarget.style.boxShadow = '0 8px 24px rgba(29, 78, 216, 0.35)';
+                  e.currentTarget.style.boxShadow = '0 6px 20px rgba(29, 78, 216, 0.32)';
                   e.currentTarget.style.filter = 'none';
                 }}
               >
                 <span>Start free trial</span>
-                <ArrowRight size={16} />
+                <ArrowRight size={15} />
               </a>
 
-              <div style={{ textAlign: 'center', marginTop: '12px', fontSize: '12px', color: '#64748B' }}>
+              <div style={{ textAlign: 'center', marginTop: '10px', fontSize: '11.5px', color: '#64748B' }}>
                 7 days free &bull; Cancel anytime with 1 click
               </div>
             </div>
