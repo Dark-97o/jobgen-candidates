@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Plus, Minus, ArrowRight } from 'lucide-react';
+import { RollingText } from '@/components/v1/skiper27';
 
 const FAQ_ITEMS = [
   {
@@ -85,7 +86,8 @@ export default function FAQSection({ onLaunchApp }) {
               margin: '0 0 14px 0'
             }}
           >
-            Have more <span style={{ color: '#1A53CF' }}>questions?</span>
+            <RollingText text="Have more " />
+            <RollingText text="questions?" style={{ color: '#1A53CF' }} />
           </h2>
 
           <p

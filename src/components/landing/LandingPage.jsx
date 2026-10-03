@@ -44,6 +44,7 @@ import MeetEmmaSection from './MeetEmmaSection';
 import ApplicationsToOffersSection from './ApplicationsToOffersSection';
 import PricingEngineSection from './PricingEngineSection';
 import FAQSection from './FAQSection';
+import { RollingText } from '@/components/v1/skiper27';
 
 // ==========================================
 // STATIC DATA & CONTENT FROM CANDIDATES.JOBGEN.AI
@@ -699,7 +700,8 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 marginBottom: '16px'
               }}
             >
-              Unmatched <span style={{ color: '#1A53CF' }}>Productivity</span>
+              <RollingText text="Unmatched " />
+              <RollingText text="Productivity" style={{ color: '#1A53CF' }} />
             </h2>
 
             <p style={{ fontSize: '16.5px', color: '#475569', lineHeight: 1.6, maxWidth: '640px' }}>

@@ -1,4 +1,5 @@
 import React from 'react';
+import { RollingText } from '@/components/v1/skiper27';
 import { 
   FileEdit, 
   Puzzle, 
@@ -376,7 +377,7 @@ export default function AutonomousWorkspacePreview({
                   margin: '0 0 16px 0'
                 }}
               >
-                Explore the Autonomous<br />Candidate Workspace
+                <RollingText text="Explore the Autonomous Candidate Workspace" />
               </h2>
 
               {/* Subtitle Paragraph */}

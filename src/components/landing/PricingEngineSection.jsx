@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Check, Sparkles, ArrowRight, ShieldCheck, Zap, Globe, ChevronDown } from 'lucide-react';
 import BlueMistAnimation from './BlueMistAnimation';
 import WhiteMatrixGridAnimation from './WhiteMatrixGridAnimation';
+import { RollingText } from '@/components/v1/skiper27';
 
 /**
  * Regional Currency Configuration
@@ -385,7 +386,8 @@ export default function PricingEngineSection({ onLaunchApp }) {
               margin: '0 0 12px 0'
             }}
           >
-            Start free. Upgrade when you want the <span style={{ color: '#1A53CF' }}>full engine</span>
+            <RollingText text="Start free. Upgrade when you want the " />
+            <RollingText text="full engine" style={{ color: '#1A53CF' }} />
           </h2>
 
           <p

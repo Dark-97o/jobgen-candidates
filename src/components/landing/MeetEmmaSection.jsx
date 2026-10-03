@@ -1,4 +1,5 @@
 import React, { useState, useRef } from 'react';
+import { RollingText } from '@/components/v1/skiper27';
 import { 
   Mic, 
   MicOff, 
@@ -379,7 +380,7 @@ export default function MeetEmmaSection({ onLaunchApp, onScoreClick }) {
                   margin: '0 0 10px 0'
                 }}
               >
-                Meet Emma
+                <RollingText text="Meet Emma" />
               </h3>
               <p
                 style={{
@@ -413,7 +414,7 @@ export default function MeetEmmaSection({ onLaunchApp, onScoreClick }) {
                 textShadow: '0 4px 20px rgba(0, 0, 0, 0.5)'
               }}
             >
-              Confident in your resume ?
+              <RollingText text="Confident in your resume ?" />
             </h2>
 
             {/* Description Subhead */}
@@ -427,7 +428,7 @@ export default function MeetEmmaSection({ onLaunchApp, onScoreClick }) {
                 letterSpacing: '-0.02em'
               }}
             >
-              Let Emma score it
+              <RollingText text="Let Emma score it" />
             </p>
 
             {/* Drag & Drop Resume Section */}

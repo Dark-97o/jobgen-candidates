@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Star } from 'lucide-react';
+import { RollingText } from '@/components/v1/skiper27';
 
 const CURATED_STORIES = [
   {
@@ -161,7 +162,8 @@ export default function ApplicationsToOffersSection() {
               marginBottom: '14px'
             }}
           >
-            From applications to <span style={{ color: '#38BDF8' }}>offers.</span>
+            <RollingText text="From applications to " />
+            <RollingText text="offers." style={{ color: '#38BDF8' }} />
           </h2>
           <p
             style={{

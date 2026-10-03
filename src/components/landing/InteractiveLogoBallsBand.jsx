@@ -1,4 +1,5 @@
 import React, { useEffect, useRef } from 'react';
+import { RollingText } from '@/components/v1/skiper27';
 
 const COMPANIES = [
   { name: 'Atlassian', src: '/logos/atlassian.webp', brandColor: '#0052CC' },
@@ -440,7 +441,7 @@ export default function InteractiveLogoBallsBand() {
                 lineHeight: 1.08
               }}
             >
-              JobGen candidates have landed dream roles at industry giants
+              <RollingText text="JobGen candidates have landed dream roles at industry giants" />
             </h2>
           </div>
 
