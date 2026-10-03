@@ -6,11 +6,12 @@ import { motion, AnimatePresence } from "framer-motion";
 /**
  * Skiper8 / WordsPreloader
  * 
- * Dennis Snellenberg inspired typography-based words preloader component from Skiper UI:
+ * Dennis Snellenberg inspired typography-based words preloader component:
  * - Fluid multilingual word-switching animation ("Hello", "Bonjour", "Ciao", etc.)
- * - Signature curved SVG bottom wipe with cubic-bezier tension easing [0.76, 0, 0.24, 1]
- * - Smooth exit animation sliding up out of view on load completion
- * - Highly customizable word list, colors, speed, and callback hooks
+ * - Deep semi-circle curved SVG bottom wipe that arches up over the page
+ * - No glowing dot (clean minimalist typography)
+ * - Transparent container with visible overflow so the semi-circle arch is prominently visible
+ * - Custom cubic-bezier tension easing [0.76, 0, 0.24, 1]
  * 
  * Usage:
  *   import { Skiper8, WordsPreloader } from "@/components/v1/skiper8";
@@ -31,17 +32,17 @@ const DEFAULT_WORDS = [
 const opacityVariants = {
   initial: {
     opacity: 0,
-    y: 8
+    y: 10
   },
   enter: {
-    opacity: 0.95,
+    opacity: 1,
     y: 0,
-    transition: { duration: 0.25, ease: "easeOut" }
+    transition: { duration: 0.22, ease: "easeOut" }
   },
   exit: {
     opacity: 0,
-    y: -8,
-    transition: { duration: 0.2, ease: "easeIn" }
+    y: -10,
+    transition: { duration: 0.16, ease: "easeIn" }
   }
 };
 
@@ -49,9 +50,8 @@ export function Skiper8({
   words = DEFAULT_WORDS,
   backgroundColor = "#141516",
   textColor = "#FFFFFF",
-  dotColor = "#FFFFFF",
-  firstWordDelay = 800,
-  wordInterval = 160,
+  firstWordDelay = 700,
+  wordInterval = 150,
   onComplete,
   className = "",
   style = {}
@@ -90,9 +90,9 @@ export function Skiper8({
         setIsExiting(true);
         const completeTimer = setTimeout(() => {
           onComplete?.();
-        }, 850);
+        }, 900);
         return () => clearTimeout(completeTimer);
-      }, 350);
+      }, 300);
       return () => clearTimeout(exitTimer);
     }
 
@@ -109,17 +109,22 @@ export function Skiper8({
   const width = dimension.width || 1920;
   const height = dimension.height || 1080;
 
-  const initialPath = `M0 0 L${width} 0 L${width} ${height} Q${width / 2} ${height + 300} 0 ${height} L0 0`;
+  // Deep semi-circle curve depth (scaled proportionally with width)
+  const curveDepth = Math.max(220, Math.min(Math.round(width * 0.32), 650));
+
+  // Initial path: covers the full screen with a deep semi-circular curve hanging below the viewport
+  const initialPath = `M0 0 L${width} 0 L${width} ${height} Q${width / 2} ${height + curveDepth} 0 ${height} L0 0`;
+  // Target path: smooths slightly as it clears the top
   const targetPath = `M0 0 L${width} 0 L${width} ${height} Q${width / 2} ${height} 0 ${height} L0 0`;
 
   const curveVariants = {
     initial: {
       d: initialPath,
-      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1] }
+      transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1] }
     },
     exit: {
       d: targetPath,
-      transition: { duration: 0.7, ease: [0.76, 0, 0.24, 1], delay: 0.25 }
+      transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.28 }
     }
   };
 
@@ -128,8 +133,8 @@ export function Skiper8({
       top: 0
     },
     exit: {
-      top: "-100vh",
-      transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.2 }
+      top: `calc(-100vh - ${curveDepth}px)`,
+      transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1], delay: 0.15 }
     }
   };
 
@@ -151,8 +156,8 @@ export function Skiper8({
             alignItems: "center",
             justifyContent: "center",
             zIndex: 99999,
-            backgroundColor,
-            overflow: "hidden",
+            backgroundColor: "transparent", // Transparent container so the SVG semi-circle is 100% visible
+            overflow: "visible", // Allows the curved semi-circle to project below without clipping
             pointerEvents: "auto",
             userSelect: "none",
             ...style
@@ -160,7 +165,7 @@ export function Skiper8({
         >
           {dimension.width > 0 && (
             <>
-              {/* Animated Text Display with Luminous Dot */}
+              {/* Clean Typography Word Display (No Glowing Dot) */}
               <div
                 style={{
                   position: "absolute",
@@ -168,20 +173,9 @@ export function Skiper8({
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "center",
-                  gap: "14px"
+                  pointerEvents: "none"
                 }}
               >
-                <span
-                  style={{
-                    display: "inline-block",
-                    width: "10px",
-                    height: "10px",
-                    borderRadius: "50%",
-                    backgroundColor: dotColor,
-                    boxShadow: `0 0 12px ${dotColor}`,
-                    flexShrink: 0
-                  }}
-                />
                 <AnimatePresence mode="wait">
                   <motion.p
                     key={words[index]}
@@ -191,12 +185,13 @@ export function Skiper8({
                     exit="exit"
                     style={{
                       fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
-                      fontSize: "clamp(34px, 4vw, 48px)",
-                      fontWeight: 600,
-                      letterSpacing: "-0.02em",
+                      fontSize: "clamp(34px, 4.5vw, 56px)",
+                      fontWeight: 700,
+                      letterSpacing: "-0.035em",
                       color: textColor,
                       margin: 0,
-                      padding: 0
+                      padding: 0,
+                      textAlign: "center"
                     }}
                   >
                     {words[index]}
@@ -204,14 +199,15 @@ export function Skiper8({
                 </AnimatePresence>
               </div>
 
-              {/* Curved Bottom SVG Transition Overlay */}
+              {/* Full-Bleed Curved SVG Overlay (The Semi-Circle Curtain) */}
               <svg
                 style={{
                   position: "absolute",
                   top: 0,
                   left: 0,
                   width: "100%",
-                  height: "calc(100% + 300px)",
+                  height: `calc(100% + ${curveDepth}px)`,
+                  overflow: "visible",
                   pointerEvents: "none"
                 }}
               >
