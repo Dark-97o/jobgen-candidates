@@ -287,37 +287,7 @@ export default function MeetEmmaSection({ onLaunchApp, onScoreClick }) {
                   }}
                 />
 
-                {/* Top-Left Live Status Pill */}
-                <div
-                  style={{
-                    position: 'absolute',
-                    top: '14px',
-                    left: '16px',
-                    zIndex: 6,
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    padding: '6px 14px',
-                    borderRadius: '9999px',
-                    backgroundColor: 'rgba(10, 15, 28, 0.78)',
-                    backdropFilter: 'blur(16px)',
-                    border: '1px solid rgba(255, 255, 255, 0.18)',
-                    fontSize: '12px',
-                    color: '#FFFFFF',
-                    fontWeight: 700
-                  }}
-                >
-                  <span 
-                    style={{ 
-                      width: '8px', 
-                      height: '8px', 
-                      borderRadius: '50%', 
-                      backgroundColor: '#10B981',
-                      boxShadow: '0 0 10px #10B981'
-                    }} 
-                  />
-                  <span>Live Simulation Active</span>
-                </div>
+
 
                 {/* Bottom Floating Video Call Controls HUD Over the Image */}
                 <div

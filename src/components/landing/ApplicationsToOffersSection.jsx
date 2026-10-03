@@ -124,28 +124,32 @@ export default function ApplicationsToOffersSection() {
       className="landing-testimonials-section"
       style={{
         padding: '80px 0 90px 0',
-        backgroundColor: '#F8FAFC',
-        borderTop: '1px solid #E2E8F0',
-        position: 'relative'
+        backgroundColor: '#090D16',
+        color: '#FFFFFF',
+        borderTop: '1px solid rgba(255, 255, 255, 0.08)',
+        position: 'relative',
+        overflow: 'hidden'
       }}
     >
-      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px' }}>
+      {/* Dark Ambient Radial Gradients */}
+      <div
+        aria-hidden="true"
+        style={{
+          position: 'absolute',
+          inset: 0,
+          pointerEvents: 'none',
+          backgroundImage: `
+            radial-gradient(circle at 15% 20%, rgba(30, 58, 138, 0.35) 0%, transparent 45%),
+            radial-gradient(circle at 85% 80%, rgba(14, 116, 144, 0.25) 0%, transparent 45%)
+          `,
+          zIndex: 0
+        }}
+      />
+
+      <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
         
         {/* Header */}
         <div style={{ textAlign: 'center', maxWidth: '680px', margin: '0 auto 48px auto' }}>
-          <div 
-            style={{
-              display: 'inline-block',
-              fontSize: '11px',
-              fontWeight: 800,
-              textTransform: 'uppercase',
-              letterSpacing: '0.12em',
-              color: '#1A53CF',
-              marginBottom: '10px'
-            }}
-          >
-            Success stories
-          </div>
           <h2
             style={{
               fontFamily: '"Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, sans-serif',
@@ -153,16 +157,16 @@ export default function ApplicationsToOffersSection() {
               fontWeight: 800,
               letterSpacing: '-0.035em',
               lineHeight: 1.12,
-              color: '#0F172A',
+              color: '#FFFFFF',
               marginBottom: '14px'
             }}
           >
-            From applications to <span style={{ color: '#1A53CF' }}>offers.</span>
+            From applications to <span style={{ color: '#38BDF8' }}>offers.</span>
           </h2>
           <p
             style={{
               fontSize: '16px',
-              color: '#64748B',
+              color: '#94A3B8',
               lineHeight: 1.6,
               margin: '0 auto'
             }}
@@ -188,13 +192,15 @@ export default function ApplicationsToOffersSection() {
                 breakInside: 'avoid',
                 WebkitColumnBreakInside: 'avoid',
                 marginBottom: '16px',
-                backgroundColor: '#FFFFFF',
+                backgroundColor: 'rgba(15, 23, 42, 0.85)',
                 borderRadius: '16px',
-                border: '1px solid #E2E8F0',
-                borderTop: story.isVerified ? '3px solid #0D9488' : '3px solid #E2E8F0',
+                border: '1px solid rgba(255, 255, 255, 0.1)',
+                borderTop: story.isVerified ? '3px solid #14B8A6' : '3px solid rgba(255, 255, 255, 0.18)',
                 padding: '24px',
-                boxShadow: '0 4px 18px rgba(15, 23, 42, 0.04)',
-                transition: 'transform 0.22s ease, box-shadow 0.22s ease',
+                boxShadow: '0 8px 30px rgba(0, 0, 0, 0.35)',
+                backdropFilter: 'blur(16px)',
+                WebkitBackdropFilter: 'blur(16px)',
+                transition: 'transform 0.22s ease, box-shadow 0.22s ease, border-color 0.22s ease',
                 display: 'flex',
                 flexDirection: 'column'
               }}
@@ -208,16 +214,16 @@ export default function ApplicationsToOffersSection() {
                     gap: '6px',
                     padding: '3px 9px',
                     borderRadius: '9999px',
-                    backgroundColor: '#F0FDFA',
-                    border: '1px solid #99F6E4',
-                    color: '#0F766E',
+                    backgroundColor: 'rgba(20, 184, 166, 0.15)',
+                    border: '1px solid rgba(20, 184, 166, 0.35)',
+                    color: '#2DD4BF',
                     fontSize: '10.5px',
                     fontWeight: 600,
                     marginBottom: '14px',
                     width: 'fit-content'
                   }}
                 >
-                  <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#0D9488' }} />
+                  <span style={{ width: '5px', height: '5px', borderRadius: '50%', backgroundColor: '#14B8A6', boxShadow: '0 0 6px #14B8A6' }} />
                   Verified Chrome Web Store review
                 </div>
               )}
@@ -239,7 +245,7 @@ export default function ApplicationsToOffersSection() {
                 style={{
                   fontSize: '14px',
                   lineHeight: '1.68',
-                  color: '#334155',
+                  color: '#E2E8F0',
                   marginBottom: '18px',
                   whiteSpace: 'pre-line'
                 }}
@@ -254,7 +260,7 @@ export default function ApplicationsToOffersSection() {
                   alignItems: 'center',
                   gap: '12px',
                   paddingTop: '16px',
-                  borderTop: '1px solid #F1F5F9',
+                  borderTop: '1px solid rgba(255, 255, 255, 0.08)',
                   marginTop: 'auto'
                 }}
               >
@@ -277,10 +283,10 @@ export default function ApplicationsToOffersSection() {
                   {story.initials}
                 </div>
                 <div>
-                  <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#0F172A' }}>
+                  <div style={{ fontSize: '13.5px', fontWeight: 700, color: '#FFFFFF' }}>
                     {story.name}
                   </div>
-                  <div style={{ fontSize: '11.5px', color: '#64748B', marginTop: '1px' }}>
+                  <div style={{ fontSize: '11.5px', color: '#94A3B8', marginTop: '1px' }}>
                     {story.role}
                   </div>
                 </div>
@@ -301,22 +307,24 @@ export default function ApplicationsToOffersSection() {
                 gap: '8px',
                 padding: '10px 24px',
                 borderRadius: '9999px',
-                border: '1px solid #CBD5E1',
-                backgroundColor: '#FFFFFF',
-                color: '#0F172A',
+                border: '1px solid rgba(255, 255, 255, 0.2)',
+                backgroundColor: 'rgba(255, 255, 255, 0.08)',
+                color: '#FFFFFF',
                 fontSize: '13.5px',
                 fontWeight: 700,
                 cursor: 'pointer',
                 transition: 'all 0.2s ease',
-                boxShadow: '0 2px 8px rgba(15, 23, 42, 0.04)'
+                backdropFilter: 'blur(10px)'
               }}
               onMouseEnter={(e) => {
-                e.currentTarget.style.borderColor = '#1A53CF';
-                e.currentTarget.style.color = '#1A53CF';
+                e.currentTarget.style.borderColor = '#38BDF8';
+                e.currentTarget.style.color = '#38BDF8';
+                e.currentTarget.style.backgroundColor = 'rgba(56, 189, 248, 0.12)';
               }}
               onMouseLeave={(e) => {
-                e.currentTarget.style.borderColor = '#CBD5E1';
-                e.currentTarget.style.color = '#0F172A';
+                e.currentTarget.style.borderColor = 'rgba(255, 255, 255, 0.2)';
+                e.currentTarget.style.color = '#FFFFFF';
+                e.currentTarget.style.backgroundColor = 'rgba(255, 255, 255, 0.08)';
               }}
             >
               Read {remainingCount} more stories
@@ -339,7 +347,8 @@ export default function ApplicationsToOffersSection() {
         }
         .offers-card:hover {
           transform: translateY(-3px);
-          box-shadow: 0 12px 28px rgba(15, 23, 42, 0.08) !important;
+          border-color: rgba(56, 189, 248, 0.4) !important;
+          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.45) !important;
         }
       `}</style>
     </section>

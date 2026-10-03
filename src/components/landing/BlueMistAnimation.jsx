@@ -89,7 +89,7 @@ export default function BlueMistAnimation() {
         flowFreqY: 0.0008 + Math.random() * 0.001,
         phase: Math.random() * Math.PI * 2,
         pulseSpeed: 0.001 + Math.random() * 0.0015,
-        alpha: 0.09 + Math.random() * 0.14,
+        alpha: 0.18 + Math.random() * 0.18,
         color
       });
     }
@@ -202,7 +202,7 @@ export default function BlueMistAnimation() {
           maxWidth: '900px',
           maxHeight: '900px',
           borderRadius: '45% 55% 63% 37% / 42% 44% 56% 58%',
-          background: 'radial-gradient(circle at 35% 35%, rgba(59, 130, 246, 0.25) 0%, rgba(147, 197, 253, 0.12) 45%, transparent 70%)',
+          background: 'radial-gradient(circle at 35% 35%, rgba(59, 130, 246, 0.38) 0%, rgba(147, 197, 253, 0.22) 45%, transparent 72%)',
           filter: 'blur(60px)',
           animation: 'mistMorph1 18s ease-in-out infinite alternate',
           transformOrigin: 'center center'
@@ -218,7 +218,7 @@ export default function BlueMistAnimation() {
           maxWidth: '950px',
           maxHeight: '950px',
           borderRadius: '58% 42% 38% 62% / 54% 60% 40% 46%',
-          background: 'radial-gradient(circle at 65% 65%, rgba(37, 99, 235, 0.22) 0%, rgba(96, 165, 250, 0.1) 50%, transparent 72%)',
+          background: 'radial-gradient(circle at 65% 65%, rgba(37, 99, 235, 0.34) 0%, rgba(96, 165, 250, 0.18) 50%, transparent 74%)',
           filter: 'blur(70px)',
           animation: 'mistMorph2 22s ease-in-out infinite alternate',
           transformOrigin: 'center center'
@@ -234,7 +234,7 @@ export default function BlueMistAnimation() {
           maxWidth: '700px',
           maxHeight: '600px',
           borderRadius: '50%',
-          background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.14) 0%, rgba(59, 130, 246, 0.08) 45%, transparent 70%)',
+          background: 'radial-gradient(ellipse at center, rgba(6, 182, 212, 0.25) 0%, rgba(59, 130, 246, 0.15) 45%, transparent 72%)',
           filter: 'blur(80px)',
           animation: 'mistMorph3 16s ease-in-out infinite alternate'
         }}

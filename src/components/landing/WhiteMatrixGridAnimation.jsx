@@ -334,7 +334,7 @@ export default function WhiteMatrixGridAnimation({ style = {} }) {
         overflow: 'hidden',
         pointerEvents: 'none',
         zIndex: 0,
-        backgroundColor: '#FFFFFF',
+        backgroundColor: 'transparent',
         ...style
       }}
     >

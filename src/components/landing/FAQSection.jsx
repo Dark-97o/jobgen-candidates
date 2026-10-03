@@ -73,19 +73,6 @@ export default function FAQSection({ onLaunchApp }) {
       >
         {/* Section Header */}
         <div style={{ textAlign: 'center', maxWidth: '640px', margin: '0 auto 48px auto' }}>
-          <div
-            style={{
-              display: 'inline-block',
-              fontSize: '11px',
-              fontWeight: 800,
-              letterSpacing: '0.12em',
-              textTransform: 'uppercase',
-              color: '#1A53CF',
-              marginBottom: '10px'
-            }}
-          >
-            FAQ
-          </div>
 
           <h2
             style={{

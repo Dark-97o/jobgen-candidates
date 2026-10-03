@@ -581,8 +581,8 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             {[
               { label: 'Features', id: 'features' },
               { label: 'ATS Scanner', id: 'ats-scanner' },
-              { label: 'Stories', id: 'testimonials' },
               { label: 'Pricing', id: 'pricing' },
+              { label: 'Reviews', id: 'testimonials' },
               { label: 'FAQ', id: 'faq' }
             ].map(item => (
               <button
@@ -770,17 +770,17 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       />
 
       {/* =========================================================================
-          6. "FROM APPLICATIONS TO OFFERS." SUCCESS STORIES / TESTIMONIALS SECTION
-          ========================================================================= */}
-      <ApplicationsToOffersSection />
-
-      {/* =========================================================================
-          7. PRICING ENGINE: WHITE THEME WITH BLUE MIST & DYNAMIC REGIONAL PRICING
+          6. PRICING ENGINE: WHITE THEME WITH BLUE MIST, LINES & DYNAMIC REGIONAL PRICING
           ========================================================================= */}
       <PricingEngineSection onLaunchApp={onLaunchApp} />
 
       {/* =========================================================================
-          7. LIGHT THEME FAQ SECTION
+          7. "FROM APPLICATIONS TO OFFERS." REVIEWS / TESTIMONIALS SECTION (DARK THEME)
+          ========================================================================= */}
+      <ApplicationsToOffersSection />
+
+      {/* =========================================================================
+          8. LIGHT THEME FAQ SECTION
           ========================================================================= */}
       <FAQSection onLaunchApp={onLaunchApp} />
 
@@ -826,8 +826,8 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             <div style={{ display: 'flex', gap: '20px' }}>
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('features')}>Features</span>
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('ats-scanner')}>ATS Scanner</span>
-              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('testimonials')}>Stories</span>
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('pricing')}>Pricing</span>
+              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('testimonials')}>Reviews</span>
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('faq')}>FAQ</span>
               <span style={{ cursor: 'pointer' }} onClick={onSignIn}>Sign In</span>
             </div>
