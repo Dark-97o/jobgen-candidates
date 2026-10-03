@@ -50,8 +50,8 @@ export function Skiper8({
   words = DEFAULT_WORDS,
   backgroundColor = "#141516",
   textColor = "#FFFFFF",
-  firstWordDelay = 700,
-  wordInterval = 150,
+  firstWordDelay = 350,
+  wordInterval = 110,
   onComplete,
   className = "",
   style = {}
@@ -101,9 +101,9 @@ export function Skiper8({
         setIsExiting(true);
         const completeTimer = setTimeout(() => {
           onComplete?.();
-        }, 900);
+        }, 650);
         return () => clearTimeout(completeTimer);
-      }, 300);
+      }, 120);
       return () => clearTimeout(exitTimer);
     }
 
@@ -131,11 +131,11 @@ export function Skiper8({
   const curveVariants = {
     initial: {
       d: initialPath,
-      transition: { duration: 0.75, ease: [0.76, 0, 0.24, 1] }
+      transition: { duration: 0.6, ease: [0.76, 0, 0.24, 1] }
     },
     exit: {
       d: targetPath,
-      transition: { duration: 0.8, ease: [0.76, 0, 0.24, 1], delay: 0.28 }
+      transition: { duration: 0.65, ease: [0.76, 0, 0.24, 1], delay: 0.15 }
     }
   };
 
@@ -145,7 +145,7 @@ export function Skiper8({
     },
     exit: {
       top: `calc(-100vh - ${curveDepth}px)`,
-      transition: { duration: 0.85, ease: [0.76, 0, 0.24, 1], delay: 0.15 }
+      transition: { duration: 0.65, ease: [0.76, 0, 0.24, 1], delay: 0.08 }
     }
   };
 

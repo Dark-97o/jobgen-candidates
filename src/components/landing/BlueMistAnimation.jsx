@@ -53,7 +53,7 @@ export default function BlueMistAnimation() {
     // Resize handling with high DPR
     const handleResize = () => {
       if (!canvas) return;
-      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      const dpr = Math.min(window.devicePixelRatio || 1, 1.5);
       width = canvas.offsetWidth;
       height = canvas.offsetHeight;
       canvas.width = width * dpr;
@@ -189,18 +189,36 @@ export default function BlueMistAnimation() {
         ctx.restore();
       }
 
+      if (isVisible) {
+        animationFrameId = requestAnimationFrame(render);
+      } else {
+        animationFrameId = null;
+      }
+    };
+
+    const startLoop = () => {
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       animationFrameId = requestAnimationFrame(render);
     };
 
-    render();
+    const stopLoop = () => {
+      if (animationFrameId) {
+        cancelAnimationFrame(animationFrameId);
+        animationFrameId = null;
+      }
+    };
 
-    if ('IntersectionObserver' in window) {
+    startLoop();
+
+    if ('IntersectionObserver' in window && container) {
       observer = new IntersectionObserver(([entry]) => {
         isVisible = entry.isIntersecting;
-        if (isVisible && !animationFrameId) {
-          animationFrameId = requestAnimationFrame(render);
+        if (isVisible) {
+          startLoop();
+        } else {
+          stopLoop();
         }
-      }, { threshold: 0.02 });
+      }, { threshold: 0.01 });
       observer.observe(container);
     }
 

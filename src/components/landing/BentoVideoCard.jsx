@@ -154,7 +154,7 @@ export default function BentoVideoCard({
         muted
         loop
         playsInline
-        preload="auto"
+        preload="metadata"
         className="bento-img-hover"
         style={{
           width: '100%',

@@ -48,7 +48,7 @@ export default function InteractiveFluidGradient() {
       color4: '#38bdf8', // Luminous Cyan Highlight
       colorIntensity: 1.08,
       softness: 0.95,
-      dprMax: 2.0,
+      dprMax: 1.5,
       softResetFrames: 12,
       softResetStrength: 0.15
     };
@@ -490,15 +490,30 @@ export default function InteractiveFluidGradient() {
       frameCount++;
     }
 
-    animate();
+    const startLoop = () => {
+      if (animId) cancelAnimationFrame(animId);
+      lastMoveTime = performance.now();
+      animId = requestAnimationFrame(animate);
+    };
 
-    if ('IntersectionObserver' in window) {
+    const stopLoop = () => {
+      if (animId) {
+        cancelAnimationFrame(animId);
+        animId = null;
+      }
+    };
+
+    startLoop();
+
+    if ('IntersectionObserver' in window && container) {
       observer = new IntersectionObserver(([entry]) => {
         isVisible = entry.isIntersecting;
-        if (isVisible && !animId) {
-          animId = requestAnimationFrame(animate);
+        if (isVisible) {
+          startLoop();
+        } else {
+          stopLoop();
         }
-      }, { threshold: 0.02 });
+      }, { threshold: 0.01 });
       observer.observe(container);
     }
 
