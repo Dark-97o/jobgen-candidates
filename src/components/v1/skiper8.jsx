@@ -74,6 +74,17 @@ export function Skiper8({
   }, []);
 
   useEffect(() => {
+    if (!isExiting) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isExiting]);
+
+  useEffect(() => {
     if (index === words.length - 1) {
       const exitTimer = setTimeout(() => {
         setIsExiting(true);

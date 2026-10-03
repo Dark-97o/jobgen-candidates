@@ -44,6 +44,7 @@ import ApplicationsToOffersSection from './ApplicationsToOffersSection';
 import PricingEngineSection from './PricingEngineSection';
 import FAQSection from './FAQSection';
 import { RollingText } from '@/components/v1/skiper27';
+import { Skiper8 } from '@/components/v1/skiper8';
 
 // ==========================================
 // STATIC DATA & CONTENT FROM CANDIDATES.JOBGEN.AI
@@ -315,6 +316,7 @@ function FluidBlueHero() {
 }
 
 export default function LandingPage({ onSignIn, onLaunchApp }) {
+  const [showPreloader, setShowPreloader] = useState(true);
   const [isScrolled, setIsScrolled] = useState(false);
   const [row1Hovered, setRow1Hovered] = useState(false);
   const [row2Hovered, setRow2Hovered] = useState(false);
@@ -349,6 +351,13 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         overflowX: 'hidden'
       }}
     >
+      {/* =========================================================================
+          0. SKIPER8 WORDS PRELOADER (DENNIS SNELLENBERG ANIMATION)
+          ========================================================================= */}
+      {showPreloader && (
+        <Skiper8 onComplete={() => setShowPreloader(false)} />
+      )}
+
       {/* =========================================================================
           GLOBAL STYLES & LIGHT AESTHETIC CLASSES
           ========================================================================= */}
