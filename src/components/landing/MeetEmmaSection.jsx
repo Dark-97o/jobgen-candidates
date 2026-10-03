@@ -429,7 +429,7 @@ export default function MeetEmmaSection({ onLaunchApp, onScoreClick }) {
               RIGHT COLUMN: RESUME CHECKER ("Confident in your resume ?" & "Let Emma score it")
               WITH DRAG AND DROP RESUME UPLOAD SECTION & INSTANT SCORING
               ========================================================================= */}
-          <div>
+          <div style={{ marginTop: '-32px' }}>
             {/* Main Headline */}
             <h2
               style={{

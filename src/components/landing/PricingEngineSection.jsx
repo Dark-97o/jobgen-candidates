@@ -383,7 +383,7 @@ export default function PricingEngineSection({ onLaunchApp }) {
               margin: '0 0 16px 0'
             }}
           >
-            Start free. Upgrade when you want the full engine
+            Start free. Upgrade when you want the <span style={{ color: '#1A53CF' }}>full engine</span>
           </h2>
 
           <p

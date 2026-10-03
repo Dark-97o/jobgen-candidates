@@ -38,10 +38,10 @@ import RevealingTitle from './RevealingTitle';
 import AutonomousWorkspacePreview from './AutonomousWorkspacePreview';
 import InteractiveLogoBallsBand from './InteractiveLogoBallsBand';
 import BlueMistAnimation from './BlueMistAnimation';
-import WhiteMatrixGridAnimation from './WhiteMatrixGridAnimation';
 import BentoVideoCard from './BentoVideoCard';
 import MeetEmmaSection from './MeetEmmaSection';
 import PricingEngineSection from './PricingEngineSection';
+import FAQSection from './FAQSection';
 
 // ==========================================
 // STATIC DATA & CONTENT FROM CANDIDATES.JOBGEN.AI
@@ -468,16 +468,16 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .productivity-card-rect, .productivity-card-square {
-          border: 1px solid rgba(255, 255, 255, 0.12) !important;
+          border: 1.5px solid rgba(59, 130, 246, 0.45) !important;
           outline: none !important;
-          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35) !important;
+          box-shadow: 0 8px 30px rgba(37, 99, 235, 0.16), 0 0 0 1px rgba(37, 99, 235, 0.2) !important;
           transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1) !important;
         }
         .productivity-card-rect:hover, .productivity-card-square:hover {
-          border-color: rgba(255, 255, 255, 0.28) !important;
+          border-color: #2563EB !important;
           outline: none !important;
           transform: translateY(-4px) !important;
-          box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5) !important;
+          box-shadow: 0 16px 40px rgba(37, 99, 235, 0.32), 0 0 0 1.5px #2563EB !important;
         }
 
 
@@ -577,7 +577,8 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
             {[
               { label: 'Features', id: 'features' },
               { label: 'ATS Scanner', id: 'ats-scanner' },
-              { label: 'Pricing', id: 'pricing' }
+              { label: 'Pricing', id: 'pricing' },
+              { label: 'FAQ', id: 'faq' }
             ].map(item => (
               <button
                 key={item.id}
@@ -673,8 +674,8 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
         }}
       >
         <div id="features" style={{ position: 'absolute', top: 0, left: 0 }} />
-        {/* White Background with Thin Blue Lines & Grey Matrix of Glowing Dots */}
-        <WhiteMatrixGridAnimation />
+        {/* Procedural Blue Mist Floating Animation in Background */}
+        <BlueMistAnimation />
 
         {/* Section Content */}
         <div style={{ maxWidth: '1200px', margin: '0 auto', padding: '0 24px', position: 'relative', zIndex: 1 }}>
@@ -691,7 +692,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
                 marginBottom: '16px'
               }}
             >
-              Unmatched Productivity
+              Unmatched <span style={{ color: '#1A53CF' }}>Productivity</span>
             </h2>
 
             <p style={{ fontSize: '16.5px', color: '#475569', lineHeight: 1.6, maxWidth: '640px' }}>
@@ -766,6 +767,11 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           ========================================================================= */}
       <PricingEngineSection onLaunchApp={onLaunchApp} />
 
+      {/* =========================================================================
+          7. LIGHT THEME FAQ SECTION
+          ========================================================================= */}
+      <FAQSection onLaunchApp={onLaunchApp} />
+
 
       {/* =========================================================================
           12. MINIMALIST WHITE FOOTER
@@ -809,6 +815,7 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('features')}>Features</span>
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('ats-scanner')}>ATS Scanner</span>
               <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('pricing')}>Pricing</span>
+              <span style={{ cursor: 'pointer' }} onClick={() => scrollToSection('faq')}>FAQ</span>
               <span style={{ cursor: 'pointer' }} onClick={onSignIn}>Sign In</span>
             </div>
           </div>
