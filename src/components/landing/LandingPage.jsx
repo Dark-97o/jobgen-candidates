@@ -1084,18 +1084,6 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       </section>
 
       {/* =========================================================================
-          4. FULL-SCREEN SOLID BLUE HERO WITH FLUID WATER SPLASH POINTER & 3D REALISTIC RESUME
-          ========================================================================= */}
-      <FluidBlueHero 
-        onSignIn={onSignIn} 
-        onLaunchApp={onLaunchApp} 
-        onScanClick={() => scrollToSection('ats-scanner')} 
-        onProductivityClick={() => scrollToSection('productivity')} 
-        onPricingClick={() => scrollToSection('pricing')}
-        isAtTop={false}
-      />
-
-      {/* =========================================================================
           4. SOCIAL PROOF / INTERACTIVE 3D FALLING LOGO BALLS
           ========================================================================= */}
       <InteractiveLogoBallsBand />
@@ -1112,6 +1100,18 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           6. PRICING ENGINE: WHITE THEME WITH BLUE MIST & DYNAMIC REGIONAL PRICING
           ========================================================================= */}
       <PricingEngineSection onLaunchApp={onLaunchApp} />
+
+      {/* =========================================================================
+          7. FULL-SCREEN SOLID BLUE JOBGEN.IO SECTION WITH SHADERS & 3D REALISTIC RESUME
+          ========================================================================= */}
+      <FluidBlueHero 
+        onSignIn={onSignIn} 
+        onLaunchApp={onLaunchApp} 
+        onScanClick={() => scrollToSection('ats-scanner')} 
+        onProductivityClick={() => scrollToSection('productivity')} 
+        onPricingClick={() => scrollToSection('pricing')}
+        isAtTop={false}
+      />
 
       {/* =========================================================================
           12. MINIMALIST WHITE FOOTER
