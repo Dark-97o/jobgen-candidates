@@ -76,11 +76,22 @@ export function Skiper8({
   useEffect(() => {
     if (!isExiting) {
       document.body.style.overflow = "hidden";
+      if (typeof window !== "undefined" && window.lenis) {
+        window.lenis.stop();
+      }
     } else {
       document.body.style.overflow = "";
+      if (typeof window !== "undefined" && window.lenis) {
+        window.lenis.start();
+        window.lenis.resize();
+      }
     }
     return () => {
       document.body.style.overflow = "";
+      if (typeof window !== "undefined" && window.lenis) {
+        window.lenis.start();
+        window.lenis.resize();
+      }
     };
   }, [isExiting]);
 

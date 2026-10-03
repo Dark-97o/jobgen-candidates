@@ -322,10 +322,17 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
   const [row2Hovered, setRow2Hovered] = useState(false);
 
   useEffect(() => {
+    let ticking = false;
     const handleScroll = () => {
-      // Navbar only visible after the top section is scrolled up
-      const heroThreshold = Math.max(250, window.innerHeight * 0.45);
-      setIsScrolled(window.scrollY > heroThreshold);
+      if (!ticking) {
+        window.requestAnimationFrame(() => {
+          const heroThreshold = Math.max(250, window.innerHeight * 0.45);
+          const next = window.scrollY > heroThreshold;
+          setIsScrolled((prev) => (prev !== next ? next : prev));
+          ticking = false;
+        });
+        ticking = true;
+      }
     };
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
@@ -336,7 +343,11 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
       (id === 'features' ? document.getElementById('productivity') : null) ||
       (id === 'productivity' ? document.getElementById('features') : null);
     if (el) {
-      el.scrollIntoView({ behavior: 'smooth' });
+      if (window.lenis) {
+        window.lenis.scrollTo(el);
+      } else {
+        el.scrollIntoView({ behavior: 'smooth' });
+      }
     }
   };
 
@@ -355,7 +366,15 @@ export default function LandingPage({ onSignIn, onLaunchApp }) {
           0. SKIPER8 WORDS PRELOADER (DENNIS SNELLENBERG ANIMATION)
           ========================================================================= */}
       {showPreloader && (
-        <Skiper8 onComplete={() => setShowPreloader(false)} />
+        <Skiper8 
+          onComplete={() => {
+            setShowPreloader(false);
+            if (typeof window !== 'undefined' && window.lenis) {
+              window.lenis.start();
+              window.lenis.resize();
+            }
+          }} 
+        />
       )}
 
       {/* =========================================================================

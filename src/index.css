@@ -180,6 +180,9 @@ html, body {
   filter: blur(75px);
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  contain: strict;
 }
 
 .glow-flare-blue {
@@ -191,6 +194,9 @@ html, body {
   filter: blur(75px);
   pointer-events: none;
   z-index: 0;
+  will-change: transform;
+  transform: translate3d(0, 0, 0);
+  contain: strict;
 }
 
 

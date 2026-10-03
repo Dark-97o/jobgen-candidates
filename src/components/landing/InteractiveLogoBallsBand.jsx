@@ -374,14 +374,30 @@ export default function InteractiveLogoBallsBand() {
         ctx.restore();
       });
 
-      animId = requestAnimationFrame(animate);
+      if (!isDestroyed && isVisible) {
+        animId = requestAnimationFrame(animate);
+      }
     };
+
+    let isVisible = true;
+    let observer = null;
+
+    if ('IntersectionObserver' in window && container) {
+      observer = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !isDestroyed && !animId) {
+          animId = requestAnimationFrame(animate);
+        }
+      }, { threshold: 0.05 });
+      observer.observe(container);
+    }
 
     animId = requestAnimationFrame(animate);
 
     return () => {
       isDestroyed = true;
-      cancelAnimationFrame(animId);
+      if (observer) observer.disconnect();
+      if (animId) cancelAnimationFrame(animId);
       resizeObserver.disconnect();
       canvas.removeEventListener('mousedown', onPointerDown);
       window.removeEventListener('mousemove', onPointerMove);

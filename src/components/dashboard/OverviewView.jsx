@@ -2048,7 +2048,7 @@ export default function OverviewView({ onNavigate }) {
                 </div>
 
                 {/* Checkboxes Matching Reference Image (with 8px right padding) */}
-                <div style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.5vw, 8px)', paddingRight: '8px', maxHeight: '145px', overflowY: 'auto' }}>
+                <div data-lenis-prevent="true" style={{ display: 'flex', flexDirection: 'column', gap: 'clamp(4px, 0.5vw, 8px)', paddingRight: '8px', maxHeight: '145px', overflowY: 'auto' }}>
                   {(dayEvents[selectedCalendarDay] || []).slice(0, 4).map((ev) => (
                     <div
                       key={ev.id}
@@ -2200,6 +2200,7 @@ export default function OverviewView({ onNavigate }) {
 
                 {/* Recruiter Contact Cards (with 8px padding to the right on both container and cards) */}
                 <div
+                  data-lenis-prevent="true"
                   style={{
                     display: 'flex',
                     flexDirection: 'column',

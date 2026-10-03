@@ -28,49 +28,41 @@ export default function App() {
   useEffect(() => {
     const lenis = new Lenis({
       autoRaf: true,
-      duration: 1.25,
+      duration: 0.85,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
       orientation: 'vertical',
       gestureOrientation: 'vertical',
       smoothWheel: true,
       wheelMultiplier: 1.0,
-      touchMultiplier: 1.6,
+      touchMultiplier: 1.0,
       infinite: false,
-      allowNestedScroll: true,
       prevent: (node) => {
         if (!node || !(node instanceof HTMLElement)) return false;
-        if (node.hasAttribute?.('data-lenis-prevent')) return true;
-        let curr = node;
-        while (curr && curr !== document.body && curr !== document.documentElement) {
-          if (curr.hasAttribute?.('data-lenis-prevent')) return true;
-          try {
-            const style = window.getComputedStyle(curr);
-            if (
-              (style.overflowY === 'auto' || style.overflowY === 'scroll') &&
-              curr.scrollHeight > curr.clientHeight
-            ) {
-              return true;
-            }
-          } catch {
-            // ignore
-          }
-          curr = curr.parentElement;
-        }
-        return false;
+        return node.closest?.('[data-lenis-prevent]') !== null;
       },
     });
 
     window.lenis = lenis;
 
+    // Keep Lenis scroll dimensions accurately synchronized as dynamic content loads
+    const ro = new ResizeObserver(() => {
+      lenis.resize();
+    });
+    if (document.body) {
+      ro.observe(document.body);
+    }
+
     return () => {
+      ro.disconnect();
       lenis.destroy();
       delete window.lenis;
     };
   }, []);
 
-  // When changing tabs, smoothly reposition to top
+  // When changing tabs, smoothly reposition to top and recalculate scroll limits
   useEffect(() => {
     if (window.lenis) {
+      window.lenis.resize();
       window.lenis.scrollTo(0, { immediate: true });
     } else {
       window.scrollTo(0, 0);
@@ -137,6 +129,9 @@ export default function App() {
             filter: 'blur(80px)',
             pointerEvents: 'none',
             zIndex: 0,
+            willChange: 'transform',
+            transform: 'translate3d(0, 0, 0)',
+            contain: 'strict'
           }}
         />
         <div 
@@ -151,6 +146,9 @@ export default function App() {
             filter: 'blur(80px)',
             pointerEvents: 'none',
             zIndex: 0,
+            willChange: 'transform',
+            transform: 'translate3d(0, 0, 0)',
+            contain: 'strict'
           }}
         />
         

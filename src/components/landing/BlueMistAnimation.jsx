@@ -102,7 +102,14 @@ export default function BlueMistAnimation() {
 
     let time = 0;
 
+    let isVisible = true;
+    let observer = null;
+
     const render = () => {
+      if (!isVisible) {
+        animationFrameId = null;
+        return;
+      }
       time += 1;
       ctx.clearRect(0, 0, width, height);
 
@@ -187,8 +194,19 @@ export default function BlueMistAnimation() {
 
     render();
 
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animationFrameId) {
+          animationFrameId = requestAnimationFrame(render);
+        }
+      }, { threshold: 0.02 });
+      observer.observe(container);
+    }
+
     return () => {
-      cancelAnimationFrame(animationFrameId);
+      if (observer) observer.disconnect();
+      if (animationFrameId) cancelAnimationFrame(animationFrameId);
       resizeObserver.disconnect();
       container.removeEventListener('mousemove', handleMouseMove);
       container.removeEventListener('mouseleave', handleMouseLeave);
@@ -220,10 +238,13 @@ export default function BlueMistAnimation() {
           width: '1550px',
           height: '1550px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.22) 0%, rgba(56, 189, 248, 0.14) 42%, rgba(147, 197, 253, 0.03) 72%, transparent 100%)',
-          filter: 'blur(95px)',
+          background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.22) 0%, rgba(56, 189, 248, 0.14) 35%, rgba(147, 197, 253, 0.06) 60%, transparent 80%)',
+          filter: 'blur(45px)',
           animation: 'mistCircleFloat1 24s ease-in-out infinite alternate',
-          transformOrigin: 'center center'
+          transformOrigin: 'center center',
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0)',
+          contain: 'strict'
         }}
       />
 
@@ -237,10 +258,13 @@ export default function BlueMistAnimation() {
           width: '1850px',
           height: '1850px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.24) 0%, rgba(2, 132, 199, 0.15) 45%, rgba(224, 242, 254, 0.04) 74%, transparent 100%)',
-          filter: 'blur(110px)',
+          background: 'radial-gradient(circle at center, rgba(56, 189, 248, 0.24) 0%, rgba(2, 132, 199, 0.15) 38%, rgba(224, 242, 254, 0.06) 62%, transparent 82%)',
+          filter: 'blur(50px)',
           animation: 'mistCircleFloat2 28s ease-in-out infinite alternate',
-          transformOrigin: 'center center'
+          transformOrigin: 'center center',
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0)',
+          contain: 'strict'
         }}
       />
 
@@ -254,10 +278,13 @@ export default function BlueMistAnimation() {
           width: '1500px',
           height: '1500px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle at center, rgba(79, 70, 229, 0.18) 0%, rgba(37, 99, 235, 0.13) 48%, rgba(199, 210, 254, 0.03) 72%, transparent 100%)',
-          filter: 'blur(95px)',
+          background: 'radial-gradient(circle at center, rgba(79, 70, 229, 0.18) 0%, rgba(37, 99, 235, 0.13) 38%, rgba(199, 210, 254, 0.05) 60%, transparent 80%)',
+          filter: 'blur(45px)',
           animation: 'mistCircleFloat3 22s ease-in-out infinite alternate',
-          transformOrigin: 'center center'
+          transformOrigin: 'center center',
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0)',
+          contain: 'strict'
         }}
       />
 
@@ -271,10 +298,13 @@ export default function BlueMistAnimation() {
           width: '1350px',
           height: '1350px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle at center, rgba(6, 182, 212, 0.20) 0%, rgba(56, 189, 248, 0.12) 50%, transparent 74%)',
-          filter: 'blur(90px)',
+          background: 'radial-gradient(circle at center, rgba(6, 182, 212, 0.20) 0%, rgba(56, 189, 248, 0.12) 40%, transparent 75%)',
+          filter: 'blur(42px)',
           animation: 'mistCircleFloat4 26s ease-in-out infinite alternate',
-          transformOrigin: 'center center'
+          transformOrigin: 'center center',
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0)',
+          contain: 'strict'
         }}
       />
 
@@ -288,10 +318,13 @@ export default function BlueMistAnimation() {
           width: '1250px',
           height: '1250px',
           borderRadius: '50%',
-          background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.18) 0%, rgba(96, 165, 250, 0.10) 52%, transparent 72%)',
-          filter: 'blur(85px)',
+          background: 'radial-gradient(circle at center, rgba(37, 99, 235, 0.18) 0%, rgba(96, 165, 250, 0.10) 42%, transparent 74%)',
+          filter: 'blur(40px)',
           animation: 'mistCircleFloat5 20s ease-in-out infinite alternate',
-          transformOrigin: 'center center'
+          transformOrigin: 'center center',
+          willChange: 'transform',
+          transform: 'translate3d(0, 0, 0)',
+          contain: 'strict'
         }}
       />
 

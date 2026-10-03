@@ -440,7 +440,14 @@ export default function InteractiveFluidGradient() {
     let frameCount = 0;
     let animId;
 
+    let isVisible = true;
+    let observer = null;
+
     function animate() {
+      if (!isVisible) {
+        animId = null;
+        return;
+      }
       animId = requestAnimationFrame(animate);
       const time = performance.now() * 0.001;
 
@@ -485,6 +492,16 @@ export default function InteractiveFluidGradient() {
 
     animate();
 
+    if ('IntersectionObserver' in window) {
+      observer = new IntersectionObserver(([entry]) => {
+        isVisible = entry.isIntersecting;
+        if (isVisible && !animId) {
+          animId = requestAnimationFrame(animate);
+        }
+      }, { threshold: 0.02 });
+      observer.observe(container);
+    }
+
     // ============== 9. Resize Handling ==============
     let resizeRaf = null;
     const onResize = () => {
@@ -496,7 +513,8 @@ export default function InteractiveFluidGradient() {
 
     // Cleanup
     return () => {
-      cancelAnimationFrame(animId);
+      if (observer) observer.disconnect();
+      if (animId) cancelAnimationFrame(animId);
       if (resizeRaf) cancelAnimationFrame(resizeRaf);
       window.removeEventListener('pointermove', onPointerMove);
       window.removeEventListener('pointerleave', onPointerLeave);
