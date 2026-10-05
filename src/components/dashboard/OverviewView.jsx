@@ -898,7 +898,7 @@ export default function OverviewView({ onNavigate }) {
               pointerEvents: 'auto',
             }}
           >
-            {/* Waves Video: Fully Blended with Background, Attached with Zero Right Gap */}
+            {/* Waves Video: Clean, Unfiltered Original Resolution */}
             <div
               style={{
                 position: 'absolute',
@@ -906,8 +906,6 @@ export default function OverviewView({ onNavigate }) {
                 overflow: 'hidden',
                 pointerEvents: 'none',
                 zIndex: 0,
-                maskImage: 'radial-gradient(ellipse 78% 70% at 50% 50%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.85) 72%, rgba(0,0,0,0) 98%)',
-                WebkitMaskImage: 'radial-gradient(ellipse 78% 70% at 50% 50%, rgba(0,0,0,1) 45%, rgba(0,0,0,0.85) 72%, rgba(0,0,0,0) 98%)',
               }}
             >
               <video
@@ -921,8 +919,6 @@ export default function OverviewView({ onNavigate }) {
                   width: '100%',
                   height: '100%',
                   objectFit: 'cover',
-                  opacity: 0.98,
-                  filter: 'contrast(1.22) saturate(1.08)',
                   display: 'block',
                 }}
               >
@@ -949,10 +945,10 @@ export default function OverviewView({ onNavigate }) {
             <div
               style={{
                 position: 'absolute',
-                left: 'calc(28.86% - 12px)',
-                top: 'calc(26.6% - 12.5px)',
-                width: 'calc(50.86% + 24px)',
-                height: 'calc(44.6% + 25px)',
+                left: 'calc(28.86% - 14px)',
+                top: 'calc(26.6% - 16.5px)',
+                width: 'calc(50.86% + 28px)',
+                height: 'calc(44.6% + 33px)',
                 zIndex: 10,
                 borderRadius: '26px',
                 overflow: 'hidden',

@@ -879,7 +879,7 @@ export default function InterviewPrepView() {
             })}
           </div>
 
-          {/* Interview Container Body with Translucent ipbg Background (Fixed height + scrollable content) */}
+          {/* Interview Container Body (Fixed height + scrollable content) */}
           <div 
             style={{ 
               flex: 1,
@@ -901,20 +901,6 @@ export default function InterviewPrepView() {
               flexDirection: 'column'
             }}
           >
-            {/* Slightly Transparent Paper-Cut Waves Background Image */}
-            <div 
-              style={{
-                position: 'absolute',
-                inset: 0,
-                backgroundImage: 'url(/ipbg.png)',
-                backgroundSize: 'cover',
-                backgroundPosition: 'right center',
-                backgroundRepeat: 'no-repeat',
-                opacity: 0.55,
-                pointerEvents: 'none',
-                zIndex: 1
-              }}
-            />
 
             <div 
               style={{ 
