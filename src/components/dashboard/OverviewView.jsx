@@ -893,7 +893,7 @@ export default function OverviewView({ onNavigate }) {
             style={{
               position: 'absolute',
               inset: 0,
-              transform: 'scale(1.28)',
+              transform: 'scale(1.024)',
               transformOrigin: '54% 49%',
               pointerEvents: 'auto',
             }}
@@ -922,6 +922,7 @@ export default function OverviewView({ onNavigate }) {
                   height: '100%',
                   objectFit: 'cover',
                   opacity: 0.98,
+                  filter: 'contrast(1.22) saturate(1.08)',
                   display: 'block',
                 }}
               >
@@ -929,16 +930,31 @@ export default function OverviewView({ onNavigate }) {
               </video>
             </div>
 
-            {/* The White Space: Precisely Locked to the 16:9 White Monitor Screen inside waves.mp4 */}
+            {/* Subtle Black Fade Shadow Overlay Around the White Plate / Lane */}
             <div
               style={{
                 position: 'absolute',
-                left: '31.2%',
-                top: '28.2%',
-                width: '45.6%',
-                height: '41.6%',
+                left: '28.86%',
+                top: '25.0%',
+                width: '50.86%',
+                height: '47.69%',
+                borderRadius: '26px',
+                pointerEvents: 'none',
+                zIndex: 5,
+                boxShadow: '0 10px 36px -4px rgba(0, 0, 0, 0.22), 0 3px 10px -2px rgba(0, 0, 0, 0.12), inset 0 0 1px 1px rgba(0, 0, 0, 0.06)',
+              }}
+            />
+
+            {/* The White Space: Precisely Locked to the White Card Screen inside waves.mp4 */}
+            <div
+              style={{
+                position: 'absolute',
+                left: 'calc(28.86% - 12px)',
+                top: 'calc(26.6% - 12.5px)',
+                width: 'calc(50.86% + 24px)',
+                height: 'calc(44.6% + 25px)',
                 zIndex: 10,
-                borderRadius: '16px',
+                borderRadius: '26px',
                 overflow: 'hidden',
                 display: 'flex',
                 flexDirection: 'column',
@@ -1187,11 +1203,11 @@ export default function OverviewView({ onNavigate }) {
                     position: 'relative',
                     width: '100%',
                     height: '100%',
-                    padding: 'clamp(6px, 1.1vw, 12px) clamp(8px, 1.4vw, 16px)',
+                    padding: 'clamp(14px, 1.5vw, 22px) clamp(16px, 1.8vw, 26px)',
                     boxSizing: 'border-box',
                     display: 'flex',
                     flexDirection: 'column',
-                    justifyContent: 'space-between',
+                    justifyContent: 'stretch',
                     opacity: cardsVisible ? 1 : 0,
                     transform: cardsVisible ? 'scale(1)' : 'scale(0.97)',
                     transition: 'all 0.5s cubic-bezier(0.16, 1, 0.3, 1)'
@@ -1203,7 +1219,7 @@ export default function OverviewView({ onNavigate }) {
                       flex: 1,
                       display: 'grid',
                       gridTemplateColumns: 'repeat(4, minmax(0, 1fr))',
-                      gap: 'clamp(5px, 0.8vw, 10px)',
+                      gap: 'clamp(10px, 1.1vw, 16px)',
                       alignItems: 'stretch'
                     }}
                   >
@@ -1213,7 +1229,7 @@ export default function OverviewView({ onNavigate }) {
                         onClick={() => onNavigate(card.route)}
                         style={{
                           position: 'relative',
-                          borderRadius: '12px',
+                          borderRadius: '16px',
                           overflow: 'hidden',
                           cursor: 'pointer',
                           boxShadow: '0 4px 14px rgba(0, 0, 0, 0.2)',
